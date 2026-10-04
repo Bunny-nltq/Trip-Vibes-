@@ -1,0 +1,142 @@
+[
+  {
+    "id": "c01",
+    "text": "Đi Đà Nẵng 3 ngày 2 đêm với vợ, ngân sách 10 triệu, thích biển và hải sản, không muốn dậy sớm.",
+    "expected": {
+      "soNguoi": 2,
+      "soNgay": 3,
+      "ngansachTongVND": 10000000,
+      "diemDen": "Đà Nẵng",
+      "sothichBaoGom": ["bien", "hai_san"],
+      "tranh": ["khong_day_som"],
+      "thieu": [],
+      "canhBaoBaoGom": []
+    }
+  },
+  {
+    "id": "c02",
+    "text": "Cho mình một chuyến Đà Nẵng 4 ngày, 2 người, tầm 12tr, thích chụp ảnh và đi spa nhẹ nhàng.",
+    "expected": {
+      "soNguoi": 2,
+      "soNgay": 4,
+      "ngansachTongVND": 12000000,
+      "diemDen": "Đà Nẵng",
+      "sothichBaoGom": ["check_in_chup_anh", "thu_gian_spa"],
+      "tranh": [],
+      "thieu": [],
+      "canhBaoBaoGom": ["ngoai_pham_vi_so_ngay"]
+    }
+  },
+  {
+    "id": "c03",
+    "text": "Đi một mình 3 ngày thôi, tiết kiệm nhất có thể.",
+    "expected": {
+      "soNguoi": 1,
+      "soNgay": 3,
+      "ngansachTongVND": null,
+      "diemDen": "Đà Nẵng",
+      "sothichBaoGom": [],
+      "tranh": [],
+      "thieu": ["ngansach"],
+      "canhBaoBaoGom": ["diem_den_mac_dinh"]
+    }
+  },
+  {
+    "id": "c04",
+    "text": "Nhà mình 3 người, đi 3 ngày 2 đêm, mỗi người 4 triệu, tránh chỗ đông người.",
+    "expected": {
+      "soNguoi": 3,
+      "soNgay": 3,
+      "ngansachTongVND": 12000000,
+      "diemDen": "Đà Nẵng",
+      "sothichBaoGom": [],
+      "tranh": ["tranh_dong_nguoi"],
+      "thieu": [],
+      "canhBaoBaoGom": ["diem_den_mac_dinh"]
+    }
+  },
+  {
+    "id": "c05",
+    "text": "Đi Đà Nẵng cuối tuần này, 2 đứa, có 6 củ.",
+    "expected": {
+      "soNguoi": 2,
+      "soNgay": null,
+      "ngansachTongVND": 6000000,
+      "diemDen": "Đà Nẵng",
+      "sothichBaoGom": [],
+      "tranh": [],
+      "thieu": ["soNgay"],
+      "canhBaoBaoGom": []
+    }
+  },
+  {
+    "id": "c06",
+    "text": "Nhóm 4 người bạn đi Đà Nẵng 3 ngày, tổng mười lăm triệu đồng, thích ăn uống và thiên nhiên, không đi đêm.",
+    "expected": {
+      "soNguoi": 4,
+      "soNgay": 3,
+      "ngansachTongVND": 15000000,
+      "diemDen": "Đà Nẵng",
+      "sothichBaoGom": ["am_thuc", "thien_nhien"],
+      "tranh": ["khong_di_dem"],
+      "thieu": [],
+      "canhBaoBaoGom": []
+    }
+  },
+  {
+    "id": "c07",
+    "text": "Mình muốn đi du lịch.",
+    "expected": {
+      "soNguoi": null,
+      "soNgay": null,
+      "ngansachTongVND": null,
+      "diemDen": "Đà Nẵng",
+      "sothichBaoGom": [],
+      "tranh": [],
+      "thieu": ["soNguoi", "soNgay", "ngansach"],
+      "canhBaoBaoGom": ["diem_den_mac_dinh"]
+    }
+  },
+  {
+    "id": "c08",
+    "text": "Đi Đà Nẵng 3 ngày với bạn gái, ngân sách không quá 8 triệu, ghét đi bộ nhiều và dậy sớm.",
+    "expected": {
+      "soNguoi": 2,
+      "soNgay": 3,
+      "ngansachTongVND": 8000000,
+      "diemDen": "Đà Nẵng",
+      "sothichBaoGom": [],
+      "tranh": ["tranh_di_bo_nhieu", "khong_day_som"],
+      "thieu": [],
+      "canhBaoBaoGom": []
+    }
+  },
+  {
+    "id": "c09",
+    "text": "Cả nhà mình đi Đà Nẵng 3 ngày, ngân sách 20 triệu.",
+    "expected": {
+      "soNguoi": null,
+      "soNgay": 3,
+      "ngansachTongVND": 20000000,
+      "diemDen": "Đà Nẵng",
+      "sothichBaoGom": [],
+      "tranh": [],
+      "thieu": ["soNguoi"],
+      "canhBaoBaoGom": []
+    }
+  },
+  {
+    "id": "c10",
+    "text": "Đi Hà Nội 3 ngày cho 2 người, 10 triệu.",
+    "expected": {
+      "soNguoi": 2,
+      "soNgay": 3,
+      "ngansachTongVND": 10000000,
+      "diemDen": "Hà Nội",
+      "sothichBaoGom": [],
+      "tranh": [],
+      "thieu": [],
+      "canhBaoBaoGom": ["ngoai_pham_vi_diem_den"]
+    }
+  }
+]

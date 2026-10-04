@@ -1,6 +1,77 @@
 import { z } from "zod";
 
-export const schemaVersion = 1;
+export const schemaVersion = 2;
+
+// ─── Enums cho TripRequest ───────────────────────────────────────────────────
+
+export const PreferenceSchema = z.enum([
+  "bien",
+  "am_thuc",
+  "hai_san",
+  "van_hoa_lich_su",
+  "thien_nhien",
+  "giai_tri_vui_choi",
+  "thu_gian_spa",
+  "check_in_chup_anh",
+  "mua_sam",
+]);
+export type Preference = z.infer<typeof PreferenceSchema>;
+
+export const AvoidanceSchema = z.enum([
+  "khong_day_som",
+  "khong_di_dem",
+  "tranh_di_chuyen_lau",
+  "tranh_dong_nguoi",
+  "tranh_di_bo_nhieu",
+]);
+export type Avoidance = z.infer<typeof AvoidanceSchema>;
+
+export const MissingFieldSchema = z.enum(["soNguoi", "soNgay", "ngansach"]);
+export type MissingField = z.infer<typeof MissingFieldSchema>;
+
+// ─── RawTripRequest (đầu ra LLM) ─────────────────────────────────────────────
+
+export const RawBudgetSchema = z.object({
+  /** Số tiền VND, số nguyên hoặc null nếu chưa có con số cụ thể */
+  soTien: z.number().int().nullable(),
+  /** "tong" (tổng cho cả nhóm) hoặc "moi_nguoi" (tính theo từng người) */
+  theo: z.enum(["tong", "moi_nguoi"]).nullable(),
+});
+export type RawBudget = z.infer<typeof RawBudgetSchema>;
+
+export const RawTripRequestSchema = z.object({
+  schemaVersion: z.number().int().default(schemaVersion),
+  diemDi: z.string().nullable(),
+  diemDen: z.string().nullable(),
+  soNgay: z.number().int().nullable(),
+  soNguoi: z.number().int().nullable(),
+  ngansach: RawBudgetSchema,
+  sothich: z.array(PreferenceSchema),
+  tranh: z.array(AvoidanceSchema),
+  ghiChu: z.array(z.string()),
+  thieu: z.array(MissingFieldSchema),
+  cauHoiLamRo: z.array(z.string()),
+});
+export type RawTripRequest = z.infer<typeof RawTripRequestSchema>;
+
+// ─── TripRequest (kết quả chuẩn hoá cuối cùng) ────────────────────────────────
+
+export const TripRequestSchema = z.object({
+  schemaVersion: z.number().int().default(schemaVersion),
+  diemDi: z.string(),
+  diemDen: z.string(),
+  soNgay: z.number().int().nullable(),
+  soNguoi: z.number().int().nullable(),
+  /** Ngân sách tổng tính bằng VND (số nguyên), null nếu thiếu thông tin ngân sách */
+  ngansachTongVND: z.number().int().nullable(),
+  sothich: z.array(PreferenceSchema),
+  tranh: z.array(AvoidanceSchema),
+  ghiChu: z.array(z.string()),
+  thieu: z.array(MissingFieldSchema),
+  cauHoiLamRo: z.array(z.string()),
+  canhBao: z.array(z.string()),
+});
+export type TripRequest = z.infer<typeof TripRequestSchema>;
 
 // ─── Hotel ───────────────────────────────────────────────────────────────────
 
@@ -78,20 +149,6 @@ export const ActivitySchema = z.object({
 });
 
 export type Activity = z.infer<typeof ActivitySchema>;
-
-// ─── TripRequest ─────────────────────────────────────────────────────────────
-
-export const TripRequestSchema = z.object({
-  schemaVersion: z.number().int().default(schemaVersion),
-  numDays: z.number().int().positive(),
-  numPeople: z.number().int().positive(),
-  /** Ngân sách tổng, VND, số nguyên */
-  budgetVnd: z.number().int().positive(),
-  preferences: z.array(z.string()),
-  avoidances: z.array(z.string()),
-});
-
-export type TripRequest = z.infer<typeof TripRequestSchema>;
 
 // ─── Plan ────────────────────────────────────────────────────────────────────
 

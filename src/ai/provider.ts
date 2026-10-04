@@ -8,7 +8,7 @@
  * @see https://ai.google.dev/gemini-api/docs/api-key
  */
 import { GoogleGenAI } from "@google/genai";
-import type { LLMProvider } from "./LLMProvider";
+import type { LLMProvider, GenerateOptions } from "./LLMProvider";
 
 export class GeminiProvider implements LLMProvider {
   private readonly client: GoogleGenAI;
@@ -37,10 +37,26 @@ export class GeminiProvider implements LLMProvider {
     this.client = new GoogleGenAI({ apiKey });
   }
 
-  async generateText(prompt: string): Promise<string> {
+  async generateText(prompt: string, options?: GenerateOptions): Promise<string> {
+    const config: Record<string, unknown> = {};
+
+    if (options?.systemInstruction) {
+      config.systemInstruction = options.systemInstruction;
+    }
+    if (options?.temperature !== undefined) {
+      config.temperature = options.temperature;
+    }
+    if (options?.responseMimeType) {
+      config.responseMimeType = options.responseMimeType;
+    }
+    if (options?.responseSchema) {
+      config.responseSchema = options.responseSchema;
+    }
+
     const response = await this.client.models.generateContent({
       model: this.modelName,
       contents: prompt,
+      config: Object.keys(config).length > 0 ? (config as never) : undefined,
     });
 
     const text = response.text;

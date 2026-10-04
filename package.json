@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "check:data": "npx tsx scripts/check-data.ts"
+    "check:data": "npx tsx scripts/check-data.ts",
+    "test:core": "vitest run src/core",
+    "eval:parse": "tsx eval/run-parse.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@google/genai": "^1",
@@ -25,6 +28,8 @@
     "eslint-config-next": "16.3.8",
     "tailwindcss": "^4",
     "tsx": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
   }
 }
