@@ -1,7 +1,8 @@
 [
   {
-    "schemaVersion": 1,
+    "schemaVersion": 3,
     "id": "transport-001",
+    "huong": "di",
     "type": "PLANE",
     "provider": "VietJet Air (mẫu)",
     "origin": "TP.HCM",
@@ -16,8 +17,9 @@
     "notes": "Hành lý xách tay 7kg, mua thêm hành lý ký gửi nếu cần."
   },
   {
-    "schemaVersion": 1,
+    "schemaVersion": 3,
     "id": "transport-002",
+    "huong": "di",
     "type": "TRAIN",
     "provider": "Đường sắt Việt Nam (mẫu)",
     "origin": "TP.HCM",
@@ -32,8 +34,9 @@
     "notes": "⚠️ Bẫy: tàu đến lúc 5:10 sáng, cần chuẩn bị kế hoạch nhận phòng sớm hoặc gửi hành lý."
   },
   {
-    "schemaVersion": 1,
+    "schemaVersion": 3,
     "id": "transport-003",
+    "huong": "di",
     "type": "BUS",
     "provider": "Phương Trang (FUTA - mẫu)",
     "origin": "TP.HCM",
@@ -46,5 +49,56 @@
     "boardingPoint": "Bến xe Miền Đông (TP.HCM)",
     "dropOffPoint": "Bến xe Đà Nẵng",
     "notes": "Hành trình qua đêm khoảng 15 giờ. Nên chuẩn bị gối và chăn mỏng."
+  },
+  {
+    "schemaVersion": 3,
+    "id": "transport-004",
+    "huong": "ve",
+    "type": "PLANE",
+    "provider": "VietJet Air (mẫu)",
+    "origin": "Đà Nẵng",
+    "destination": "TP.HCM",
+    "departureTime": "18:00",
+    "arrivalTime": "19:25",
+    "durationMinutes": 85,
+    "pricePerPerson": 980000,
+    "seatClass": "Phổ thông",
+    "boardingPoint": "Sân bay Đà Nẵng (DAD)",
+    "dropOffPoint": "Sân bay Tân Sơn Nhất (SGN)",
+    "notes": "Chuyến bay chiều về buổi tối."
+  },
+  {
+    "schemaVersion": 3,
+    "id": "transport-005",
+    "huong": "ve",
+    "type": "TRAIN",
+    "provider": "Đường sắt Việt Nam (mẫu)",
+    "origin": "Đà Nẵng",
+    "destination": "TP.HCM",
+    "departureTime": "18:30",
+    "arrivalTime": "12:00",
+    "durationMinutes": 1050,
+    "pricePerPerson": 850000,
+    "seatClass": "Nằm điều hoà",
+    "boardingPoint": "Ga Đà Nẵng",
+    "dropOffPoint": "Ga Sài Gòn",
+    "notes": "Chuyến tàu chiều về qua đêm."
+  },
+  {
+    "schemaVersion": 3,
+    "id": "transport-006",
+    "huong": "ve",
+    "type": "BUS",
+    "provider": "Phương Trang (FUTA - mẫu)",
+    "origin": "Đà Nẵng",
+    "destination": "TP.HCM",
+    "departureTime": "16:30",
+    "arrivalTime": "10:00",
+    "durationMinutes": 1050,
+    "pricePerPerson": 520000,
+    "seatClass": "Giường nằm",
+    "boardingPoint": "Bến xe Đà Nẵng",
+    "dropOffPoint": "Bến xe Miền Đông (TP.HCM)",
+    "notes": "Xe khách chiều về giường nằm qua đêm."
   }
 ]

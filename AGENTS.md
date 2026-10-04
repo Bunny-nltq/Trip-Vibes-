@@ -10,3 +10,5 @@ Quy tắc bắt buộc:
 - Không gọi Gemini từ trình duyệt. Không ghi API key vào code, chỉ dùng biến môi trường.
 - AI chỉ chọn và hiểu; không để AI cộng tiền hay tạo khách sạn, giá, đánh giá ngoài dữ liệu.
 - Khi sửa giao diện chỉ sửa file trong src/ui và src/design.
+- Hằng số giả định nằm trong src/core/assumptions.ts.
+- Cờ cảnh báo tính ở src/core/flags.ts, không để AI tự gán.

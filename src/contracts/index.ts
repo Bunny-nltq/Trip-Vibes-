@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-export const schemaVersion = 2;
+export const schemaVersion = 3;
 
-// ─── Enums cho TripRequest ───────────────────────────────────────────────────
+// ─── Enums cho TripRequest & Activity ────────────────────────────────────────
 
 export const PreferenceSchema = z.enum([
   "bien",
@@ -102,16 +102,21 @@ export type Hotel = z.infer<typeof HotelSchema>;
 export const TransportTypeSchema = z.enum(["PLANE", "TRAIN", "BUS"]);
 export type TransportType = z.infer<typeof TransportTypeSchema>;
 
+export const TransportDirectionSchema = z.enum(["di", "ve"]);
+export type TransportDirection = z.infer<typeof TransportDirectionSchema>;
+
 export const TransportSchema = z.object({
   schemaVersion: z.number().int().default(schemaVersion),
   id: z.string(),
+  /** Chiều di chuyển: "di" = TP.HCM -> Đà Nẵng, "ve" = Đà Nẵng -> TP.HCM */
+  huong: TransportDirectionSchema,
   type: TransportTypeSchema,
   provider: z.string(),
   origin: z.string(),
   destination: z.string(),
-  departureTime: z.string(), // HH:mm
-  arrivalTime: z.string(),   // HH:mm
-  durationMinutes: z.number().int().positive(),
+  departureTime: z.string(), // HH:mm (giờ đi)
+  arrivalTime: z.string().optional(), // HH:mm (giờ đến)
+  durationMinutes: z.number().int().positive(), // thời lượng tính bằng phút
   /** Giá mỗi người, VND, số nguyên */
   pricePerPerson: z.number().int().nonnegative(),
   seatClass: z.string(),
@@ -124,33 +129,42 @@ export type Transport = z.infer<typeof TransportSchema>;
 
 // ─── Activity ────────────────────────────────────────────────────────────────
 
-export const ActivityCategorySchema = z.enum([
-  "FOOD_AND_DRINK",
-  "SIGHTSEEING",
-  "ADVENTURE",
-  "CULTURE",
-  "SHOPPING",
-  "RELAXATION",
-]);
-export type ActivityCategory = z.infer<typeof ActivityCategorySchema>;
-
 export const ActivitySchema = z.object({
   schemaVersion: z.number().int().default(schemaVersion),
   id: z.string(),
-  name: z.string(),
-  category: ActivityCategorySchema,
-  location: z.string(),
-  /** Giá vé/suất, VND, số nguyên */
-  pricePerPerson: z.number().int().nonnegative(),
-  durationMinutes: z.number().int().positive(),
-  description: z.string(),
+  ten: z.string(),
+  khuVuc: z.string(),
+  /** Giá vé mỗi người, VND, số nguyên */
+  giaVeNguoi: z.number().int().nonnegative(),
+  thoiLuongPhut: z.number().int().positive(),
+  tuKhoaBanDo: z.string(),
+  nhan: z.array(PreferenceSchema),
+  dongNguoi: z.boolean(),
+  diBoNhieu: z.boolean(),
+  // Tương thích thêm nếu có
+  name: z.string().optional(),
+  category: z.string().optional(),
+  location: z.string().optional(),
+  pricePerPerson: z.number().int().nonnegative().optional(),
+  durationMinutes: z.number().int().positive().optional(),
+  description: z.string().optional(),
   openHours: z.string().optional(),
-  tags: z.array(z.string()),
+  tags: z.array(z.string()).optional(),
 });
 
 export type Activity = z.infer<typeof ActivitySchema>;
 
-// ─── Plan ────────────────────────────────────────────────────────────────────
+// ─── Selection (Đầu ra của AI Agent) ─────────────────────────────────────────
+
+export const SelectionSchema = z.object({
+  transportDiId: z.string(),
+  transportVeId: z.string(),
+  hotelId: z.string(),
+  hoatDongTheoNgay: z.array(z.array(z.string())),
+});
+export type Selection = z.infer<typeof SelectionSchema>;
+
+// ─── Plan (Kế hoạch hoàn chỉnh sau khi code tính toán) ────────────────────────
 
 export const PlanItemCategorySchema = z.enum([
   "Di chuyển",
@@ -161,32 +175,43 @@ export const PlanItemCategorySchema = z.enum([
 export type PlanItemCategory = z.infer<typeof PlanItemCategorySchema>;
 
 export const PlanItemSchema = z.object({
-  category: PlanItemCategorySchema,
-  name: z.string(),
-  description: z.string().optional(),
+  /** Ngày trong chuyến đi (1..soNgay) */
+  ngay: z.number().int().positive(),
+  /** Giờ bắt đầu danh nghĩa (HH:mm) hoặc null */
+  gio: z.string().nullable(),
+  hangMuc: PlanItemCategorySchema,
+  noiDung: z.string(),
+  soLuong: z.number().int().positive(),
   /** Đơn giá VND, số nguyên */
-  unitPriceVnd: z.number().int().nonnegative(),
-  quantity: z.number().int().positive(),
-  /** Thành tiền = unitPriceVnd * quantity, VND, số nguyên */
-  totalPriceVnd: z.number().int().nonnegative(),
+  donGia: z.number().int().nonnegative(),
+  /** Thành tiền = donGia * soLuong, VND, số nguyên */
+  thanhTien: z.number().int().nonnegative(),
+  /** ID tham chiếu trong mock data, null với hạng mục Ăn uống */
+  refId: z.string().nullable(),
 });
-
 export type PlanItem = z.infer<typeof PlanItemSchema>;
 
-export const PlanDaySchema = z.object({
-  day: z.number().int().positive(),
-  items: z.array(PlanItemSchema),
+export const PlanTongKetSchema = z.object({
+  /** Tổng chi phí VND, số nguyên */
+  tongVND: z.number().int().nonnegative(),
+  /** Ngân sách còn lại VND (ngansachTongVND - tongVND) */
+  conLaiVND: z.number().int(),
+  /** Phần trăm ngân sách đã dùng (làm tròn 1 chữ số thập phân) */
+  phanTramDaDung: z.number(),
+  /** Chi phí theo từng hạng mục */
+  theoHangMuc: z.record(PlanItemCategorySchema, z.number().int().nonnegative()),
+  /** Tổng thời gian di chuyển chiều đi + chiều về (phút) */
+  tongThoiGianDiChuyenPhut: z.number().int().nonnegative(),
+  /** Trạng thái ngân sách: "trong" nếu tongVND <= ngansachTongVND, "vuot" nếu vượt */
+  trangThaiNganSach: z.enum(["trong", "vuot"]),
 });
-
-export type PlanDay = z.infer<typeof PlanDaySchema>;
+export type PlanTongKet = z.infer<typeof PlanTongKetSchema>;
 
 export const PlanSchema = z.object({
   schemaVersion: z.number().int().default(schemaVersion),
   request: TripRequestSchema,
-  days: z.array(PlanDaySchema),
-  /** Tổng chi phí VND, số nguyên */
-  totalCostVnd: z.number().int().nonnegative(),
-  notes: z.string().optional(),
+  items: z.array(PlanItemSchema),
+  tongKet: PlanTongKetSchema,
+  canhBao: z.array(z.string()),
 });
-
 export type Plan = z.infer<typeof PlanSchema>;

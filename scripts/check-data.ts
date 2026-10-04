@@ -46,7 +46,7 @@ function main() {
   ];
 
   const expected: Record<string, number> = {
-    "transports.json": 3,
+    "transports.json": 6,
     "hotels.json": 4,
     "activities.json": 6,
   };
@@ -81,7 +81,7 @@ function main() {
     console.log("✅ Tất cả kiểm tra THÀNH CÔNG.\n");
     console.log(
       `   Tổng: ${checks.reduce((acc, c) => acc + c.total, 0)} mục đọc được` +
-        ` (3 phương tiện, 4 khách sạn, 6 hoạt động)\n`
+        ` (6 phương tiện [3 đi + 3 về], 4 khách sạn, 6 hoạt động)\n`
     );
   }
 }

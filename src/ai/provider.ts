@@ -11,7 +11,7 @@ import { GoogleGenAI } from "@google/genai";
 import type { LLMProvider, GenerateOptions } from "./LLMProvider";
 
 export class GeminiProvider implements LLMProvider {
-  private readonly client: GoogleGenAI;
+  readonly client: GoogleGenAI;
   readonly modelName: string;
 
   constructor() {

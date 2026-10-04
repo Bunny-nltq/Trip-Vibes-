@@ -10,6 +10,7 @@
     "check:data": "npx tsx scripts/check-data.ts",
     "test:core": "vitest run src/core",
     "eval:parse": "tsx eval/run-parse.ts",
+    "try:plan": "tsx eval/try-plan.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
