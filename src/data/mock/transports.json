@@ -1,0 +1,50 @@
+[
+  {
+    "schemaVersion": 1,
+    "id": "transport-001",
+    "type": "PLANE",
+    "provider": "VietJet Air (mẫu)",
+    "origin": "TP.HCM",
+    "destination": "Đà Nẵng",
+    "departureTime": "06:30",
+    "arrivalTime": "08:00",
+    "durationMinutes": 90,
+    "pricePerPerson": 1200000,
+    "seatClass": "Phổ thông",
+    "boardingPoint": "Sân bay Tân Sơn Nhất (SGN)",
+    "dropOffPoint": "Sân bay Đà Nẵng (DAD)",
+    "notes": "Hành lý xách tay 7kg, mua thêm hành lý ký gửi nếu cần."
+  },
+  {
+    "schemaVersion": 1,
+    "id": "transport-002",
+    "type": "TRAIN",
+    "provider": "Đường sắt Việt Nam (mẫu)",
+    "origin": "TP.HCM",
+    "destination": "Đà Nẵng",
+    "departureTime": "22:00",
+    "arrivalTime": "05:10",
+    "durationMinutes": 435,
+    "pricePerPerson": 580000,
+    "seatClass": "Nằm điều hoà",
+    "boardingPoint": "Ga Sài Gòn",
+    "dropOffPoint": "Ga Đà Nẵng",
+    "notes": "⚠️ Bẫy: tàu đến lúc 5:10 sáng, cần chuẩn bị kế hoạch nhận phòng sớm hoặc gửi hành lý."
+  },
+  {
+    "schemaVersion": 1,
+    "id": "transport-003",
+    "type": "BUS",
+    "provider": "Phương Trang (FUTA - mẫu)",
+    "origin": "TP.HCM",
+    "destination": "Đà Nẵng",
+    "departureTime": "19:00",
+    "arrivalTime": "10:00",
+    "durationMinutes": 900,
+    "pricePerPerson": 320000,
+    "seatClass": "Giường nằm",
+    "boardingPoint": "Bến xe Miền Đông (TP.HCM)",
+    "dropOffPoint": "Bến xe Đà Nẵng",
+    "notes": "Hành trình qua đêm khoảng 15 giờ. Nên chuẩn bị gối và chăn mỏng."
+  }
+]

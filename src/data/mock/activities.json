@@ -1,0 +1,74 @@
+[
+  {
+    "schemaVersion": 1,
+    "id": "activity-001",
+    "name": "Tắm biển Mỹ Khê (mẫu)",
+    "category": "RELAXATION",
+    "location": "Bãi biển Mỹ Khê, Đà Nẵng",
+    "pricePerPerson": 0,
+    "durationMinutes": 180,
+    "description": "Bãi biển nổi tiếng được tạp chí Forbes bình chọn là một trong những bãi biển đẹp nhất hành tinh.",
+    "openHours": "05:00 - 20:00",
+    "tags": ["bãi biển", "miễn phí", "ngoài trời", "thư giãn"]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "activity-002",
+    "name": "Tham quan Bà Nà Hills (mẫu)",
+    "category": "SIGHTSEEING",
+    "location": "Bà Nà Hills, Đà Nẵng",
+    "pricePerPerson": 900000,
+    "durationMinutes": 480,
+    "description": "Khu du lịch nổi tiếng với Cầu Vàng biểu tượng, làng Pháp cổ kính và hệ thống cáp treo.",
+    "openHours": "08:00 - 21:00",
+    "tags": ["cầu vàng", "cáp treo", "làng Pháp", "gia đình"]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "activity-003",
+    "name": "Ăn hải sản tươi sống (mẫu)",
+    "category": "FOOD_AND_DRINK",
+    "location": "Chợ Hàn hoặc khu Mỹ Khê, Đà Nẵng",
+    "pricePerPerson": 300000,
+    "durationMinutes": 90,
+    "description": "Thưởng thức hải sản tươi sống như tôm, cua, cá, mực tại các quán ven biển Đà Nẵng.",
+    "openHours": "11:00 - 22:00",
+    "tags": ["hải sản", "ẩm thực địa phương", "biển"]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "activity-004",
+    "name": "Tham quan Ngũ Hành Sơn (mẫu)",
+    "category": "CULTURE",
+    "location": "Ngũ Hành Sơn, Đà Nẵng",
+    "pricePerPerson": 40000,
+    "durationMinutes": 150,
+    "description": "Cụm núi đá cẩm thạch huyền bí với hang động, chùa chiền và nghề điêu khắc đá truyền thống.",
+    "openHours": "07:00 - 17:30",
+    "tags": ["văn hoá", "lịch sử", "hang động", "cẩm thạch"]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "activity-005",
+    "name": "Xem biểu diễn Cầu Rồng phun lửa (mẫu)",
+    "category": "SIGHTSEEING",
+    "location": "Cầu Rồng, Đà Nẵng",
+    "pricePerPerson": 0,
+    "durationMinutes": 30,
+    "description": "Cầu Rồng phun lửa và phun nước vào tối thứ Bảy và Chủ Nhật (21:00). Miễn phí, chỉ cần đứng xem.",
+    "openHours": "Tối thứ 7 và CN: 21:00",
+    "tags": ["miễn phí", "biểu diễn", "đêm", "cầu rồng"]
+  },
+  {
+    "schemaVersion": 1,
+    "id": "activity-006",
+    "name": "Khám phá phố cổ Hội An (mẫu)",
+    "category": "CULTURE",
+    "location": "Hội An, Quảng Nam (cách Đà Nẵng ~30km)",
+    "pricePerPerson": 80000,
+    "durationMinutes": 300,
+    "description": "Di sản thế giới UNESCO với phố cổ đèn lồng, chùa Cầu, làng nghề và ẩm thực đặc sắc.",
+    "openHours": "Cả ngày (phố cổ 08:00 - 21:30)",
+    "tags": ["UNESCO", "phố cổ", "đèn lồng", "lịch sử", "ẩm thực"]
+  }
+]
