@@ -1,6 +1,6 @@
 [
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "transport-001",
     "huong": "di",
     "type": "PLANE",
@@ -17,7 +17,7 @@
     "notes": "Hành lý xách tay 7kg, mua thêm hành lý ký gửi nếu cần."
   },
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "transport-002",
     "huong": "di",
     "type": "TRAIN",
@@ -34,7 +34,7 @@
     "notes": "⚠️ Bẫy: tàu đến lúc 5:10 sáng, cần chuẩn bị kế hoạch nhận phòng sớm hoặc gửi hành lý."
   },
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "transport-003",
     "huong": "di",
     "type": "BUS",
@@ -51,7 +51,7 @@
     "notes": "Hành trình qua đêm khoảng 15 giờ. Nên chuẩn bị gối và chăn mỏng."
   },
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "transport-004",
     "huong": "ve",
     "type": "PLANE",
@@ -68,7 +68,7 @@
     "notes": "Chuyến bay chiều về buổi tối."
   },
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "transport-005",
     "huong": "ve",
     "type": "TRAIN",
@@ -85,7 +85,7 @@
     "notes": "Chuyến tàu chiều về qua đêm."
   },
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "transport-006",
     "huong": "ve",
     "type": "BUS",

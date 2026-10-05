@@ -1,6 +1,6 @@
 [
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "activity-001",
     "ten": "Tắm biển Mỹ Khê (mẫu)",
     "khuVuc": "Mỹ Khê",
@@ -12,7 +12,7 @@
     "diBoNhieu": false
   },
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "activity-002",
     "ten": "Tham quan Bà Nà Hills (mẫu)",
     "khuVuc": "Hòa Vang",
@@ -24,7 +24,7 @@
     "diBoNhieu": true
   },
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "activity-003",
     "ten": "Ăn hải sản tươi sống (mẫu)",
     "khuVuc": "Mỹ Khê",
@@ -36,7 +36,7 @@
     "diBoNhieu": false
   },
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "activity-004",
     "ten": "Tham quan Ngũ Hành Sơn (mẫu)",
     "khuVuc": "Ngũ Hành Sơn",
@@ -48,7 +48,7 @@
     "diBoNhieu": true
   },
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "activity-005",
     "ten": "Xem biểu diễn Cầu Rồng phun lửa (mẫu)",
     "khuVuc": "Hải Châu",
@@ -60,7 +60,7 @@
     "diBoNhieu": false
   },
   {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "id": "activity-006",
     "ten": "Khám phá phố cổ Hội An (mẫu)",
     "khuVuc": "Hội An",

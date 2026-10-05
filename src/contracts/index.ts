@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const schemaVersion = 3;
+export const schemaVersion = 4;
 
 // ─── Enums cho TripRequest & Activity ────────────────────────────────────────
 

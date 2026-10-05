@@ -1,6 +1,6 @@
 [
   {
-    "schemaVersion": 1,
+    "schemaVersion": 4,
     "id": "hotel-001",
     "name": "Furama Resort Đà Nẵng (mẫu)",
     "stars": 5,
@@ -18,7 +18,7 @@
     "tip": "Đặt phòng hướng biển để có view đẹp nhất."
   },
   {
-    "schemaVersion": 1,
+    "schemaVersion": 4,
     "id": "hotel-002",
     "name": "Brilliant Hotel Đà Nẵng (mẫu)",
     "stars": 4,
@@ -36,7 +36,7 @@
     "tip": "Gần chợ Hàn và cầu Rồng, thuận tiện đi bộ khám phá."
   },
   {
-    "schemaVersion": 1,
+    "schemaVersion": 4,
     "id": "hotel-003",
     "name": "Bella Villa Đà Nẵng (mẫu)",
     "stars": 3,
@@ -54,7 +54,7 @@
     "tip": "Khu vực An Thượng có nhiều quán ăn ngon và quán cà phê gần đó."
   },
   {
-    "schemaVersion": 1,
+    "schemaVersion": 4,
     "id": "hotel-004",
     "name": "Luxury Sky Tower Đà Nẵng (mẫu)",
     "stars": 5,
