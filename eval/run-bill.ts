@@ -27,9 +27,16 @@ async function main() {
 
   const expectedPath = path.join(dir, "expected.json");
   const hasExpected = fs.existsSync(expectedPath);
-  let expected: Record<string, Partial<BillExtraction>> = {};
+  let expected: Record<string, any> = {};
   if (hasExpected) {
-    expected = JSON.parse(fs.readFileSync(expectedPath, "utf-8"));
+    const rawExpected = JSON.parse(fs.readFileSync(expectedPath, "utf-8"));
+    if (rawExpected.cases && Array.isArray(rawExpected.cases)) {
+      rawExpected.cases.forEach((c: any) => {
+        expected[c.file] = c;
+      });
+    } else {
+      expected = rawExpected;
+    }
   }
 
   const cacheDir = path.resolve(process.cwd(), "eval/.cache");
@@ -106,22 +113,22 @@ async function main() {
     }
 
     if (!raw) {
-      try {
-        console.log(`Chạy AI cho ${file}...`);
-        const start = Date.now();
-        raw = await extractBill({ bytes: base64Bytes, mimeType }, { provider });
-        ms = Date.now() - start;
-        fs.writeFileSync(cacheFile, JSON.stringify({ raw, ms }, null, 2), "utf-8");
-        await sleep(4000);
-      } catch (err: any) {
-        if (err.message?.includes("429") || err.message?.includes("RESOURCE_EXHAUSTED")) {
-          console.error(`❌ Lỗi 429 khi xử lý ${file}. Dừng toàn bộ.`);
-          stoppedBy429 = true;
-          break;
+        try {
+          console.log(`Chạy AI cho ${file}...`);
+          const start = Date.now();
+          raw = await extractBill({ bytes: base64Bytes, mimeType }, { provider });
+          ms = Date.now() - start;
+          fs.writeFileSync(cacheFile, JSON.stringify({ raw, ms }, null, 2), "utf-8");
+          await sleep(4000);
+        } catch (err: any) {
+          if (err.message?.includes("429") || err.message?.includes("RESOURCE_EXHAUSTED") || err.message?.includes("503")) {
+            console.error(`❌ Lỗi API (Rate Limit/503) khi xử lý ${file}. Dừng toàn bộ.`);
+            stoppedBy429 = true;
+            break;
+          }
+          console.error(`Lỗi không mong muốn ở ${file}:`, err);
+          continue;
         }
-        console.error(`Lỗi không mong muốn ở ${file}:`, err);
-        continue;
-      }
     } else {
       console.log(`Tải cache cho ${file}.`);
     }
