@@ -1,0 +1,55 @@
+{
+  "_ghiChu": "Đáp án do con người đặt, KHÔNG được sửa để ép đạt. tenCuaHangChua: tên đọc được phải chứa chuỗi này (không phân biệt hoa thường và dấu).",
+  "cases": [
+    {
+      "file": "b01_nhahang_haisan.jpg",
+      "laChungTu": true,
+      "loaiChungTu": "hoa_don",
+      "tenCuaHangChua": "Biển Xanh",
+      "ngay": "2026-09-20",
+      "tongTienVND": 560000,
+      "hangMuc": "an_uong",
+      "tongKhopCacDong": true
+    },
+    {
+      "file": "b02_cafe.jpg",
+      "laChungTu": true,
+      "loaiChungTu": "hoa_don",
+      "tenCuaHangChua": "Góc Phố",
+      "ngay": "2026-09-21",
+      "tongTienVND": 108000,
+      "hangMuc": "an_uong",
+      "tongKhopCacDong": true
+    },
+    {
+      "file": "b03_ve_tham_quan.jpg",
+      "laChungTu": true,
+      "loaiChungTu": "ve",
+      "tenCuaHangChua": "Sơn Thủy",
+      "ngay": "2026-09-22",
+      "tongTienVND": 80000,
+      "hangMuc": "vui_choi",
+      "tongKhopCacDong": true
+    },
+    {
+      "file": "b04_quan_an_kho.jpg",
+      "laChungTu": true,
+      "loaiChungTu": "hoa_don",
+      "tenCuaHangChua": "Phố Cổ",
+      "ngay": "2026-09-22",
+      "tongTienVND": 308000,
+      "hangMuc": "an_uong",
+      "tongKhopCacDong": true
+    },
+    {
+      "file": "b05_thuc_don_khong_phai_hoa_don.jpg",
+      "laChungTu": false,
+      "loaiChungTu": null,
+      "tenCuaHangChua": null,
+      "ngay": null,
+      "tongTienVND": null,
+      "hangMuc": null,
+      "tongKhopCacDong": null
+    }
+  ]
+}

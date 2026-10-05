@@ -73,3 +73,7 @@ eval/           # Evaluation scripts
 docs/           # Tài liệu kiến trúc
 scripts/        # Utility scripts
 ```
+
+## Lưu ý bảo mật dữ liệu
+
+Chỉ dùng bill mẫu hoặc bill của chính mình đã che thông tin cá nhân; gói miễn phí có thể dùng dữ liệu để cải thiện sản phẩm của Google.

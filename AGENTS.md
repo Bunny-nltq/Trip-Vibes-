@@ -12,3 +12,5 @@ Quy tắc bắt buộc:
 - Khi sửa giao diện chỉ sửa file trong src/ui và src/design.
 - Hằng số giả định nằm trong src/core/assumptions.ts.
 - Cờ cảnh báo tính ở src/core/flags.ts, không để AI tự gán.
+- Số tiền đọc từ bill luôn cần người dùng xác nhận trước khi ghi vào sổ chi tiêu.
+- Ảnh bill chỉ xử lý trong bộ nhớ: không lưu đĩa, không log.

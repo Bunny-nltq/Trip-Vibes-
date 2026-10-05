@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const schemaVersion = 4;
+export const schemaVersion = 5;
 
 // ─── Enums cho TripRequest & Activity ────────────────────────────────────────
 
@@ -215,3 +215,65 @@ export const PlanSchema = z.object({
   canhBao: z.array(z.string()),
 });
 export type Plan = z.infer<typeof PlanSchema>;
+
+// ─── Bills & Expenses (Tính năng Quản lý chi tiêu) ──────────────────────────
+
+export const ExpenseCategorySchema = z.enum([
+  "an_uong",
+  "vui_choi",
+  "di_chuyen",
+  "cho_o",
+  "khac",
+]);
+export type ExpenseCategory = z.infer<typeof ExpenseCategorySchema>;
+
+export const BillExtractionRawSchema = z.object({
+  laChungTu: z.boolean(),
+  loaiChungTu: z.enum(["hoa_don", "ve", "khac"]).nullable(),
+  tenCuaHang: z.string().nullable(),
+  ngay: z.string().nullable(), // ISO YYYY-MM-DD
+  tongTienVND: z.number().int().nullable(),
+  tamTinhVND: z.number().int().nullable(),
+  giamGiaVND: z.number().int().nullable(),
+  phuThuVND: z.number().int().nullable(),
+  thueVND: z.number().int().nonnegative().nullable(),
+  dongChiTiet: z.array(
+    z.object({
+      ten: z.string(),
+      soLuong: z.number().int().nullable(),
+      thanhTienVND: z.number().int().nullable(),
+    })
+  ),
+  hangMucGoiY: ExpenseCategorySchema.nullable(),
+  doTinCay: z.enum(["cao", "trung_binh", "thap"]),
+  ghiChu: z.array(z.string()),
+});
+export type BillExtractionRaw = z.infer<typeof BillExtractionRawSchema>;
+
+export const BillExtractionSchema = BillExtractionRawSchema.extend({
+  status: z.enum(["can_xac_nhan", "khong_phai_chung_tu", "khong_doc_duoc_so_tien"]),
+  khopCacDong: z.boolean().nullable(),
+  chenhLechVND: z.number().nullable(),
+  canhBao: z.array(z.string()),
+});
+export type BillExtraction = z.infer<typeof BillExtractionSchema>;
+
+export const ExpenseSchema = z.object({
+  id: z.string(),
+  nguon: z.enum(["anh_bill", "nhap_tay"]),
+  tenCuaHang: z.string().nullable(),
+  ngay: z.string().nullable(),
+  ngayTrongChuyen: z.number().int().min(1).max(7).nullable(),
+  hangMuc: ExpenseCategorySchema,
+  soTienVND: z.number().int().positive(),
+  giaTriAIDoc: z.number().int().nullable(),
+  daSuaTay: z.boolean(),
+  ghiChu: z.string().nullable(),
+});
+export type Expense = z.infer<typeof ExpenseSchema>;
+
+export const LedgerSchema = z.object({
+  schemaVersion: z.number().int().default(schemaVersion),
+  expenses: z.array(ExpenseSchema),
+});
+export type Ledger = z.infer<typeof LedgerSchema>;

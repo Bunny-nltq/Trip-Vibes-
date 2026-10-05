@@ -30,3 +30,27 @@ export const GIO_DI_DEM_DEN = "05:00";
 
 /** Ngưỡng giờ đến nơi bị coi là quá sớm (trước 06:00 sáng) */
 export const GIO_DEN_SOM = "06:00";
+
+/** Giờ danh nghĩa cho hoạt động thứ nhất trong ngày */
+export const GIO_HOAT_DONG_1 = "09:30";
+
+/** Giờ danh nghĩa cho hoạt động thứ hai trong ngày */
+export const GIO_HOAT_DONG_2 = "15:30";
+
+/** Giờ nhận phòng khách sạn chuẩn */
+export const GIO_NHAN_PHONG = "14:00";
+
+/** Thời gian dự phòng (phút) sau khi đến nơi trước khi có thể bắt đầu hoạt động */
+export const BUFFER_SAU_KHI_DEN_PHUT = 60;
+
+/** Thời gian dự phòng (phút) cần thiết để di chuyển ra bến tàu/xe/sân bay trước giờ khởi hành */
+export const BUFFER_RA_BEN_PHUT = 120;
+
+/** Thời gian dự phòng tối thiểu (phút) giữa hai hoạt động trong cùng một ngày */
+export const BUFFER_GIUA_HOAT_DONG_PHUT = 30;
+
+/** Số vòng tối đa AI được phép thử sửa lỗi tự động */
+export const MAX_REPAIR_ROUNDS = 2;
+
+/** Ngưỡng phần trăm ngân sách bị coi là gần hết (để cảnh báo soft) */
+export const NGUONG_GAN_HET_NGAN_SACH_PHAN_TRAM = 95;

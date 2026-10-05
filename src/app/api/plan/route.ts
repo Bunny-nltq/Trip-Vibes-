@@ -1,19 +1,14 @@
 import { NextResponse } from "next/server";
 import { parseRequest } from "@/ai/parseRequest";
-import { runPlanAgent } from "@/ai/planAgent";
+import { planWithRepair } from "@/ai/planWithRepair";
 import { normalizeRequest, removeVietnameseDiacritics } from "@/core/normalizeRequest";
-import { buildPlan } from "@/core/buildPlan";
-import { JsonDataSource } from "@/data/JsonDataSource";
 import { TripRequestSchema, type TripRequest } from "@/contracts";
 
 /**
  * POST /api/plan
  * Nhận { text } hoặc { request }.
  * - Có text thì chạy parse-request trước.
- * - Điều kiện chạy agent: soNguoi, soNgay, ngansachTongVND đều có; soNgay = 3; diemDen là Đà Nẵng.
- * - Không đủ điều kiện: trả { ok: true, status: "can_lam_ro", request, cauHoiLamRo, canhBao } và KHÔNG gọi agent.
- * - Đủ điều kiện: gọi runPlanAgent -> buildPlan, trả { ok: true, status: "ok", request, plan, trace, ms }.
- * - Không log nội dung text, không in key.
+ * - Chạy qua planWithRepair (bao gồm cả kiểm tra điều kiện, minBudget, Agent + Repair).
  */
 export async function POST(req: Request) {
   const start = Date.now();
@@ -67,64 +62,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // Kiểm tra điều kiện chạy AI Agent
-    const normDiemDen = removeVietnameseDiacritics(tripRequest.diemDen);
-    const coDuThongTin =
-      tripRequest.soNguoi !== null &&
-      tripRequest.soNguoi > 0 &&
-      tripRequest.soNgay !== null &&
-      tripRequest.soNgay > 0 &&
-      tripRequest.ngansachTongVND !== null &&
-      tripRequest.ngansachTongVND > 0;
-
-    const dungPhamVi = tripRequest.soNgay === 3 && normDiemDen === "da nang";
-
-    if (!coDuThongTin || !dungPhamVi) {
-      const ms = Date.now() - start;
-      return NextResponse.json({
-        ok: true,
-        status: "can_lam_ro",
-        request: tripRequest,
-        cauHoiLamRo: tripRequest.cauHoiLamRo,
-        canhBao: tripRequest.canhBao,
-        ms,
-      });
-    }
-
-    // Đủ điều kiện: chạy AI agent để chọn mã ID
-    const { selection, trace } = await runPlanAgent(tripRequest);
-
-    // Dùng code core đọc dữ liệu và xây dựng kế hoạch, tính toán chi phí
-    const dataSource = new JsonDataSource();
-    const [transports, hotels, activities] = await Promise.all([
-      dataSource.getTransports(),
-      dataSource.getHotels(),
-      dataSource.getActivities(),
-    ]);
-
-    const planRes = buildPlan(tripRequest, selection, {
-      transports,
-      hotels,
-      activities,
-    });
-
-    const ms = Date.now() - start;
-
-    if (!planRes.ok) {
-      return NextResponse.json(
-        { ok: false, error: planRes.loi.join("; "), ms },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({
-      ok: true,
-      status: "ok",
-      request: tripRequest,
-      plan: planRes.plan,
-      trace,
-      ms,
-    });
+    const result = await planWithRepair(tripRequest);
+    return NextResponse.json({ ok: true, ...result });
   } catch (err: unknown) {
     const ms = Date.now() - start;
     const raw = err instanceof Error ? err.message : String(err);

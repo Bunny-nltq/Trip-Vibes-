@@ -20,7 +20,7 @@ import {
   NGUOI_MOI_PHONG,
 } from "@/core/assumptions";
 
-export const AGENT_PROMPT_VERSION = "v1";
+export const AGENT_PROMPT_VERSION = "v2";
 export const AGENT_MAX_STEPS = 8;
 
 export interface AgentTraceItem {
@@ -61,6 +61,13 @@ NGUYÊN TẮC BẮT BUỘC:
 export interface PlanAgentOptions {
   provider?: GeminiProvider;
   dataSource?: DataSource;
+  repairInfo?: {
+    selectionTruoc: Selection;
+    viPham: Array<{ code: string; chiTiet: string; duLieu?: any }>;
+    tongKetHienTai: any;
+    ngansachTongVND: number;
+  };
+  sharedSeenIds?: Set<string>;
 }
 
 /**
@@ -85,14 +92,14 @@ export async function runPlanAgent(
     soNgay,
     soDem,
     soPhong,
-    seenIds: new Set<string>(),
+    seenIds: options?.sharedSeenIds ?? new Set<string>(),
   };
 
   const trace: AgentTraceItem[] = [];
   let selection: Selection | null = null;
   let idRetryCount = 0;
 
-  const userPrompt = `Yêu cầu du lịch của khách hàng:
+  let userPrompt = `Yêu cầu du lịch của khách hàng:
 - Điểm đi: ${request.diemDi}
 - Điểm đến: ${request.diemDen}
 - Số ngày: ${soNgay} ngày (${soDem} đêm)
@@ -101,13 +108,34 @@ export async function runPlanAgent(
 - Chi phí ăn uống dự kiến (cố định): ${anUongDuKien.toLocaleString("vi-VN")} VND
 - Sở thích: ${request.sothich.length > 0 ? request.sothich.join(", ") : "Không nêu cụ thể"}
 - Điều cần tránh: ${request.tranh.length > 0 ? request.tranh.join(", ") : "Không nêu cụ thể"}
-- Ghi chú: ${request.ghiChu.length > 0 ? request.ghiChu.join("; ") : "Không có"}
+- Ghi chú: ${request.ghiChu.length > 0 ? request.ghiChu.join("; ") : "Không có"}`;
 
-Hãy bắt đầu quy trình tìm kiếm và chốt kế hoạch:
+  if (options?.repairInfo) {
+    userPrompt += `\n\nCHÚ Ý: Bản kế hoạch bạn vừa lập BỊ LỖI (Vi phạm ràng buộc cứng).
+Bạn đang ở chế độ SỬA LỖI. Dưới đây là thông tin lỗi từ hệ thống (code):
+
+Kế hoạch cũ:
+${JSON.stringify(options.repairInfo.selectionTruoc, null, 2)}
+
+Tổng kết cũ:
+${JSON.stringify(options.repairInfo.tongKetHienTai, null, 2)}
+
+Danh sách VI PHẠM (phải sửa):
+${JSON.stringify(options.repairInfo.viPham, null, 2)}
+
+Chỉ thị cho bạn:
+- Hãy thay thế ÍT LỰA CHỌN NHẤT CÓ THỂ để giải quyết toàn bộ các vi phạm trên.
+- KHÔNG ĐƯỢC nới lỏng ngân sách hay bỏ qua điều cần tránh của người dùng.
+- Bạn có thể gọi lại các công cụ tìm kiếm với bộ lọc khác nếu cần.
+- Bắt buộc dùng lại ID từ công cụ (bạn vẫn có quyền truy cập các ID đã tìm thấy trước đó).
+- Cuối cùng gọi chotKeHoach đúng 1 lần với kế hoạch mới.`;
+  } else {
+    userPrompt += `\n\nHãy bắt đầu quy trình tìm kiếm và chốt kế hoạch:
 1. Gọi timPhuongTien cho chiều "di" và chiều "ve".
 2. Gọi timKhachSan để tìm khách sạn.
 3. Gọi goiYHoatDong để tìm hoạt động.
 4. Chọn lựa và gọi chotKeHoach để hoàn tất (nhớ: mọi ID chỉ được lấy từ kết quả các công cụ trên, không tự bịa ID).`;
+  }
 
   // Mảng hội thoại chuẩn theo SDK @google/genai
   const contents: Array<{

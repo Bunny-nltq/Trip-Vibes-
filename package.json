@@ -11,6 +11,8 @@
     "test:core": "vitest run src/core",
     "eval:parse": "tsx eval/run-parse.ts",
     "try:plan": "tsx eval/try-plan.ts",
+    "eval:repair": "tsx eval/run-repair.ts",
+    "eval:bill": "tsx eval/run-bill.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -3,12 +3,10 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { loadEnvConfig } from "@next/env";
 import { parseRequest } from "../src/ai/parseRequest";
-import { normalizeRequest, removeVietnameseDiacritics } from "../src/core/normalizeRequest";
-import { buildPlan } from "../src/core/buildPlan";
-import { runPlanAgent, AGENT_PROMPT_VERSION, type AgentTraceItem } from "../src/ai/planAgent";
+import { normalizeRequest } from "../src/core/normalizeRequest";
+import { planWithRepair, type PlanRepairResult } from "../src/ai/planWithRepair";
+import { AGENT_PROMPT_VERSION } from "../src/ai/planAgent";
 import { GeminiProvider } from "../src/ai/provider";
-import { JsonDataSource } from "../src/data/JsonDataSource";
-import type { Selection } from "../src/contracts";
 
 loadEnvConfig(process.cwd());
 
@@ -29,7 +27,7 @@ async function main() {
   fs.mkdirSync(cacheDir, { recursive: true });
 
   console.log("\n========================================================");
-  console.log("       TRIP VIBES – THỬ NGHIỆM LẬP KẾ HOẠCH (BƯỚC 3)");
+  console.log("       TRIP VIBES – THỬ NGHIỆM LẬP KẾ HOẠCH (BƯỚC 4)");
   console.log("========================================================");
   console.log(`Câu yêu cầu: "${userText}"`);
   console.log(`Dùng cache:  ${noCache ? "KHÔNG (--no-cache)" : "CÓ"}\n`);
@@ -44,7 +42,6 @@ async function main() {
   }
 
   const modelName = provider.modelName;
-  const dataSource = new JsonDataSource();
 
   // 1. Trích xuất yêu cầu
   console.log("1️⃣  Đang trích xuất yêu cầu du lịch (parseRequest)...");
@@ -67,144 +64,107 @@ async function main() {
     `   - Cần tránh:     ${request.tranh.join(", ") || "(không)"}`
   );
 
-  // 2. Kiểm tra điều kiện chạy Agent
-  const normDiemDen = removeVietnameseDiacritics(request.diemDen);
-  const coDuThongTin =
-    request.soNguoi !== null &&
-    request.soNguoi > 0 &&
-    request.soNgay !== null &&
-    request.soNgay > 0 &&
-    request.ngansachTongVND !== null &&
-    request.ngansachTongVND > 0;
-  const dungPhamVi = request.soNgay === 3 && normDiemDen === "da nang";
-
-  if (!coDuThongTin || !dungPhamVi) {
-    console.log("\n⚠️  Yêu cầu chưa đủ điều kiện chạy Agent hoặc ngoài phạm vi hỗ trợ:");
-    if (request.cauHoiLamRo.length > 0) {
-      console.log("   Câu hỏi làm rõ:");
-      request.cauHoiLamRo.forEach((q) => console.log(`   - ${q}`));
-    }
-    if (request.canhBao.length > 0) {
-      console.log("   Cảnh báo:");
-      request.canhBao.forEach((c) => console.log(`   - ${c}`));
-    }
-    return;
-  }
-
-  // 3. Chạy Agent với cache
-  console.log("\n2️⃣  Đang chạy AI Agent với công cụ tìm kiếm (runPlanAgent)...");
+  // 2. Chạy planWithRepair với cache
+  console.log("\n2️⃣  Đang chạy AI Agent với tự sửa lỗi (planWithRepair)...");
   const cacheKey = crypto
     .createHash("sha256")
-    .update(JSON.stringify(request) + modelName + AGENT_PROMPT_VERSION)
+    .update(JSON.stringify(request) + modelName + AGENT_PROMPT_VERSION + "-repair")
     .digest("hex");
   const cacheFile = path.join(cacheDir, `plan-${cacheKey}.json`);
 
-  let selection: Selection | null = null;
-  let trace: AgentTraceItem[] = [];
+  let result: PlanRepairResult | null = null;
   let fromCache = false;
 
   if (!noCache && fs.existsSync(cacheFile)) {
     try {
-      const cached = JSON.parse(fs.readFileSync(cacheFile, "utf-8"));
-      selection = cached.selection;
-      trace = cached.trace ?? [];
+      result = JSON.parse(fs.readFileSync(cacheFile, "utf-8"));
       fromCache = true;
-      console.log("   ⚡ Tải kết quả Selection từ cache!");
+      console.log("   ⚡ Tải kết quả từ cache!");
     } catch {
       // cache hỏng thì chạy lại
     }
   }
 
-  if (!selection) {
-    const agentRes = await runPlanAgent(request, { provider, dataSource });
-    selection = agentRes.selection;
-    trace = agentRes.trace;
-
+  if (!result) {
+    result = await planWithRepair(request, { provider });
     fs.writeFileSync(
       cacheFile,
-      JSON.stringify({ selection, trace }, null, 2),
+      JSON.stringify(result, null, 2),
       "utf-8"
     );
   }
 
-  // 4. Xây dựng kế hoạch chi tiết từ core
-  console.log("\n3️⃣  Đang xây dựng kế hoạch và tính toán số liệu (buildPlan)...");
-  const [transports, hotels, activities] = await Promise.all([
-    dataSource.getTransports(),
-    dataSource.getHotels(),
-    dataSource.getActivities(),
-  ]);
-
-  const planRes = buildPlan(request, selection, {
-    transports,
-    hotels,
-    activities,
-  });
-
-  if (!planRes.ok) {
-    console.error("❌ Lỗi khi xây dựng kế hoạch:");
-    planRes.loi.forEach((l) => console.error(`   - ${l}`));
-    return;
+  // 3. Kết quả
+  console.log(`\n=> Trạng thái cuối: ${result.status}`);
+  console.log(`=> Thời gian: ${result.ms} ms`);
+  console.log(`=> Số vòng sửa thực tế: ${result.soVongSua}`);
+  console.log(`=> Số lần gọi AI: ${result.soLanGoiAI}`);
+  if (result.toiThieuVND) {
+    console.log(`=> Ngân sách tối thiểu yêu cầu: ${formatVND(result.toiThieuVND)}`);
   }
 
-  const plan = planRes.plan;
+  if (result.lichSu.length > 0) {
+    console.log("\n📖 LỊCH SỬ SỬA LỖI:");
+    result.lichSu.forEach(ls => {
+      console.log(`   - Vòng ${ls.vong}: ${ls.soHard} vi phạm cứng [${ls.codes.join(", ")}], tổng VND: ${formatVND(ls.tongVND)}`);
+    });
+  }
 
-  // 5. In bảng kế hoạch theo ngày
-  console.log("\n========================================================");
-  console.log("                 BẢNG KẾ HOẠCH THEO NGÀY");
-  console.log("========================================================");
-  console.log(
-    "| Ngày | Giờ   | Hạng mục   | Nội dung                                 | SL | Đơn giá     | Thành tiền   |"
-  );
-  console.log(
-    "|------|-------|------------|------------------------------------------|----|-------------|--------------|"
-  );
+  if (result.hard.length > 0) {
+    console.log("\n❌ VI PHẠM CỨNG CÒN LẠI:");
+    result.hard.forEach(h => console.log(`   - [${h.code}] ${h.chiTiet}`));
+  }
 
-  plan.items.forEach((item) => {
-    const ngayStr = `Ngày ${item.ngay}`.padEnd(5, " ");
-    const gioStr = (item.gio || "--:--").padEnd(5, " ");
-    const hangMucStr = item.hangMuc.padEnd(10, " ");
-    const noiDungStr =
-      item.noiDung.length > 40
-        ? item.noiDung.slice(0, 37) + "..."
-        : item.noiDung.padEnd(40, " ");
-    const slStr = String(item.soLuong).padStart(2, " ");
-    const donGiaStr = formatVND(item.donGia).padStart(11, " ");
-    const thanhTienStr = formatVND(item.thanhTien).padStart(12, " ");
+  if (result.soft.length > 0) {
+    console.log("\n⚠️ CẢNH BÁO MỀM:");
+    result.soft.forEach(s => console.log(`   - [${s.code}] ${s.chiTiet}`));
+  }
 
+  if (result.plan) {
+    const plan = result.plan;
+    console.log("\n========================================================");
+    console.log("                 BẢNG KẾ HOẠCH THEO NGÀY");
+    console.log("========================================================");
     console.log(
-      `| ${ngayStr} | ${gioStr} | ${hangMucStr} | ${noiDungStr} | ${slStr} | ${donGiaStr} | ${thanhTienStr} |`
+      "| Ngày | Giờ   | Hạng mục   | Nội dung                                 | SL | Đơn giá     | Thành tiền   |"
     );
-  });
-
-  // 6. In tổng kết
-  console.log("\n========================================================");
-  console.log("                     TỔNG KẾT CHI PHÍ");
-  console.log("========================================================");
-  console.log(`- Di chuyển:                    ${formatVND(plan.tongKet.theoHangMuc["Di chuyển"] ?? 0)}`);
-  console.log(`- Chỗ ở:                        ${formatVND(plan.tongKet.theoHangMuc["Chỗ ở"] ?? 0)}`);
-  console.log(`- Ăn uống:                      ${formatVND(plan.tongKet.theoHangMuc["Ăn uống"] ?? 0)}`);
-  console.log(`- Vui chơi:                     ${formatVND(plan.tongKet.theoHangMuc["Vui chơi"] ?? 0)}`);
-  console.log("--------------------------------------------------------");
-  console.log(`👉 TỔNG CHI PHÍ:                ${formatVND(plan.tongKet.tongVND)}`);
-  console.log(`- Ngân sách ban đầu:            ${formatVND(request.ngansachTongVND ?? 0)}`);
-  console.log(`- Còn lại:                      ${formatVND(plan.tongKet.conLaiVND)}`);
-  console.log(`- Đã sử dụng:                   ${plan.tongKet.phanTramDaDung} %`);
-  console.log(`- Trạng thái ngân sách:         ${plan.tongKet.trangThaiNganSach === "trong" ? "✅ Trong ngân sách" : "⚠️ Vượt ngân sách"}`);
-  console.log(`- Tổng thời gian di chuyển:     ${plan.tongKet.tongThoiGianDiChuyenPhut} phút (${(plan.tongKet.tongThoiGianDiChuyenPhut / 60).toFixed(1)} giờ)`);
-
-  // 7. Cảnh báo
-  if (plan.canhBao.length > 0) {
-    console.log("\n⚠️ CẢNH BÁO:");
-    plan.canhBao.forEach((c) => console.log(`   - ${c}`));
+    console.log(
+      "|------|-------|------------|------------------------------------------|----|-------------|--------------|"
+    );
+  
+    plan.items.forEach((item) => {
+      const ngayStr = `Ngày ${item.ngay}`.padEnd(5, " ");
+      const gioStr = (item.gio || "--:--").padEnd(5, " ");
+      const hangMucStr = item.hangMuc.padEnd(10, " ");
+      const noiDungStr =
+        item.noiDung.length > 40
+          ? item.noiDung.slice(0, 37) + "..."
+          : item.noiDung.padEnd(40, " ");
+      const slStr = String(item.soLuong).padStart(2, " ");
+      const donGiaStr = formatVND(item.donGia).padStart(11, " ");
+      const thanhTienStr = formatVND(item.thanhTien).padStart(12, " ");
+  
+      console.log(
+        `| ${ngayStr} | ${gioStr} | ${hangMucStr} | ${noiDungStr} | ${slStr} | ${donGiaStr} | ${thanhTienStr} |`
+      );
+    });
+  
+    // 6. In tổng kết
+    console.log("\n========================================================");
+    console.log("                     TỔNG KẾT CHI PHÍ");
+    console.log("========================================================");
+    console.log(`- Di chuyển:                    ${formatVND(plan.tongKet.theoHangMuc["Di chuyển"] ?? 0)}`);
+    console.log(`- Chỗ ở:                        ${formatVND(plan.tongKet.theoHangMuc["Chỗ ở"] ?? 0)}`);
+    console.log(`- Ăn uống:                      ${formatVND(plan.tongKet.theoHangMuc["Ăn uống"] ?? 0)}`);
+    console.log(`- Vui chơi:                     ${formatVND(plan.tongKet.theoHangMuc["Vui chơi"] ?? 0)}`);
+    console.log("--------------------------------------------------------");
+    console.log(`👉 TỔNG CHI PHÍ:                ${formatVND(plan.tongKet.tongVND)}`);
+    console.log(`- Ngân sách ban đầu:            ${formatVND(request.ngansachTongVND ?? 0)}`);
+    console.log(`- Còn lại:                      ${formatVND(plan.tongKet.conLaiVND)}`);
+    console.log(`- Đã sử dụng:                   ${plan.tongKet.phanTramDaDung} %`);
+    console.log(`- Trạng thái ngân sách:         ${plan.tongKet.trangThaiNganSach === "trong" ? "✅ Trong ngân sách" : "⚠️ Vượt ngân sách"}`);
+    console.log(`- Tổng thời gian di chuyển:     ${plan.tongKet.tongThoiGianDiChuyenPhut} phút (${(plan.tongKet.tongThoiGianDiChuyenPhut / 60).toFixed(1)} giờ)`);
   }
-
-  // 8. Trace công cụ
-  console.log("\n🔍 TRACE GỌI CÔNG CỤ CỦA AGENT:");
-  trace.forEach((t, idx) => {
-    console.log(`   [${idx + 1}] Công cụ: ${t.tool.padEnd(16, " ")} | Kết quả: ${String(t.soKetQua).padStart(2, " ")} | Thời gian: ${t.ms} ms`);
-  });
-  console.log();
 }
 
 main().catch((err) => {
