@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useApp } from "@/ui/context/AppContext";
+import { useApp, DEFAULT_SAMPLE_PLAN, extractSelectionFromPlan } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
 import {
@@ -12,6 +12,7 @@ import {
   Info,
   TrendingDown,
   TrendingUp,
+  Sparkles,
 } from "lucide-react";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
@@ -19,7 +20,51 @@ const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
 export function B6XemTruocScreen() {
   const { nav, plan, previewData, applyPreview, cancelPreview } = useApp();
 
-  if (!previewData) {
+  const effectivePreview =
+    previewData ||
+    (typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("screen") === "b6-xem-truoc"
+      ? {
+          planSau: {
+            ...DEFAULT_SAMPLE_PLAN,
+            request: {
+              ...DEFAULT_SAMPLE_PLAN.request,
+              sothich: ["bien", "thien_nhien", "check_in_chup_anh"] as any,
+            },
+          },
+          selection: extractSelectionFromPlan(DEFAULT_SAMPLE_PLAN),
+          diff: {
+            tongVND: { truoc: 9540000, sau: 8860000, chenh: -680000 },
+            conLaiVND: { truoc: 460000, sau: 1140000, chenh: 680000 },
+            thoiGianDiChuyenPhut: { truoc: 170, sau: 160, chenh: -10 },
+            doiMuc: [
+              {
+                loai: "hoat_dong" as const,
+                truoc: "Tham quan Bà Nà Hills (mẫu)",
+                sau: "Bãi biển Non Nước & Check-in Chụp ảnh",
+              },
+            ],
+            ngayAnhHuong: [
+              { ngay: 2, lyDo: "đổi hoạt động phù hợp sở thích biển & chụp ảnh" },
+              { ngay: 3, lyDo: "đổi hoạt động sang thư giãn ngắm cảnh" },
+            ],
+            theoHangMuc: [
+              { ten: "Di chuyển", truoc: 3920000, sau: 3920000, chenh: 0 },
+              { ten: "Chỗ ở", truoc: 2200000, sau: 2200000, chenh: 0 },
+              { ten: "Ăn uống", truoc: 1800000, sau: 1800000, chenh: 0 },
+              { ten: "Vui chơi", truoc: 1620000, sau: 940000, chenh: -680000 },
+            ],
+            canhBaoMoi: [],
+            canhBaoGiaiQuyet: [],
+          },
+          hard: [],
+          soft: [],
+          diemKhopTruoc: 0.75,
+          diemKhopSau: 1.5,
+        }
+      : null);
+
+  if (!effectivePreview) {
     return (
       <div className="tv-layout">
         <SideNav />
@@ -49,7 +94,7 @@ export function B6XemTruocScreen() {
     );
   }
 
-  const { diff, planSau, hard, soft } = previewData;
+  const { diff, planSau, hard, soft, diemKhopTruoc, diemKhopSau } = effectivePreview;
 
   const isCostIncrease = diff.tongVND.chenh > 0;
   const isCostDecrease = diff.tongVND.chenh < 0;
@@ -76,9 +121,35 @@ export function B6XemTruocScreen() {
           So sánh chi tiết kế hoạch hiện tại và sau khi thay đổi. Dữ liệu do hệ thống tự động tính toán.
         </p>
 
+        {/* Dòng độ khớp sở thích khi có điểm khớp và sở thích không rỗng */}
+        {diemKhopTruoc !== undefined &&
+          diemKhopSau !== undefined &&
+          planSau.request.sothich &&
+          planSau.request.sothich.length > 0 && (
+            <div
+              style={{
+                fontSize: 13,
+                color: "var(--p600)",
+                fontWeight: 600,
+                marginBottom: 16,
+                padding: "8px 14px",
+                background: "var(--p50)",
+                borderRadius: "var(--r-md)",
+                border: "1px solid var(--p200)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              <Sparkles size={14} />
+              Độ khớp sở thích: trước {diemKhopTruoc.toFixed(2).replace(".", ",")}, sau{" "}
+              {diemKhopSau.toFixed(2).replace(".", ",")}
+            </div>
+          )}
+
         {/* So sánh mục thay đổi (DoiMuc) */}
         {diff.doiMuc.length > 0 && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
+          <div className="b6-compare-grid" style={{ display: "grid", gap: 16, marginBottom: 24 }}>
             {/* Trước */}
             <div>
               <div

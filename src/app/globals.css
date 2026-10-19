@@ -331,3 +331,46 @@ body {
     display: none;
   }
 }
+
+/* ── Mobile Responsive ── */
+@media (max-width: 768px) {
+  .tv-layout {
+    flex-direction: column;
+  }
+  .tv-sidenav {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--g100);
+    padding: 8px 12px;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+  }
+  .tv-navitem {
+    white-space: nowrap;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+  .tv-main {
+    padding: 16px;
+    max-width: 100%;
+  }
+  .tv-side {
+    width: 100%;
+    padding: 16px;
+  }
+  .tv-topbar {
+    padding: 8px 16px;
+    height: auto;
+    min-height: 56px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .b6-compare-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.b6-compare-grid {
+  grid-template-columns: 1fr 1fr;
+}

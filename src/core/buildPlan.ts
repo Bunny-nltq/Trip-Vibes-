@@ -345,6 +345,7 @@ export function buildPlan(
         doTinCay: actAny.doTinCay,
         giaLaUocTinh: actAny.giaLaUocTinh,
         mapsUrl,
+        nhan: actAny.nhan ?? [],
       });
     });
   });

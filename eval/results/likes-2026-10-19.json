@@ -1,0 +1,166 @@
+{
+  "date": "2026-10-19",
+  "timestamp": "2026-10-19T10:21:55.723Z",
+  "promptVersion": "v1",
+  "model": "gemini-3.5-flash-lite",
+  "summary": {
+    "totalRan": 5,
+    "totalScenarios": 5,
+    "hopLeRate": 100,
+    "numHigher": 2,
+    "avgCalls": 1,
+    "stoppedBy429": false
+  },
+  "results": [
+    {
+      "scenario": "1. [bien, hai_san]",
+      "sothich": [
+        "bien",
+        "hai_san"
+      ],
+      "ghiChu": [],
+      "hopLe": true,
+      "hard": [],
+      "soft": [
+        {
+          "code": "den_truoc_gio_nhan_phong",
+          "chiTiet": "Giờ đến (07:30) sớm hơn giờ nhận phòng (14:00)."
+        }
+      ],
+      "diemKhopTruoc": 0.5,
+      "diemKhopSau": 0.5,
+      "soLanGoiAI": 1,
+      "planSauActivities": [
+        [
+          "activity-001"
+        ],
+        [
+          "activity-003",
+          "osm:node:8883385553"
+        ],
+        [
+          "osm:node:4172034499"
+        ]
+      ]
+    },
+    {
+      "scenario": "2. [van_hoa_lich_su, am_thuc]",
+      "sothich": [
+        "van_hoa_lich_su",
+        "am_thuc"
+      ],
+      "ghiChu": [],
+      "hopLe": true,
+      "hard": [],
+      "soft": [
+        {
+          "code": "den_truoc_gio_nhan_phong",
+          "chiTiet": "Giờ đến (07:30) sớm hơn giờ nhận phòng (14:00)."
+        }
+      ],
+      "diemKhopTruoc": 0.5,
+      "diemKhopSau": 1,
+      "soLanGoiAI": 1,
+      "planSauActivities": [
+        [
+          "osm:node:8883385553"
+        ],
+        [
+          "osm:node:2076855954",
+          "osm:node:2076855866"
+        ],
+        [
+          "osm:node:2076856032"
+        ]
+      ]
+    },
+    {
+      "scenario": "3. [thien_nhien, check_in_chup_anh]",
+      "sothich": [
+        "thien_nhien",
+        "check_in_chup_anh"
+      ],
+      "ghiChu": [],
+      "hopLe": true,
+      "hard": [],
+      "soft": [
+        {
+          "code": "den_truoc_gio_nhan_phong",
+          "chiTiet": "Giờ đến (07:30) sớm hơn giờ nhận phòng (14:00)."
+        }
+      ],
+      "diemKhopTruoc": 0.5,
+      "diemKhopSau": 0,
+      "soLanGoiAI": 1,
+      "planSauActivities": [
+        [
+          "activity-001"
+        ],
+        [
+          "osm:node:8883385553",
+          "osm:node:6099308589"
+        ],
+        [
+          "osm:node:4172034499"
+        ]
+      ]
+    },
+    {
+      "scenario": "4. [thu_gian_spa]",
+      "sothich": [
+        "thu_gian_spa"
+      ],
+      "ghiChu": [],
+      "hopLe": true,
+      "hard": [],
+      "soft": [
+        {
+          "code": "den_truoc_gio_nhan_phong",
+          "chiTiet": "Giờ đến (07:30) sớm hơn giờ nhận phòng (14:00)."
+        }
+      ],
+      "diemKhopTruoc": 0.25,
+      "diemKhopSau": 0.5,
+      "soLanGoiAI": 1,
+      "planSauActivities": [
+        [
+          "activity-001"
+        ],
+        [
+          "osm:node:8883385553"
+        ],
+        []
+      ]
+    },
+    {
+      "scenario": "5. [] + không muốn đi bộ nhiều",
+      "sothich": [],
+      "ghiChu": [
+        "không muốn đi bộ nhiều"
+      ],
+      "hopLe": true,
+      "hard": [],
+      "soft": [
+        {
+          "code": "den_truoc_gio_nhan_phong",
+          "chiTiet": "Giờ đến (07:30) sớm hơn giờ nhận phòng (14:00)."
+        }
+      ],
+      "diemKhopTruoc": 0,
+      "diemKhopSau": 0,
+      "soLanGoiAI": 1,
+      "planSauActivities": [
+        [
+          "activity-001"
+        ],
+        [
+          "osm:node:8883385553",
+          "osm:node:4807957148"
+        ],
+        [
+          "activity-005"
+        ]
+      ]
+    }
+  ]
+}

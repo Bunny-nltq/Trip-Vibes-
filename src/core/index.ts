@@ -4,3 +4,4 @@ export * from "./normalizeRequest";
 export * from "./buildPlan";
 export * from "./soSanhThucTe";
 export * from "./ledger";
+export * from "./soThich";

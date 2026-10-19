@@ -54,6 +54,8 @@ export interface PreviewData {
     viTri?: number;
     idMoi: string;
   };
+  diemKhopTruoc?: number;
+  diemKhopSau?: number;
 }
 
 interface AppState {
@@ -386,7 +388,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   });
 
   const [editContext, setEditContext] = useState<EditContext | null>(null);
-  const [previewData, setPreviewData] = useState<PreviewData | null>(null);
+  const [previewData, setPreviewDataState] = useState<PreviewData | null>(() =>
+    loadSession<PreviewData | null>("trip_preview", null)
+  );
+
+  const setPreviewData = useCallback((data: PreviewData | null) => {
+    setPreviewDataState(data);
+    saveSession("trip_preview", data);
+  }, []);
 
   // Ticked places state (lưu AppContext & sessionStorage)
   const [tickedPlaces, setTickedPlaces] = useState<Record<string, boolean>>(() =>

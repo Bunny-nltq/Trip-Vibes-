@@ -284,6 +284,7 @@ export const PlanItemSchema = z.object({
   nguon: z.string().nullable().optional(),
   doTinCay: DoTinCaySchema.optional(),
   giaLaUocTinh: z.boolean().optional(),
+  nhan: z.array(PreferenceSchema).optional(),
 });
 export type PlanItem = z.infer<typeof PlanItemSchema>;
 

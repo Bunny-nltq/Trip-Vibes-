@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { useApp } from "@/ui/context/AppContext";
+import { useApp, extractSelectionFromPlan } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
-import type { PlanItem } from "@/contracts";
+import type { PlanItem, Preference } from "@/contracts";
 import {
   Map as MapIcon,
   Sparkles,
@@ -13,18 +13,20 @@ import {
   ArrowLeft,
   Check,
   ExternalLink,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 
-const VIBES = [
-  "Biển",
-  "Ẩm thực",
-  "Hải sản",
-  "Văn hóa",
-  "Thiên nhiên",
-  "Vui chơi",
-  "Thư giãn",
-  "Chụp ảnh",
-  "Mua sắm",
+const VIBES: { label: string; key: Preference }[] = [
+  { label: "Biển", key: "bien" },
+  { label: "Ẩm thực", key: "am_thuc" },
+  { label: "Hải sản", key: "hai_san" },
+  { label: "Văn hóa", key: "van_hoa_lich_su" },
+  { label: "Thiên nhiên", key: "thien_nhien" },
+  { label: "Vui chơi", key: "giai_tri_vui_choi" },
+  { label: "Thư giãn", key: "thu_gian_spa" },
+  { label: "Chụp ảnh", key: "check_in_chup_anh" },
+  { label: "Mua sắm", key: "mua_sam" },
 ];
 
 function formatSource(source: string | null | undefined): string | null {
@@ -63,30 +65,90 @@ export function B3KeHoachScreen() {
     hardViolations,
     softViolations,
     tripConfig,
-    executePlan,
+    confirmed,
+    setPreviewData,
     setEditContext,
   } = useApp();
 
-  const [selectedVibes, setSelectedVibes] = useState<string[]>([]);
+  const [selectedVibes, setSelectedVibes] = useState<Preference[]>(() =>
+    (plan?.request.sothich as Preference[]) ?? []
+  );
   const [vibeNote, setVibeNote] = useState<string>("");
+  const [isRegenerating, setIsRegenerating] = useState<boolean>(false);
+  const [regenError, setRegenError] = useState<string | null>(null);
 
-  const toggleVibe = (vibe: string) => {
+  const toggleVibe = (vibe: Preference) => {
     setSelectedVibes((prev) =>
       prev.includes(vibe) ? prev.filter((v) => v !== vibe) : [...prev, vibe]
     );
   };
 
-  const handleRegenerateVibes = () => {
-    const combinedNote = [tripConfig.note, vibeNote.trim()]
-      .filter(Boolean)
-      .join("; ");
+  const handleRegenerateVibes = async () => {
+    if (!plan) return;
+    if (selectedVibes.length === 0 && !vibeNote.trim()) return;
 
-    nav("b2-dang-chay");
-    executePlan({
-      ...tripConfig,
-      preferences: selectedVibes,
-      note: combinedNote,
-    });
+    setIsRegenerating(true);
+    setRegenError(null);
+
+    try {
+      const currentSelection = extractSelectionFromPlan(plan);
+      const res = await fetch("/api/plan/regenerate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          request: {
+            ...plan.request,
+            sothich: selectedVibes,
+            ghiChu: vibeNote.trim()
+              ? [...(plan.request.ghiChu || []).filter((g) => g !== vibeNote.trim()), vibeNote.trim()]
+              : (plan.request.ghiChu || []),
+          },
+          selection: currentSelection,
+        }),
+      });
+
+      if (res.status === 429) {
+        setRegenError(
+          "Hết lượt gợi ý bằng AI lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\" ở từng mục."
+        );
+        setIsRegenerating(false);
+        return;
+      }
+
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data) {
+        if (data?.error?.includes("429") || data?.message?.includes("429")) {
+          setRegenError(
+            "Hết lượt gợi ý bằng AI lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\" ở từng mục."
+          );
+        } else {
+          setRegenError(
+            data?.message || data?.error || "Không thể gợi ý lại lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\"."
+          );
+        }
+        setIsRegenerating(false);
+        return;
+      }
+
+      // data: { planSau, diff, hard, soft, diemKhopTruoc, diemKhopSau, soLanGoiAI }
+      setPreviewData({
+        planSau: data.planSau,
+        selection: extractSelectionFromPlan(data.planSau),
+        diff: data.diff,
+        hard: data.hard || [],
+        soft: data.soft || [],
+        diemKhopTruoc: data.diemKhopTruoc,
+        diemKhopSau: data.diemKhopSau,
+      });
+
+      setIsRegenerating(false);
+      nav("b6-xem-truoc");
+    } catch (err: any) {
+      setRegenError(
+        "Có lỗi kết nối khi gợi ý lại. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\"."
+      );
+      setIsRegenerating(false);
+    }
   };
 
   const handleEditItem = (item: PlanItem) => {
@@ -384,44 +446,82 @@ export function B3KeHoachScreen() {
           );
         })}
 
-        {/* Khung Muốn kế hoạch hợp gu hơn */}
-        <div className="personal-panel">
-          <div className="panel-title" style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <Sparkles size={16} />
-            Muốn kế hoạch hợp gu hơn?
-          </div>
-          <div className="panel-sub">
-            Chọn điều bạn thích, AI sẽ gợi ý lại các hoạt động và ẩm thực phù hợp nhất.
-          </div>
-          <div className="chips">
-            {VIBES.map((v) => (
-              <button
-                key={v}
-                className={`chip ${selectedVibes.includes(v) ? "on" : ""}`}
-                onClick={() => toggleVibe(v)}
+        {/* Khung Muốn kế hoạch hợp gu hơn - bị ẩn khi kế hoạch đã chốt */}
+        {!confirmed && (
+          <div className="personal-panel" style={{ marginTop: 24 }}>
+            <div className="panel-title" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <Sparkles size={16} />
+              Muốn kế hoạch hợp gu hơn?
+            </div>
+            <div className="panel-sub">
+              Chọn điều bạn thích, AI sẽ gợi ý lại các hoạt động phù hợp nhất.
+            </div>
+            <div className="chips">
+              {VIBES.map((v) => (
+                <button
+                  key={v.key}
+                  type="button"
+                  className={`chip ${selectedVibes.includes(v.key) ? "on" : ""}`}
+                  onClick={() => toggleVibe(v.key)}
+                >
+                  {v.label}
+                </button>
+              ))}
+            </div>
+            <textarea
+              className="textarea"
+              style={{ marginTop: 12 }}
+              placeholder="Hoặc nhắn thêm yêu cầu, ví dụ: không muốn đi bộ nhiều, thích cà phê ngắm cảnh..."
+              value={vibeNote}
+              onChange={(e) => setVibeNote(e.target.value)}
+            />
+            {regenError && (
+              <div
+                className="banner banner-warn"
+                style={{
+                  marginTop: 12,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 13,
+                  padding: "8px 12px",
+                }}
               >
-                {v}
+                <AlertCircle size={16} style={{ flexShrink: 0, color: "var(--warning)" }} />
+                <span>{regenError}</span>
+              </div>
+            )}
+            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}>
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={handleRegenerateVibes}
+                disabled={isRegenerating || (selectedVibes.length === 0 && !vibeNote.trim())}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  opacity: (selectedVibes.length === 0 && !vibeNote.trim()) || isRegenerating ? 0.6 : 1,
+                  cursor:
+                    (selectedVibes.length === 0 && !vibeNote.trim()) || isRegenerating
+                      ? "not-allowed"
+                      : "pointer",
+                }}
+              >
+                {isRegenerating ? (
+                  <>
+                    <Loader2 size={14} className="spin" style={{ animation: "spin 1s linear infinite" }} />
+                    Đang tìm...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={14} />
+                    Gợi ý lại
+                  </>
+                )}
               </button>
-            ))}
+            </div>
           </div>
-          <textarea
-            className="textarea"
-            style={{ marginTop: 12 }}
-            placeholder="Hoặc nhắn thêm yêu cầu, ví dụ: muốn đi quán cà phê view biển, đi cùng gia đình có trẻ nhỏ..."
-            value={vibeNote}
-            onChange={(e) => setVibeNote(e.target.value)}
-          />
-          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}>
-            <button
-              className="btn btn-primary btn-sm"
-              onClick={handleRegenerateVibes}
-              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-            >
-              <Sparkles size={14} />
-              Gợi ý lại kế hoạch
-            </button>
-          </div>
-        </div>
+        )}
 
         {/* Action bar dưới cùng */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 24 }}>

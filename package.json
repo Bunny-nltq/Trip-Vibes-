@@ -14,6 +14,7 @@
     "eval:repair": "tsx eval/run-repair.ts",
     "eval:bill": "tsx eval/run-bill.ts",
     "eval:data": "tsx eval/run-data.ts",
+    "eval:likes": "tsx eval/run-likes.ts",
     "data:refresh": "tsx scripts/data-refresh.ts",
     "data:snapshot": "tsx scripts/data-snapshot.ts",
     "typecheck": "tsc --noEmit"
