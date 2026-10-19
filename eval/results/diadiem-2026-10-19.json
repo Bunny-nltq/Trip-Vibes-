@@ -1,0 +1,96 @@
+[
+  {
+    "diemDen": "Đà Nẵng",
+    "geocodeThanhCong": true,
+    "chiTietDiemDen": {
+      "ten": "Thành phố Đà Nẵng",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 16.068501,
+        "lng": 108.2240242
+      },
+      "tienTe": "VND",
+      "nguon": "nominatim",
+      "ngayLay": "2026-10-19T11:21:42.761Z"
+    },
+    "soLuongTheoLoai": {
+      "khachSan": 15,
+      "quanAn": 0,
+      "cafe": 0,
+      "hoatDong": 0
+    },
+    "tongSoMuc": 15,
+    "tyLeCoNguon": 1,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 6,
+    "keHoachHopLe": true,
+    "loiHard": [],
+    "soSlotChuaLap": {
+      "hoatDong": 4,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 1
+    },
+    "danhGia": "Khá: Dùng phương tiện ước lượng quãng đường do không có kết quả web."
+  },
+  {
+    "diemDen": "Đà Lạt",
+    "geocodeThanhCong": false,
+    "soLuongTheoLoai": {
+      "khachSan": 0,
+      "quanAn": 0,
+      "cafe": 0,
+      "hoatDong": 0
+    },
+    "tongSoMuc": 0,
+    "tyLeCoNguon": 0,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 0,
+    "keHoachHopLe": false,
+    "loiHard": [
+      "Geocode không thành công"
+    ],
+    "soSlotChuaLap": {
+      "hoatDong": 0,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 0
+    },
+    "danhGia": "Kém: Không định vị được địa danh qua Nominatim."
+  },
+  {
+    "diemDen": "Phú Quốc",
+    "geocodeThanhCong": false,
+    "soLuongTheoLoai": {
+      "khachSan": 0,
+      "quanAn": 0,
+      "cafe": 0,
+      "hoatDong": 0
+    },
+    "tongSoMuc": 0,
+    "tyLeCoNguon": 0,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 0,
+    "keHoachHopLe": false,
+    "loiHard": [
+      "Geocode không thành công"
+    ],
+    "soSlotChuaLap": {
+      "hoatDong": 0,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 0
+    },
+    "danhGia": "Kém: Không định vị được địa danh qua Nominatim."
+  }
+]

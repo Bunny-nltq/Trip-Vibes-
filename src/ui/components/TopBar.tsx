@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { useApp } from "@/ui/context/AppContext";
 import { Undo2, Redo2, Check, RotateCcw } from "lucide-react";
+import { getDiemDenTen } from "@/contracts";
 
 const SCREENS = [
   { id: "welcome", label: "W0 · Màn chào (Welcome)" },
@@ -99,7 +100,14 @@ export function TopBar() {
 
       {showTrip && (
         <div style={{ fontSize: 13, color: "var(--g500)", fontWeight: 500 }} className="hidden md:block">
-          {plan?.request.diemDi || "TP.HCM"} → {plan?.request.diemDen || "Đà Nẵng"} &nbsp;·&nbsp; {plan?.request.soNgay ?? 3} ngày {Math.max(1, (plan?.request.soNgay ?? 3) - 1)} đêm &nbsp;·&nbsp; {plan?.request.soNguoi ?? tripConfig.people} người
+          {(plan?.request.diemDi
+            ? typeof plan.request.diemDi === "string"
+              ? plan.request.diemDi
+              : plan.request.diemDi.ten
+            : "TP.HCM")}{" "}
+          → {getDiemDenTen(plan?.request.diemDen) || "Điểm đến"} &nbsp;·&nbsp;{" "}
+          {plan?.request.soNgay ?? 3} ngày {Math.max(1, (plan?.request.soNgay ?? 3) - 1)} đêm &nbsp;·&nbsp;{" "}
+          {plan?.request.soNguoi ?? tripConfig.people} người
         </div>
       )}
 

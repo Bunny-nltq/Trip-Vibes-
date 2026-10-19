@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { useApp, extractSelectionFromPlan } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
-import type { PlanItem, Preference } from "@/contracts";
+import type { PlanItem, Preference, DiemDen } from "@/contracts";
+import { getDiemDenTen } from "@/contracts";
 import {
   Map as MapIcon,
   Sparkles,
@@ -15,6 +16,7 @@ import {
   ExternalLink,
   Loader2,
   AlertCircle,
+  Info,
 } from "lucide-react";
 
 const VIBES: { label: string; key: Preference }[] = [
@@ -230,8 +232,8 @@ export function B3KeHoachScreen() {
     );
   }
   plan.request.canhBao.forEach((cb) => {
-    if (cb === "diem_den_mac_dinh") warningList.push("Điểm đến mặc định: Đà Nẵng.");
-    else if (cb === "ngoai_pham_vi_diem_den") warningList.push("Hệ thống hiện tối ưu cho điểm đến Đà Nẵng.");
+    if (cb === "diem_den_mac_dinh") warningList.push("Chưa rõ điểm đến.");
+    else if (cb === "ngoai_pham_vi_so_ngay") warningList.push("Số ngày nằm ngoài phạm vi 2 đến 5 ngày.");
     else warningList.push(cb);
   });
   softViolations.forEach((sv) => {
@@ -242,6 +244,30 @@ export function B3KeHoachScreen() {
     <div className="tv-layout">
       <SideNav />
       <div className="tv-main animate-in" style={{ overflowY: "auto" }}>
+        {plan.request.diemDen &&
+          typeof plan.request.diemDen === "object" &&
+          plan.request.diemDen.maQuocGia !== "VN" && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "8px 12px",
+                background: "#eff6ff",
+                border: "1px solid #bfdbfe",
+                borderRadius: "var(--r-md)",
+                color: "#1e40af",
+                fontSize: 12,
+                marginBottom: 16,
+              }}
+            >
+              <Info size={15} style={{ flexShrink: 0 }} />
+              <span>
+                Dữ liệu ngoài Việt Nam có thể ít hơn và chỉ là ước tính. Trip Vibes không tư vấn visa.
+              </span>
+            </div>
+          )}
+
         {/* Banner lỗi nếu có vi phạm cứng */}
         {planStatus === "co_vi_pham" && hardViolations.length > 0 && (
           <div className="banner banner-error" style={{ marginBottom: 16 }}>
@@ -303,14 +329,12 @@ export function B3KeHoachScreen() {
                   .split("(")[0]
                   .trim();
 
+                const currentDestName = getDiemDenTen(plan.request.diemDen);
+                const queryTarget = currentDestName ? `${cleanName}, ${currentDestName}` : cleanName;
                 const xemUrl =
                   item.mapsUrl ||
-                  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    `${cleanName}, Đà Nẵng`
-                  )}`;
-                const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-                  `${cleanName}, Đà Nẵng`
-                )}`;
+                  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryTarget)}`;
+                const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(queryTarget)}`;
 
                 const canEdit =
                   item.hangMuc === "Di chuyển" ||
@@ -431,9 +455,18 @@ export function B3KeHoachScreen() {
                         </div>
                       </div>
 
-                      <div className="item-amount" style={{ textAlign: "right", minWidth: 100 }}>
+                      <div className="item-amount" style={{ textAlign: "right", minWidth: 120 }}>
                         {item.thanhTien === 0 ? (
                           <span style={{ color: "var(--success)" }}>Miễn phí</span>
+                        ) : item.giaGoc && item.giaGoc.tienTe !== "VND" ? (
+                          <div>
+                            <div style={{ fontWeight: 700, fontSize: 13, color: "var(--navy)" }}>
+                              khoảng {item.giaGoc.soTien.toLocaleString("vi-VN")} {item.giaGoc.tienTe}, tương đương {item.thanhTien.toLocaleString("vi-VN")} đ
+                            </div>
+                            <div style={{ fontSize: 11, color: "var(--g500)", marginTop: 2 }}>
+                              Tỷ giá: 1 {item.giaGoc.tienTe} = {item.giaGoc.tyGia.toLocaleString("vi-VN")} đ ({item.giaGoc.ngayTyGia})
+                            </div>
+                          </div>
                         ) : (
                           `${item.thanhTien.toLocaleString("vi-VN")} đ`
                         )}

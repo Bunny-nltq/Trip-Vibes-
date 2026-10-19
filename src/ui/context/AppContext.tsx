@@ -28,11 +28,23 @@ type Screen =
   | "b10-chon-nguon"
   | "b11-ngan-sach";
 
+import {
+  POPULAR_DESTINATIONS,
+  POPULAR_ORIGINS,
+  toDiemDen,
+  type DiemDen,
+  getDiemDenTen,
+} from "@/contracts";
+
 export interface TripConfig {
+  diemDi: string | DiemDen;
+  diemDen: DiemDen | string | null;
+  soNgay: number;
   people: number;
   budget: number;
   avoids: string[];
   note: string;
+  giaVeTuNhap?: { chieuDiVND: number; chieuVeVND: number };
 }
 
 export interface EditContext {
@@ -193,12 +205,15 @@ export interface AppCtx extends AppState {
 
 const Ctx = createContext<AppCtx | null>(null);
 
+const sampleDest = toDiemDen(POPULAR_DESTINATIONS[0]);
+const sampleOrigin = POPULAR_ORIGINS[0];
+
 export const DEFAULT_SAMPLE_PLAN: Plan = {
-  schemaVersion: 6,
+  schemaVersion: 7,
   request: {
-    schemaVersion: 6,
-    diemDi: "TP.HCM",
-    diemDen: "Đà Nẵng",
+    schemaVersion: 7,
+    diemDi: sampleOrigin.ten,
+    diemDen: sampleDest,
     soNguoi: 2,
     soNgay: 3,
     ngansachTongVND: 10_000_000,
@@ -214,7 +229,7 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
       ngay: 1,
       gio: "06:30",
       hangMuc: "Di chuyển",
-      noiDung: "Di chuyển chiều đi: Máy bay VietJet Air (TP.HCM → Đà Nẵng)",
+      noiDung: `Di chuyển chiều đi: Máy bay VietJet Air (${sampleOrigin.ten} → ${sampleDest.ten})`,
       soLuong: 2,
       donGia: 980_000,
       thanhTien: 1_960_000,
@@ -224,7 +239,7 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
       ngay: 1,
       gio: "14:00",
       hangMuc: "Chỗ ở",
-      noiDung: "Lưu trú: Sanouva Danang Hotel (2 đêm, 1 phòng)",
+      noiDung: "Lưu trú: Khách sạn 4 sao trung tâm (2 đêm, 1 phòng)",
       soLuong: 2,
       donGia: 1_100_000,
       thanhTien: 2_200_000,
@@ -245,12 +260,12 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
       ngay: 1,
       gio: "15:30",
       hangMuc: "Vui chơi",
-      noiDung: "Bãi biển Mỹ Khê",
+      noiDung: "Bãi biển trung tâm",
       soLuong: 2,
       donGia: 0,
       thanhTien: 0,
-      refId: "act-my-khe",
-      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bãi+biển+Mỹ+Khê,+Đà+Nẵng",
+      refId: "act-bien",
+      mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Bãi biển trung tâm, " + sampleDest.ten)}`,
     },
     {
       ngay: 1,
@@ -266,12 +281,12 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
       ngay: 2,
       gio: "08:30",
       hangMuc: "Vui chơi",
-      noiDung: "Ngũ Hành Sơn",
+      noiDung: "Điểm tham quan danh thắng",
       soLuong: 2,
       donGia: 40_000,
       thanhTien: 80_000,
-      refId: "act-ngu-hanh-son",
-      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Ngũ+Hành+Sơn,+Đà+Nẵng",
+      refId: "act-thang-canh",
+      mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Điểm tham quan danh thắng, " + sampleDest.ten)}`,
     },
     {
       ngay: 2,
@@ -287,12 +302,12 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
       ngay: 2,
       gio: "15:00",
       hangMuc: "Vui chơi",
-      noiDung: "Phố cổ Hội An",
+      noiDung: "Khu phố cổ văn hóa",
       soLuong: 2,
       donGia: 120_000,
       thanhTien: 240_000,
-      refId: "act-hoi-an",
-      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Phố+cổ+Hội+An,+Quảng+Nam",
+      refId: "act-pho-co",
+      mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Khu phố cổ văn hóa, " + sampleDest.ten)}`,
     },
     {
       ngay: 2,
@@ -308,12 +323,12 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
       ngay: 3,
       gio: "08:30",
       hangMuc: "Vui chơi",
-      noiDung: "Bà Nà Hills",
+      noiDung: "Khu du lịch sinh thái",
       soLuong: 2,
       donGia: 650_000,
       thanhTien: 1_300_000,
-      refId: "act-ba-na",
-      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bà+Nà+Hills,+Đà+Nẵng",
+      refId: "act-sinh-thai",
+      mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Khu du lịch sinh thái, " + sampleDest.ten)}`,
     },
     {
       ngay: 3,
@@ -329,7 +344,7 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
       ngay: 3,
       gio: "18:00",
       hangMuc: "Di chuyển",
-      noiDung: "Di chuyển chiều về: Máy bay VietJet Air (Đà Nẵng → TP.HCM)",
+      noiDung: `Di chuyển chiều về: Máy bay VietJet Air (${sampleDest.ten} → ${sampleOrigin.ten})`,
       soLuong: 2,
       donGia: 980_000,
       thanhTien: 1_960_000,
@@ -362,6 +377,41 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
   canhBao: [],
 };
 
+export const BANGKOK_SAMPLE_PLAN: Plan = {
+  ...DEFAULT_SAMPLE_PLAN,
+  request: {
+    ...DEFAULT_SAMPLE_PLAN.request,
+    diemDen: {
+      ten: "Bangkok",
+      quocGia: "Thái Lan",
+      maQuocGia: "TH",
+      toaDo: { lat: 13.7563, lng: 100.5018 },
+      tienTe: "THB",
+      nguon: "nominatim",
+      ngayLay: "2026-10-19",
+    },
+    ngansachTongVND: 25_000_000,
+  },
+  items: DEFAULT_SAMPLE_PLAN.items.map((item) => {
+    if (item.hangMuc === "Chỗ ở") {
+      return {
+        ...item,
+        noiDung: "Khách sạn 4 sao Sukhumvit (2 đêm, 1 phòng)",
+        donGia: 1_270_000,
+        thanhTien: 2_540_000,
+        giaGoc: { soTien: 50, tienTe: "USD", tyGia: 25400, ngayTyGia: "2026-10-19" },
+      };
+    }
+    if (item.hangMuc === "Vui chơi" && item.thanhTien > 0) {
+      return {
+        ...item,
+        giaGoc: { soTien: 25, tienTe: "USD", tyGia: 25400, ngayTyGia: "2026-10-19" },
+      };
+    }
+    return item;
+  }),
+};
+
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [screen, setScreen] = useState<Screen>(() => {
     if (typeof window !== "undefined") {
@@ -380,11 +430,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   });
   const [activeDay, setActiveDay] = useState(1);
   const [activeTab, setActiveTab] = useState("b8-list");
-  const [tripConfig, setTripConfigState] = useState<TripConfig>({
-    people: 2,
-    budget: 10_000_000,
-    avoids: ["Không dậy sớm"],
-    note: "",
+  const [tripConfig, setTripConfigState] = useState<TripConfig>(() => {
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      if (sp.get("dest") === "bangkok") {
+        return {
+          diemDi: sampleOrigin.ten,
+          diemDen: BANGKOK_SAMPLE_PLAN.request.diemDen,
+          soNgay: 3,
+          people: 2,
+          budget: 25_000_000,
+          avoids: ["Không dậy sớm"],
+          note: "",
+        };
+      }
+    }
+    return {
+      diemDi: sampleOrigin.ten,
+      diemDen: sampleDest,
+      soNgay: 3,
+      people: 2,
+      budget: 10_000_000,
+      avoids: ["Không dậy sớm"],
+      note: "",
+    };
   });
 
   const [editContext, setEditContext] = useState<EditContext | null>(null);
@@ -496,10 +565,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const handleExecutePlan = useCallback(
     async (input?: PlanInput) => {
       const targetInput = input ?? {
+        diemDi: tripConfig.diemDi,
+        diemDen: tripConfig.diemDen,
+        soNgay: tripConfig.soNgay,
         people: tripConfig.people,
         budget: tripConfig.budget,
         avoids: tripConfig.avoids,
         note: tripConfig.note,
+        giaVeTuNhap: tripConfig.giaVeTuNhap,
       };
       const res = await planState.executePlan(targetInput);
       if (res && res.plan) {
@@ -510,7 +583,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [planState, tripConfig, history]
   );
 
-  const activePlan = history.current ?? planState.plan ?? DEFAULT_SAMPLE_PLAN;
+  const isBangkokParam = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("dest") === "bangkok";
+  const fallbackPlan = isBangkokParam ? BANGKOK_SAMPLE_PLAN : DEFAULT_SAMPLE_PLAN;
+  const activePlan = history.current ?? planState.plan ?? fallbackPlan;
 
   const applyPreview = useCallback(() => {
     if (previewData && previewData.planSau) {

@@ -22,12 +22,12 @@ export interface PlaceForMaps {
 /**
  * buildMapsUrls: Tạo bộ URL Google Maps và Apple Maps cho một địa điểm.
  *
- * - xem: https://www.google.com/maps/search/?api=1&query=<ten>, Đà Nẵng
+ * - xem: https://www.google.com/maps/search/?api=1&query=<encodeURIComponent("<ten>, <tenDiemDen>")>
  * - chiDuong: https://www.google.com/maps/dir/?api=1&destination=<lat>,<lng>
  * - apple: https://maps.apple.com/?daddr=<lat>,<lng>
  */
-export function buildMapsUrls(place: PlaceForMaps): MapsUrls {
-  const queryStr = `${place.ten}, Đà Nẵng`;
+export function buildMapsUrls(place: PlaceForMaps, tenDiemDen?: string): MapsUrls {
+  const queryStr = tenDiemDen ? `${place.ten}, ${tenDiemDen}` : place.ten;
   const latLngStr = `${place.toaDo.lat},${place.toaDo.lng}`;
 
   return {

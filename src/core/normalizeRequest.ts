@@ -32,6 +32,7 @@ const DEFAULT_QUESTIONS: Record<MissingField, string> = {
   soNguoi: "Chuyến đi này bạn dự định đi bao nhiêu người?",
   soNgay: "Bạn muốn đi du lịch trong mấy ngày?",
   ngansach: "Ngân sách dự kiến cho chuyến đi là khoảng bao nhiêu?",
+  diemDen: "Bạn muốn đi du lịch ở đâu?",
 };
 
 /**
@@ -47,18 +48,14 @@ export function normalizeRequest(raw: RawTripRequest): TripRequest {
   const rawDiemDi = raw.diemDi?.trim();
   const diemDi = rawDiemDi && rawDiemDi.length > 0 ? rawDiemDi : "TP.HCM";
 
-  // 2. Điểm đến
-  let diemDen: string;
+  // 2. Điểm đến (mở rộng điểm đến bất kỳ)
+  let diemDen: string | null = null;
   const rawDiemDen = raw.diemDen?.trim();
   if (!rawDiemDen || rawDiemDen.length === 0) {
-    diemDen = "Đà Nẵng";
-    canhBao.push("diem_den_mac_dinh");
+    diemDen = null;
+    thieuSet.add("diemDen");
   } else {
     diemDen = rawDiemDen;
-    const normalizedDiemDen = removeVietnameseDiacritics(rawDiemDen);
-    if (normalizedDiemDen !== "da nang") {
-      canhBao.push("ngoai_pham_vi_diem_den");
-    }
   }
 
   // 3. Số người (hợp lệ: 1 - 20)
@@ -75,13 +72,20 @@ export function normalizeRequest(raw: RawTripRequest): TripRequest {
     thieuSet.add("soNguoi");
   }
 
-  // 4. Số ngày (hợp lệ: 1 - 7, phạm vi chuẩn hiện tại là 3 ngày)
+  // 4. Số ngày (hợp lệ trong phạm vi đồ án: 2 - 5 ngày)
   let soNgay: number | null = null;
   if (raw.soNgay !== null && raw.soNgay !== undefined) {
-    if (Number.isInteger(raw.soNgay) && raw.soNgay >= 1 && raw.soNgay <= 7) {
-      soNgay = raw.soNgay;
-      if (soNgay !== 3) {
+    if (Number.isInteger(raw.soNgay)) {
+      if (raw.soNgay >= 2 && raw.soNgay <= 5) {
+        soNgay = raw.soNgay;
+      } else if (raw.soNgay === 1 || raw.soNgay === 6 || raw.soNgay === 7) {
+        soNgay = null;
+        thieuSet.add("soNgay");
         canhBao.push("ngoai_pham_vi_so_ngay");
+      } else {
+        soNgay = null;
+        thieuSet.add("soNgay");
+        canhBao.push("so_ngay_khong_hop_le");
       }
     } else {
       soNgay = null;
@@ -122,12 +126,14 @@ export function normalizeRequest(raw: RawTripRequest): TripRequest {
     if (t === "soNguoi" && soNguoi === null) thieuSet.add("soNguoi");
     if (t === "soNgay" && soNgay === null) thieuSet.add("soNgay");
     if (t === "ngansach" && ngansachTongVND === null) thieuSet.add("ngansach");
+    if (t === "diemDen" && diemDen === null) thieuSet.add("diemDen");
   }
 
   const thieu: MissingField[] = [];
   if (thieuSet.has("soNguoi")) thieu.push("soNguoi");
   if (thieuSet.has("soNgay")) thieu.push("soNgay");
   if (thieuSet.has("ngansach")) thieu.push("ngansach");
+  if (thieuSet.has("diemDen")) thieu.push("diemDen");
 
   // 6. Câu hỏi làm rõ
   const questions: string[] = [];
@@ -144,7 +150,9 @@ export function normalizeRequest(raw: RawTripRequest): TripRequest {
           ? /người|ai|bao nhiêu người/i.test(q)
           : f === "soNgay"
           ? /ngày|hôm|kéo dài/i.test(q)
-          : /ngân sách|tiền|chi phí/i.test(q)
+          : f === "ngansach"
+          ? /ngân sách|tiền|chi phí/i.test(q)
+          : /điểm đến|ở đâu|đi đâu|nơi nào/i.test(q)
       );
       if (!hasSpecificQ && defaultQ) {
         questions.push(defaultQ);

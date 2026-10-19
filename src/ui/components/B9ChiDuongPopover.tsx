@@ -50,7 +50,7 @@ export function B9ChiDuongPopover({ place, onClose }: B9ChiDuongPopoverProps) {
 
   if (!place) return null;
 
-  const diaChi = place.diaChi || `${place.ten}, Đà Nẵng`;
+  const diaChi = place.diaChi || place.ten;
   const googleMapsUrl =
     place.mapsUrls?.chiDuong ||
     `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(diaChi)}`;

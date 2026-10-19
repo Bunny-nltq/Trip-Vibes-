@@ -3,6 +3,7 @@ import React from "react";
 import { useApp } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
+import { getDiemDenTen } from "@/contracts";
 import {
   ArrowLeft,
   Check,
@@ -80,7 +81,7 @@ export function B7XacNhanScreen() {
                 <div>
                   <div style={{ fontSize: 12, color: "var(--g500)" }}>Lộ trình</div>
                   <div style={{ fontWeight: 700, fontSize: 14, color: "var(--navy)" }}>
-                    {plan.request.diemDi} → {plan.request.diemDen}
+                    {(typeof plan.request.diemDi === "string" ? plan.request.diemDi : plan.request.diemDi.ten)} → {getDiemDenTen(plan.request.diemDen) || "Điểm đến"}
                   </div>
                 </div>
                 <div>
@@ -169,13 +170,13 @@ export function B7XacNhanScreen() {
             : `${it.thanhTien.toLocaleString("vi-VN")} đ`,
       }))
     : [
-        { label: "Chiều đi", detail: "Máy bay TP.HCM → Đà Nẵng · 06:30 → 07:55", amount: "1.960.000 đ" },
-        { label: "Chỗ ở", detail: "Khách sạn Mẫu 02 · 2 đêm · buffet sáng · hồ bơi", amount: "2.200.000 đ" },
-        { label: "Ngày 1", detail: "Bãi biển Mỹ Khê", amount: "Miễn phí" },
-        { label: "Ngày 2", detail: "Ngũ Hành Sơn, Phố cổ Hội An", amount: "320.000 đ" },
-        { label: "Ngày 3", detail: "Bà Nà Hills", amount: "1.300.000 đ" },
-        { label: "Ăn uống", detail: "Ước tính 3 ngày cho 2 người", amount: "1.800.000 đ" },
-        { label: "Chiều về", detail: "Máy bay Đà Nẵng → TP.HCM · 18:00 → 19:25", amount: "1.960.000 đ" },
+        { label: "Chiều đi", detail: "Di chuyển chiều đi · Đã lên lịch", amount: "1.960.000 đ" },
+        { label: "Chỗ ở", detail: "Khách sạn trung tâm · 2 đêm · buffet sáng · hồ bơi", amount: "2.200.000 đ" },
+        { label: "Ngày 1", detail: "Điểm tham quan trung tâm", amount: "Miễn phí" },
+        { label: "Ngày 2", detail: "Khu danh thắng, Di sản văn hóa", amount: "320.000 đ" },
+        { label: "Ngày 3", detail: "Khu du lịch sinh thái", amount: "1.300.000 đ" },
+        { label: "Ăn uống", detail: "Ước tính các bữa ăn cho 2 người", amount: "1.800.000 đ" },
+        { label: "Chiều về", detail: "Di chuyển chiều về · Đã lên lịch", amount: "1.960.000 đ" },
       ];
 
   return (

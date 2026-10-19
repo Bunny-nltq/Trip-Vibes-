@@ -25,7 +25,7 @@ export function tinhNganSachToiThieu(
 ): MinBudgetResult {
   const soNguoi = request.soNguoi ?? 2;
   const soNgay = request.soNgay ?? 3;
-  const soDem = Math.max(1, soNgay - 1);
+  const soDem = soNgay - 1;
   const soPhong = Math.ceil(soNguoi / NGUOI_MOI_PHONG);
   const ngansach = request.ngansachTongVND ?? 0;
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const schemaVersion = 6;
+export const schemaVersion = 7;
 
 // ─── Enums cho TripRequest & Activity ────────────────────────────────────────
 
@@ -26,16 +26,50 @@ export const AvoidanceSchema = z.enum([
 ]);
 export type Avoidance = z.infer<typeof AvoidanceSchema>;
 
-export const MissingFieldSchema = z.enum(["soNguoi", "soNgay", "ngansach"]);
+export const MissingFieldSchema = z.enum(["soNguoi", "soNgay", "ngansach", "diemDen"]);
 export type MissingField = z.infer<typeof MissingFieldSchema>;
+
+// ─── Điểm đến & Tọa độ ────────────────────────────────────────────────────────
+
+export const DiemDenSchema = z.object({
+  ten: z.string(),
+  quocGia: z.string(),
+  maQuocGia: z.string(), // mã ISO 2 ký tự (VN, TH, KR, JP, ...)
+  toaDo: z.object({ lat: z.number(), lng: z.number() }),
+  tienTe: z.string(), // mã ISO (VND, THB, USD, ...)
+  nguon: z.literal("nominatim"),
+  ngayLay: z.string(),
+});
+export type DiemDen = z.infer<typeof DiemDenSchema>;
+
+export const DEFAULT_DIEM_DI: DiemDen = {
+  ten: "TP.HCM",
+  quocGia: "Việt Nam",
+  maQuocGia: "VN",
+  toaDo: { lat: 10.7769, lng: 106.7009 },
+  tienTe: "VND",
+  nguon: "nominatim",
+  ngayLay: "2026-10-19T00:00:00.000Z",
+};
+
+// ─── Giá gốc & Tỷ giá ─────────────────────────────────────────────────────────
+
+export const GiaGocSchema = z.object({
+  soTien: z.number(),
+  tienTe: z.string(),
+  tyGia: z.number(),
+  ngayTyGia: z.string(),
+});
+export type GiaGoc = z.infer<typeof GiaGocSchema>;
 
 // ─── Độ tin cậy nguồn dữ liệu ────────────────────────────────────────────────
 
 export const DoTinCaySchema = z.enum([
-  "xac_minh",   // lấy trực tiếp từ nguồn chính thức, khớp hoàn toàn
-  "uoc_tinh",   // ước lượng từ nhiều nguồn web, có thể sai lệch
-  "tham_khao",  // lấy từ dữ liệu tham khảo tĩnh (snapshot/mock)
-  "mau",        // dữ liệu mẫu cứng, không từ bất kỳ nguồn thực nào
+  "xac_minh",        // lấy trực tiếp từ nguồn chính thức, khớp hoàn toàn
+  "uoc_tinh",        // ước lượng từ nhiều nguồn web, có thể sai lệch
+  "tham_khao",       // lấy từ dữ liệu tham khảo tĩnh (snapshot/mock)
+  "mau",             // dữ liệu mẫu cứng, không từ bất kỳ nguồn thực nào
+  "nguoi_dung_nhap", // người dùng tự nhập thủ công khi không tìm thấy phương án
 ]);
 export type DoTinCay = z.infer<typeof DoTinCaySchema>;
 
@@ -52,6 +86,7 @@ export const PlaceBaseSchema = z.object({
   gioMoCua: z.string().nullable(),
   soSao: z.number().nullable(),               // chỉ khách sạn (OSM tag stars)
   giaUocTinhNguoi: z.number().int().nonnegative().nullable(),
+  giaGoc: GiaGocSchema.optional(),
   nguon: z.string().nullable(),               // url hoặc osmId; null nếu không có
   ngayLay: z.string(),                        // ISO datetime
   doTinCay: DoTinCaySchema,
@@ -132,9 +167,9 @@ export type RawTripRequest = z.infer<typeof RawTripRequestSchema>;
 
 export const TripRequestSchema = z.object({
   schemaVersion: z.number().int().default(schemaVersion),
-  diemDi: z.string(),
-  diemDen: z.string(),
-  soNgay: z.number().int().nullable(),
+  diemDi: z.union([DiemDenSchema, z.string()]).default(DEFAULT_DIEM_DI),
+  diemDen: z.union([DiemDenSchema, z.string()]).nullable(),
+  soNgay: z.number().int().min(2).max(5).nullable(),
   soNguoi: z.number().int().nullable(),
   /** Ngân sách tổng tính bằng VND (số nguyên), null nếu thiếu thông tin ngân sách */
   ngansachTongVND: z.number().int().nullable(),
@@ -144,8 +179,18 @@ export const TripRequestSchema = z.object({
   thieu: z.array(MissingFieldSchema),
   cauHoiLamRo: z.array(z.string()),
   canhBao: z.array(z.string()),
+  giaVeTuNhap: z.object({
+    chieuDiVND: z.number().int().nonnegative(),
+    chieuVeVND: z.number().int().nonnegative(),
+  }).optional(),
 });
 export type TripRequest = z.infer<typeof TripRequestSchema>;
+
+export function getDiemDenTen(diemDen: DiemDen | string | null | undefined): string {
+  if (!diemDen) return "";
+  if (typeof diemDen === "string") return diemDen;
+  return diemDen.ten;
+}
 
 // ─── Hotel (legacy, giữ để backward compat với mock JSON) ──────────────────
 
@@ -182,7 +227,7 @@ export type TransportDirection = z.infer<typeof TransportDirectionSchema>;
 export const TransportSchema = z.object({
   schemaVersion: z.number().int().default(schemaVersion),
   id: z.string(),
-  /** Chiều di chuyển: "di" = TP.HCM -> Đà Nẵng, "ve" = Đà Nẵng -> TP.HCM */
+  /** Chiều di chuyển: "di" = điểm đi -> điểm đến, "ve" = điểm đến -> điểm đi */
   huong: TransportDirectionSchema,
   type: TransportTypeSchema,
   provider: z.string(),
@@ -203,6 +248,7 @@ export const TransportSchema = z.object({
   doTinCay: DoTinCaySchema.optional(),
   giaLaUocTinh: z.boolean().optional(),
   nguonGia: z.array(z.string()).optional(),
+  giaGoc: GiaGocSchema.optional(),
 });
 
 export type Transport = z.infer<typeof TransportSchema>;
@@ -284,6 +330,7 @@ export const PlanItemSchema = z.object({
   nguon: z.string().nullable().optional(),
   doTinCay: DoTinCaySchema.optional(),
   giaLaUocTinh: z.boolean().optional(),
+  giaGoc: GiaGocSchema.optional(),
   nhan: z.array(PreferenceSchema).optional(),
 });
 export type PlanItem = z.infer<typeof PlanItemSchema>;
@@ -376,3 +423,6 @@ export const LedgerSchema = z.object({
   expenses: z.array(ExpenseSchema),
 });
 export type Ledger = z.infer<typeof LedgerSchema>;
+
+export * from "./destinations";
+

@@ -63,7 +63,8 @@ QUY TẮC BẮT BUỘC:
      + "soNguoi": khi soNguoi là null.
      + "soNgay": khi soNgay là null.
      + "ngansach": khi ngansach.soTien là null.
-   - Nếu cả 3 trường đều có giá trị rõ ràng thì thieu = [].
+     + "diemDen": khi diemDen là null.
+   - Nếu cả 4 trường đều có giá trị rõ ràng thì thieu = [].
 11. Câu hỏi làm rõ (cauHoiLamRo):
    - Với MỖI trường nằm trong "thieu", tạo MỘT câu hỏi ngắn gọn, lịch sự bằng tiếng Việt tự nhiên để hỏi người dùng.
    - Nếu thieu = [] thì cauHoiLamRo = [].`;
@@ -128,7 +129,7 @@ export const rawTripRequestGenAiSchema = {
       type: Type.ARRAY,
       items: {
         type: Type.STRING,
-        enum: ["soNguoi", "soNgay", "ngansach"],
+        enum: ["soNguoi", "soNgay", "ngansach", "diemDen"],
       },
     },
     cauHoiLamRo: {

@@ -100,3 +100,17 @@ export const MAX_REPAIR_ROUNDS = 2;
 
 /** Ngưỡng phần trăm ngân sách bị coi là gần hết (để cảnh báo soft) */
 export const NGUONG_GAN_HET_NGAN_SACH_PHAN_TRAM = 95;
+
+// ─── Ước lượng phương tiện di chuyển ─────────────────────────────────────────
+
+export const VAN_TOC_XE_KHACH_KMH = 50;
+export const DON_GIA_XE_KHACH_D_KM = 1_000;
+
+export const VAN_TOC_TAU_KMH = 55;
+export const DON_GIA_TAU_D_KM = 1_000;
+
+export const VAN_TOC_MAY_BAY_KMH = 750;
+export const THOI_GIAN_CO_DINH_MAY_BAY_PHUT = 90;
+export const GIA_CO_DINH_MAY_BAY_VND = 600_000;
+export const DON_GIA_MAY_BAY_D_KM = 1_100;
+

@@ -8,6 +8,7 @@
  */
 
 import type { Plan } from "@/contracts";
+import { getDiemDenTen } from "@/contracts";
 
 export interface ProgressPlace {
   id: string;
@@ -32,6 +33,9 @@ export interface ProgressPlace {
  */
 export function gomDiaDiemTheoNgay(plan: Plan): Record<number, ProgressPlace[]> {
   const soNgay = plan.request.soNgay || 3;
+  const tenDiemDen = getDiemDenTen(plan.request.diemDen);
+  const locationSuffix = tenDiemDen ? `, ${tenDiemDen}` : "";
+
   const result: Record<number, ProgressPlace[]> = {};
   for (let d = 1; d <= soNgay; d++) {
     result[d] = [];
@@ -62,12 +66,12 @@ export function gomDiaDiemTheoNgay(plan: Plan): Record<number, ProgressPlace[]> 
       hangMuc: item.hangMuc,
       ten: cleanName,
       thanhTien: item.thanhTien,
-      diaChi: `${cleanName}, Đà Nẵng`,
+      diaChi: `${cleanName}${locationSuffix}`,
       mapsUrl: item.mapsUrl,
       mapsUrls: {
-        xem: item.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${cleanName}, Đà Nẵng`)}`,
-        chiDuong: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${cleanName}, Đà Nẵng`)}`,
-        apple: `http://maps.apple.com/?daddr=${encodeURIComponent(`${cleanName}, Đà Nẵng`)}`,
+        xem: item.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${cleanName}${locationSuffix}`)}`,
+        chiDuong: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${cleanName}${locationSuffix}`)}`,
+        apple: `http://maps.apple.com/?daddr=${encodeURIComponent(`${cleanName}${locationSuffix}`)}`,
       },
     };
 

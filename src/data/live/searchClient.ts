@@ -104,6 +104,7 @@ export async function tavilySearch(
         search_depth: "basic",
         include_answer: false,
       }),
+      signal: AbortSignal.timeout(8000),
     });
 
     if (!response.ok) {

@@ -24,7 +24,7 @@
       "sothichBaoGom": ["check_in_chup_anh", "thu_gian_spa"],
       "tranh": [],
       "thieu": [],
-      "canhBaoBaoGom": ["ngoai_pham_vi_so_ngay"]
+      "canhBaoBaoGom": []
     }
   },
   {
@@ -34,11 +34,11 @@
       "soNguoi": 1,
       "soNgay": 3,
       "ngansachTongVND": null,
-      "diemDen": "Đà Nẵng",
+      "diemDen": null,
       "sothichBaoGom": [],
       "tranh": [],
-      "thieu": ["ngansach"],
-      "canhBaoBaoGom": ["diem_den_mac_dinh"]
+      "thieu": ["ngansach", "diemDen"],
+      "canhBaoBaoGom": []
     }
   },
   {
@@ -48,11 +48,11 @@
       "soNguoi": 3,
       "soNgay": 3,
       "ngansachTongVND": 12000000,
-      "diemDen": "Đà Nẵng",
+      "diemDen": null,
       "sothichBaoGom": [],
       "tranh": ["tranh_dong_nguoi"],
-      "thieu": [],
-      "canhBaoBaoGom": ["diem_den_mac_dinh"]
+      "thieu": ["diemDen"],
+      "canhBaoBaoGom": []
     }
   },
   {
@@ -90,11 +90,11 @@
       "soNguoi": null,
       "soNgay": null,
       "ngansachTongVND": null,
-      "diemDen": "Đà Nẵng",
+      "diemDen": null,
       "sothichBaoGom": [],
       "tranh": [],
-      "thieu": ["soNguoi", "soNgay", "ngansach"],
-      "canhBaoBaoGom": ["diem_den_mac_dinh"]
+      "thieu": ["soNguoi", "soNgay", "ngansach", "diemDen"],
+      "canhBaoBaoGom": []
     }
   },
   {
@@ -136,7 +136,7 @@
       "sothichBaoGom": [],
       "tranh": [],
       "thieu": [],
-      "canhBaoBaoGom": ["ngoai_pham_vi_diem_den"]
+      "canhBaoBaoGom": []
     }
   }
 ]

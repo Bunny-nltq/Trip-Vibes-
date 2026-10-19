@@ -47,40 +47,49 @@ describe("normalizeRequest", () => {
   });
 
   describe("diemDen", () => {
-    it("nếu null thì đặt Đà Nẵng và thêm canhBao diem_den_mac_dinh", () => {
+    it("nếu null thì đặt null, thêm vào thieu kèm câu hỏi làm rõ và không có cảnh báo diem_den_mac_dinh", () => {
       const res = normalizeRequest(createBaseRaw({ diemDen: null }));
-      expect(res.diemDen).toBe("Đà Nẵng");
-      expect(res.canhBao).toContain("diem_den_mac_dinh");
+      expect(res.diemDen).toBeNull();
+      expect(res.thieu).toContain("diemDen");
+      expect(res.cauHoiLamRo.some((q) => /điểm đến|ở đâu|đi đâu/i.test(q))).toBe(true);
+      expect(res.canhBao).not.toContain("diem_den_mac_dinh");
       expect(res.canhBao).not.toContain("ngoai_pham_vi_diem_den");
     });
 
-    it("nếu là Đà Nẵng (bất kể hoa/thường) thì không cảnh báo", () => {
+    it("điểm đến bất kỳ (Hà Nội, Bangkok, Đà Nẵng...) đều không có cảnh báo ngoài phạm vi", () => {
       const res1 = normalizeRequest(createBaseRaw({ diemDen: "Đà Nẵng" }));
+      expect(res1.diemDen).toBe("Đà Nẵng");
       expect(res1.canhBao).not.toContain("ngoai_pham_vi_diem_den");
-      expect(res1.canhBao).not.toContain("diem_den_mac_dinh");
 
-      const res2 = normalizeRequest(createBaseRaw({ diemDen: "da nang" }));
+      const res2 = normalizeRequest(createBaseRaw({ diemDen: "Hà Nội" }));
+      expect(res2.diemDen).toBe("Hà Nội");
       expect(res2.canhBao).not.toContain("ngoai_pham_vi_diem_den");
-    });
 
-    it("nếu khác Đà Nẵng thì thêm canhBao ngoai_pham_vi_diem_den", () => {
-      const res = normalizeRequest(createBaseRaw({ diemDen: "Hà Nội" }));
-      expect(res.diemDen).toBe("Hà Nội");
-      expect(res.canhBao).toContain("ngoai_pham_vi_diem_den");
+      const res3 = normalizeRequest(createBaseRaw({ diemDen: "Bangkok" }));
+      expect(res3.diemDen).toBe("Bangkok");
+      expect(res3.canhBao).not.toContain("ngoai_pham_vi_diem_den");
     });
   });
 
   describe("soNgay", () => {
-    it("giữ nguyên khi là 3 ngày và không cảnh báo phạm vi ngày", () => {
-      const res = normalizeRequest(createBaseRaw({ soNgay: 3 }));
-      expect(res.soNgay).toBe(3);
-      expect(res.canhBao).not.toContain("ngoai_pham_vi_so_ngay");
+    it("soNgay trong khoảng 2-5 giữ nguyên và không cảnh báo", () => {
+      for (const d of [2, 3, 4, 5]) {
+        const res = normalizeRequest(createBaseRaw({ soNgay: d }));
+        expect(res.soNgay).toBe(d);
+        expect(res.canhBao).not.toContain("ngoai_pham_vi_so_ngay");
+      }
     });
 
-    it("soNgay khác 3 (trong 1-7) thì thêm canhBao ngoai_pham_vi_so_ngay", () => {
-      const res = normalizeRequest(createBaseRaw({ soNgay: 4 }));
-      expect(res.soNgay).toBe(4);
-      expect(res.canhBao).toContain("ngoai_pham_vi_so_ngay");
+    it("soNgay 1 hoặc 6 trả canhBao ngoai_pham_vi_so_ngay và đặt soNgay null kèm vào thieu", () => {
+      const res1 = normalizeRequest(createBaseRaw({ soNgay: 1 }));
+      expect(res1.soNgay).toBeNull();
+      expect(res1.thieu).toContain("soNgay");
+      expect(res1.canhBao).toContain("ngoai_pham_vi_so_ngay");
+
+      const res6 = normalizeRequest(createBaseRaw({ soNgay: 6 }));
+      expect(res6.soNgay).toBeNull();
+      expect(res6.thieu).toContain("soNgay");
+      expect(res6.canhBao).toContain("ngoai_pham_vi_so_ngay");
     });
 
     it("soNgay ngoài 1-7 thì đặt null, thêm thieu và canhBao so_ngay_khong_hop_le", () => {

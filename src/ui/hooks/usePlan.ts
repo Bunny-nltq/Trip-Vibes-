@@ -33,6 +33,8 @@ export type PlanStatus =
   | "co_vi_pham"
   | "error";
 
+import { getDiemDenTen, type DiemDen } from "@/contracts";
+
 export interface PlanStructuredInput {
   people?: number;
   budget?: number;
@@ -40,11 +42,20 @@ export interface PlanStructuredInput {
   note?: string;
   preferences?: string[];
   soNgay?: number;
-  diemDi?: string;
-  diemDen?: string;
+  diemDi?: string | DiemDen;
+  diemDen?: DiemDen | string | null;
+  giaVeTuNhap?: { chieuDiVND: number; chieuVeVND: number };
 }
 
 export type PlanInput = PlanStructuredInput | { text: string } | string;
+
+export interface DestinationCandidate {
+  ten: string;
+  quocGia: string;
+  maQuocGia: string;
+  toaDo: { lat: number; lng: number };
+  tienTe: string;
+}
 
 export interface PlanApiResponse {
   ok: boolean;
@@ -59,6 +70,8 @@ export interface PlanApiResponse {
   ms?: number;
   toiThieuVND?: number;
   dataSourceUsed?: string;
+  lyDo?: string;
+  ungVien?: DestinationCandidate[];
   error?: string;
 }
 
@@ -157,6 +170,13 @@ export function usePlan() {
           .map((p) => PREF_MAP[p])
           .filter((p): p is Preference => Boolean(p));
 
+        const tenDiemDen = getDiemDenTen(sInput.diemDen);
+        const tenDiemDi = sInput.diemDi
+          ? typeof sInput.diemDi === "string"
+            ? sInput.diemDi
+            : sInput.diemDi.ten
+          : "TP.HCM";
+
         const noteTrimmed = sInput.note?.trim();
 
         // Nếu người dùng có nhập ghi chú tự do, gửi qua text để AI phân tích toàn diện
@@ -165,28 +185,32 @@ export function usePlan() {
             ? `Tránh: ${sInput.avoids.join(", ")}.`
             : "";
           bodyPayload = {
-            text: `Đi Đà Nẵng ${sInput.people ?? 2} người, ngân sách ${
+            text: `Đi ${tenDiemDen || ""} ${sInput.people ?? 2} người, ngân sách ${
               ((sInput.budget ?? 10_000_000) / 1_000_000).toFixed(0)
-            } triệu, 3 ngày 2 đêm từ TP.HCM. ${avoidsStr} Ghi chú: ${noteTrimmed}`,
+            } triệu, ${sInput.soNgay ?? 3} ngày từ ${tenDiemDi}. ${avoidsStr} Ghi chú: ${noteTrimmed}`,
           };
         } else {
           // Gửi request có cấu trúc trực tiếp
+          const thieuList: ("soNguoi" | "ngansach" | "diemDen" | "soNgay")[] = [];
+          if (!sInput.diemDen) thieuList.push("diemDen");
+          if (!sInput.people) thieuList.push("soNguoi");
+          if (!sInput.budget) thieuList.push("ngansach");
+          if (!sInput.soNgay) thieuList.push("soNgay");
+
           const tripRequest: TripRequest = {
-            schemaVersion: 6,
+            schemaVersion: 7,
             diemDi: sInput.diemDi || "TP.HCM",
-            diemDen: sInput.diemDen || "Đà Nẵng",
+            diemDen: sInput.diemDen || null,
             soNgay: sInput.soNgay ?? 3,
             soNguoi: sInput.people ?? null,
             ngansachTongVND: sInput.budget ?? null,
             sothich: mappedPrefs,
             tranh: mappedAvoids,
             ghiChu: [],
-            thieu: [
-              ...(!sInput.people ? (["soNguoi"] as const) : []),
-              ...(!sInput.budget ? (["ngansach"] as const) : []),
-            ],
+            thieu: thieuList,
             cauHoiLamRo: [],
             canhBao: [],
+            giaVeTuNhap: sInput.giaVeTuNhap,
           };
           bodyPayload = { request: tripRequest };
         }

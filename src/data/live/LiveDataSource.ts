@@ -1,9 +1,9 @@
 /**
  * src/data/live/LiveDataSource.ts
  *
- * DataSource triển khai dữ liệu live:
- * - OSM: khách sạn, quán ăn, cafe, điểm tham quan
- * - Tavily + Gemini: giá phương tiện, giá phòng khách sạn
+ * DataSource triển khai dữ liệu live mở rộng cho điểm đến bất kỳ:
+ * - OSM (Overpass): khách sạn, quán ăn, cafe, điểm tham quan theo bán kính toạ độ điểm đến
+ * - Tavily + Gemini: giá phương tiện, giá phòng khách sạn và bữa ăn theo điểm đến
  * - Dự phòng: snapshot mới nhất → mock JSON
  *
  * DATA_MODE = "live" | "snapshot" | "mock"
@@ -12,7 +12,17 @@
 import path from "node:path";
 import fs from "node:fs";
 import type { DataSource } from "../DataSource";
-import type { Hotel, Transport, Activity, KhachSan, QuanAn, Cafe } from "@/contracts";
+import type {
+  Hotel,
+  Transport,
+  Activity,
+  KhachSan,
+  QuanAn,
+  Cafe,
+  HoatDong,
+  DiemDen,
+} from "@/contracts";
+import { DEFAULT_DIEM_DI } from "@/contracts";
 import { JsonDataSource } from "../JsonDataSource";
 import {
   fetchKhachSansOSM,
@@ -21,22 +31,55 @@ import {
   fetchHoatDongsOSM,
 } from "./overpassClient";
 import { researchTransports } from "./researchTransport";
-import { enrichHotelPrices } from "./researchHotelPrice";
+import { researchGiaDiemDen } from "./researchGiaDiemDen";
 
 export type DataMode = "live" | "snapshot" | "mock";
+
+const DEFAULT_COORD = { lat: 10.7769, lng: 106.7009 }; // default center if not specified
 
 export class LiveDataSource implements DataSource {
   private readonly mode: DataMode;
   private readonly snapshotName?: string;
   private readonly mockSource: JsonDataSource;
   private readonly fetchedAt: string;
+  private diemDen?: DiemDen;
+  private diemDi?: DiemDen;
+  private soNgay: number;
+  private giaVeTuNhap?: { chieuDiVND: number; chieuVeVND: number };
 
-  constructor(mode?: DataMode, snapshotName?: string) {
+  private memoKhachSans?: KhachSan[];
+  private memoQuanAns?: QuanAn[];
+  private memoCafes?: Cafe[];
+  private memoHoatDongs?: HoatDong[];
+  private memoTransports?: Transport[];
+
+  constructor(
+    mode?: DataMode,
+    snapshotName?: string,
+    diemDen?: DiemDen,
+    diemDi?: DiemDen,
+    soNgay: number = 3,
+    giaVeTuNhap?: { chieuDiVND: number; chieuVeVND: number }
+  ) {
     this.mode =
       (process.env.DATA_MODE as DataMode | undefined) ?? mode ?? "live";
     this.snapshotName = snapshotName ?? process.env.DATA_SNAPSHOT_NAME;
     this.mockSource = new JsonDataSource();
     this.fetchedAt = new Date().toISOString();
+    this.diemDen = diemDen;
+    this.diemDi = diemDi ?? DEFAULT_DIEM_DI;
+    this.soNgay = soNgay;
+    this.giaVeTuNhap = giaVeTuNhap;
+  }
+
+  setDestination(diemDen: DiemDen, diemDi?: DiemDen): void {
+    this.diemDen = diemDen;
+    if (diemDi) this.diemDi = diemDi;
+    this.memoKhachSans = undefined;
+    this.memoQuanAns = undefined;
+    this.memoCafes = undefined;
+    this.memoHoatDongs = undefined;
+    this.memoTransports = undefined;
   }
 
   getMode(): string {
@@ -47,6 +90,14 @@ export class LiveDataSource implements DataSource {
     return this.fetchedAt;
   }
 
+  private getToaDo(): { lat: number; lng: number } {
+    return this.diemDen?.toaDo ?? DEFAULT_COORD;
+  }
+
+  private getTenDiemDen(): string {
+    return this.diemDen?.ten ?? "";
+  }
+
   // ─── Legacy interface (backward compat) ───────────────────────────────────
 
   async getHotels(): Promise<Hotel[]> {
@@ -54,9 +105,26 @@ export class LiveDataSource implements DataSource {
   }
 
   async getTransports(): Promise<Transport[]> {
+    if (this.memoTransports) return this.memoTransports;
     if (this.mode === "mock") return this.mockSource.getTransports();
+
+    if (this.mode === "snapshot") {
+      const snap = this.loadSnapshot();
+      if (snap?.transports && snap.transports.length > 0) return snap.transports;
+      return this.mockSource.getTransports();
+    }
+
     try {
-      return await researchTransports();
+      if (this.diemDen) {
+        const res = await researchTransports(
+          this.diemDi ?? DEFAULT_DIEM_DI,
+          this.diemDen,
+          this.soNgay,
+          this.giaVeTuNhap
+        );
+        if (res.transports.length > 0) return res.transports;
+      }
+      return this.mockSource.getTransports();
     } catch {
       return this.mockSource.getTransports();
     }
@@ -69,9 +137,9 @@ export class LiveDataSource implements DataSource {
   // ─── Live data ────────────────────────────────────────────────────────────
 
   async getKhachSans(): Promise<KhachSan[]> {
+    if (this.memoKhachSans) return this.memoKhachSans;
     if (this.mode === "mock") return [];
 
-    // snapshot mode
     if (this.mode === "snapshot") {
       const snap = this.loadSnapshot();
       if (snap?.khachSans) return snap.khachSans;
@@ -79,65 +147,119 @@ export class LiveDataSource implements DataSource {
     }
 
     try {
-      const raw = await fetchKhachSansOSM();
-      const enriched = await enrichHotelPrices(raw);
-      return enriched;
+      const coord = this.getToaDo();
+      const ten = this.getTenDiemDen();
+      const raw = await fetchKhachSansOSM(coord, ten);
+
+      // Điền giá theo sao từ researchGiaDiemDen
+      let giaTheoSao: Record<number, number> | null = null;
+      if (this.diemDen) {
+        try {
+          const res = await researchGiaDiemDen(this.diemDen);
+          giaTheoSao = res.giaKhachSanTheoSao;
+        } catch {
+          // ignore
+        }
+      }
+
+      const res = raw.map((ks) => {
+        const stars = ks.soSao ?? 3;
+        const estimatedNight = giaTheoSao?.[stars] ?? 700_000;
+        return {
+          ...ks,
+          giaUocTinhNguoi: Math.round(estimatedNight / 2),
+          khoangGiaDemVND: {
+            min: Math.round(estimatedNight * 0.85),
+            max: Math.round(estimatedNight * 1.15),
+          },
+        };
+      });
+      return (this.memoKhachSans = res);
     } catch (err) {
       console.error("[LiveDataSource] getKhachSans lỗi:", err instanceof Error ? err.message : err);
-      // Dự phòng snapshot
       const snap = this.loadLatestSnapshot();
-      return snap?.khachSans ?? [];
+      return (this.memoKhachSans = snap?.khachSans ?? []);
     }
   }
 
   async getQuanAns(): Promise<QuanAn[]> {
+    if (this.memoQuanAns) return this.memoQuanAns;
     if (this.mode === "mock") return [];
 
     if (this.mode === "snapshot") {
       const snap = this.loadSnapshot();
-      return snap?.quanAns ?? [];
+      if (snap?.quanAns) return (this.memoQuanAns = snap.quanAns);
+      return [];
     }
 
     try {
-      return await fetchQuanAnsOSM();
+      const coord = this.getToaDo();
+      const ten = this.getTenDiemDen();
+      const raw = await fetchQuanAnsOSM(coord, ten);
+
+      let giaBuaAn = 150_000;
+      if (this.diemDen) {
+        try {
+          const res = await researchGiaDiemDen(this.diemDen);
+          giaBuaAn = res.giaBuaAnTrungBinh;
+        } catch {
+          // ignore
+        }
+      }
+
+      const res = raw.map((qa) => ({
+        ...qa,
+        giaUocTinhNguoi: giaBuaAn,
+      }));
+      return (this.memoQuanAns = res);
     } catch (err) {
       console.error("[LiveDataSource] getQuanAns lỗi:", err instanceof Error ? err.message : err);
       const snap = this.loadLatestSnapshot();
-      return snap?.quanAns ?? [];
+      return (this.memoQuanAns = snap?.quanAns ?? []);
     }
   }
 
   async getCafes(): Promise<Cafe[]> {
+    if (this.memoCafes) return this.memoCafes;
     if (this.mode === "mock") return [];
 
     if (this.mode === "snapshot") {
       const snap = this.loadSnapshot();
-      return snap?.cafes ?? [];
+      if (snap?.cafes) return (this.memoCafes = snap.cafes);
+      return [];
     }
 
     try {
-      return await fetchCafesOSM();
+      const coord = this.getToaDo();
+      const ten = this.getTenDiemDen();
+      const res = await fetchCafesOSM(coord, ten);
+      return (this.memoCafes = res);
     } catch (err) {
       console.error("[LiveDataSource] getCafes lỗi:", err instanceof Error ? err.message : err);
       const snap = this.loadLatestSnapshot();
-      return snap?.cafes ?? [];
+      return (this.memoCafes = snap?.cafes ?? []);
     }
   }
 
-  async getHoatDongs(): Promise<import("@/contracts").HoatDong[]> {
+  async getHoatDongs(): Promise<HoatDong[]> {
+    if (this.memoHoatDongs) return this.memoHoatDongs;
     if (this.mode === "mock") return [];
 
     if (this.mode === "snapshot") {
       const snap = this.loadSnapshot();
-      return snap?.hoatDongs ?? [];
+      if (snap?.hoatDongs) return (this.memoHoatDongs = snap.hoatDongs);
+      return [];
     }
 
     try {
-      return await fetchHoatDongsOSM();
+      const coord = this.getToaDo();
+      const ten = this.getTenDiemDen();
+      const res = await fetchHoatDongsOSM(coord, ten);
+      return (this.memoHoatDongs = res);
     } catch (err) {
       console.error("[LiveDataSource] getHoatDongs lỗi:", err instanceof Error ? err.message : err);
       const snap = this.loadLatestSnapshot();
-      return snap?.hoatDongs ?? [];
+      return (this.memoHoatDongs = snap?.hoatDongs ?? []);
     }
   }
 
@@ -201,6 +323,7 @@ export class LiveDataSource implements DataSource {
       cafes,
       hoatDongs,
       transports,
+      diemDen: this.diemDen,
     };
 
     const filePath = path.join(dir, `${name}.json`);
@@ -214,6 +337,7 @@ export interface SnapshotData {
   khachSans: KhachSan[];
   quanAns: QuanAn[];
   cafes: Cafe[];
-  hoatDongs: import("@/contracts").HoatDong[];
+  hoatDongs: HoatDong[];
   transports: Transport[];
+  diemDen?: DiemDen;
 }

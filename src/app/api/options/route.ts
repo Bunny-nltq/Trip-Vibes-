@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
 import { calculateTransportFlags } from "@/core/flags";
+import { geocodeDestination } from "@/data/live/geocodeClient";
+import type { DiemDen } from "@/contracts";
 
 // In-memory cache cho /api/options (TTL 1 giờ)
 interface CacheEntry {
@@ -17,6 +19,7 @@ export function clearOptionsCache() {
 
 /**
  * GET /api/options?loai=phuong_tien&huong=di|ve | khach_san | hoat_dong | quan_an | cafe
+ * Tham số tuỳ chọn: diemDi, diemDen, soNgay, soNguoi
  *
  * Trả danh sách ứng viên từ LiveDataSource (theo DATA_MODE hiện tại).
  * Có cache in-memory: gọi lần 2 liên tiếp không chạm vào nguồn ngoài.
@@ -28,6 +31,10 @@ export async function GET(req: Request) {
   const huong = url.searchParams.get("huong"); // "di" | "ve"
   const soNguoiStr = url.searchParams.get("soNguoi");
   const soNguoi = soNguoiStr ? parseInt(soNguoiStr, 10) : 2;
+  const soNgayStr = url.searchParams.get("soNgay");
+  const soNgay = soNgayStr ? parseInt(soNgayStr, 10) : 3;
+  const diemDenParam = url.searchParams.get("diemDen");
+  const diemDiParam = url.searchParams.get("diemDi");
 
   if (!loai) {
     return NextResponse.json(
@@ -36,14 +43,44 @@ export async function GET(req: Request) {
     );
   }
 
-  const cacheKey = `${loai}_${huong || ""}_${soNguoi}`;
+  const cacheKey = `${loai}_${huong || ""}_${soNguoi}_${soNgay}_${diemDenParam || ""}_${diemDiParam || ""}`;
   const cached = memoryCache.get(cacheKey);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
     return NextResponse.json(cached.data);
   }
 
   try {
-    const ds = new LiveDataSource();
+    let diemDen: DiemDen | undefined;
+    if (diemDenParam) {
+      try {
+        const parsed = JSON.parse(diemDenParam);
+        if (parsed && typeof parsed === "object" && parsed.ten) {
+          diemDen = parsed;
+        }
+      } catch {
+        const geo = await geocodeDestination(diemDenParam);
+        if (geo.status === "thanh_cong") {
+          diemDen = geo.diemDen;
+        }
+      }
+    }
+
+    let diemDi: DiemDen | undefined;
+    if (diemDiParam) {
+      try {
+        const parsed = JSON.parse(diemDiParam);
+        if (parsed && typeof parsed === "object" && parsed.ten) {
+          diemDi = parsed;
+        }
+      } catch {
+        const geo = await geocodeDestination(diemDiParam);
+        if (geo.status === "thanh_cong") {
+          diemDi = geo.diemDen;
+        }
+      }
+    }
+
+    const ds = new LiveDataSource(undefined, undefined, diemDen, diemDi);
 
     if (loai === "phuong_tien") {
       if (!huong || !["di", "ve"].includes(huong)) {

@@ -6,6 +6,7 @@ import { parseRequest, PARSE_PROMPT_VERSION } from "../src/ai/parseRequest";
 import { normalizeRequest, removeVietnameseDiacritics } from "../src/core/normalizeRequest";
 import { GeminiProvider } from "../src/ai/provider";
 import type { TripRequest, RawTripRequest, MissingField, Preference, Avoidance } from "../src/contracts";
+import { getDiemDenTen } from "../src/contracts";
 
 // Nạp biến môi trường từ .env.local mà không in hay đọc thô nội dung
 loadEnvConfig(process.cwd());
@@ -14,7 +15,7 @@ interface ExpectedCase {
   soNguoi: number | null;
   soNgay: number | null;
   ngansachTongVND: number | null;
-  diemDen: string;
+  diemDen: string | null;
   sothichBaoGom: Preference[];
   tranh: Avoidance[];
   thieu: MissingField[];
@@ -196,9 +197,13 @@ async function main() {
       mismatches.push(`ngansachTongVND: mong đợi ${exp.ngansachTongVND}, thực tế ${request.ngansachTongVND}`);
     }
 
-    const normExpDiemDen = removeVietnameseDiacritics(exp.diemDen);
-    const normActDiemDen = removeVietnameseDiacritics(request.diemDen);
-    if (normExpDiemDen !== normActDiemDen) {
+    const expDiemDenStr = exp.diemDen ? removeVietnameseDiacritics(exp.diemDen) : null;
+    const actDiemDenStr = request.diemDen
+      ? removeVietnameseDiacritics(
+          typeof request.diemDen === "string" ? request.diemDen : request.diemDen.ten
+        )
+      : null;
+    if (expDiemDenStr !== actDiemDenStr) {
       mismatches.push(`diemDen: mong đợi "${exp.diemDen}", thực tế "${request.diemDen}"`);
     }
 
@@ -273,8 +278,8 @@ async function main() {
     if (res.request) {
       if (res.request.soNguoi === c.expected.soNguoi) correctSoNguoi++;
       if (res.request.soNgay === c.expected.soNgay) correctSoNgay++;
-      if (res.request.ngansachTongVND === c.expected.ngansachTongVND) correctNganSach++;
-      if (removeVietnameseDiacritics(res.request.diemDen) === removeVietnameseDiacritics(c.expected.diemDen)) correctDiemDen++;
+      const actualTen = getDiemDenTen(res.request.diemDen);
+      if (removeVietnameseDiacritics(actualTen || "") === removeVietnameseDiacritics(c.expected.diemDen || "")) correctDiemDen++;
       if (isSubset(c.expected.sothichBaoGom, res.request.sothich)) correctSothich++;
       if (setEquals(c.expected.tranh, res.request.tranh)) correctTranh++;
       if (setEquals(c.expected.thieu, res.request.thieu)) correctThieu++;

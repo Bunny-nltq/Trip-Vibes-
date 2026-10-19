@@ -1,4 +1,5 @@
-import type { TripRequest, Plan } from "@/contracts";
+import type { TripRequest, Plan, DiemDen } from "@/contracts";
+import { DEFAULT_DIEM_DI, getDiemDenTen } from "@/contracts";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
 import { buildPlan } from "@/core/buildPlan";
 import { validatePlan, type Violation } from "@/core/validatePlan";
@@ -6,6 +7,7 @@ import { tinhNganSachToiThieu } from "@/core/minBudget";
 import { runPlanAgent, type AgentTraceItem } from "./planAgent";
 import { GeminiProvider } from "./provider";
 import { MAX_REPAIR_ROUNDS } from "@/core/assumptions";
+import { geocodeDestination, type GeocodeCandidate } from "@/data/live/geocodeClient";
 
 export interface PlanRepairResult {
   status:
@@ -14,6 +16,8 @@ export interface PlanRepairResult {
     | "khong_the_dat_ngan_sach"
     | "khong_co_phuong_an"
     | "can_lam_ro";
+  lyDo?: "diem_den_mo_ho" | "thieu_thong_tin" | "ngoai_pham_vi_so_ngay" | string;
+  ungVien?: GeocodeCandidate[];
   request: TripRequest;
   plan?: Plan;
   hard: Violation[];
@@ -33,13 +37,93 @@ export interface PlanRepairResult {
 }
 
 export async function planWithRepair(
-  request: TripRequest,
+  incomingRequest: TripRequest,
   options?: { provider?: GeminiProvider }
 ): Promise<PlanRepairResult> {
   const startMs = Date.now();
-  const liveDataSource = new LiveDataSource();
-  const mode = liveDataSource.getMode();
+  let request = { ...incomingRequest };
 
+  // a) Kiểm tra điều kiện "cần làm rõ" (thiếu trường, ngoài phạm vi)
+  const emptyResult: PlanRepairResult = {
+    status: "can_lam_ro",
+    request,
+    hard: [],
+    soft: [],
+    lichSu: [],
+    soVongSua: 0,
+    soLanGoiAI: 0,
+    ms: 0,
+    dataSourceUsed: "live",
+  };
+
+  if (!request.diemDen || request.thieu.includes("diemDen")) {
+    emptyResult.lyDo = "thieu_thong_tin";
+    emptyResult.ms = Date.now() - startMs;
+    return emptyResult;
+  }
+
+  // Geocode nếu diemDen là string hoặc cần kiểm tra mơ hồ
+  let resolvedDiemDen: DiemDen;
+  if (typeof request.diemDen === "string") {
+    const geo = await geocodeDestination(request.diemDen);
+    if (geo.status === "can_lam_ro") {
+      emptyResult.lyDo = "diem_den_mo_ho";
+      emptyResult.ungVien = geo.ungVien;
+      emptyResult.ms = Date.now() - startMs;
+      return emptyResult;
+    }
+    if (geo.status === "khong_tim_thay") {
+      emptyResult.lyDo = "thieu_thong_tin";
+      emptyResult.ms = Date.now() - startMs;
+      return emptyResult;
+    }
+    resolvedDiemDen = geo.diemDen;
+    request.diemDen = resolvedDiemDen;
+  } else {
+    resolvedDiemDen = request.diemDen;
+  }
+
+  let resolvedDiemDi: DiemDen = DEFAULT_DIEM_DI;
+  if (request.diemDi) {
+    if (typeof request.diemDi === "string") {
+      const geoDi = await geocodeDestination(request.diemDi);
+      if (geoDi.status === "thanh_cong") {
+        resolvedDiemDi = geoDi.diemDen;
+      }
+    } else {
+      resolvedDiemDi = request.diemDi;
+    }
+  }
+
+  if (
+    !request.soNguoi ||
+    !request.soNgay ||
+    !request.ngansachTongVND ||
+    request.soNgay < 2 ||
+    request.soNgay > 5 ||
+    request.thieu.length > 0
+  ) {
+    emptyResult.lyDo =
+      request.soNgay && (request.soNgay < 2 || request.soNgay > 5)
+        ? "ngoai_pham_vi_so_ngay"
+        : "thieu_thong_tin";
+    emptyResult.ms = Date.now() - startMs;
+    return emptyResult;
+  }
+
+  console.log("[planWithRepair] Initializing LiveDataSource for:", resolvedDiemDen.ten);
+  const liveDataSource = new LiveDataSource(
+    undefined,
+    undefined,
+    resolvedDiemDen,
+    resolvedDiemDi,
+    request.soNgay ?? 3,
+    request.giaVeTuNhap
+  );
+  const mode = liveDataSource.getMode();
+  emptyResult.dataSourceUsed = mode;
+
+  console.log("[planWithRepair] Fetching all data via Promise.all...");
   // Lấy dữ liệu song song
   const [transports, hotels, activities, khachSans, quanAns, cafes, hoatDongs] =
     await Promise.all([
@@ -51,6 +135,7 @@ export async function planWithRepair(
       liveDataSource.getCafes(),
       liveDataSource.getHoatDongs(),
     ]);
+  console.log(`[planWithRepair] Data ready: ${transports.length} transports, ${khachSans.length} hotels, ${quanAns.length} food, ${hoatDongs.length} activities`);
 
   const data = {
     transports,
@@ -62,34 +147,15 @@ export async function planWithRepair(
     hoatDongs,
   };
 
-  const emptyResult: PlanRepairResult = {
-    status: "can_lam_ro",
-    request,
-    hard: [],
-    soft: [],
-    lichSu: [],
-    soVongSua: 0,
-    soLanGoiAI: 0,
-    ms: 0,
-    dataSourceUsed: mode,
-  };
-
-  // a) Kiểm tra điều kiện "cần làm rõ"
-  if (
-    !request.soNguoi ||
-    !request.soNgay ||
-    !request.ngansachTongVND ||
-    request.soNgay !== 3 ||
-    request.diemDen !== "Đà Nẵng" ||
-    request.thieu.length > 0
-  ) {
+  // Nếu không có bất kỳ phương tiện nào
+  if (transports.length === 0) {
+    emptyResult.status = "khong_co_phuong_an";
+    emptyResult.lyDo = "khong_co_phuong_an";
     emptyResult.ms = Date.now() - startMs;
     return emptyResult;
   }
 
   // b) Kiểm tra ngân sách tối thiểu (không tốn quota AI)
-  // Gộp khachSans vào hotels để minBudget có thể tính
-  const hotelsMerged = [...hotels];
   const minBudgetRes = tinhNganSachToiThieu(request, data);
   if (!minBudgetRes.khaThi) {
     emptyResult.status =

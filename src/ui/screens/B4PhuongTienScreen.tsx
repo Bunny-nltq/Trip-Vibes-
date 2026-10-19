@@ -6,6 +6,7 @@ import { BudgetBox } from "@/ui/components/BudgetBox";
 import { useOptions, type TransportOption } from "@/ui/hooks/useOptions";
 import { usePlanPreview } from "@/ui/hooks/usePlanPreview";
 import { Plane, Train, Bus, ArrowLeft, ArrowRight, Moon, Clock } from "lucide-react";
+import { getDiemDenTen } from "@/contracts";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
 
@@ -130,7 +131,7 @@ export function B4PhuongTienScreen() {
               setSelectedId("");
             }}
           >
-            Chiều đi ({plan?.request.diemDi || "TP.HCM"} → {plan?.request.diemDen || "Đà Nẵng"})
+            Chiều đi ({(plan?.request.diemDi ? (typeof plan.request.diemDi === "string" ? plan.request.diemDi : plan.request.diemDi.ten) : "TP.HCM")} → {getDiemDenTen(plan?.request.diemDen) || "Điểm đến"})
           </div>
           <div
             className={`tab-item ${tab === "ve" ? "active" : ""}`}
@@ -139,7 +140,7 @@ export function B4PhuongTienScreen() {
               setSelectedId("");
             }}
           >
-            Chiều về ({plan?.request.diemDen || "Đà Nẵng"} → {plan?.request.diemDi || "TP.HCM"})
+            Chiều về ({getDiemDenTen(plan?.request.diemDen) || "Điểm đến"} → {(plan?.request.diemDi ? (typeof plan.request.diemDi === "string" ? plan.request.diemDi : plan.request.diemDi.ten) : "TP.HCM")})
           </div>
         </div>
 

@@ -15,6 +15,7 @@ Quy tắc bắt buộc:
 - Số tiền đọc từ bill luôn cần người dùng xác nhận trước khi ghi vào sổ chi tiêu.
 - Ảnh bill chỉ xử lý trong bộ nhớ: không lưu đĩa, không log.
 - Dữ liệu động luôn có nguồn và ngày lấy; giá ước tính phải gắn nhãn; không tự điền sao Google.
+- Phạm vi: điểm đến bất kỳ, 2 đến 5 ngày; giá ước tính và tỷ giá phải gắn nhãn và nguồn; Nominatim tối đa 1 yêu cầu mỗi giây.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

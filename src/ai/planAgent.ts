@@ -3,6 +3,7 @@ import {
   type Selection,
   type Preference,
   SelectionSchema,
+  getDiemDenTen,
 } from "@/contracts";
 import { JsonDataSource } from "@/data/JsonDataSource";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
@@ -38,7 +39,7 @@ export interface PlanAgentResult {
   dataSourceUsed: string;
 }
 
-export const AGENT_SYSTEM_PROMPT = `Bạn là trợ lý AI chuyên lập kế hoạch du lịch Đà Nẵng của hệ thống Trip Vibes.
+export const AGENT_SYSTEM_PROMPT = `Bạn là trợ lý AI chuyên lập kế hoạch du lịch của hệ thống Trip Vibes.
 
 NGUYÊN TẮC BẮT BUỘC:
 1. Bạn CHỈ ĐƯỢC CHỌN MÃ ID từ dữ liệu do các công cụ tìm kiếm trả về trong phiên này. Tuyệt đối KHÔNG tự tạo ID, giá, đánh giá hay bịa bất kỳ thông tin nào.
@@ -120,9 +121,12 @@ export async function runPlanAgent(
   let selection: Selection | null = null;
   let idRetryCount = 0;
 
+  const tenDiemDi = typeof request.diemDi === "string" ? request.diemDi : request.diemDi.ten;
+  const tenDiemDen = getDiemDenTen(request.diemDen);
+
   let userPrompt = `Yêu cầu du lịch của khách hàng:
-- Điểm đi: ${request.diemDi}
-- Điểm đến: ${request.diemDen}
+- Điểm đi: ${tenDiemDi}
+- Điểm đến: ${tenDiemDen}
 - Số ngày: ${soNgay} ngày (${soDem} đêm)
 - Số người: ${soNguoi} người (${soPhong} phòng)
 - Ngân sách tổng: ${request.ngansachTongVND ? request.ngansachTongVND.toLocaleString("vi-VN") + " VND" : "Chưa có"}
@@ -168,30 +172,47 @@ Chỉ thị:
 
   while (steps < AGENT_MAX_STEPS && !selection) {
     steps++;
+    console.log(`[PlanAgent] Step ${steps}: Sending request to Gemini (${provider.modelName})...`);
 
     let response;
-    try {
-      response = await provider.client.models.generateContent({
-        model: provider.modelName,
-        contents: contents as never,
-        config: {
-          systemInstruction: AGENT_SYSTEM_PROMPT,
-          temperature: 0,
-          tools: [{ functionDeclarations: AGENT_TOOLS_DECLARATIONS as never }],
-        },
-      });
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      if (
-        msg.includes("429") ||
-        msg.includes("RESOURCE_EXHAUSTED") ||
-        msg.includes("quota")
-      ) {
-        throw new Error(
-          "Đã vượt hạn mức gọi Gemini API (429 / RESOURCE_EXHAUSTED). Vui lòng thử lại sau."
-        );
+    let attempts = 0;
+    while (attempts < 2) {
+      attempts++;
+      try {
+        response = await provider.client.models.generateContent({
+          model: provider.modelName,
+          contents: contents as never,
+          config: {
+            systemInstruction: AGENT_SYSTEM_PROMPT,
+            temperature: 0,
+            tools: [{ functionDeclarations: AGENT_TOOLS_DECLARATIONS as never }],
+          },
+        });
+        break;
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        if (
+          msg.includes("429") ||
+          msg.includes("RESOURCE_EXHAUSTED") ||
+          msg.includes("quota")
+        ) {
+          throw new Error(
+            "Đã vượt hạn mức gọi Gemini API (429 / RESOURCE_EXHAUSTED). Vui lòng thử lại sau."
+          );
+        }
+        if (
+          attempts < 2 &&
+          (msg.includes("503") || msg.includes("UNAVAILABLE") || msg.includes("demand"))
+        ) {
+          await new Promise((r) => setTimeout(r, 2000));
+          continue;
+        }
+        throw err;
       }
-      throw err;
+    }
+
+    if (!response) {
+      throw new Error("Gemini không phản hồi sau khi thử lại.");
     }
 
     const candidate = response.candidates?.[0];
@@ -201,6 +222,7 @@ Chỉ thị:
 
     const modelContent = candidate.content;
     const functionCalls = response.functionCalls;
+    console.log(`[PlanAgent] Step ${steps}: Received ${functionCalls?.length ?? 0} function calls:`, functionCalls?.map(f => f.name));
 
     if (!functionCalls || functionCalls.length === 0) {
       if (selection) break;

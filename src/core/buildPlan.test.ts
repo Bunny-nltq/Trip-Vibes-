@@ -392,7 +392,7 @@ describe("buildPlan – Maps URLs (core/maps.ts)", () => {
       ten: "Bãi biển Mỹ Khê",
       toaDo: { lat: 16.0617, lng: 108.2478 },
     };
-    const urls = buildMapsUrls(place);
+    const urls = buildMapsUrls(place, "Đà Nẵng");
     expect(urls.xem).toBe(
       "https://www.google.com/maps/search/?api=1&query=B%C3%A3i%20bi%E1%BB%83n%20M%E1%BB%B9%20Kh%C3%AA%2C%20%C4%90%C3%A0%20N%E1%BA%B5ng"
     );
@@ -518,3 +518,117 @@ describe("buildPlan – FixtureB (3 người)", () => {
     }
   });
 });
+
+describe("buildPlan – N ngày, Fixture A", () => {
+  const data = createMockData();
+
+  it("4 ngày, hoạt động [[A1],[A2,A3],[],[]]", () => {
+    const req4: TripRequest = {
+      ...baseRequest,
+      soNgay: 4,
+      soNguoi: 2,
+      ngansachTongVND: 10_000_000,
+    };
+    const selection: Selection = {
+      transportDiId: "T_DI",
+      transportVeId: "T_VE",
+      hotelId: "H1",
+      hoatDongTheoNgay: [["A1"], ["A2", "A3"], [], []],
+    };
+
+    const res = buildPlan(req4, selection, data);
+    expect(res.ok).toBe(true);
+    if (res.ok) {
+      const { tongKet } = res.plan;
+      expect(tongKet.theoHangMuc["Di chuyển"]).toBe(3_920_000);
+      expect(tongKet.theoHangMuc["Chỗ ở"]).toBe(3_300_000);
+      expect(tongKet.theoHangMuc["Ăn uống"]).toBe(2_400_000);
+      expect(tongKet.theoHangMuc["Vui chơi"]).toBe(320_000);
+      expect(tongKet.tongVND).toBe(9_940_000);
+      expect(tongKet.conLaiVND).toBe(60_000);
+      expect(tongKet.phanTramDaDung).toBe(99.4);
+    }
+  });
+
+  it("2 ngày, hoạt động [[A1],[A2]]", () => {
+    const req2: TripRequest = {
+      ...baseRequest,
+      soNgay: 2,
+      soNguoi: 2,
+      ngansachTongVND: 10_000_000,
+    };
+    const selection: Selection = {
+      transportDiId: "T_DI",
+      transportVeId: "T_VE",
+      hotelId: "H1",
+      hoatDongTheoNgay: [["A1"], ["A2"]],
+    };
+
+    const res = buildPlan(req2, selection, data);
+    expect(res.ok).toBe(true);
+    if (res.ok) {
+      const { tongKet } = res.plan;
+      expect(tongKet.theoHangMuc["Chỗ ở"]).toBe(1_100_000);
+      expect(tongKet.theoHangMuc["Ăn uống"]).toBe(1_200_000);
+      expect(tongKet.theoHangMuc["Vui chơi"]).toBe(80_000);
+      expect(tongKet.tongVND).toBe(6_300_000);
+    }
+  });
+
+  it("5 ngày, hoạt động [[A1],[A2,A3],[],[],[]]", () => {
+    const req5: TripRequest = {
+      ...baseRequest,
+      soNgay: 5,
+      soNguoi: 2,
+      ngansachTongVND: 10_000_000,
+    };
+    const selection: Selection = {
+      transportDiId: "T_DI",
+      transportVeId: "T_VE",
+      hotelId: "H1",
+      hoatDongTheoNgay: [["A1"], ["A2", "A3"], [], [], []],
+    };
+
+    const res = buildPlan(req5, selection, data);
+    expect(res.ok).toBe(true);
+    if (res.ok) {
+      const { tongKet, canhBao } = res.plan;
+      expect(tongKet.theoHangMuc["Chỗ ở"]).toBe(4_400_000);
+      expect(tongKet.theoHangMuc["Ăn uống"]).toBe(3_000_000);
+      expect(tongKet.theoHangMuc["Vui chơi"]).toBe(320_000);
+      expect(tongKet.tongVND).toBe(11_640_000);
+      expect(tongKet.conLaiVND).toBe(-1_640_000);
+      expect(canhBao).toContain("vuot_ngan_sach");
+    }
+  });
+
+  it("Số ô hoạt động sai (ngày giữa 3 hoạt động; ngày đầu 2 hoạt động) trả lỗi", () => {
+    const req3: TripRequest = {
+      ...baseRequest,
+      soNgay: 3,
+      soNguoi: 2,
+      ngansachTongVND: 10_000_000,
+    };
+
+    // Ngày đầu 2 hoạt động
+    const selNgayDau2: Selection = {
+      transportDiId: "T_DI",
+      transportVeId: "T_VE",
+      hotelId: "H1",
+      hoatDongTheoNgay: [["A1", "A2"], ["A3"], []],
+    };
+    const resNgayDau = buildPlan(req3, selNgayDau2, data);
+    expect(resNgayDau.ok).toBe(false);
+
+    // Ngày giữa 3 hoạt động
+    const selNgayGiua3: Selection = {
+      transportDiId: "T_DI",
+      transportVeId: "T_VE",
+      hotelId: "H1",
+      hoatDongTheoNgay: [["A1"], ["A2", "A3", "A4"], []],
+    };
+    const resNgayGiua = buildPlan(req3, selNgayGiua3, data);
+    expect(resNgayGiua.ok).toBe(false);
+  });
+});
+

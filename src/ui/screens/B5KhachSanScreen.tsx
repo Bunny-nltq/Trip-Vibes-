@@ -3,6 +3,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useApp, extractSelectionFromPlan } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
+import { getDiemDenTen } from "@/contracts";
 import {
   useOptions,
   type HotelOptionItem,
@@ -184,8 +185,8 @@ export function B5KhachSanScreen() {
         </h1>
         <p className="page-sub">
           {mode === "khach_san"
-            ? `${soDem} đêm, ${soPhong} phòng cho ${soNguoi} người tại Đà Nẵng.`
-            : `Các địa điểm và hoạt động giải trí tại Đà Nẵng.`}
+            ? `${soDem} đêm, ${soPhong} phòng cho ${soNguoi} người tại ${getDiemDenTen(plan?.request.diemDen) || "điểm đến"}.`
+            : `Các địa điểm và hoạt động giải trí tại ${getDiemDenTen(plan?.request.diemDen) || "điểm đến"}.`}
         </p>
 
         {/* Tab chuyển đổi linh hoạt */}
@@ -341,7 +342,7 @@ export function B5KhachSanScreen() {
                           ) : (
                             <span>Khách sạn</span>
                           )}
-                          <span>· Khu vực {h.khuVuc || "Đà Nẵng"}</span>
+                          <span>· Khu vực {h.khuVuc || getDiemDenTen(plan?.request.diemDen) || "Trung tâm"}</span>
                         </div>
                         <div style={{ fontSize: 12, color: "var(--g700)", display: "flex", gap: 12, flexWrap: "wrap", marginTop: 4 }}>
                           <span>Buffet: <b>{h.includesBreakfast ? "Đã gồm" : "Tự túc"}</b></span>

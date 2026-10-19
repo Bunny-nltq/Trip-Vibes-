@@ -8,6 +8,7 @@ import {
   type PlanItem,
   type PlanItemCategory,
   schemaVersion,
+  getDiemDenTen,
 } from "@/contracts";
 import type { KhachSan, QuanAn, Cafe, HoatDong } from "@/contracts";
 import {
@@ -80,7 +81,13 @@ export function buildPlan(
   // 3. Kiểm tra số hoạt động mỗi ngày và phát hiện hoạt động trùng
   const seenActivityIds = new Set<string>();
   selection.hoatDongTheoNgay.forEach((dayActs, dayIdx) => {
-    if (dayActs.length > SO_HOAT_DONG_TOI_DA_MOI_NGAY) {
+    if (dayIdx === 0 && dayActs.length > 1) {
+      loi.push(`Ngày đầu chỉ được tối đa 1 hoạt động, vượt quá mức tối đa (hiện có ${dayActs.length}).`);
+    } else if (dayIdx === soNgay - 1 && dayActs.length > 1) {
+      loi.push(`Ngày cuối chỉ được tối đa 1 hoạt động, vượt quá mức tối đa (hiện có ${dayActs.length}).`);
+    } else if (dayIdx > 0 && dayIdx < soNgay - 1 && dayActs.length > 2) {
+      loi.push(`Ngày giữa chỉ được tối đa 2 hoạt động, vượt quá mức tối đa (hiện có ${dayActs.length}).`);
+    } else if (dayActs.length > SO_HOAT_DONG_TOI_DA_MOI_NGAY) {
       loi.push(
         `Ngày ${dayIdx + 1} có ${dayActs.length} hoạt động, vượt quá mức tối đa ${SO_HOAT_DONG_TOI_DA_MOI_NGAY}.`
       );
@@ -154,8 +161,9 @@ export function buildPlan(
   const tVe = transportVe!;
 
   // 5. Tính toán các thông số phòng và đêm
-  const soDem = Math.max(1, soNgay - 1);
+  const soDem = soNgay - 1;
   const soPhong = Math.ceil(soNguoi / NGUOI_MOI_PHONG);
+  const tenDiemDen = getDiemDenTen(request.diemDen);
 
   // Tính giá đêm khách sạn
   let giaDem: number;
@@ -261,7 +269,7 @@ export function buildPlan(
       doTinCay: quanTrua?.doTinCay,
       giaLaUocTinh: quanTrua?.giaLaUocTinh ?? true,
       mapsUrl: quanTrua?.nguon
-        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(quanTrua.ten + ", Đà Nẵng")}`
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(quanTrua.ten + (tenDiemDen ? `, ${tenDiemDen}` : ""))}`
         : undefined,
     });
 
@@ -285,7 +293,7 @@ export function buildPlan(
       doTinCay: quanToi?.doTinCay,
       giaLaUocTinh: quanToi?.giaLaUocTinh ?? true,
       mapsUrl: quanToi?.nguon
-        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(quanToi.ten + ", Đà Nẵng")}`
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(quanToi.ten + (tenDiemDen ? `, ${tenDiemDen}` : ""))}`
         : undefined,
     });
 
@@ -310,7 +318,7 @@ export function buildPlan(
         doTinCay: quanCafe?.doTinCay,
         giaLaUocTinh: quanCafe?.giaLaUocTinh ?? true,
         mapsUrl: quanCafe?.nguon
-          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((quanCafe.ten) + ", Đà Nẵng")}`
+          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((quanCafe.ten) + (tenDiemDen ? `, ${tenDiemDen}` : ""))}`
           : undefined,
       });
     }
@@ -329,7 +337,7 @@ export function buildPlan(
       const mapsUrl =
         actAny.mapsUrls?.xem ??
         (actAny.nguon
-          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(tenAct + ", Đà Nẵng")}`
+          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(tenAct + (tenDiemDen ? `, ${tenDiemDen}` : ""))}`
           : undefined);
 
       items.push({
