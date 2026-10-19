@@ -14,6 +14,20 @@ export function addExpense(ledger: Ledger, expense: Expense): Ledger {
   };
 }
 
+export function deleteExpense(ledger: Ledger, id: string): Ledger {
+  return {
+    ...ledger,
+    expenses: ledger.expenses.filter((e) => e.id !== id),
+  };
+}
+
+export function updateExpense(ledger: Ledger, expense: Expense): Ledger {
+  return {
+    ...ledger,
+    expenses: ledger.expenses.map((e) => (e.id === expense.id ? expense : e)),
+  };
+}
+
 export function tinhThucTeTheoHangMuc(ledger: Ledger): Record<string, number> {
   const result: Record<string, number> = {};
   for (const exp of ledger.expenses) {

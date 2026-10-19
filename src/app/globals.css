@@ -304,3 +304,30 @@ body {
 .checkbox.checked { background: var(--p500); border-color: var(--p500); color: white; }
 .center-layout { max-width: 640px; margin: 0 auto; padding: 48px 0; }
 .narrow-layout { max-width: 420px; margin: 0 auto; padding: 64px 16px; }
+
+/* ── Bill Scanner Effect ── */
+.scanner-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-md);
+}
+.scanner-laser {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--p500), #60A5FA, transparent);
+  box-shadow: 0 0 12px var(--p500);
+  animation: scan-laser 2s ease-in-out infinite alternate;
+}
+@keyframes scan-laser {
+  0% { top: 0%; }
+  100% { top: 96%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scanner-laser {
+    animation: none;
+    display: none;
+  }
+}

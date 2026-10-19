@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { createLedger, addExpense, tinhThucTeTheoHangMuc, tongThucTe } from "./ledger";
+import {
+  createLedger,
+  addExpense,
+  deleteExpense,
+  updateExpense,
+  tinhThucTeTheoHangMuc,
+  tongThucTe,
+} from "./ledger";
 import type { Expense } from "@/contracts";
 
 describe("ledger", () => {
@@ -68,5 +75,30 @@ describe("ledger", () => {
 
     const tong = tongThucTe(l4);
     expect(tong).toBe(1056000);
+  });
+
+  it("L2: xóa và cập nhật expense", () => {
+    let ledger = createLedger();
+    const e1: Expense = {
+      id: "1",
+      nguon: "nhap_tay",
+      tenCuaHang: "Cà phê",
+      ngay: null,
+      ngayTrongChuyen: 1,
+      hangMuc: "an_uong",
+      soTienVND: 50000,
+      giaTriAIDoc: null,
+      daSuaTay: false,
+      ghiChu: null,
+    };
+    ledger = addExpense(ledger, e1);
+    expect(ledger.expenses.length).toBe(1);
+
+    const updated: Expense = { ...e1, soTienVND: 60000 };
+    ledger = updateExpense(ledger, updated);
+    expect(ledger.expenses[0].soTienVND).toBe(60000);
+
+    ledger = deleteExpense(ledger, "1");
+    expect(ledger.expenses.length).toBe(0);
   });
 });

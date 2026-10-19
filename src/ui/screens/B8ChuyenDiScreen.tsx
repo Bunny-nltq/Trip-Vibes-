@@ -30,6 +30,7 @@ export function B8ChuyenDiScreen() {
     tickedPlaces,
     toggleTickPlace,
     untickPlace,
+    openB10,
   } = useApp();
 
   // Toast khi tick địa điểm
@@ -252,7 +253,13 @@ export function B8ChuyenDiScreen() {
           </span>
           <button
             className="toast-btn"
-            onClick={() => nav("b10-chon-nguon")}
+            onClick={() => {
+              openB10({
+                tenCuaHang: toast.ten,
+                ngayTrongChuyen: activeDay,
+              });
+              setToast(null);
+            }}
             style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
           >
             <Plus size={13} />

@@ -8,9 +8,10 @@ import {
   type Violation,
 } from "@/ui/hooks/usePlan";
 import { usePlanHistory } from "@/ui/hooks/usePlanHistory";
-import type { Plan, TripRequest, Selection } from "@/contracts";
+import type { Plan, TripRequest, Selection, Expense, Ledger, ExpenseCategory } from "@/contracts";
 import type { PlanDiff } from "@/core/diffPlan";
 import type { ProgressPlace } from "@/core/tripProgress";
+import { createLedger, addExpense, deleteExpense, updateExpense } from "@/core/ledger";
 
 type Screen =
   | "welcome"
@@ -177,6 +178,15 @@ export interface AppCtx extends AppState {
   untickPlace: (id: string) => void;
   activePopoverPlace: ProgressPlace | null;
   setActivePopoverPlace: (p: ProgressPlace | null) => void;
+
+  // B10 & B11 (Sổ chi tiêu & Thêm chi tiêu)
+  ledger: Ledger;
+  addExpenseToLedger: (exp: Expense) => void;
+  deleteExpenseFromLedger: (id: string) => void;
+  updateExpenseInLedger: (exp: Expense) => void;
+  b10Prefill: { tenCuaHang?: string; ngayTrongChuyen?: number; hangMuc?: ExpenseCategory } | null;
+  setB10Prefill: (prefill: { tenCuaHang?: string; ngayTrongChuyen?: number; hangMuc?: ExpenseCategory } | null) => void;
+  openB10: (prefill?: { tenCuaHang?: string; ngayTrongChuyen?: number; hangMuc?: ExpenseCategory }) => void;
 }
 
 const Ctx = createContext<AppCtx | null>(null);
@@ -221,6 +231,16 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
     },
     {
       ngay: 1,
+      gio: "12:00",
+      hangMuc: "Ăn uống",
+      noiDung: "Trưa ngày 1 – ước tính (2 người)",
+      soLuong: 2,
+      donGia: 150_000,
+      thanhTien: 300_000,
+      refId: null,
+    },
+    {
+      ngay: 1,
       gio: "15:30",
       hangMuc: "Vui chơi",
       noiDung: "Bãi biển Mỹ Khê",
@@ -229,6 +249,16 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
       thanhTien: 0,
       refId: "act-my-khe",
       mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bãi+biển+Mỹ+Khê,+Đà+Nẵng",
+    },
+    {
+      ngay: 1,
+      gio: "18:30",
+      hangMuc: "Ăn uống",
+      noiDung: "Tối ngày 1 – ước tính (2 người)",
+      soLuong: 2,
+      donGia: 150_000,
+      thanhTien: 300_000,
+      refId: null,
     },
     {
       ngay: 2,
@@ -243,6 +273,16 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
     },
     {
       ngay: 2,
+      gio: "12:00",
+      hangMuc: "Ăn uống",
+      noiDung: "Trưa ngày 2 – ước tính (2 người)",
+      soLuong: 2,
+      donGia: 150_000,
+      thanhTien: 300_000,
+      refId: null,
+    },
+    {
+      ngay: 2,
       gio: "15:00",
       hangMuc: "Vui chơi",
       noiDung: "Phố cổ Hội An",
@@ -251,6 +291,16 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
       thanhTien: 240_000,
       refId: "act-hoi-an",
       mapsUrl: "https://www.google.com/maps/search/?api=1&query=Phố+cổ+Hội+An,+Quảng+Nam",
+    },
+    {
+      ngay: 2,
+      gio: "18:30",
+      hangMuc: "Ăn uống",
+      noiDung: "Tối ngày 2 – ước tính (2 người)",
+      soLuong: 2,
+      donGia: 150_000,
+      thanhTien: 300_000,
+      refId: null,
     },
     {
       ngay: 3,
@@ -265,6 +315,16 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
     },
     {
       ngay: 3,
+      gio: "12:00",
+      hangMuc: "Ăn uống",
+      noiDung: "Trưa ngày 3 – ước tính (2 người)",
+      soLuong: 2,
+      donGia: 150_000,
+      thanhTien: 300_000,
+      refId: null,
+    },
+    {
+      ngay: 3,
       gio: "18:00",
       hangMuc: "Di chuyển",
       noiDung: "Di chuyển chiều về: Máy bay VietJet Air (Đà Nẵng → TP.HCM)",
@@ -273,15 +333,25 @@ export const DEFAULT_SAMPLE_PLAN: Plan = {
       thanhTien: 1_960_000,
       refId: "ref_vj_ve_17",
     },
+    {
+      ngay: 3,
+      gio: "18:30",
+      hangMuc: "Ăn uống",
+      noiDung: "Tối ngày 3 – ước tính (2 người)",
+      soLuong: 2,
+      donGia: 150_000,
+      thanhTien: 300_000,
+      refId: null,
+    },
   ],
   tongKet: {
-    tongVND: 7_740_000,
-    conLaiVND: 2_260_000,
-    phanTramDaDung: 77.4,
+    tongVND: 9_540_000,
+    conLaiVND: 460_000,
+    phanTramDaDung: 95.4,
     theoHangMuc: {
       "Di chuyển": 3_920_000,
       "Chỗ ở": 2_200_000,
-      "Ăn uống": 0,
+      "Ăn uống": 1_800_000,
       "Vui chơi": 1_620_000,
     },
     tongThoiGianDiChuyenPhut: 170,
@@ -325,6 +395,55 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   // Popover B9
   const [activePopoverPlace, setActivePopoverPlace] = useState<ProgressPlace | null>(null);
+
+  // Sổ chi tiêu (Ledger) lưu AppContext & sessionStorage
+  const [ledger, setLedger] = useState<Ledger>(() => {
+    const loaded = loadSession<Ledger>("trip_ledger", createLedger());
+    if (!loaded || !Array.isArray(loaded.expenses)) return createLedger();
+    return loaded;
+  });
+
+  const [b10Prefill, setB10Prefill] = useState<{
+    tenCuaHang?: string;
+    ngayTrongChuyen?: number;
+    hangMuc?: ExpenseCategory;
+  } | null>(null);
+
+  const addExpenseToLedger = useCallback((exp: Expense) => {
+    setLedger((prev) => {
+      const next = addExpense(prev, exp);
+      saveSession("trip_ledger", next);
+      return next;
+    });
+  }, []);
+
+  const deleteExpenseFromLedger = useCallback((id: string) => {
+    setLedger((prev) => {
+      const next = deleteExpense(prev, id);
+      saveSession("trip_ledger", next);
+      return next;
+    });
+  }, []);
+
+  const updateExpenseInLedger = useCallback((exp: Expense) => {
+    setLedger((prev) => {
+      const next = updateExpense(prev, exp);
+      saveSession("trip_ledger", next);
+      return next;
+    });
+  }, []);
+
+  const openB10 = useCallback(
+    (prefill?: {
+      tenCuaHang?: string;
+      ngayTrongChuyen?: number;
+      hangMuc?: ExpenseCategory;
+    }) => {
+      setB10Prefill(prefill ?? null);
+      setScreen("b10-chon-nguon");
+    },
+    []
+  );
 
   const planState = usePlan();
   const history = usePlanHistory();
@@ -449,6 +568,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         untickPlace,
         activePopoverPlace,
         setActivePopoverPlace,
+
+        // B10 & B11
+        ledger,
+        addExpenseToLedger,
+        deleteExpenseFromLedger,
+        updateExpenseInLedger,
+        b10Prefill,
+        setB10Prefill,
+        openB10,
       }}
     >
       {children}

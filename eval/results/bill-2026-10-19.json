@@ -1,0 +1,237 @@
+{
+  "correctRealBills": 4,
+  "numRealBills": 4,
+  "correctNotBills": 0,
+  "numNotBills": 1,
+  "dangerousErrors": 0,
+  "avgTime": 2594,
+  "modelName": "gemini-3.5-flash-lite",
+  "promptVersion": "v1",
+  "timestamp": "2026-10-19T09:18:51.325Z",
+  "details": [
+    {
+      "file": "b01_nhahang_haisan.jpg",
+      "extraction": {
+        "laChungTu": true,
+        "loaiChungTu": "hoa_don",
+        "tenCuaHang": "NHÀ HÀNG HẢI SẢN BIỂN XANH (mẫu)",
+        "ngay": "2026-09-20",
+        "tongTienVND": 560000,
+        "tamTinhVND": null,
+        "giamGiaVND": null,
+        "phuThuVND": null,
+        "thueVND": null,
+        "dongChiTiet": [
+          {
+            "ten": "Tôm hấp bia",
+            "soLuong": 1,
+            "thanhTienVND": 280000
+          },
+          {
+            "ten": "Mực nướng",
+            "soLuong": 1,
+            "thanhTienVND": 220000
+          },
+          {
+            "ten": "Rau muống xào",
+            "soLuong": 1,
+            "thanhTienVND": 30000
+          },
+          {
+            "ten": "Nước ngọt",
+            "soLuong": 2,
+            "thanhTienVND": 30000
+          }
+        ],
+        "hangMucGoiY": "an_uong",
+        "doTinCay": "cao",
+        "ghiChu": [],
+        "status": "can_xac_nhan",
+        "khopCacDong": true,
+        "chenhLechVND": 0,
+        "canhBao": []
+      },
+      "errors": [],
+      "dangerous": false,
+      "ms": 3084,
+      "isCorrect": true
+    },
+    {
+      "file": "b02_cafe.jpg",
+      "extraction": {
+        "laChungTu": true,
+        "loaiChungTu": "hoa_don",
+        "tenCuaHang": "Cà phê góc phố (mẫu)",
+        "ngay": "2026-09-21",
+        "tongTienVND": 108000,
+        "tamTinhVND": 128000,
+        "giamGiaVND": 20000,
+        "phuThuVND": null,
+        "thueVND": null,
+        "dongChiTiet": [
+          {
+            "ten": "Cà phê sữa đá",
+            "soLuong": 2,
+            "thanhTienVND": 58000
+          },
+          {
+            "ten": "Bánh flan",
+            "soLuong": 1,
+            "thanhTienVND": 25000
+          },
+          {
+            "ten": "Trà đào",
+            "soLuong": 1,
+            "thanhTienVND": 45000
+          }
+        ],
+        "hangMucGoiY": "an_uong",
+        "doTinCay": "cao",
+        "ghiChu": [],
+        "status": "can_xac_nhan",
+        "khopCacDong": true,
+        "chenhLechVND": 0,
+        "canhBao": []
+      },
+      "errors": [],
+      "dangerous": false,
+      "ms": 2276,
+      "isCorrect": true
+    },
+    {
+      "file": "b03_ve_tham_quan.jpg",
+      "extraction": {
+        "laChungTu": true,
+        "loaiChungTu": "ve",
+        "tenCuaHang": "KHU THAM QUAN SƠN THỦY",
+        "ngay": "2026-09-22",
+        "tongTienVND": 80000,
+        "tamTinhVND": null,
+        "giamGiaVND": null,
+        "phuThuVND": null,
+        "thueVND": null,
+        "dongChiTiet": [
+          {
+            "ten": "Người lớn",
+            "soLuong": 2,
+            "thanhTienVND": 80000
+          }
+        ],
+        "hangMucGoiY": "vui_choi",
+        "doTinCay": "cao",
+        "ghiChu": [],
+        "status": "can_xac_nhan",
+        "khopCacDong": true,
+        "chenhLechVND": 0,
+        "canhBao": []
+      },
+      "errors": [],
+      "dangerous": false,
+      "ms": 1938,
+      "isCorrect": true
+    },
+    {
+      "file": "b04_quan_an_kho.jpg",
+      "extraction": {
+        "laChungTu": true,
+        "loaiChungTu": "hoa_don",
+        "tenCuaHang": "QUÁN ĂN PHỐ CỔ (mẫu)",
+        "ngay": "2026-09-22",
+        "tongTienVND": 308000,
+        "tamTinhVND": 280000,
+        "giamGiaVND": null,
+        "phuThuVND": 28000,
+        "thueVND": null,
+        "dongChiTiet": [
+          {
+            "ten": "Cao lầu",
+            "soLuong": 2,
+            "thanhTienVND": 90000
+          },
+          {
+            "ten": "Mì Quảng",
+            "soLuong": 2,
+            "thanhTienVND": 100000
+          },
+          {
+            "ten": "Bánh mì",
+            "soLuong": 2,
+            "thanhTienVND": 50000
+          },
+          {
+            "ten": "Nước mía",
+            "soLuong": 2,
+            "thanhTienVND": 40000
+          }
+        ],
+        "hangMucGoiY": "an_uong",
+        "doTinCay": "cao",
+        "ghiChu": [],
+        "status": "can_xac_nhan",
+        "khopCacDong": true,
+        "chenhLechVND": 0,
+        "canhBao": []
+      },
+      "errors": [],
+      "dangerous": false,
+      "ms": 2960,
+      "isCorrect": true
+    },
+    {
+      "file": "b05_thuc_don_khong_phai_hoa_don.jpg",
+      "extraction": {
+        "laChungTu": false,
+        "loaiChungTu": "khac",
+        "tenCuaHang": "QUÁN MẪU",
+        "ngay": null,
+        "tongTienVND": null,
+        "tamTinhVND": null,
+        "giamGiaVND": null,
+        "phuThuVND": null,
+        "thueVND": null,
+        "dongChiTiet": [
+          {
+            "ten": "Cao lầu",
+            "soLuong": null,
+            "thanhTienVND": 45000
+          },
+          {
+            "ten": "Mì Quảng",
+            "soLuong": null,
+            "thanhTienVND": 50000
+          },
+          {
+            "ten": "Bánh mì",
+            "soLuong": null,
+            "thanhTienVND": 25000
+          },
+          {
+            "ten": "Nước mía",
+            "soLuong": null,
+            "thanhTienVND": 20000
+          },
+          {
+            "ten": "Cà phê sữa",
+            "soLuong": null,
+            "thanhTienVND": 29000
+          }
+        ],
+        "hangMucGoiY": "an_uong",
+        "doTinCay": "cao",
+        "ghiChu": [
+          "Đây là thực đơn, không phải hóa đơn thanh toán."
+        ],
+        "status": "khong_phai_chung_tu",
+        "khopCacDong": null,
+        "chenhLechVND": null,
+        "canhBao": []
+      },
+      "errors": [
+        "loaiChungTu: mong đợi null, thực tế khac"
+      ],
+      "dangerous": false,
+      "ms": 2714,
+      "isCorrect": false
+    }
+  ]
+}
