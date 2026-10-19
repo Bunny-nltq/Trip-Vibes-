@@ -1,5 +1,16 @@
 "use client";
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import {
+  usePlan,
+  type PlanStatus,
+  type PlanApiResponse,
+  type PlanInput,
+  type Violation,
+} from "@/ui/hooks/usePlan";
+import { usePlanHistory } from "@/ui/hooks/usePlanHistory";
+import type { Plan, TripRequest, Selection } from "@/contracts";
+import type { PlanDiff } from "@/core/diffPlan";
+import type { ProgressPlace } from "@/core/tripProgress";
 
 type Screen =
   | "welcome"
@@ -16,11 +27,32 @@ type Screen =
   | "b10-chon-nguon"
   | "b11-ngan-sach";
 
-interface TripConfig {
+export interface TripConfig {
   people: number;
   budget: number;
   avoids: string[];
   note: string;
+}
+
+export interface EditContext {
+  type: "phuong_tien_di" | "phuong_tien_ve" | "khach_san" | "hoat_dong";
+  dayIndex?: number;
+  slotIndex?: number;
+  currentId?: string;
+  huong?: "di" | "ve";
+}
+
+export interface PreviewData {
+  planSau: Plan;
+  selection: Selection;
+  diff: PlanDiff;
+  hard: Violation[];
+  soft: Violation[];
+  thayDoi?: {
+    loai: string;
+    viTri?: number;
+    idMoi: string;
+  };
 }
 
 interface AppState {
@@ -31,39 +63,394 @@ interface AppState {
   activeTab: string;
 }
 
-interface AppCtx extends AppState {
+function loadSession<T>(key: string, fallback: T): T {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = window.sessionStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function saveSession<T>(key: string, value: T): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // ignore
+  }
+}
+
+/** Tái tạo Selection từ Plan hiện tại */
+export function extractSelectionFromPlan(plan: Plan): Selection {
+  const soNgay = plan.request.soNgay || 3;
+  let transportDiId = "";
+  let transportVeId = "";
+  let hotelId = "";
+  const hoatDongTheoNgay: string[][] = Array.from({ length: soNgay }, () => []);
+  const buaAnTheoNgay: Array<{ trua: string | null; toi: string | null; cafe: string | null }> =
+    Array.from({ length: soNgay }, () => ({ trua: null, toi: null, cafe: null }));
+
+  for (const item of plan.items) {
+    if (item.hangMuc === "Di chuyển") {
+      if (item.ngay === 1 && !transportDiId) {
+        transportDiId = item.refId || "";
+      } else {
+        transportVeId = item.refId || "";
+      }
+    } else if (item.hangMuc === "Chỗ ở") {
+      if (!hotelId && item.refId) {
+        hotelId = item.refId;
+      }
+    } else if (item.hangMuc === "Vui chơi" && item.refId) {
+      const dayIdx = item.ngay - 1;
+      if (dayIdx >= 0 && dayIdx < soNgay) {
+        hoatDongTheoNgay[dayIdx].push(item.refId);
+      }
+    } else if (item.hangMuc === "Ăn uống" && item.refId) {
+      const dayIdx = item.ngay - 1;
+      if (dayIdx >= 0 && dayIdx < soNgay) {
+        if (item.noiDung.toLowerCase().includes("trưa")) {
+          buaAnTheoNgay[dayIdx].trua = item.refId;
+        } else if (item.noiDung.toLowerCase().includes("tối")) {
+          buaAnTheoNgay[dayIdx].toi = item.refId;
+        } else if (
+          item.noiDung.toLowerCase().includes("cà phê") ||
+          item.noiDung.toLowerCase().includes("cafe")
+        ) {
+          buaAnTheoNgay[dayIdx].cafe = item.refId;
+        }
+      }
+    }
+  }
+
+  return {
+    transportDiId: transportDiId || "trans-001",
+    transportVeId: transportVeId || "trans-004",
+    hotelId: hotelId || "hotel-002",
+    hoatDongTheoNgay,
+    buaAnTheoNgay,
+  };
+}
+
+export interface AppCtx extends AppState {
   nav: (s: Screen) => void;
   setTripConfig: (c: Partial<TripConfig>) => void;
   setConfirmed: (v: boolean) => void;
   setActiveDay: (d: number) => void;
   setActiveTab: (t: string) => void;
+
+  // Plan backend state
+  plan: Plan | null;
+  planRequest: TripRequest | null;
+  planStatus: PlanStatus;
+  planResult: PlanApiResponse | null;
+  planError: string | null;
+  loadingStep: number;
+  executePlan: (input?: PlanInput) => Promise<PlanApiResponse | undefined>;
+  retryPlan: () => void;
+  abortPlan: () => void;
+  toiThieuVND: number;
+  hardViolations: Violation[];
+  softViolations: Violation[];
+  dataSourceUsed: string;
+
+  // Plan History (Undo / Redo)
+  canUndo: boolean;
+  canRedo: boolean;
+  undoPlan: () => void;
+  redoPlan: () => void;
+  applyPlan: (newPlan: Plan) => void;
+
+  // Edit & Preview state
+  editContext: EditContext | null;
+  setEditContext: (ctx: EditContext | null) => void;
+  previewData: PreviewData | null;
+  setPreviewData: (data: PreviewData | null) => void;
+  applyPreview: () => void;
+  cancelPreview: () => void;
+
+  // B8 & B9 (Chuyến đi & Chỉ đường)
+  tickedPlaces: Record<string, boolean>;
+  toggleTickPlace: (id: string) => boolean;
+  untickPlace: (id: string) => void;
+  activePopoverPlace: ProgressPlace | null;
+  setActivePopoverPlace: (p: ProgressPlace | null) => void;
 }
 
 const Ctx = createContext<AppCtx | null>(null);
 
+export const DEFAULT_SAMPLE_PLAN: Plan = {
+  schemaVersion: 6,
+  request: {
+    schemaVersion: 6,
+    diemDi: "TP.HCM",
+    diemDen: "Đà Nẵng",
+    soNguoi: 2,
+    soNgay: 3,
+    ngansachTongVND: 10_000_000,
+    sothich: ["bien", "van_hoa_lich_su", "giai_tri_vui_choi"],
+    tranh: ["khong_day_som"],
+    ghiChu: [],
+    thieu: [],
+    cauHoiLamRo: [],
+    canhBao: [],
+  },
+  items: [
+    {
+      ngay: 1,
+      gio: "06:30",
+      hangMuc: "Di chuyển",
+      noiDung: "Di chuyển chiều đi: Máy bay VietJet Air (TP.HCM → Đà Nẵng)",
+      soLuong: 2,
+      donGia: 980_000,
+      thanhTien: 1_960_000,
+      refId: "ref_vj_di_06",
+    },
+    {
+      ngay: 1,
+      gio: "14:00",
+      hangMuc: "Chỗ ở",
+      noiDung: "Lưu trú: Sanouva Danang Hotel (2 đêm, 1 phòng)",
+      soLuong: 2,
+      donGia: 1_100_000,
+      thanhTien: 2_200_000,
+      refId: "hotel-002",
+      doTinCay: "tham_khao",
+    },
+    {
+      ngay: 1,
+      gio: "15:30",
+      hangMuc: "Vui chơi",
+      noiDung: "Bãi biển Mỹ Khê",
+      soLuong: 2,
+      donGia: 0,
+      thanhTien: 0,
+      refId: "act-my-khe",
+      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bãi+biển+Mỹ+Khê,+Đà+Nẵng",
+    },
+    {
+      ngay: 2,
+      gio: "08:30",
+      hangMuc: "Vui chơi",
+      noiDung: "Ngũ Hành Sơn",
+      soLuong: 2,
+      donGia: 40_000,
+      thanhTien: 80_000,
+      refId: "act-ngu-hanh-son",
+      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Ngũ+Hành+Sơn,+Đà+Nẵng",
+    },
+    {
+      ngay: 2,
+      gio: "15:00",
+      hangMuc: "Vui chơi",
+      noiDung: "Phố cổ Hội An",
+      soLuong: 2,
+      donGia: 120_000,
+      thanhTien: 240_000,
+      refId: "act-hoi-an",
+      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Phố+cổ+Hội+An,+Quảng+Nam",
+    },
+    {
+      ngay: 3,
+      gio: "08:30",
+      hangMuc: "Vui chơi",
+      noiDung: "Bà Nà Hills",
+      soLuong: 2,
+      donGia: 650_000,
+      thanhTien: 1_300_000,
+      refId: "act-ba-na",
+      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bà+Nà+Hills,+Đà+Nẵng",
+    },
+    {
+      ngay: 3,
+      gio: "18:00",
+      hangMuc: "Di chuyển",
+      noiDung: "Di chuyển chiều về: Máy bay VietJet Air (Đà Nẵng → TP.HCM)",
+      soLuong: 2,
+      donGia: 980_000,
+      thanhTien: 1_960_000,
+      refId: "ref_vj_ve_17",
+    },
+  ],
+  tongKet: {
+    tongVND: 7_740_000,
+    conLaiVND: 2_260_000,
+    phanTramDaDung: 77.4,
+    theoHangMuc: {
+      "Di chuyển": 3_920_000,
+      "Chỗ ở": 2_200_000,
+      "Ăn uống": 0,
+      "Vui chơi": 1_620_000,
+    },
+    tongThoiGianDiChuyenPhut: 170,
+    trangThaiNganSach: "trong",
+  },
+  canhBao: [],
+};
+
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [screen, setScreen] = useState<Screen>("welcome");
-  const [confirmed, setConfirmed] = useState(false);
+  const [screen, setScreen] = useState<Screen>(() => {
+    if (typeof window !== "undefined") {
+      const q = new URLSearchParams(window.location.search).get("screen");
+      if (q) return q as Screen;
+    }
+    return "welcome";
+  });
+  const [confirmed, setConfirmedState] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const q = new URLSearchParams(window.location.search).get("confirmed");
+      if (q === "true") return true;
+      if (q === "false") return false;
+    }
+    return loadSession("trip_confirmed", false);
+  });
   const [activeDay, setActiveDay] = useState(1);
   const [activeTab, setActiveTab] = useState("b8-list");
   const [tripConfig, setTripConfigState] = useState<TripConfig>({
-    people: 2, budget: 10_000_000,
+    people: 2,
+    budget: 10_000_000,
     avoids: ["Không dậy sớm"],
     note: "",
   });
 
+  const [editContext, setEditContext] = useState<EditContext | null>(null);
+  const [previewData, setPreviewData] = useState<PreviewData | null>(null);
+
+  // Ticked places state (lưu AppContext & sessionStorage)
+  const [tickedPlaces, setTickedPlaces] = useState<Record<string, boolean>>(() =>
+    loadSession("trip_ticked_places", {})
+  );
+
+  // Popover B9
+  const [activePopoverPlace, setActivePopoverPlace] = useState<ProgressPlace | null>(null);
+
+  const planState = usePlan();
+  const history = usePlanHistory();
+
+  useEffect(() => {
+    if (planState.plan && !history.current) {
+      history.init(planState.plan);
+    }
+  }, [planState.plan, history]);
+
   const nav = useCallback((s: Screen) => setScreen(s), []);
+
+  const setConfirmed = useCallback((v: boolean) => {
+    setConfirmedState(v);
+    saveSession("trip_confirmed", v);
+  }, []);
+
   const setTripConfig = useCallback((c: Partial<TripConfig>) => {
-    setTripConfigState(prev => ({ ...prev, ...c }));
+    setTripConfigState((prev) => ({ ...prev, ...c }));
+  }, []);
+
+  const toggleTickPlace = useCallback((id: string): boolean => {
+    let nextValue = false;
+    setTickedPlaces((prev) => {
+      nextValue = !prev[id];
+      const next = { ...prev, [id]: nextValue };
+      saveSession("trip_ticked_places", next);
+      return next;
+    });
+    return nextValue;
+  }, []);
+
+  const untickPlace = useCallback((id: string) => {
+    setTickedPlaces((prev) => {
+      const next = { ...prev, [id]: false };
+      saveSession("trip_ticked_places", next);
+      return next;
+    });
+  }, []);
+
+  const handleExecutePlan = useCallback(
+    async (input?: PlanInput) => {
+      const targetInput = input ?? {
+        people: tripConfig.people,
+        budget: tripConfig.budget,
+        avoids: tripConfig.avoids,
+        note: tripConfig.note,
+      };
+      const res = await planState.executePlan(targetInput);
+      if (res && res.plan) {
+        history.init(res.plan);
+      }
+      return res;
+    },
+    [planState, tripConfig, history]
+  );
+
+  const activePlan = history.current ?? planState.plan ?? DEFAULT_SAMPLE_PLAN;
+
+  const applyPreview = useCallback(() => {
+    if (previewData && previewData.planSau) {
+      history.apply(previewData.planSau);
+      setPreviewData(null);
+      setEditContext(null);
+      setScreen("b3-ke-hoach");
+    }
+  }, [previewData, history]);
+
+  const cancelPreview = useCallback(() => {
+    setPreviewData(null);
+    setEditContext(null);
+    setScreen("b3-ke-hoach");
   }, []);
 
   return (
-    <Ctx.Provider value={{
-      screen, nav, confirmed, setConfirmed,
-      tripConfig, setTripConfig,
-      activeDay, setActiveDay,
-      activeTab, setActiveTab,
-    }}>
+    <Ctx.Provider
+      value={{
+        screen,
+        nav,
+        confirmed,
+        setConfirmed,
+        tripConfig,
+        setTripConfig,
+        activeDay,
+        setActiveDay,
+        activeTab,
+        setActiveTab,
+
+        // Plan fields
+        plan: activePlan,
+        planRequest: activePlan?.request ?? planState.request,
+        planStatus: planState.status,
+        planResult: planState.result,
+        planError: planState.error,
+        loadingStep: planState.loadingStep,
+        executePlan: handleExecutePlan,
+        retryPlan: planState.retry,
+        abortPlan: planState.abort,
+        toiThieuVND: planState.toiThieuVND,
+        hardViolations: planState.hardViolations,
+        softViolations: planState.softViolations,
+        dataSourceUsed: planState.dataSourceUsed,
+
+        // History
+        canUndo: history.canUndo,
+        canRedo: history.canRedo,
+        undoPlan: history.undo,
+        redoPlan: history.redo,
+        applyPlan: history.apply,
+
+        // Edit & Preview
+        editContext,
+        setEditContext,
+        previewData,
+        setPreviewData,
+        applyPreview,
+        cancelPreview,
+
+        // B8 & B9
+        tickedPlaces,
+        toggleTickPlace,
+        untickPlace,
+        activePopoverPlace,
+        setActivePopoverPlace,
+      }}
+    >
       {children}
     </Ctx.Provider>
   );

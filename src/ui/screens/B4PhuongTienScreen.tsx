@@ -1,89 +1,424 @@
 "use client";
-import React, { useState } from "react";
-import { useApp } from "@/ui/context/AppContext";
+import React, { useState, useMemo, useEffect } from "react";
+import { useApp, extractSelectionFromPlan } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
-
-const FLIGHTS = [
-  { id: "f1", airline: "Hãng bay Mẫu A", dep: "05:45", arr: "07:10", duration: "85 phút", price: 1_600_000, note: "Trực tiếp", badge: "Rẻ nhất" },
-  { id: "f2", airline: "Hãng bay Mẫu B", dep: "06:30", arr: "07:55", duration: "85 phút", price: 1_960_000, note: "Trực tiếp", badge: "Đang chọn" },
-  { id: "f3", airline: "Hãng bay Mẫu C", dep: "08:00", arr: "09:25", duration: "85 phút", price: 2_200_000, note: "Trực tiếp", badge: "" },
-  { id: "f4", airline: "Hãng bay Mẫu D", dep: "10:30", arr: "11:55", duration: "85 phút", price: 1_800_000, note: "Trực tiếp", badge: "" },
-];
+import { useOptions, type TransportOption } from "@/ui/hooks/useOptions";
+import { usePlanPreview } from "@/ui/hooks/usePlanPreview";
+import { Plane, Train, Bus, ArrowLeft, ArrowRight, Moon, Clock } from "lucide-react";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
 
 export function B4PhuongTienScreen() {
-  const { nav } = useApp();
-  const [selected, setSelected] = useState("f2");
-  const [tab, setTab] = useState<"di" | "ve">("di");
+  const { nav, plan, editContext, setPreviewData } = useApp();
+
+  const initialTab: "di" | "ve" =
+    editContext?.huong === "ve" || editContext?.type === "phuong_tien_ve" ? "ve" : "di";
+
+  const [tab, setTab] = useState<"di" | "ve">(initialTab);
+  const [selectedId, setSelectedId] = useState<string>(editContext?.currentId || "");
+  const [filterType, setFilterType] = useState<string>("all");
+  const [filterTime, setFilterTime] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<"price" | "time" | "duration">("price");
+
+  const soNguoi = plan?.request.soNguoi || 2;
+
+  const { items: transports, loading: loadingOptions, error: errorOptions } =
+    useOptions<TransportOption>({
+      loai: "phuong_tien",
+      huong: tab,
+      soNguoi,
+    });
+
+  const { preview, loading: loadingPreview, error: errorPreview } = usePlanPreview();
+
+  useEffect(() => {
+    if (editContext?.currentId) {
+      setSelectedId(editContext.currentId);
+    } else if (transports.length > 0 && !selectedId) {
+      setSelectedId(transports[0].id);
+    }
+  }, [editContext, transports, selectedId]);
+
+  // Bộ lọc & sắp xếp
+  const filtered = useMemo(() => {
+    let list = [...transports];
+
+    if (filterType !== "all") {
+      list = list.filter((t) => t.type === filterType);
+    }
+
+    if (filterTime === "morning") {
+      list = list.filter((t) => {
+        const hour = parseInt(t.departureTime.split(":")[0], 10);
+        return hour < 12;
+      });
+    } else if (filterTime === "afternoon") {
+      list = list.filter((t) => {
+        const hour = parseInt(t.departureTime.split(":")[0], 10);
+        return hour >= 12;
+      });
+    }
+
+    list.sort((a, b) => {
+      if (sortBy === "price") {
+        return a.tongTienNhom - b.tongTienNhom;
+      }
+      if (sortBy === "duration") {
+        return a.durationMinutes - b.durationMinutes;
+      }
+      return a.departureTime.localeCompare(b.departureTime);
+    });
+
+    return list;
+  }, [transports, filterType, filterTime, sortBy]);
+
+  const handlePreview = async () => {
+    if (!plan || !selectedId) return;
+
+    const selection = extractSelectionFromPlan(plan);
+    const thayDoiType = tab === "di" ? ("phuong_tien_di" as const) : ("phuong_tien_ve" as const);
+
+    const res = await preview({
+      request: plan.request,
+      selection,
+      thayDoi: {
+        loai: thayDoiType,
+        idMoi: selectedId,
+      },
+    });
+
+    if (res) {
+      setPreviewData({
+        planSau: res.planSau,
+        selection: res.selection,
+        diff: res.diff,
+        hard: res.hard,
+        soft: res.soft,
+        thayDoi: {
+          loai: thayDoiType,
+          idMoi: selectedId,
+        },
+      });
+      nav("b6-xem-truoc");
+    }
+  };
 
   return (
     <div className="tv-layout">
       <SideNav />
-      <div className="tv-main animate-in">
-        <span className="text-link" style={{ display: "inline-flex", alignItems: "center", gap: 4, marginBottom: 16, fontSize: 14 }} onClick={() => nav("b3-ke-hoach")}>
-          ← Quay lại kế hoạch
+      <div className="tv-main animate-in" style={{ overflowY: "auto" }}>
+        <span
+          className="text-link"
+          style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 16, fontSize: 14 }}
+          onClick={() => nav("b3-ke-hoach")}
+        >
+          <ArrowLeft size={16} />
+          Quay lại kế hoạch
         </span>
-        <h1 className="page-title">Chọn phương tiện</h1>
-        <p className="page-sub">Chọn chuyến bay phù hợp với bạn.</p>
+        <h1 className="page-title">Chọn phương tiện di chuyển</h1>
+        <p className="page-sub">
+          Xem và so sánh các phương án di chuyển thực tế. Không gọi lại AI, core tính toán tức thì.
+        </p>
 
-        <div className="tabs">
-          <div className={`tab-item ${tab === "di" ? "active" : ""}`} onClick={() => setTab("di")}>Chiều đi</div>
-          <div className={`tab-item ${tab === "ve" ? "active" : ""}`} onClick={() => setTab("ve")}>Chiều về</div>
-        </div>
-
-        <div style={{ fontSize: 13, color: "var(--g500)", marginBottom: 16, fontWeight: 500 }}>
-          {tab === "di" ? "TP.HCM → Đà Nẵng" : "Đà Nẵng → TP.HCM"} · 2 vé
-        </div>
-
-        {FLIGHTS.map(f => (
+        {/* Tabs Chiều đi / Chiều về */}
+        <div className="tabs" style={{ marginBottom: 16 }}>
           <div
-            key={f.id}
-            className={`card ${selected === f.id ? "card-selected" : "card-hover"}`}
-            style={{ padding: 20, marginBottom: 12, cursor: "pointer", transition: "all 0.2s" }}
-            onClick={() => setSelected(f.id)}
+            className={`tab-item ${tab === "di" ? "active" : ""}`}
+            onClick={() => {
+              setTab("di");
+              setSelectedId("");
+            }}
           >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                <div>
-                  <div style={{ fontSize: 22, fontWeight: 800, color: "var(--navy)" }}>{f.dep}</div>
-                  <div style={{ fontSize: 12, color: "var(--g500)" }}>Tân Sơn Nhất</div>
+            Chiều đi ({plan?.request.diemDi || "TP.HCM"} → {plan?.request.diemDen || "Đà Nẵng"})
+          </div>
+          <div
+            className={`tab-item ${tab === "ve" ? "active" : ""}`}
+            onClick={() => {
+              setTab("ve");
+              setSelectedId("");
+            }}
+          >
+            Chiều về ({plan?.request.diemDen || "Đà Nẵng"} → {plan?.request.diemDi || "TP.HCM"})
+          </div>
+        </div>
+
+        {/* Thanh lọc & sắp xếp */}
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginBottom: 16 }}>
+          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "var(--g500)" }}>Loại:</span>
+            <button
+              className={`chip ${filterType === "all" ? "on" : ""}`}
+              onClick={() => setFilterType("all")}
+            >
+              Tất cả
+            </button>
+            <button
+              className={`chip ${filterType === "flight" || filterType === "PLANE" ? "on" : ""}`}
+              onClick={() => setFilterType(filterType === "PLANE" ? "all" : "PLANE")}
+              style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
+            >
+              <Plane size={13} />
+              Máy bay
+            </button>
+            <button
+              className={`chip ${filterType === "train" || filterType === "TRAIN" ? "on" : ""}`}
+              onClick={() => setFilterType(filterType === "TRAIN" ? "all" : "TRAIN")}
+              style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
+            >
+              <Train size={13} />
+              Tàu hỏa
+            </button>
+          </div>
+
+          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "var(--g500)" }}>Giờ:</span>
+            <button
+              className={`chip ${filterTime === "all" ? "on" : ""}`}
+              onClick={() => setFilterTime("all")}
+            >
+              Tất cả
+            </button>
+            <button
+              className={`chip ${filterTime === "morning" ? "on" : ""}`}
+              onClick={() => setFilterTime("morning")}
+            >
+              Buổi sáng
+            </button>
+            <button
+              className={`chip ${filterTime === "afternoon" ? "on" : ""}`}
+              onClick={() => setFilterTime("afternoon")}
+            >
+              Chiều/Tối
+            </button>
+          </div>
+
+          <div style={{ marginLeft: "auto", display: "flex", gap: 6, alignItems: "center" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "var(--g500)" }}>Xếp theo:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as "price" | "time" | "duration")}
+              style={{
+                padding: "4px 8px",
+                borderRadius: "var(--r-md)",
+                border: "1px solid var(--g300)",
+                fontSize: 12,
+                fontWeight: 600,
+                color: "var(--navy)",
+                background: "var(--surface)",
+              }}
+            >
+              <option value="price">Giá thấp nhất</option>
+              <option value="duration">Thời gian nhanh nhất</option>
+              <option value="time">Giờ khởi hành sớm nhất</option>
+            </select>
+          </div>
+        </div>
+
+        {errorOptions && (
+          <div className="banner banner-error" style={{ marginBottom: 16 }}>
+            <div className="banner-mark">!</div>
+            <div>{errorOptions}</div>
+          </div>
+        )}
+
+        {errorPreview && (
+          <div className="banner banner-error" style={{ marginBottom: 16 }}>
+            <div className="banner-mark">!</div>
+            <div>{errorPreview}</div>
+          </div>
+        )}
+
+        {loadingOptions && (
+          <div style={{ padding: 40, textAlign: "center", color: "var(--g500)", display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}>
+            <Clock size={16} className="animate-spin" />
+            Đang tải danh sách phương tiện...
+          </div>
+        )}
+
+        {/* Danh sách phương tiện thực tế */}
+        {!loadingOptions &&
+          filtered.map((f) => {
+            const isSelected = selectedId === f.id;
+            const isCurrent = editContext?.currentId === f.id;
+            const isPlane = f.type === "flight" || f.type === "PLANE";
+            const isTrain = f.type === "train" || f.type === "TRAIN";
+
+            const isThamKhao = f.doTinCay === "tham_khao";
+            const isEstimated =
+              f.giaLaUocTinh ||
+              f.flags.includes("GIA_UOC_TINH") ||
+              (f.doTinCay && f.doTinCay !== "xac_minh");
+
+            return (
+              <div
+                key={f.id}
+                className={`card ${isSelected ? "card-selected" : "card-hover"}`}
+                style={{
+                  padding: 18,
+                  marginBottom: 12,
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                  border: isSelected ? "2px solid var(--p500)" : "1px solid var(--g300)",
+                }}
+                onClick={() => setSelectedId(f.id)}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
+                    <div>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: "var(--navy)" }}>{f.departureTime}</div>
+                      <div style={{ fontSize: 12, color: "var(--g500)" }}>{f.origin}</div>
+                    </div>
+                    <div style={{ textAlign: "center", color: "var(--g400)", fontSize: 13, minWidth: 90 }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                        {isPlane ? <Plane size={14} /> : isTrain ? <Train size={14} /> : <Bus size={14} />}
+                        <span>──────</span>
+                      </div>
+                      <div style={{ fontSize: 12 }}>{f.durationMinutes} phút</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: "var(--navy)" }}>{f.arrivalTime}</div>
+                      <div style={{ fontSize: 12, color: "var(--g500)" }}>{f.destination}</div>
+                    </div>
+                    <div style={{ marginLeft: 8 }}>
+                      <div style={{ fontWeight: 700, fontSize: 14, color: "var(--navy)" }}>
+                        {f.carrier} {f.code && <span style={{ color: "var(--g500)", fontWeight: 500 }}>· {f.code}</span>}
+                      </div>
+                      <div style={{ fontSize: 12, color: "var(--g500)" }}>
+                        {fmt(f.pricePerPerson)} / người
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontWeight: 800, fontSize: 18, color: isSelected ? "var(--p500)" : "var(--navy)" }}>
+                      {fmt(f.tongTienNhom)}
+                    </div>
+                    <div style={{ fontSize: 12, color: "var(--g500)" }}>{soNguoi} người</div>
+
+                    <div style={{ display: "flex", gap: 6, justifyContent: "flex-end", marginTop: 6, flexWrap: "wrap" }}>
+                      {isCurrent && (
+                        <span
+                          style={{
+                            padding: "2px 8px",
+                            background: "var(--g100)",
+                            color: "var(--g700)",
+                            borderRadius: "var(--r-full)",
+                            fontSize: 11,
+                            fontWeight: 600,
+                          }}
+                        >
+                          Đang chọn
+                        </span>
+                      )}
+                      {f.flags.includes("XE_DEM") && (
+                        <span
+                          style={{
+                            padding: "2px 8px",
+                            background: "#FEF3C7",
+                            color: "var(--warning)",
+                            borderRadius: "var(--r-full)",
+                            fontSize: 11,
+                            fontWeight: 600,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 3,
+                          }}
+                        >
+                          <Moon size={11} />
+                          Chuyến đêm
+                        </span>
+                      )}
+                      {isThamKhao ? (
+                        <span
+                          style={{
+                            padding: "2px 8px",
+                            background: "var(--g100)",
+                            color: "var(--g700)",
+                            borderRadius: "var(--r-full)",
+                            fontSize: 11,
+                            fontWeight: 600,
+                          }}
+                        >
+                          Tham khảo
+                        </span>
+                      ) : isEstimated ? (
+                        <span
+                          style={{
+                            padding: "2px 8px",
+                            background: "var(--p100)",
+                            color: "var(--p500)",
+                            borderRadius: "var(--r-full)",
+                            fontSize: 11,
+                            fontWeight: 600,
+                          }}
+                        >
+                          Giá ước tính
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
                 </div>
-                <div style={{ textAlign: "center", color: "var(--g400)", fontSize: 13 }}>
-                  <div>✈ ──────</div>
-                  <div style={{ fontSize: 12 }}>{f.duration}</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 22, fontWeight: 800, color: "var(--navy)" }}>{f.arr}</div>
-                  <div style={{ fontSize: 12, color: "var(--g500)" }}>Đà Nẵng</div>
-                </div>
-                <div style={{ marginLeft: 16 }}>
-                  <div style={{ fontWeight: 600, fontSize: 14 }}>{f.airline}</div>
-                  <div style={{ fontSize: 12, color: "var(--g500)" }}>{f.note}</div>
-                </div>
-              </div>
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontWeight: 800, fontSize: 18, color: selected === f.id ? "var(--p500)" : "var(--navy)" }}>{fmt(f.price)}</div>
-                <div style={{ fontSize: 12, color: "var(--g500)" }}>2 vé</div>
-                {f.badge && (
-                  <div style={{ marginTop: 4, display: "inline-block", padding: "2px 8px", background: f.badge === "Rẻ nhất" ? "#DCFCE7" : "var(--p100)", borderRadius: "var(--r-full)", fontSize: 11, fontWeight: 600, color: f.badge === "Rẻ nhất" ? "var(--success)" : "var(--p500)" }}>
-                    {f.badge}
+
+                {isSelected && (
+                  <div
+                    style={{
+                      marginTop: 12,
+                      paddingTop: 10,
+                      borderTop: "1px dashed var(--p300)",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePreview();
+                      }}
+                      disabled={loadingPreview}
+                      style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
+                    >
+                      {loadingPreview ? "Đang tính toán..." : "Xem trước thay đổi"}
+                      <ArrowRight size={14} />
+                    </button>
                   </div>
                 )}
               </div>
-            </div>
-          </div>
-        ))}
+            );
+          })}
 
+        {!loadingOptions && filtered.length === 0 && (
+          <div style={{ padding: 40, textAlign: "center", color: "var(--g500)" }}>
+            Không có phương tiện nào khớp với bộ lọc hiện tại.
+          </div>
+        )}
+
+        {/* Nút hành động */}
         <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 24 }}>
-          <button className="btn btn-outline" onClick={() => nav("b3-ke-hoach")}>Hủy</button>
-          <button className="btn btn-primary" onClick={() => nav("b6-xem-truoc")}>
-            Xem trước thay đổi →
+          <button className="btn btn-outline" onClick={() => nav("b3-ke-hoach")}>
+            Hủy
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={handlePreview}
+            disabled={!selectedId || loadingPreview}
+            style={{
+              opacity: !selectedId || loadingPreview ? 0.6 : 1,
+              cursor: !selectedId || loadingPreview ? "not-allowed" : "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            {loadingPreview ? "Đang tính toán..." : "Xem trước thay đổi"}
+            <ArrowRight size={14} />
           </button>
         </div>
       </div>
-      <div className="tv-side"><BudgetBox /></div>
+      <div className="tv-side">
+        <BudgetBox plan={plan} />
+      </div>
     </div>
   );
 }

@@ -18,6 +18,7 @@ import {
   NGUOI_MOI_PHONG,
   SO_HOAT_DONG_TOI_DA_MOI_NGAY,
 } from "./assumptions";
+import { mealTimeOrNull, hhmm2min } from "./mealTimes";
 
 export interface PlanData {
   transports: Transport[];
@@ -227,10 +228,18 @@ export function buildPlan(
   });
 
   // 5.3. Ăn uống theo ngày (tính theo từng bữa hoặc dùng mặc định)
+  // Tính giờ đến ngày 1 cho mealTimeOrNull
+  const gioDenNgay1Phut = hhmm2min(tDi.departureTime) + tDi.durationMinutes;
   let tongAnUong = 0;
 
   for (let day = 1; day <= soNgay; day++) {
     const bua = selection.buaAnTheoNgay?.[day - 1];
+    const mealCtx = {
+      ngay: day,
+      soNgay,
+      gioDenNgay1Phut,
+      gioKhoiHanhVe: tVe.departureTime,
+    };
 
     // --- Bữa trưa ---
     const quanTrua = bua?.trua ? (quanAnMap.get(bua.trua) ?? null) : null;
@@ -239,7 +248,7 @@ export function buildPlan(
     tongAnUong += thanhTienTrua;
     items.push({
       ngay: day,
-      gio: "12:00",
+      gio: mealTimeOrNull("12:00", mealCtx),
       hangMuc: "Ăn uống",
       noiDung: quanTrua
         ? `Trưa: ${quanTrua.ten} (${soNguoi} người)`
@@ -263,7 +272,7 @@ export function buildPlan(
     tongAnUong += thanhTienToi;
     items.push({
       ngay: day,
-      gio: "18:30",
+      gio: mealTimeOrNull("18:30", mealCtx),
       hangMuc: "Ăn uống",
       noiDung: quanToi
         ? `Tối: ${quanToi.ten} (${soNguoi} người)`
@@ -288,7 +297,7 @@ export function buildPlan(
       tongAnUong += thanhTienCafe;
       items.push({
         ngay: day,
-        gio: "09:00",
+        gio: mealTimeOrNull("09:00", mealCtx),
         hangMuc: "Ăn uống",
         noiDung: quanCafe
           ? `Cà phê: ${quanCafe.ten} (${soNguoi} người)`

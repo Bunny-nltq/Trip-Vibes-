@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { useApp } from "@/ui/context/AppContext";
+import { Undo2, Redo2, Check, RotateCcw } from "lucide-react";
 
 const SCREENS = [
   { id: "welcome", label: "W0 · Màn chào (Welcome)" },
@@ -20,7 +21,18 @@ const SCREENS = [
 ] as const;
 
 export function TopBar() {
-  const { screen, confirmed, nav } = useApp();
+  const {
+    screen,
+    confirmed,
+    setConfirmed,
+    nav,
+    plan,
+    tripConfig,
+    canUndo,
+    canRedo,
+    undoPlan,
+    redoPlan,
+  } = useApp();
 
   const showTrip = [
     "b3-ke-hoach",
@@ -31,14 +43,14 @@ export function TopBar() {
     "b8-chuyen-di",
     "b9-chi-duong",
     "b10-chon-nguon",
-    "b11-ngan-sach"
+    "b11-ngan-sach",
   ].includes(screen);
 
   const showActions = [
     "b3-ke-hoach",
     "b4-phuong-tien",
     "b5-khach-san",
-    "b6-xem-truoc"
+    "b6-xem-truoc",
   ].includes(screen);
 
   return (
@@ -63,7 +75,7 @@ export function TopBar() {
           <span style={{ fontSize: 11, fontWeight: 700, color: "var(--g400)", textTransform: "uppercase" }}>Test:</span>
           <select
             value={screen}
-            onChange={e => nav(e.target.value as Parameters<typeof nav>[0])}
+            onChange={(e) => nav(e.target.value as Parameters<typeof nav>[0])}
             style={{
               padding: "4px 8px",
               borderRadius: "var(--r-md)",
@@ -76,7 +88,7 @@ export function TopBar() {
               outline: "none",
             }}
           >
-            {SCREENS.map(s => (
+            {SCREENS.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.label}
               </option>
@@ -87,26 +99,90 @@ export function TopBar() {
 
       {showTrip && (
         <div style={{ fontSize: 13, color: "var(--g500)", fontWeight: 500 }} className="hidden md:block">
-          TP.HCM → Đà Nẵng &nbsp;·&nbsp; 3 ngày 2 đêm &nbsp;·&nbsp; 2 người
+          {plan?.request.diemDi || "TP.HCM"} → {plan?.request.diemDen || "Đà Nẵng"} &nbsp;·&nbsp; {plan?.request.soNgay ?? 3} ngày {Math.max(1, (plan?.request.soNgay ?? 3) - 1)} đêm &nbsp;·&nbsp; {plan?.request.soNguoi ?? tripConfig.people} người
         </div>
       )}
 
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        {showActions && !confirmed && (
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        {showActions && (
           <>
-            <button className="btn btn-ghost btn-sm" onClick={() => alert("Tính năng hoàn tác các thay đổi gần nhất.")}>
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={undoPlan}
+              disabled={!canUndo || confirmed}
+              style={{
+                opacity: canUndo && !confirmed ? 1 : 0.4,
+                cursor: canUndo && !confirmed ? "pointer" : "not-allowed",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+              }}
+              title={
+                confirmed
+                  ? "Kế hoạch đã chốt, không thể hoàn tác"
+                  : canUndo
+                  ? "Hoàn tác thay đổi vừa thực hiện"
+                  : "Không có thay đổi nào để hoàn tác"
+              }
+            >
+              <Undo2 size={14} />
               Hoàn tác
             </button>
-            <button className="btn btn-primary btn-sm" onClick={() => nav("b7-xac-nhan")}>
-              Xác nhận kế hoạch
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={redoPlan}
+              disabled={!canRedo || confirmed}
+              style={{
+                opacity: canRedo && !confirmed ? 1 : 0.4,
+                cursor: canRedo && !confirmed ? "pointer" : "not-allowed",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+              }}
+              title={
+                confirmed
+                  ? "Kế hoạch đã chốt, không thể làm lại"
+                  : canRedo
+                  ? "Làm lại thay đổi vừa hoàn tác"
+                  : "Không có thay đổi nào để làm lại"
+              }
+            >
+              <Redo2 size={14} />
+              Làm lại
             </button>
+            {!confirmed ? (
+              <button className="btn btn-primary btn-sm" onClick={() => nav("b7-xac-nhan")}>
+                Xác nhận kế hoạch
+              </button>
+            ) : (
+              <button
+                className="btn btn-outline btn-sm"
+                onClick={() => setConfirmed(false)}
+                style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
+              >
+                <RotateCcw size={13} />
+                Mở lại để sửa
+              </button>
+            )}
           </>
         )}
+
         {confirmed && (
-          <span style={{ fontSize: 13, color: "var(--success)", fontWeight: 600 }}>
-            ✓ Đã chốt
+          <span
+            style={{
+              fontSize: 13,
+              color: "var(--success)",
+              fontWeight: 600,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <Check size={14} strokeWidth={2.5} />
+            Đã chốt
           </span>
         )}
+
         <Link
           href="/demo"
           className="btn btn-outline btn-sm"

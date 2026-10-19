@@ -99,21 +99,21 @@ export function validatePlan(
     if (request.tranh.includes("khong_day_som") && (flags.khoiHanhSom || flags.denSom)) {
       hard.push({
         code: "vi_pham_khong_day_som",
-        chiTiet: `Phương tiện ${t.id} khởi hành hoặc đến nơi quá sớm.`,
+        chiTiet: `Phương tiện ${t.provider || t.id} khởi hành hoặc đến nơi quá sớm.`,
         duLieu: { id: t.id },
       });
     }
     if (request.tranh.includes("khong_di_dem") && flags.diDem) {
       hard.push({
         code: "vi_pham_khong_di_dem",
-        chiTiet: `Phương tiện ${t.id} đi trong khung giờ đêm.`,
+        chiTiet: `Phương tiện ${t.provider || t.id} đi trong khung giờ đêm.`,
         duLieu: { id: t.id },
       });
     }
     if (request.tranh.includes("tranh_di_chuyen_lau") && flags.diChuyenLau) {
       hard.push({
         code: "vi_pham_tranh_di_chuyen_lau",
-        chiTiet: `Phương tiện ${t.id} có thời gian di chuyển quá lâu.`,
+        chiTiet: `Phương tiện ${t.provider || t.id} có thời gian di chuyển quá lâu.`,
         duLieu: { id: t.id },
       });
     }
@@ -134,14 +134,14 @@ export function validatePlan(
         if (request.tranh.includes("tranh_dong_nguoi") && act.dongNguoi) {
           hard.push({
             code: "vi_pham_tranh_dong_nguoi",
-            chiTiet: `Hoạt động ${act.id} thường đông người.`,
+            chiTiet: `Hoạt động ${act.ten || act.id} thường đông người.`,
             duLieu: { id: act.id },
           });
         }
         if (request.tranh.includes("tranh_di_bo_nhieu") && act.diBoNhieu) {
           hard.push({
             code: "vi_pham_tranh_di_bo_nhieu",
-            chiTiet: `Hoạt động ${act.id} đòi hỏi đi bộ nhiều.`,
+            chiTiet: `Hoạt động ${act.ten || act.id} đòi hỏi đi bộ nhiều.`,
             duLieu: { id: act.id },
           });
         }
@@ -172,7 +172,7 @@ export function validatePlan(
       if (act1End + BUFFER_GIUA_HOAT_DONG_PHUT > act2Start) {
         hard.push({
           code: "hoat_dong_chong_len",
-          chiTiet: `Hoạt động ${act1.id} kết thúc quá trễ, lấn sang hoạt động thứ hai của ngày ${d + 1}.`,
+          chiTiet: `Hoạt động ${act1.ten || act1.id} kết thúc quá trễ, lấn sang hoạt động thứ hai của ngày ${d + 1}.`,
           duLieu: { ngay: d + 1, act1Id: act1.id, act2Id: acts[1].act.id },
         });
       }
@@ -189,7 +189,7 @@ export function validatePlan(
         if (gioBatDauAct + act.thoiLuongPhut + BUFFER_RA_BEN_PHUT > gioVePhut) {
           hard.push({
             code: "ngay_cuoi_khong_kip",
-            chiTiet: `Hoạt động ${act.id} kết thúc quá sát giờ khởi hành chuyến về.`,
+            chiTiet: `Hoạt động ${act.ten || act.id} kết thúc quá sát giờ khởi hành chuyến về.`,
             duLieu: { id: act.id },
           });
         }
