@@ -9,19 +9,33 @@ import { GeminiProvider } from "./provider";
 import { MAX_REPAIR_ROUNDS } from "@/core/assumptions";
 import { geocodeDestination, type GeocodeCandidate } from "@/data/live/geocodeClient";
 
+import { getLastOverpassStatsSummary } from "@/data/live/overpassClient";
+
 export interface PlanRepairResult {
   status:
     | "ok"
     | "co_vi_pham"
     | "khong_the_dat_ngan_sach"
     | "khong_co_phuong_an"
-    | "can_lam_ro";
-  lyDo?: "diem_den_mo_ho" | "thieu_thong_tin" | "ngoai_pham_vi_so_ngay" | string;
+    | "can_lam_ro"
+    | "khong_du_du_lieu";
+  lyDo?:
+    | "diem_den_mo_ho"
+    | "thieu_thong_tin"
+    | "ngoai_pham_vi_so_ngay"
+    | "khong_du_du_lieu"
+    | string;
   ungVien?: GeocodeCandidate[];
   request: TripRequest;
   plan?: Plan;
   hard: Violation[];
   soft: Violation[];
+  chiTietThieu?: {
+    khachSan: number;
+    quanAn: number;
+    hoatDong: number;
+    mayChuDaThu?: string;
+  };
   lichSu: Array<{
     vong: number;
     soHard: number;
@@ -34,6 +48,8 @@ export interface PlanRepairResult {
   ms: number;
   toiThieuVND?: number;
   dataSourceUsed: string;
+  ngayDuLieu?: string;
+  snapshotDate?: string;
 }
 
 export async function planWithRepair(
@@ -137,6 +153,11 @@ export async function planWithRepair(
     ]);
   console.log(`[planWithRepair] Data ready: ${transports.length} transports, ${khachSans.length} hotels, ${quanAns.length} food, ${hoatDongs.length} activities`);
 
+  const dsUsedInfo = liveDataSource.getDataSourceUsed();
+  emptyResult.dataSourceUsed = dsUsedInfo.source;
+  emptyResult.ngayDuLieu = dsUsedInfo.ngayDuLieu;
+  emptyResult.snapshotDate = dsUsedInfo.snapshotDate;
+
   const data = {
     transports,
     hotels,
@@ -152,6 +173,41 @@ export async function planWithRepair(
     emptyResult.status = "khong_co_phuong_an";
     emptyResult.lyDo = "khong_co_phuong_an";
     emptyResult.ms = Date.now() - startMs;
+    return emptyResult;
+  }
+
+  // Tiền điều kiện dữ liệu: khách sạn dưới 3, điểm tham quan dưới 3 hoặc quán ăn dưới 2
+  const thieuKS = khachSans.length < 3;
+  const thieuHD = hoatDongs.length < 3;
+  const thieuQA = quanAns.length < 2;
+
+  if (thieuKS || thieuHD || thieuQA) {
+    const lyDoThieu: string[] = [];
+    if (thieuKS) lyDoThieu.push(`khách sạn (${khachSans.length}/3)`);
+    if (thieuHD) lyDoThieu.push(`điểm tham quan (${hoatDongs.length}/3)`);
+    if (thieuQA) lyDoThieu.push(`quán ăn (${quanAns.length}/2)`);
+
+    const overpassStats = getLastOverpassStatsSummary();
+    console.warn(
+      `[planWithRepair] Kho dữ liệu không đủ: thiếu ${lyDoThieu.join(", ")}. Dừng trước khi gọi Gemini.`
+    );
+
+    emptyResult.status = "khong_du_du_lieu";
+    emptyResult.lyDo = "khong_du_du_lieu";
+    emptyResult.soLanGoiAI = 0;
+    emptyResult.ms = Date.now() - startMs;
+    emptyResult.chiTietThieu = {
+      khachSan: khachSans.length,
+      quanAn: quanAns.length,
+      hoatDong: hoatDongs.length,
+      mayChuDaThu: overpassStats,
+    };
+    emptyResult.hard.push({
+      code: "khong_du_du_lieu",
+      chiTiet: `Dữ liệu địa phương tại ${resolvedDiemDen.ten} chưa đủ để lập kế hoạch chất lượng: thiếu ${lyDoThieu.join(
+        ", "
+      )}. Nguồn: OpenStreetMap. Chi tiết máy chủ: ${overpassStats}`,
+    });
     return emptyResult;
   }
 
@@ -269,7 +325,9 @@ export async function planWithRepair(
         soLanGoiAI,
         ms: Date.now() - startMs,
         toiThieuVND: minBudgetRes.toiThieuVND,
-        dataSourceUsed: mode,
+        dataSourceUsed: dsUsedInfo.source,
+        ngayDuLieu: dsUsedInfo.ngayDuLieu,
+        snapshotDate: dsUsedInfo.snapshotDate,
       };
     }
 
@@ -292,6 +350,8 @@ export async function planWithRepair(
     soLanGoiAI,
     ms: Date.now() - startMs,
     toiThieuVND: minBudgetRes.toiThieuVND,
-    dataSourceUsed: mode,
+    dataSourceUsed: dsUsedInfo.source,
+    ngayDuLieu: dsUsedInfo.ngayDuLieu,
+    snapshotDate: dsUsedInfo.snapshotDate,
   };
 }

@@ -125,9 +125,9 @@ export function B10ChonNguonScreen() {
     }
   }, [b10Prefill]);
 
-  // Support URL param for demo & testing states
+  // Support URL param for demo & testing states (chỉ trong môi trường development)
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || process.env.NODE_ENV !== "development") return;
     const params = new URLSearchParams(window.location.search);
     const mockState = params.get("state");
     if (mockState === "nhap_tay") {

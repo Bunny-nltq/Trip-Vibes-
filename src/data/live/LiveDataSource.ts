@@ -53,6 +53,9 @@ export class LiveDataSource implements DataSource {
   private memoHoatDongs?: HoatDong[];
   private memoTransports?: Transport[];
 
+  private dataSourceUsed: "live" | "snapshot" | "mock" = "live";
+  private snapshotDate?: string;
+
   constructor(
     mode?: DataMode,
     snapshotName?: string,
@@ -70,6 +73,18 @@ export class LiveDataSource implements DataSource {
     this.diemDi = diemDi ?? DEFAULT_DIEM_DI;
     this.soNgay = soNgay;
     this.giaVeTuNhap = giaVeTuNhap;
+  }
+
+  isFallbackAllowed(): boolean {
+    return process.env.DATA_FALLBACK !== "off";
+  }
+
+  getDataSourceUsed(): { source: "live" | "snapshot" | "mock"; ngayDuLieu: string; snapshotDate?: string } {
+    return {
+      source: this.dataSourceUsed,
+      ngayDuLieu: this.fetchedAt,
+      snapshotDate: this.snapshotDate,
+    };
   }
 
   setDestination(diemDen: DiemDen, diemDi?: DiemDen): void {
@@ -151,6 +166,18 @@ export class LiveDataSource implements DataSource {
       const ten = this.getTenDiemDen();
       const raw = await fetchKhachSansOSM(coord, ten);
 
+      if (raw.length === 0) {
+        if (!this.isFallbackAllowed()) {
+          return (this.memoKhachSans = []);
+        }
+        const snap = this.loadSnapshotForDestination();
+        if (snap?.khachSans && snap.khachSans.length > 0) {
+          this.dataSourceUsed = "snapshot";
+          this.snapshotDate = snap.createdAt;
+          return (this.memoKhachSans = snap.khachSans);
+        }
+      }
+
       // Điền giá theo sao từ researchGiaDiemDen
       let giaTheoSao: Record<number, number> | null = null;
       if (this.diemDen) {
@@ -177,8 +204,16 @@ export class LiveDataSource implements DataSource {
       return (this.memoKhachSans = res);
     } catch (err) {
       console.error("[LiveDataSource] getKhachSans lỗi:", err instanceof Error ? err.message : err);
-      const snap = this.loadLatestSnapshot();
-      return (this.memoKhachSans = snap?.khachSans ?? []);
+      if (!this.isFallbackAllowed()) {
+        return (this.memoKhachSans = []);
+      }
+      const snap = this.loadSnapshotForDestination() ?? this.loadLatestSnapshot();
+      if (snap?.khachSans && snap.khachSans.length > 0) {
+        this.dataSourceUsed = "snapshot";
+        this.snapshotDate = snap.createdAt;
+        return (this.memoKhachSans = snap.khachSans);
+      }
+      return (this.memoKhachSans = []);
     }
   }
 
@@ -197,6 +232,18 @@ export class LiveDataSource implements DataSource {
       const ten = this.getTenDiemDen();
       const raw = await fetchQuanAnsOSM(coord, ten);
 
+      if (raw.length === 0) {
+        if (!this.isFallbackAllowed()) {
+          return (this.memoQuanAns = []);
+        }
+        const snap = this.loadSnapshotForDestination();
+        if (snap?.quanAns && snap.quanAns.length > 0) {
+          this.dataSourceUsed = "snapshot";
+          this.snapshotDate = snap.createdAt;
+          return (this.memoQuanAns = snap.quanAns);
+        }
+      }
+
       let giaBuaAn = 150_000;
       if (this.diemDen) {
         try {
@@ -214,8 +261,16 @@ export class LiveDataSource implements DataSource {
       return (this.memoQuanAns = res);
     } catch (err) {
       console.error("[LiveDataSource] getQuanAns lỗi:", err instanceof Error ? err.message : err);
-      const snap = this.loadLatestSnapshot();
-      return (this.memoQuanAns = snap?.quanAns ?? []);
+      if (!this.isFallbackAllowed()) {
+        return (this.memoQuanAns = []);
+      }
+      const snap = this.loadSnapshotForDestination() ?? this.loadLatestSnapshot();
+      if (snap?.quanAns && snap.quanAns.length > 0) {
+        this.dataSourceUsed = "snapshot";
+        this.snapshotDate = snap.createdAt;
+        return (this.memoQuanAns = snap.quanAns);
+      }
+      return (this.memoQuanAns = []);
     }
   }
 
@@ -233,11 +288,30 @@ export class LiveDataSource implements DataSource {
       const coord = this.getToaDo();
       const ten = this.getTenDiemDen();
       const res = await fetchCafesOSM(coord, ten);
+      if (res.length === 0) {
+        if (!this.isFallbackAllowed()) {
+          return (this.memoCafes = []);
+        }
+        const snap = this.loadSnapshotForDestination();
+        if (snap?.cafes && snap.cafes.length > 0) {
+          this.dataSourceUsed = "snapshot";
+          this.snapshotDate = snap.createdAt;
+          return (this.memoCafes = snap.cafes);
+        }
+      }
       return (this.memoCafes = res);
     } catch (err) {
       console.error("[LiveDataSource] getCafes lỗi:", err instanceof Error ? err.message : err);
-      const snap = this.loadLatestSnapshot();
-      return (this.memoCafes = snap?.cafes ?? []);
+      if (!this.isFallbackAllowed()) {
+        return (this.memoCafes = []);
+      }
+      const snap = this.loadSnapshotForDestination() ?? this.loadLatestSnapshot();
+      if (snap?.cafes && snap.cafes.length > 0) {
+        this.dataSourceUsed = "snapshot";
+        this.snapshotDate = snap.createdAt;
+        return (this.memoCafes = snap.cafes);
+      }
+      return (this.memoCafes = []);
     }
   }
 
@@ -255,11 +329,30 @@ export class LiveDataSource implements DataSource {
       const coord = this.getToaDo();
       const ten = this.getTenDiemDen();
       const res = await fetchHoatDongsOSM(coord, ten);
+      if (res.length === 0) {
+        if (!this.isFallbackAllowed()) {
+          return (this.memoHoatDongs = []);
+        }
+        const snap = this.loadSnapshotForDestination();
+        if (snap?.hoatDongs && snap.hoatDongs.length > 0) {
+          this.dataSourceUsed = "snapshot";
+          this.snapshotDate = snap.createdAt;
+          return (this.memoHoatDongs = snap.hoatDongs);
+        }
+      }
       return (this.memoHoatDongs = res);
     } catch (err) {
       console.error("[LiveDataSource] getHoatDongs lỗi:", err instanceof Error ? err.message : err);
-      const snap = this.loadLatestSnapshot();
-      return (this.memoHoatDongs = snap?.hoatDongs ?? []);
+      if (!this.isFallbackAllowed()) {
+        return (this.memoHoatDongs = []);
+      }
+      const snap = this.loadSnapshotForDestination() ?? this.loadLatestSnapshot();
+      if (snap?.hoatDongs && snap.hoatDongs.length > 0) {
+        this.dataSourceUsed = "snapshot";
+        this.snapshotDate = snap.createdAt;
+        return (this.memoHoatDongs = snap.hoatDongs);
+      }
+      return (this.memoHoatDongs = []);
     }
   }
 
@@ -269,15 +362,39 @@ export class LiveDataSource implements DataSource {
     return path.join(process.cwd(), "src", "data", "snapshots");
   }
 
-  private loadSnapshot(): SnapshotData | null {
-    if (!this.snapshotName) return null;
-    const p = path.join(this.getSnapshotDir(), `${this.snapshotName}.json`);
-    if (!fs.existsSync(p)) return null;
-    try {
-      return JSON.parse(fs.readFileSync(p, "utf-8")) as SnapshotData;
-    } catch {
-      return null;
+  private loadSnapshotForDestination(destName?: string): SnapshotData | null {
+    const dir = this.getSnapshotDir();
+    if (!fs.existsSync(dir)) return null;
+
+    // 1. Tên snapshot cụ thể từ biến môi trường / constructor
+    if (this.snapshotName) {
+      const p = path.join(dir, `${this.snapshotName}.json`);
+      if (fs.existsSync(p)) {
+        try {
+          return JSON.parse(fs.readFileSync(p, "utf-8")) as SnapshotData;
+        } catch {}
+      }
     }
+
+    const target = (destName ?? this.getTenDiemDen()).toLowerCase();
+    let matchedFile: string | null = null;
+    if (target.includes("đà nẵng") || target.includes("da nang")) {
+      matchedFile = fs.existsSync(path.join(dir, "snapshot_2026-10-19.json"))
+        ? "snapshot_2026-10-19.json"
+        : null;
+    }
+
+    if (matchedFile) {
+      try {
+        return JSON.parse(fs.readFileSync(path.join(dir, matchedFile), "utf-8")) as SnapshotData;
+      } catch {}
+    }
+
+    return null;
+  }
+
+  private loadSnapshot(): SnapshotData | null {
+    return this.loadSnapshotForDestination();
   }
 
   private loadLatestSnapshot(): SnapshotData | null {

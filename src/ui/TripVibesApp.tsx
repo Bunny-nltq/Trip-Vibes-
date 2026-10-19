@@ -14,6 +14,27 @@ import { B7XacNhanScreen } from "@/ui/screens/B7XacNhanScreen";
 import { B8ChuyenDiScreen } from "@/ui/screens/B8ChuyenDiScreen";
 import { B9ChiDuongScreen, B10ChonNguonScreen, B11NganSachScreen } from "@/ui/screens/B9to11Screens";
 
+function SampleDataBanner() {
+  const { isSampleDataActive } = useApp();
+  if (!isSampleDataActive) return null;
+  return (
+    <div
+      style={{
+        background: "#fef3c7",
+        color: "#92400e",
+        borderBottom: "1px solid #fcd34d",
+        padding: "5px 12px",
+        fontSize: 12,
+        fontWeight: 700,
+        textAlign: "center",
+        letterSpacing: "0.5px",
+      }}
+    >
+      DỮ LIỆU MẪU (Chỉ kích hoạt trong môi trường Development)
+    </div>
+  );
+}
+
 function ScreenRouter() {
   const { screen } = useApp();
 
@@ -54,6 +75,7 @@ function ScreenRouter() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)" }}>
+      <SampleDataBanner />
       {showTopBar && <TopBar />}
       <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {renderContent()}

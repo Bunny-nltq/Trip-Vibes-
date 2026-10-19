@@ -201,6 +201,7 @@ export interface AppCtx extends AppState {
   b10Prefill: { tenCuaHang?: string; ngayTrongChuyen?: number; hangMuc?: ExpenseCategory } | null;
   setB10Prefill: (prefill: { tenCuaHang?: string; ngayTrongChuyen?: number; hangMuc?: ExpenseCategory } | null) => void;
   openB10: (prefill?: { tenCuaHang?: string; ngayTrongChuyen?: number; hangMuc?: ExpenseCategory }) => void;
+  isSampleDataActive: boolean;
 }
 
 const Ctx = createContext<AppCtx | null>(null);
@@ -430,8 +431,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   });
   const [activeDay, setActiveDay] = useState(1);
   const [activeTab, setActiveTab] = useState("b8-list");
+  const isDev = process.env.NODE_ENV === "development";
   const [tripConfig, setTripConfigState] = useState<TripConfig>(() => {
-    if (typeof window !== "undefined") {
+    if (isDev && typeof window !== "undefined") {
       const sp = new URLSearchParams(window.location.search);
       if (sp.get("dest") === "bangkok") {
         return {
@@ -583,8 +585,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [planState, tripConfig, history]
   );
 
-  const isBangkokParam = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("dest") === "bangkok";
+  const isBangkokParam =
+    isDev &&
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("dest") === "bangkok";
+  const isPreviewParam =
+    isDev &&
+    typeof window !== "undefined" &&
+    (new URLSearchParams(window.location.search).get("previewMoHo") === "1" ||
+      new URLSearchParams(window.location.search).get("previewNhapGiaTay") === "1");
   const fallbackPlan = isBangkokParam ? BANGKOK_SAMPLE_PLAN : DEFAULT_SAMPLE_PLAN;
+  const isUsingFallbackPlan = !history.current && !planState.plan;
+  const isSampleDataActive =
+    isDev && (isBangkokParam || isPreviewParam || isUsingFallbackPlan);
   const activePlan = history.current ?? planState.plan ?? fallbackPlan;
 
   const applyPreview = useCallback(() => {
@@ -615,6 +628,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setActiveDay,
         activeTab,
         setActiveTab,
+        isSampleDataActive,
 
         // Plan fields
         plan: activePlan,

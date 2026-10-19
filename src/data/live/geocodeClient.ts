@@ -4,9 +4,14 @@
  * Client Nominatim Geocoding API (OpenStreetMap).
  * - Sử dụng endpoint: https://nominatim.openstreetmap.org/search
  * - Tham số: format=jsonv2, limit=3, addressdetails=1, accept-language=vi
- * - User-Agent định danh đọc từ biến môi trường NOMINATIM_USER_AGENT (báo lỗi nếu thiếu)
+ * - User-Agent định danh: bắt buộc hợp lệ (phải có email/URL thực tế, KHÔNG chấp nhận .local hoặc example)
  * - TỐI ĐA 1 yêu cầu mỗi giây (sequential queue rate-limited)
  * - Cache file trên đĩa 30 ngày (TTL 30 days)
+ * - Thử lại khi 0 kết quả:
+ *   (a) q gốc (accept-language=vi)
+ *   (b) q + ", Việt Nam" (accept-language=vi)
+ *   (c) q gốc (bỏ accept-language)
+ *   (Gặp 403 hoặc 429 thì dừng ngay, báo lỗi rõ và không thử dồn)
  * - Ghi nhận bản quyền: "Data © OpenStreetMap contributors"
  */
 
@@ -77,6 +82,25 @@ export function suyRaTienTeTuMaQuocGia(maQuocGia: string): string {
   return MA_QUOC_GIA_TIEN_TE[code] ?? (code === "VN" ? "VND" : "USD");
 }
 
+export function validateNominatimUserAgent(ua?: string): string {
+  if (!ua || !ua.trim()) {
+    throw new Error(
+      "Thiếu biến môi trường NOMINATIM_USER_AGENT. Vui lòng cấu hình User-Agent định danh theo chính sách của OpenStreetMap Nominatim."
+    );
+  }
+  const trimmed = ua.trim();
+  const lower = trimmed.toLowerCase();
+  const hasContact = trimmed.includes("@") || trimmed.includes("http://") || trimmed.includes("https://");
+  const hasForbidden = lower.includes(".local") || lower.includes("example");
+
+  if (!hasContact || hasForbidden) {
+    throw new Error(
+      "NOMINATIM_USER_AGENT không hợp lệ: Phải chứa thông tin liên hệ thực tế (email hoặc URL hợp lệ, không chấp nhận tên miền .local hoặc example). Cách sửa: cấu hình ví dụ 'TripVibes/1.0 (contact@tripvibes.vn)' trong .env.local"
+    );
+  }
+  return trimmed;
+}
+
 // ─── Rate Limiter (Tối đa 1 request mỗi giây, tuần tự) ─────────────────────────
 
 let lastRequestTime = 0;
@@ -136,7 +160,7 @@ function writeCache(query: string, data: GeocodeResult): void {
     fs.mkdirSync(CACHE_DIR, { recursive: true });
     fs.writeFileSync(getCachePath(query), JSON.stringify(data, null, 2), "utf-8");
   } catch {
-    // ignore cache write error
+    // ignore
   }
 }
 
@@ -146,8 +170,7 @@ export function parseNominatimItem(item: any, nowIso: string = new Date().toISOS
   const address = item.address || {};
   const countryCode = (address.country_code || "vn").toUpperCase();
   const country = address.country || (countryCode === "VN" ? "Việt Nam" : countryCode);
-  
-  // Tên điểm đến gọn: ưu tiên tên cụ thể hoặc tên thành phố/địa danh
+
   const name =
     item.name ||
     address.city ||
@@ -172,6 +195,20 @@ export function parseNominatimItem(item: any, nowIso: string = new Date().toISOS
   };
 }
 
+function normalizePlaceName(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/^thành phố\s+/i, "")
+    .replace(/^đặc khu\s+/i, "")
+    .replace(/^tỉnh\s+/i, "")
+    .replace(/^quận\s+/i, "")
+    .replace(/^huyện\s+/i, "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .trim();
+}
+
 // ─── Main Geocode Function ───────────────────────────────────────────────────
 
 export async function geocodeDestination(
@@ -194,33 +231,60 @@ export async function geocodeDestination(
   }
 
   // 2. Kiểm tra User-Agent
-  const userAgent = process.env.NOMINATIM_USER_AGENT;
-  if (!userAgent || userAgent.trim().length === 0) {
-    throw new Error(
-      "Thiếu biến môi trường NOMINATIM_USER_AGENT. Vui lòng cấu hình User-Agent định danh theo chính sách của OpenStreetMap Nominatim."
-    );
+  const userAgent = validateNominatimUserAgent(process.env.NOMINATIM_USER_AGENT);
+  const fetcher = options?.fetchFn ?? fetch;
+
+  // 3. Thực hiện thử lần lượt:
+  // (a) q gốc (accept-language=vi)
+  // (b) q + ", Việt Nam" (accept-language=vi)
+  // (c) q gốc (bỏ accept-language)
+  const attempts = [
+    {
+      url: `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(cleanQuery)}&format=jsonv2&limit=3&addressdetails=1&accept-language=vi`,
+      desc: "q gốc vi",
+    },
+    {
+      url: `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(cleanQuery + ", Việt Nam")}&format=jsonv2&limit=3&addressdetails=1&accept-language=vi`,
+      desc: "q + Việt Nam vi",
+    },
+    {
+      url: `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(cleanQuery)}&format=jsonv2&limit=3&addressdetails=1`,
+      desc: "q gốc no-lang",
+    },
+  ];
+
+  let rawData: any[] = [];
+
+  for (const att of attempts) {
+    const data = await scheduleRateLimited(async () => {
+      const res = await fetcher(att.url, {
+        headers: {
+          "User-Agent": userAgent,
+          Accept: "application/json",
+        },
+        signal: AbortSignal.timeout(10000),
+      });
+
+      if (res.status === 403 || res.status === 429) {
+        throw new Error(
+          `Nominatim API từ chối truy cập (HTTP ${res.status}: ${res.statusText}). Đã dừng để tránh gửi dồn yêu cầu.`
+        );
+      }
+
+      if (!res.ok) {
+        throw new Error(`Nominatim API returned HTTP ${res.status}: ${res.statusText}`);
+      }
+
+      return res.json();
+    });
+
+    if (Array.isArray(data) && data.length > 0) {
+      rawData = data;
+      break;
+    }
   }
 
-  // 3. Thực hiện gọi mạng qua Sequential Rate Limiter
-  const fetcher = options?.fetchFn ?? fetch;
-  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-    cleanQuery
-  )}&format=jsonv2&limit=3&addressdetails=1&accept-language=vi`;
-
-  const rawData = await scheduleRateLimited(async () => {
-    const res = await fetcher(url, {
-      headers: {
-        "User-Agent": userAgent,
-        Accept: "application/json",
-      },
-    });
-    if (!res.ok) {
-      throw new Error(`Nominatim API returned HTTP ${res.status}: ${res.statusText}`);
-    }
-    return res.json();
-  });
-
-  if (!Array.isArray(rawData) || rawData.length === 0) {
+  if (rawData.length === 0) {
     const result: GeocodeResult = {
       status: "khong_tim_thay",
       ungVien: [],
@@ -234,10 +298,18 @@ export async function geocodeDestination(
   const ungVien: GeocodeCandidate[] = rawData.slice(0, 3).map((item) => parseNominatimItem(item, nowIso));
 
   // Kiểm tra mơ hồ:
-  // Nếu có nhiều ứng viên và chúng khác quốc gia hoặc khác loại địa danh
+  // Mơ hồ khi các ứng viên thuộc các quốc gia khác nhau
   const distinctCountries = new Set(ungVien.map((u) => u.maQuocGia));
-  const distinctTypes = new Set(ungVien.map((u) => u.loai));
-  const isAmbiguous = ungVien.length > 1 && (distinctCountries.size > 1 || distinctTypes.size > 1);
+  let isAmbiguous = distinctCountries.size > 1;
+
+  if (!isAmbiguous && ungVien.length > 1) {
+    // Nếu cùng quốc gia: kiểm tra xem có phải cùng tên thành phố/địa danh không
+    const normalizedNames = new Set(ungVien.map((u) => normalizePlaceName(u.ten)));
+    if (normalizedNames.size > 1) {
+      // Tên chuẩn hóa khác nhau -> Có nhiều địa danh khác nhau cùng từ khóa tìm kiếm
+      isAmbiguous = true;
+    }
+  }
 
   if (isAmbiguous) {
     const result: GeocodeResult = {
@@ -250,7 +322,13 @@ export async function geocodeDestination(
     return result;
   }
 
-  const primary = ungVien[0];
+  // Chọn ứng viên ưu tiên nhất: ưu tiên city/administrative hơn historic
+  const sorted = [...ungVien].sort((a, b) => {
+    const score = (u: GeocodeCandidate) => (u.loai === "city" || u.loai === "administrative" ? 2 : 1);
+    return score(b) - score(a);
+  });
+
+  const primary = sorted[0];
   const diemDen: DiemDen = {
     ten: primary.ten,
     quocGia: primary.quocGia,

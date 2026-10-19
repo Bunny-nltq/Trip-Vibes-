@@ -50,9 +50,9 @@ export function B11NganSachScreen() {
     return gomDiaDiemTheoNgay(plan);
   }, [plan]);
 
-  // Hỗ trợ mock state cho chụp ảnh màn hình / demo
+  // Hỗ trợ mock state cho chụp ảnh màn hình / demo (chỉ trong môi trường development)
   const effectiveLedger = useMemo(() => {
-    if (typeof window === "undefined") return ledger;
+    if (typeof window === "undefined" || process.env.NODE_ENV !== "development") return ledger;
     const params = new URLSearchParams(window.location.search);
     const mockState = params.get("state");
     if (mockState === "binh_thuong" || mockState === "lech_ngan_sach") {

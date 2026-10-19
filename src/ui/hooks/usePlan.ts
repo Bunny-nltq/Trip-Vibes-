@@ -30,6 +30,7 @@ export type PlanStatus =
   | "can_lam_ro"
   | "khong_the_dat_ngan_sach"
   | "khong_co_phuong_an"
+  | "khong_du_du_lieu"
   | "co_vi_pham"
   | "error";
 

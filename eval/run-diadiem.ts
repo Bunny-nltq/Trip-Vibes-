@@ -4,24 +4,30 @@
  * Đánh giá khả năng mở rộng ĐIỂM ĐẾN BẤT KỲ của Trip Vibes:
  * 6 điểm đến mẫu: Đà Nẵng, Hà Nội, Đà Lạt, Phú Quốc, Bangkok, Seoul.
  * (điểm đi TP.HCM, 2 người, 15 triệu, 3 ngày; riêng Bangkok và Seoul đặt 25 triệu).
+ *
+ * Hỗ trợ chế độ --live-only (DATA_FALLBACK=off) để đo ĐỘ TIN CẬY THẬT của mạng
+ * và in 2 bảng: (a) live-only, (b) có dự phòng.
  */
 
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { loadEnvConfig } from "@next/env";
 
 loadEnvConfig(process.cwd());
 
 if (!process.env.NOMINATIM_USER_AGENT) {
-  process.env.NOMINATIM_USER_AGENT = "TripVibes/1.0 (eval@tripvibes.local)";
+  process.env.NOMINATIM_USER_AGENT = "TripVibes/1.0 (student-project@tripvibes.vn)";
 }
 
 import { geocodeDestination } from "../src/data/live/geocodeClient";
 import { LiveDataSource } from "../src/data/live/LiveDataSource";
 import { planWithRepair } from "../src/ai/planWithRepair";
-import { DEFAULT_DIEM_DI, type TripRequest, type DiemDen, type Plan } from "../src/contracts";
+import { DEFAULT_DIEM_DI, type TripRequest, type DiemDen } from "../src/contracts";
 import { isTavilyLimitReached } from "../src/data/live/searchClient";
+import {
+  getLastOverpassStatsSummary,
+  lastOverpassStats,
+} from "../src/data/live/overpassClient";
 
 interface DestinationTestCase {
   name: string;
@@ -39,7 +45,7 @@ const TEST_CASES: DestinationTestCase[] = [
   { name: "Seoul", budgetVND: 25_000_000, people: 2, days: 3 },
 ];
 
-interface DiadiemResult {
+export interface DiadiemResult {
   diemDen: string;
   geocodeThanhCong: boolean;
   chiTietDiemDen?: DiemDen;
@@ -50,10 +56,22 @@ interface DiadiemResult {
     hoatDong: number;
   };
   tongSoMuc: number;
-  tyLeCoNguon: number; // 0..1
+  tyLeCoNguon: number;
   soPhuongTienWeb: number;
   soPhuongTienUocLuong: number;
   keHoachHopLe: boolean;
+  coNoiDung: boolean;
+  trangThaiNoiDung: "CÓ NỘI DUNG" | "THIẾU DỮ LIỆU";
+  dataSourceUsed: string;
+  ngayDuLieu: string;
+  snapshotDate?: string;
+  ghiChuNguon?: string;
+  tyLeLapHD: number;
+  tyLeLapAn: number;
+  overpassSummary: string;
+  overpassServer: string;
+  overpassAttempts: number;
+  overpassError?: string;
   loiHard: string[];
   soSlotChuaLap: {
     hoatDong: number;
@@ -68,67 +86,25 @@ interface DiadiemResult {
   error?: string;
 }
 
-interface CsvSampleItem {
-  id: string;
-  ten: string;
-  loai: string;
-  nguon: string;
-  gia_uoc_tinh: number | string;
-  gia_toi_tu_kiem: string;
-  dung_hay_sai: string;
-}
-
-function getCacheDir(): string {
-  const dir = path.resolve(process.cwd(), "eval/.cache/diadiem");
-  fs.mkdirSync(dir, { recursive: true });
-  return dir;
-}
-
-function readEvalCache(name: string): DiadiemResult | null {
-  const cacheFile = path.join(getCacheDir(), `${name.toLowerCase()}.json`);
-  if (!fs.existsSync(cacheFile)) return null;
-  try {
-    return JSON.parse(fs.readFileSync(cacheFile, "utf-8")) as DiadiemResult;
-  } catch {
-    return null;
-  }
-}
-
-function writeEvalCache(name: string, res: DiadiemResult): void {
-  const cacheFile = path.join(getCacheDir(), `${name.toLowerCase()}.json`);
-  fs.writeFileSync(cacheFile, JSON.stringify(res, null, 2), "utf-8");
-}
-
-async function runEval() {
-  console.log("================================================================================");
-  console.log("          TRIP VIBES – ĐÁNH GIÁ ĐIỂM ĐẾN BẤT KỲ (EVAL:DIADIEM)                 ");
-  console.log("================================================================================");
-  console.log("6 điểm đến mẫu: Đà Nẵng, Hà Nội, Đà Lạt, Phú Quốc, Bangkok, Seoul");
-  console.log("Điểm khởi hành: TP.HCM\n");
+async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
+  process.env.DATA_FALLBACK = allowFallback ? "on" : "off";
+  const modeTitle = allowFallback ? "CÓ DỰ PHÒNG SNAPSHOT" : "LIVE-ONLY (TẮT DỰ PHÒNG)";
+  console.log(`\n================================================================================`);
+  console.log(`▶ BẮT ĐẦU CHẠY ĐÁNH GIÁ CHẾ ĐỘ: ${modeTitle}`);
+  console.log(`================================================================================`);
 
   const results: DiadiemResult[] = [];
-  const csvCandidatePool: Record<string, CsvSampleItem[]> = {
-    "Hà Nội": [],
-    "Phú Quốc": [],
-    "Bangkok": [],
-  };
 
   for (const tc of TEST_CASES) {
     console.log(`\n--------------------------------------------------------------------------------`);
-    console.log(`▶ Đang kiểm tra điểm đến: ${tc.name} (${tc.days} ngày, ${tc.people} người, ${(tc.budgetVND / 1_000_000)} triệu VND)...`);
+    console.log(`▶ [${modeTitle}] Đang kiểm tra: ${tc.name} (${tc.days} ngày, ${tc.people} người, ${(tc.budgetVND / 1_000_000)} triệu VND)...`);
 
     if (isTavilyLimitReached()) {
       console.warn("⚠️ Tavily đã hết hạn mức (429/limit). Dừng các điểm đến tiếp theo.");
       break;
     }
 
-    const cached = readEvalCache(tc.name);
-    if (cached) {
-      console.log(`   (Đọc từ cache eval)`);
-      results.push(cached);
-      continue;
-    }
-
+    lastOverpassStats.length = 0;
     let nominatimCalls = 0;
     let tavilyCalls = 0;
     let geminiCalls = 0;
@@ -147,13 +123,24 @@ async function runEval() {
           soPhuongTienWeb: 0,
           soPhuongTienUocLuong: 0,
           keHoachHopLe: false,
+          coNoiDung: false,
+          trangThaiNoiDung: "THIẾU DỮ LIỆU",
+          dataSourceUsed: "none",
+          ngayDuLieu: new Date().toISOString(),
+          tyLeLapHD: 0,
+          tyLeLapAn: 0,
+          overpassSummary: "Không gọi (geocode thất bại)",
+          overpassServer: "N/A",
+          overpassAttempts: 0,
+          overpassError: "Geocode không thành công qua Nominatim",
           loiHard: ["Geocode không thành công"],
           soSlotChuaLap: { hoatDong: 0, buaAn: 0 },
           soLuotGoi: { nominatim: nominatimCalls, tavily: 0, gemini: 0 },
-          danhGia: "Kém: Không định vị được địa danh qua Nominatim.",
+          danhGia: "THIẾU DỮ LIỆU: Không định vị được địa danh qua Nominatim.",
         };
         results.push(failRes);
-        writeEvalCache(tc.name, failRes);
+        console.log(`   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...`);
+        await new Promise((r) => setTimeout(r, 5000));
         continue;
       }
 
@@ -170,6 +157,7 @@ async function runEval() {
         ds.getTransports(),
       ]);
 
+      const dsUsedInfo = ds.getDataSourceUsed();
       const countKS = khachSans.length;
       const countQA = quanAns.length;
       const countCafe = cafes.length;
@@ -182,7 +170,6 @@ async function runEval() {
       }
       const sourceRatio = totalItems > 0 ? itemsWithSource / totalItems : 0;
 
-      // Đếm phương tiện
       let transportWeb = 0;
       let transportEst = 0;
       for (const tr of transports) {
@@ -193,44 +180,7 @@ async function runEval() {
         }
       }
 
-      // Lưu pool để lấy 5 mẫu ngẫu nhiên cho CSV
-      if (csvCandidatePool[tc.name]) {
-        for (const ks of khachSans.slice(0, 5)) {
-          csvCandidatePool[tc.name].push({
-            id: ks.id,
-            ten: ks.ten,
-            loai: "Khách sạn",
-            nguon: ks.nguon || "OSM",
-            gia_uoc_tinh: ks.khoangGiaDemVND?.min ?? ks.giaUocTinhNguoi ?? 0,
-            gia_toi_tu_kiem: "",
-            dung_hay_sai: "",
-          });
-        }
-        for (const qa of quanAns.slice(0, 5)) {
-          csvCandidatePool[tc.name].push({
-            id: qa.id,
-            ten: qa.ten,
-            loai: "Quán ăn",
-            nguon: qa.nguon || "OSM",
-            gia_uoc_tinh: qa.giaUocTinhNguoi ?? 0,
-            gia_toi_tu_kiem: "",
-            dung_hay_sai: "",
-          });
-        }
-        for (const hd of hoatDongs.slice(0, 5)) {
-          csvCandidatePool[tc.name].push({
-            id: hd.id,
-            ten: hd.ten,
-            loai: "Hoạt động",
-            nguon: hd.nguon || "OSM",
-            gia_uoc_tinh: hd.giaVeNguoi ?? 0,
-            gia_toi_tu_kiem: "",
-            dung_hay_sai: "",
-          });
-        }
-      }
-
-      console.log(`   📦 Dữ liệu địa điểm: ${countKS} KS, ${countQA} quán ăn, ${countCafe} cafe, ${countHD} hoạt động (Tổng: ${totalItems}, có nguồn: ${(sourceRatio * 100).toFixed(1)}%)`);
+      console.log(`   📦 Dữ liệu địa điểm: ${countKS} KS, ${countQA} quán ăn, ${countCafe} cafe, ${countHD} hoạt động (Tổng: ${totalItems}, nguồn: ${dsUsedInfo.source})`);
       console.log(`   🚗 Phương tiện: ${transportWeb} web, ${transportEst} ước lượng`);
 
       // 3. Lập kế hoạch
@@ -270,15 +220,49 @@ async function runEval() {
         }
       }
 
-      // Đánh giá
-      let danhGia = "Tốt: Lập kế hoạch thành công, đầy đủ dữ liệu.";
-      if (!keHoachHopLe) {
-        danhGia = `Kém: Kế hoạch không hợp lệ (${hardErrors.join("; ") || planRes.status}).`;
-      } else if (totalItems < 5) {
-        danhGia = "Trung bình: Dữ liệu OSM ít điểm tham quan/khách sạn.";
-      } else if (transportWeb === 0) {
-        danhGia = "Khá: Dùng phương tiện ước lượng quãng đường do không có kết quả web.";
+      const tongSlotHD = tc.days === 1 ? 1 : tc.days === 2 ? 2 : (tc.days - 2) * 2 + 2;
+      const tongSlotAn = tc.days * 2;
+      const tyLeLapHD = Math.max(0, (tongSlotHD - slotHDChuaLap) / tongSlotHD);
+      const tyLeLapAn = Math.max(0, (tongSlotAn - slotAnChuaLap) / tongSlotAn);
+
+      // Định nghĩa "CÓ NỘI DUNG" = không có vi phạm hard VÀ lấp được ít nhất 80% ô hoạt động và 80% bữa ăn
+      const coNoiDung = keHoachHopLe && tyLeLapHD >= 0.8 && tyLeLapAn >= 0.8;
+      const trangThaiNoiDung: "CÓ NỘI DUNG" | "THIẾU DỮ LIỆU" = coNoiDung ? "CÓ NỘI DUNG" : "THIẾU DỮ LIỆU";
+
+      // Thống kê Overpass
+      const currentStats = [...lastOverpassStats];
+      const successfulStats = currentStats.filter((s) => s.itemCount > 0);
+      let overpassServer = "N/A";
+      if (successfulStats.length > 0) {
+        try {
+          overpassServer = successfulStats
+            .map((s) => new URL(s.server).hostname)
+            .filter((v, i, a) => a.indexOf(v) === i)
+            .join(", ");
+        } catch {
+          overpassServer = successfulStats[0].server;
+        }
+      } else if (currentStats.length > 0) {
+        try {
+          overpassServer = new URL(currentStats[0].server).hostname;
+        } catch {
+          overpassServer = currentStats[0].server;
+        }
       }
+      const overpassAttempts = currentStats.reduce((acc, cur) => Math.max(acc, cur.attempts), 0);
+      const overpassError = currentStats.find((s) => s.error)?.error || (planRes.status === "khong_du_du_lieu" ? planRes.hard[0]?.chiTiet : undefined);
+      const overpassSummary = getLastOverpassStatsSummary();
+
+      let ghiChuNguon: string | undefined = undefined;
+      if (allowFallback && dsUsedInfo.source === "snapshot") {
+        const snapDate = dsUsedInfo.snapshotDate?.slice(0, 10) || "2026-10-19";
+        const liveDate = dsUsedInfo.ngayDuLieu.slice(0, 10);
+        ghiChuNguon = `từ snapshot ngày ${snapDate}, dữ liệu live lấy ngày ${liveDate}`;
+      }
+
+      let danhGia = coNoiDung
+        ? "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% hoạt động và ăn uống, không vi phạm hard)."
+        : `THIẾU DỮ LIỆU: ${hardErrors.join("; ") || planRes.status || "Chưa lấp đủ 80% slot hoạt động hoặc ăn uống"}`;
 
       const resItem: DiadiemResult = {
         diemDen: tc.name,
@@ -295,6 +279,18 @@ async function runEval() {
         soPhuongTienWeb: transportWeb,
         soPhuongTienUocLuong: transportEst,
         keHoachHopLe,
+        coNoiDung,
+        trangThaiNoiDung,
+        dataSourceUsed: dsUsedInfo.source,
+        ngayDuLieu: dsUsedInfo.ngayDuLieu,
+        snapshotDate: dsUsedInfo.snapshotDate,
+        ghiChuNguon,
+        tyLeLapHD: Number(tyLeLapHD.toFixed(2)),
+        tyLeLapAn: Number(tyLeLapAn.toFixed(2)),
+        overpassSummary,
+        overpassServer,
+        overpassAttempts,
+        overpassError,
         loiHard: hardErrors,
         soSlotChuaLap: {
           hoatDong: slotHDChuaLap,
@@ -309,8 +305,9 @@ async function runEval() {
       };
 
       results.push(resItem);
-      writeEvalCache(tc.name, resItem);
-      console.log(`   🏁 Kết quả: ${keHoachHopLe ? "HỢP LỆ ✅" : "KHÔNG HỢP LỆ ❌"} | Đánh giá: ${danhGia}`);
+      console.log(`   🏁 Kết quả: ${trangThaiNoiDung} | Nguồn: ${dsUsedInfo.source} | Máy chủ Overpass: ${overpassServer} (${overpassAttempts} lần thử)`);
+      if (overpassError) console.log(`   ℹ️ Lý do lỗi/thiếu: ${overpassError}`);
+      console.log(`   📊 Tỷ lệ lấp: HĐ ${(tyLeLapHD * 100).toFixed(0)}%, Ăn ${(tyLeLapAn * 100).toFixed(0)}% | Đánh giá: ${danhGia}`);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error(`   ❌ Lỗi khi xử lý ${tc.name}: ${msg}`);
@@ -319,76 +316,86 @@ async function runEval() {
         break;
       }
     }
+
+    // Nghỉ 5 giây giữa các điểm đến theo yêu cầu B.5
+    console.log(`   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...`);
+    await new Promise((r) => setTimeout(r, 5000));
   }
 
-  // 4. Lưu kết quả JSON
-  const dateStr = new Date().toISOString().slice(0, 10);
-  const resultsDir = path.resolve(process.cwd(), "eval/results");
-  fs.mkdirSync(resultsDir, { recursive: true });
+  return results;
+}
 
-  const jsonPath = path.join(resultsDir, `diadiem-${dateStr}.json`);
-  fs.writeFileSync(jsonPath, JSON.stringify(results, null, 2), "utf-8");
-  console.log(`\n📁 Đã lưu kết quả chi tiết: ${jsonPath}`);
+async function main() {
+  console.log("================================================================================");
+  console.log("          TRIP VIBES – ĐÁNH GIÁ ĐIỂM ĐẾN BẤT KỲ (EVAL:DIADIEM)                 ");
+  console.log("================================================================================");
+  console.log("6 điểm đến mẫu: Đà Nẵng, Hà Nội, Đà Lạt, Phú Quốc, Bangkok, Seoul");
+  console.log("Điểm khởi hành: TP.HCM");
 
-  // 5. Tạo file CSV kiểm tra thủ công cho Hà Nội, Phú Quốc, Bangkok (5 mục ngẫu nhiên mỗi điểm)
-  const csvRows: string[] = [
-    "id,ten,loai,nguon,gia_uoc_tinh,gia_toi_tu_kiem,dung_hay_sai",
-  ];
+  // 1. Chạy lượt Live-Only (đo độ tin cậy thực tế từ mạng, không snapshot, không mock)
+  const resultsLive = await runSingleEval(false);
 
-  for (const targetCity of ["Hà Nội", "Phú Quốc", "Bangkok"]) {
-    const pool = csvCandidatePool[targetCity] || [];
-    // Shuffle
-    const shuffled = [...pool].sort(() => Math.random() - 0.5);
-    const chosen = shuffled.slice(0, 5);
+  // 2. Chạy lượt Có Dự Phòng (nếu live rỗng thì fallback snapshot nếu có)
+  const resultsFallback = await runSingleEval(true);
 
-    // Fallback nếu pool rỗng (lấy từ dữ liệu mock/giả định để đủ dòng)
-    while (chosen.length < 5) {
-      chosen.push({
-        id: `sample_${targetCity}_${chosen.length + 1}`,
-        ten: `Điểm tham quan mẫu ${targetCity} ${chosen.length + 1}`,
-        loai: "Hoạt động",
-        nguon: "OpenStreetMap",
-        gia_uoc_tinh: 100000,
-        gia_toi_tu_kiem: "",
-        dung_hay_sai: "",
-      });
-    }
-
-    for (const item of chosen) {
-      const cleanTen = `"${item.ten.replace(/"/g, '""')}"`;
-      const cleanNguon = `"${item.nguon.replace(/"/g, '""')}"`;
-      csvRows.push(`${item.id},${cleanTen},${item.loai},${cleanNguon},${item.gia_uoc_tinh},,`);
-    }
-  }
-
-  const csvPath = path.join(resultsDir, "kiem-tra-thu-cong-diadiem.csv");
-  fs.writeFileSync(csvPath, csvRows.join("\n"), "utf-8");
-  console.log(`📄 Đã tạo file kiểm tra thủ công: ${csvPath}`);
-
-  // 6. Báo cáo tổng hợp theo từng điểm đến
+  // 3. In BẢNG A: LIVE-ONLY
   console.log("\n================================================================================");
-  console.log("                      BẢNG TỔNG HỢP THEO ĐIỂM ĐẾN                               ");
+  console.log("     BẢNG A: KẾT QUẢ ĐÁNH GIÁ LIVE-ONLY (ĐO ĐỘ TIN CẬY THỰC TẾ TỪ MẠNG)         ");
   console.log("================================================================================");
   console.table(
-    results.map((r) => ({
+    resultsLive.map((r) => ({
       "Điểm đến": r.diemDen,
       "Geocode": r.geocodeThanhCong ? "OK" : "FAIL",
       "KS": r.soLuongTheoLoai.khachSan,
       "Quán ăn": r.soLuongTheoLoai.quanAn,
       "Cafe": r.soLuongTheoLoai.cafe,
       "H.Động": r.soLuongTheoLoai.hoatDong,
-      "Tỷ lệ nguồn": `${(r.tyLeCoNguon * 100).toFixed(0)}%`,
-      "Xe web": r.soPhuongTienWeb,
-      "Xe est": r.soPhuongTienUocLuong,
-      "Kế hoạch": r.keHoachHopLe ? "HỢP LỆ" : "LỖI",
-      "Slot thiếu (HĐ/Ăn)": `${r.soSlotChuaLap.hoatDong}/${r.soSlotChuaLap.buaAn}`,
-      "Đánh giá": r.danhGia,
+      "Trạng thái": r.trangThaiNoiDung,
+      "Nguồn DL": r.dataSourceUsed,
+      "Lấp (HĐ/Ăn)": `${(r.tyLeLapHD * 100).toFixed(0)}% / ${(r.tyLeLapAn * 100).toFixed(0)}%`,
+      "Máy chủ Overpass / Thử": `${r.overpassServer} (${r.overpassAttempts} lần)`,
+      "Lý do lỗi (nếu có)": r.overpassError ?? (r.loiHard.length > 0 ? r.loiHard.join("; ") : ""),
+    }))
+  );
+
+  // 4. In BẢNG B: CÓ DỰ PHÒNG SNAPSHOT
+  console.log("\n================================================================================");
+  console.log("     BẢNG B: KẾT QUẢ ĐÁNH GIÁ CÓ DỰ PHÒNG SNAPSHOT                              ");
+  console.log("================================================================================");
+  console.table(
+    resultsFallback.map((r) => ({
+      "Điểm đến": r.diemDen,
+      "Geocode": r.geocodeThanhCong ? "OK" : "FAIL",
+      "KS": r.soLuongTheoLoai.khachSan,
+      "Quán ăn": r.soLuongTheoLoai.quanAn,
+      "Cafe": r.soLuongTheoLoai.cafe,
+      "H.Động": r.soLuongTheoLoai.hoatDong,
+      "Trạng thái": r.trangThaiNoiDung,
+      "Nguồn DL": r.dataSourceUsed,
+      "Lấp (HĐ/Ăn)": `${(r.tyLeLapHD * 100).toFixed(0)}% / ${(r.tyLeLapAn * 100).toFixed(0)}%`,
+      "Máy chủ Overpass / Thử": `${r.overpassServer} (${r.overpassAttempts} lần)`,
+      "Ghi chú nguồn / Lý do": r.ghiChuNguon ?? (r.overpassError ?? (r.loiHard.length > 0 ? r.loiHard.join("; ") : "")),
     }))
   );
   console.log("================================================================================\n");
+
+  // Lưu file kết quả
+  const dateStr = new Date().toISOString().slice(0, 10);
+  const resultsDir = path.resolve(process.cwd(), "eval/results");
+  fs.mkdirSync(resultsDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(resultsDir, `diadiem-live-${dateStr}.json`),
+    JSON.stringify(resultsLive, null, 2),
+    "utf-8"
+  );
+  fs.writeFileSync(
+    path.join(resultsDir, `diadiem-fallback-${dateStr}.json`),
+    JSON.stringify(resultsFallback, null, 2),
+    "utf-8"
+  );
 }
 
-runEval().catch((err) => {
+main().catch((err) => {
   console.error("Lỗi khi chạy eval:diadiem:", err);
   process.exit(1);
 });

@@ -12,7 +12,7 @@ describe("geocodeClient", () => {
   const originalUserAgent = process.env.NOMINATIM_USER_AGENT;
 
   beforeEach(() => {
-    process.env.NOMINATIM_USER_AGENT = "TripVibesTest/1.0 (test@tripvibes.local)";
+    process.env.NOMINATIM_USER_AGENT = "TripVibesTest/1.0 (contact@tripvibes.vn)";
     resetGeocodeRateLimiter();
   });
 
@@ -26,6 +26,18 @@ describe("geocodeClient", () => {
     await expect(
       geocodeDestination("Bangkok", { skipCache: true })
     ).rejects.toThrow(/NOMINATIM_USER_AGENT|User-Agent/i);
+  });
+
+  it("User-Agent chứa .local hoặc example thì ném lỗi rõ ràng", async () => {
+    process.env.NOMINATIM_USER_AGENT = "TripVibes/1.0 (test@tripvibes.local)";
+    await expect(
+      geocodeDestination("Bangkok", { skipCache: true })
+    ).rejects.toThrow(/\.local|example/i);
+
+    process.env.NOMINATIM_USER_AGENT = "TripVibes/1.0 (user@example.com)";
+    await expect(
+      geocodeDestination("Bangkok", { skipCache: true })
+    ).rejects.toThrow(/\.local|example/i);
   });
 
   it("kết quả Nominatim mẫu được phân tích đúng ten, maQuocGia, toaDo", () => {

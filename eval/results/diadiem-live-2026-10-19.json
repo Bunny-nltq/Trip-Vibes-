@@ -1,0 +1,277 @@
+[
+  {
+    "diemDen": "Đà Nẵng",
+    "geocodeThanhCong": true,
+    "chiTietDiemDen": {
+      "ten": "Thành phố Đà Nẵng",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 16.068501,
+        "lng": 108.2240242
+      },
+      "tienTe": "VND",
+      "nguon": "nominatim",
+      "ngayLay": "2026-10-19T11:21:42.761Z"
+    },
+    "soLuongTheoLoai": {
+      "khachSan": 15,
+      "quanAn": 15,
+      "cafe": 15,
+      "hoatDong": 15
+    },
+    "tongSoMuc": 60,
+    "tyLeCoNguon": 1,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 6,
+    "keHoachHopLe": false,
+    "coNoiDung": false,
+    "trangThaiNoiDung": "THIẾU DỮ LIỆU",
+    "dataSourceUsed": "live",
+    "ngayDuLieu": "2026-10-19T12:28:44.110Z",
+    "tyLeLapHD": 1,
+    "tyLeLapAn": 1,
+    "overpassSummary": "Chưa có lượt gọi Overpass nào.",
+    "overpassServer": "N/A",
+    "overpassAttempts": 0,
+    "loiHard": [
+      "Đến nơi lúc 619 phút, không kịp tham gia hoạt động thứ nhất."
+    ],
+    "soSlotChuaLap": {
+      "hoatDong": 0,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 3
+    },
+    "danhGia": "THIẾU DỮ LIỆU: Đến nơi lúc 619 phút, không kịp tham gia hoạt động thứ nhất."
+  },
+  {
+    "diemDen": "Hà Nội",
+    "geocodeThanhCong": true,
+    "chiTietDiemDen": {
+      "ten": "Hà Nội",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 21.0283334,
+        "lng": 105.854041
+      },
+      "tienTe": "VND",
+      "nguon": "nominatim",
+      "ngayLay": "2026-10-19T11:39:00.089Z"
+    },
+    "soLuongTheoLoai": {
+      "khachSan": 15,
+      "quanAn": 0,
+      "cafe": 0,
+      "hoatDong": 0
+    },
+    "tongSoMuc": 15,
+    "tyLeCoNguon": 1,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 6,
+    "keHoachHopLe": false,
+    "coNoiDung": false,
+    "trangThaiNoiDung": "THIẾU DỮ LIỆU",
+    "dataSourceUsed": "live",
+    "ngayDuLieu": "2026-10-19T12:28:58.144Z",
+    "tyLeLapHD": 1,
+    "tyLeLapAn": 1,
+    "overpassSummary": "[quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục)",
+    "overpassServer": "overpass-api.de",
+    "overpassAttempts": 3,
+    "overpassError": "The operation was aborted due to timeout",
+    "loiHard": [
+      "Dữ liệu địa phương tại Hà Nội chưa đủ để lập kế hoạch chất lượng: thiếu điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: [quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục)"
+    ],
+    "soSlotChuaLap": {
+      "hoatDong": 0,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 0
+    },
+    "danhGia": "THIẾU DỮ LIỆU: Dữ liệu địa phương tại Hà Nội chưa đủ để lập kế hoạch chất lượng: thiếu điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: [quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục)"
+  },
+  {
+    "diemDen": "Đà Lạt",
+    "geocodeThanhCong": false,
+    "soLuongTheoLoai": {
+      "khachSan": 0,
+      "quanAn": 0,
+      "cafe": 0,
+      "hoatDong": 0
+    },
+    "tongSoMuc": 0,
+    "tyLeCoNguon": 0,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 0,
+    "keHoachHopLe": false,
+    "coNoiDung": false,
+    "trangThaiNoiDung": "THIẾU DỮ LIỆU",
+    "dataSourceUsed": "none",
+    "ngayDuLieu": "2026-10-19T12:41:11.158Z",
+    "tyLeLapHD": 0,
+    "tyLeLapAn": 0,
+    "overpassSummary": "Không gọi (geocode thất bại)",
+    "overpassServer": "N/A",
+    "overpassAttempts": 0,
+    "overpassError": "Geocode không thành công qua Nominatim",
+    "loiHard": [
+      "Geocode không thành công"
+    ],
+    "soSlotChuaLap": {
+      "hoatDong": 0,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 0
+    },
+    "danhGia": "THIẾU DỮ LIỆU: Không định vị được địa danh qua Nominatim."
+  },
+  {
+    "diemDen": "Phú Quốc",
+    "geocodeThanhCong": false,
+    "soLuongTheoLoai": {
+      "khachSan": 0,
+      "quanAn": 0,
+      "cafe": 0,
+      "hoatDong": 0
+    },
+    "tongSoMuc": 0,
+    "tyLeCoNguon": 0,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 0,
+    "keHoachHopLe": false,
+    "coNoiDung": false,
+    "trangThaiNoiDung": "THIẾU DỮ LIỆU",
+    "dataSourceUsed": "none",
+    "ngayDuLieu": "2026-10-19T12:41:16.172Z",
+    "tyLeLapHD": 0,
+    "tyLeLapAn": 0,
+    "overpassSummary": "Không gọi (geocode thất bại)",
+    "overpassServer": "N/A",
+    "overpassAttempts": 0,
+    "overpassError": "Geocode không thành công qua Nominatim",
+    "loiHard": [
+      "Geocode không thành công"
+    ],
+    "soSlotChuaLap": {
+      "hoatDong": 0,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 0
+    },
+    "danhGia": "THIẾU DỮ LIỆU: Không định vị được địa danh qua Nominatim."
+  },
+  {
+    "diemDen": "Bangkok",
+    "geocodeThanhCong": true,
+    "chiTietDiemDen": {
+      "ten": "Băng Cốc",
+      "quocGia": "Thái Lan",
+      "maQuocGia": "TH",
+      "toaDo": {
+        "lat": 13.7524938,
+        "lng": 100.4935089
+      },
+      "tienTe": "THB",
+      "nguon": "nominatim",
+      "ngayLay": "2026-10-19T11:39:49.360Z"
+    },
+    "soLuongTheoLoai": {
+      "khachSan": 0,
+      "quanAn": 0,
+      "cafe": 0,
+      "hoatDong": 0
+    },
+    "tongSoMuc": 0,
+    "tyLeCoNguon": 0,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 2,
+    "keHoachHopLe": false,
+    "coNoiDung": false,
+    "trangThaiNoiDung": "THIẾU DỮ LIỆU",
+    "dataSourceUsed": "live",
+    "ngayDuLieu": "2026-10-19T12:41:21.191Z",
+    "tyLeLapHD": 1,
+    "tyLeLapAn": 1,
+    "overpassSummary": "[khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục)",
+    "overpassServer": "overpass.private.coffee",
+    "overpassAttempts": 3,
+    "overpassError": "HTTP 500 Internal Server Error",
+    "loiHard": [
+      "Dữ liệu địa phương tại Băng Cốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: [khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục)"
+    ],
+    "soSlotChuaLap": {
+      "hoatDong": 0,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 0
+    },
+    "danhGia": "THIẾU DỮ LIỆU: Dữ liệu địa phương tại Băng Cốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: [khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục)"
+  },
+  {
+    "diemDen": "Seoul",
+    "geocodeThanhCong": true,
+    "chiTietDiemDen": {
+      "ten": "Seoul",
+      "quocGia": "Hàn Quốc",
+      "maQuocGia": "KR",
+      "toaDo": {
+        "lat": 37.5666791,
+        "lng": 126.9782914
+      },
+      "tienTe": "KRW",
+      "nguon": "nominatim",
+      "ngayLay": "2026-10-19T11:40:36.377Z"
+    },
+    "soLuongTheoLoai": {
+      "khachSan": 15,
+      "quanAn": 0,
+      "cafe": 0,
+      "hoatDong": 0
+    },
+    "tongSoMuc": 15,
+    "tyLeCoNguon": 1,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 2,
+    "keHoachHopLe": false,
+    "coNoiDung": false,
+    "trangThaiNoiDung": "THIẾU DỮ LIỆU",
+    "dataSourceUsed": "live",
+    "ngayDuLieu": "2026-10-19T12:56:29.189Z",
+    "tyLeLapHD": 1,
+    "tyLeLapAn": 1,
+    "overpassSummary": "[khach_san] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass.private.coffee/api/interpreter (1 lần thử, status: 200, 50 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục)",
+    "overpassServer": "overpass.private.coffee",
+    "overpassAttempts": 3,
+    "overpassError": "The operation was aborted due to timeout",
+    "loiHard": [
+      "Dữ liệu địa phương tại Seoul chưa đủ để lập kế hoạch chất lượng: thiếu điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: [khach_san] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass.private.coffee/api/interpreter (1 lần thử, status: 200, 50 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục)"
+    ],
+    "soSlotChuaLap": {
+      "hoatDong": 0,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 0
+    },
+    "danhGia": "THIẾU DỮ LIỆU: Dữ liệu địa phương tại Seoul chưa đủ để lập kế hoạch chất lượng: thiếu điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: [khach_san] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san_expanded] Server: https://overpass.private.coffee/api/interpreter (1 lần thử, status: 200, 50 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [quan_an_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [cafe_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass-api.de/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://overpass.private.coffee/api/interpreter (3 lần thử, status: ERR, 0 mục); [hoat_dong_expanded] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (3 lần thử, status: ERR, 0 mục)"
+  }
+]

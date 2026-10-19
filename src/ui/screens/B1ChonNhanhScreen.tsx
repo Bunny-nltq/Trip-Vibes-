@@ -81,7 +81,8 @@ export function B1ChonNhanhScreen() {
   const [forceNhapGiaTay, setForceNhapGiaTay] = useState(false);
 
   React.useEffect(() => {
-    if (typeof window !== "undefined") {
+    const isDev = process.env.NODE_ENV === "development";
+    if (isDev && typeof window !== "undefined") {
       const sp = new URLSearchParams(window.location.search);
       if (sp.get("previewMoHo") === "1") {
         setCandidates([
@@ -398,6 +399,62 @@ export function B1ChonNhanhScreen() {
             </button>
             <button className="btn btn-outline btn-sm" onClick={handleClearAvoids}>
               Bỏ bớt điều muốn tránh
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Khung Không đủ dữ liệu địa phương (khong_du_du_lieu) ─── */}
+      {planStatus === "khong_du_du_lieu" && (
+        <div
+          className="card"
+          style={{
+            background: "#fef2f2",
+            border: "1.5px solid #ef4444",
+            padding: 20,
+            marginBottom: 24,
+            borderRadius: "var(--r-lg)",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              fontWeight: 700,
+              fontSize: 16,
+              color: "#991b1b",
+              marginBottom: 8,
+            }}
+          >
+            <AlertCircle size={18} color="#ef4444" />
+            Chưa đủ dữ liệu địa phương tại {tenDiemDen}
+          </div>
+          <p style={{ fontSize: 13, color: "#7f1d1d", marginBottom: 16, lineHeight: 1.5 }}>
+            Kho dữ liệu mở từ OpenStreetMap chưa có đủ tối thiểu 3 khách sạn, 3 điểm tham quan hoặc 2 quán ăn được gắn nhãn đầy đủ tại khu vực này để AI có thể lên lịch trình chất lượng cho bạn.
+          </p>
+
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
+            <button
+              className="btn btn-primary btn-sm"
+              style={{ background: "#dc2626", borderColor: "#dc2626" }}
+              onClick={handleSubmit}
+            >
+              Thử lại lần nữa
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline btn-sm"
+              onClick={() => handleSelectPopularDest(POPULAR_DESTINATIONS[0])}
+            >
+              Gợi ý: Đi Đà Nẵng
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline btn-sm"
+              onClick={() => handleSelectPopularDest(POPULAR_DESTINATIONS[1])}
+            >
+              Gợi ý: Đi Hà Nội
             </button>
           </div>
         </div>
