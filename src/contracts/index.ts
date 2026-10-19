@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const schemaVersion = 5;
+export const schemaVersion = 6;
 
 // ─── Enums cho TripRequest & Activity ────────────────────────────────────────
 
@@ -28,6 +28,80 @@ export type Avoidance = z.infer<typeof AvoidanceSchema>;
 
 export const MissingFieldSchema = z.enum(["soNguoi", "soNgay", "ngansach"]);
 export type MissingField = z.infer<typeof MissingFieldSchema>;
+
+// ─── Độ tin cậy nguồn dữ liệu ────────────────────────────────────────────────
+
+export const DoTinCaySchema = z.enum([
+  "xac_minh",   // lấy trực tiếp từ nguồn chính thức, khớp hoàn toàn
+  "uoc_tinh",   // ước lượng từ nhiều nguồn web, có thể sai lệch
+  "tham_khao",  // lấy từ dữ liệu tham khảo tĩnh (snapshot/mock)
+  "mau",        // dữ liệu mẫu cứng, không từ bất kỳ nguồn thực nào
+]);
+export type DoTinCay = z.infer<typeof DoTinCaySchema>;
+
+// ─── Place chung (base cho QuanAn, Cafe, HoatDong, KhachSan) ─────────────────
+
+export const PlaceBaseSchema = z.object({
+  id: z.string(),
+  osmId: z.string().nullable(),
+  ten: z.string(),
+  khuVuc: z.string(),
+  diaChi: z.string().nullable(),
+  toaDo: z.object({ lat: z.number(), lng: z.number() }),
+  loai: z.string(),
+  gioMoCua: z.string().nullable(),
+  soSao: z.number().nullable(),               // chỉ khách sạn (OSM tag stars)
+  giaUocTinhNguoi: z.number().int().nonnegative().nullable(),
+  nguon: z.string().nullable(),               // url hoặc osmId; null nếu không có
+  ngayLay: z.string(),                        // ISO datetime
+  doTinCay: DoTinCaySchema,
+  giaLaUocTinh: z.boolean(),
+});
+export type PlaceBase = z.infer<typeof PlaceBaseSchema>;
+
+export const QuanAnSchema = PlaceBaseSchema.extend({
+  loai: z.literal("quan_an"),
+  amThuc: z.string().nullable(),             // cuisine tag từ OSM
+});
+export type QuanAn = z.infer<typeof QuanAnSchema>;
+
+export const CafeSchema = PlaceBaseSchema.extend({
+  loai: z.literal("cafe"),
+});
+export type Cafe = z.infer<typeof CafeSchema>;
+
+export const HoatDongSchema = PlaceBaseSchema.extend({
+  loai: z.string(),                          // attraction | museum | viewpoint | beach | ...
+  giaVeNguoi: z.number().int().nonnegative(), // alias của giaUocTinhNguoi cho backward compat
+  thoiLuongPhut: z.number().int().positive(),
+  nhan: z.array(PreferenceSchema),
+  dongNguoi: z.boolean(),
+  diBoNhieu: z.boolean(),
+  mapsUrls: z.object({
+    xem: z.string(),
+    chiDuong: z.string(),
+    apple: z.string(),
+  }).optional(),
+});
+export type HoatDong = z.infer<typeof HoatDongSchema>;
+
+export const KhachSanSchema = PlaceBaseSchema.extend({
+  loai: z.literal("khach_san"),
+  soSao: z.number().nullable(),
+  khoangGiaDemVND: z.object({
+    min: z.number().int().nonnegative(),
+    max: z.number().int().nonnegative(),
+  }).nullable(),
+  includesBreakfast: z.boolean(),
+  hasPool: z.boolean(),
+  mapsUrls: z.object({
+    xem: z.string(),
+    chiDuong: z.string(),
+    apple: z.string(),
+  }).optional(),
+  nguonGia: z.array(z.string()),             // list url nguồn giá
+});
+export type KhachSan = z.infer<typeof KhachSanSchema>;
 
 // ─── RawTripRequest (đầu ra LLM) ─────────────────────────────────────────────
 
@@ -73,7 +147,7 @@ export const TripRequestSchema = z.object({
 });
 export type TripRequest = z.infer<typeof TripRequestSchema>;
 
-// ─── Hotel ───────────────────────────────────────────────────────────────────
+// ─── Hotel (legacy, giữ để backward compat với mock JSON) ──────────────────
 
 export const HotelSchema = z.object({
   schemaVersion: z.number().int().default(schemaVersion),
@@ -123,11 +197,17 @@ export const TransportSchema = z.object({
   boardingPoint: z.string(),
   dropOffPoint: z.string(),
   notes: z.string().optional(),
+  // ─── Bước 5B: nguồn dữ liệu ───
+  nguon: z.string().nullable().optional(),
+  ngayLay: z.string().optional(),
+  doTinCay: DoTinCaySchema.optional(),
+  giaLaUocTinh: z.boolean().optional(),
+  nguonGia: z.array(z.string()).optional(),
 });
 
 export type Transport = z.infer<typeof TransportSchema>;
 
-// ─── Activity ────────────────────────────────────────────────────────────────
+// ─── Activity (legacy) ────────────────────────────────────────────────────────
 
 export const ActivitySchema = z.object({
   schemaVersion: z.number().int().default(schemaVersion),
@@ -156,11 +236,21 @@ export type Activity = z.infer<typeof ActivitySchema>;
 
 // ─── Selection (Đầu ra của AI Agent) ─────────────────────────────────────────
 
+/** Bữa ăn theo từng ngày (trưa, tối, cafe) – id của QuanAn/Cafe hoặc null */
+export const BuaAnSchema = z.object({
+  trua: z.string().nullable(),
+  toi: z.string().nullable(),
+  cafe: z.string().nullable(),
+});
+export type BuaAn = z.infer<typeof BuaAnSchema>;
+
 export const SelectionSchema = z.object({
   transportDiId: z.string(),
   transportVeId: z.string(),
   hotelId: z.string(),
   hoatDongTheoNgay: z.array(z.array(z.string())),
+  /** Bữa ăn theo từng ngày; độ dài bằng soNgay */
+  buaAnTheoNgay: z.array(BuaAnSchema).optional(),
 });
 export type Selection = z.infer<typeof SelectionSchema>;
 
@@ -186,8 +276,14 @@ export const PlanItemSchema = z.object({
   donGia: z.number().int().nonnegative(),
   /** Thành tiền = donGia * soLuong, VND, số nguyên */
   thanhTien: z.number().int().nonnegative(),
-  /** ID tham chiếu trong mock data, null với hạng mục Ăn uống */
+  /** ID tham chiếu trong data, null với hạng mục Ăn uống tổng hợp */
   refId: z.string().nullable(),
+  /** URL Google Maps xem địa điểm (nếu có) */
+  mapsUrl: z.string().optional(),
+  /** Nguồn dữ liệu (url hoặc osmId) */
+  nguon: z.string().nullable().optional(),
+  doTinCay: DoTinCaySchema.optional(),
+  giaLaUocTinh: z.boolean().optional(),
 });
 export type PlanItem = z.infer<typeof PlanItemSchema>;
 
@@ -213,6 +309,8 @@ export const PlanSchema = z.object({
   items: z.array(PlanItemSchema),
   tongKet: PlanTongKetSchema,
   canhBao: z.array(z.string()),
+  /** Nguồn dữ liệu đã sử dụng: "live" | "snapshot" | "mock" */
+  dataSourceUsed: z.string().optional(),
 });
 export type Plan = z.infer<typeof PlanSchema>;
 

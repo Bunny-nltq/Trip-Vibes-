@@ -9,8 +9,12 @@ import {
   type PlanItemCategory,
   schemaVersion,
 } from "@/contracts";
+import type { KhachSan, QuanAn, Cafe, HoatDong } from "@/contracts";
 import {
-  AN_UONG_MOI_NGUOI_MOI_NGAY,
+  AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA,
+  CAFE_MAC_DINH_MOI_NGUOI,
+  HOTEL_GIA_THEO_SAO,
+  HOTEL_GIA_MAC_DINH,
   NGUOI_MOI_PHONG,
   SO_HOAT_DONG_TOI_DA_MOI_NGAY,
 } from "./assumptions";
@@ -19,6 +23,14 @@ export interface PlanData {
   transports: Transport[];
   hotels: Hotel[];
   activities: Activity[];
+  /** Khách sạn từ dữ liệu live (nếu có) */
+  khachSans?: KhachSan[];
+  /** Quán ăn từ dữ liệu live (nếu có) */
+  quanAns?: QuanAn[];
+  /** Quán cà phê từ dữ liệu live (nếu có) */
+  cafes?: Cafe[];
+  /** Hoạt động từ dữ liệu live (nếu có) */
+  hoatDongs?: HoatDong[];
 }
 
 export type BuildPlanResult =
@@ -30,11 +42,15 @@ export type BuildPlanResult =
  * - AI chỉ chọn các mã ID (Selection).
  * - Code (core) tính toàn bộ tiền, số phòng, thời gian và trạng thái ngân sách.
  * - Không import AI hay UI, không dùng Date.now() hay hàm ngẫu nhiên.
+ *
+ * Bước 5B: Ăn uống tính theo từng bữa (quanAns/cafes); giá lấy giaUocTinhNguoi
+ * của quán, null thì dùng mặc định. Mỗi ngày 2 bữa (trưa + tối), cafe tuỳ chọn.
  */
 export function buildPlan(
   request: TripRequest,
   selection: Selection,
-  data: PlanData
+  data: PlanData,
+  dataSourceUsed?: string
 ): BuildPlanResult {
   const loi: string[] = [];
 
@@ -99,16 +115,29 @@ export function buildPlan(
     );
   }
 
-  const hotel = data.hotels.find((h) => h.id === selection.hotelId);
-  if (!hotel) {
+  // Tìm khách sạn: ưu tiên KhachSan (live) trước, rồi Hotel (mock)
+  const khachSanLive = data.khachSans?.find((h) => h.id === selection.hotelId);
+  const hotelMock = data.hotels.find((h) => h.id === selection.hotelId);
+
+  if (!khachSanLive && !hotelMock) {
     loi.push(`ID khách sạn không tồn tại: ${selection.hotelId}`);
   }
 
-  const activityMap = new Map<string, Activity>();
+  const activityMap = new Map<string, Activity | HoatDong>();
   for (const act of data.activities) {
     activityMap.set(act.id, act);
   }
+  for (const hd of data.hoatDongs ?? []) {
+    activityMap.set(hd.id, hd);
+  }
 
+  // Build map quán ăn & cafe từ dữ liệu live
+  const quanAnMap = new Map<string, QuanAn>();
+  for (const qa of data.quanAns ?? []) quanAnMap.set(qa.id, qa);
+  const cafeMap = new Map<string, Cafe>();
+  for (const c of data.cafes ?? []) cafeMap.set(c.id, c);
+
+  // Validate ID hoạt động (chỉ hoạt động cổ điển, không phải quán ăn)
   for (const actId of seenActivityIds) {
     if (!activityMap.has(actId)) {
       loi.push(`ID hoạt động không tồn tại: ${actId}`);
@@ -122,11 +151,45 @@ export function buildPlan(
   // Chắc chắn các thực thể đã tồn tại và hợp lệ
   const tDi = transportDi!;
   const tVe = transportVe!;
-  const hHotel = hotel!;
 
   // 5. Tính toán các thông số phòng và đêm
   const soDem = Math.max(1, soNgay - 1);
   const soPhong = Math.ceil(soNguoi / NGUOI_MOI_PHONG);
+
+  // Tính giá đêm khách sạn
+  let giaDem: number;
+  let giaKhachSanLaUocTinh = false;
+  let nguonKhachSan: string | undefined;
+
+  if (khachSanLive) {
+    // Ưu tiên lấy giá từ khoangGiaDemVND (trung bình min+max)
+    if (khachSanLive.khoangGiaDemVND) {
+      giaDem = Math.round(
+        (khachSanLive.khoangGiaDemVND.min + khachSanLive.khoangGiaDemVND.max) / 2
+      );
+      giaKhachSanLaUocTinh = khachSanLive.giaLaUocTinh;
+    } else if (khachSanLive.giaUocTinhNguoi !== null) {
+      giaDem = khachSanLive.giaUocTinhNguoi;
+      giaKhachSanLaUocTinh = true;
+    } else {
+      // Fallback về HOTEL_GIA_THEO_SAO
+      const sao = khachSanLive.soSao;
+      giaDem =
+        sao !== null && HOTEL_GIA_THEO_SAO[sao] !== undefined
+          ? HOTEL_GIA_THEO_SAO[sao]
+          : HOTEL_GIA_MAC_DINH;
+      giaKhachSanLaUocTinh = true;
+    }
+    nguonKhachSan = khachSanLive.nguon ?? undefined;
+  } else {
+    // Mock hotel
+    giaDem = hotelMock!.pricePerNight;
+    giaKhachSanLaUocTinh = false;
+    nguonKhachSan = hotelMock!.source;
+  }
+
+  const soLuongPhongDem = soDem * soPhong;
+  const thanhTienHotel = giaDem * soLuongPhongDem;
 
   const items: PlanItem[] = [];
 
@@ -142,36 +205,106 @@ export function buildPlan(
     donGia: donGiaDi,
     thanhTien: thanhTienDi,
     refId: tDi.id,
+    nguon: tDi.nguon ?? null,
+    doTinCay: tDi.doTinCay,
+    giaLaUocTinh: tDi.giaLaUocTinh,
   });
 
   // 5.2. Chỗ ở (Ngày 1, danh nghĩa 14:00)
-  const giaDem = hHotel.pricePerNight;
-  const soLuongPhongDem = soDem * soPhong;
-  const thanhTienHotel = giaDem * soLuongPhongDem;
+  const tenKhachSan = khachSanLive?.ten ?? hotelMock!.name;
   items.push({
     ngay: 1,
     gio: "14:00",
     hangMuc: "Chỗ ở",
-    noiDung: `Lưu trú: ${hHotel.name} (${soDem} đêm, ${soPhong} phòng)`,
+    noiDung: `Lưu trú: ${tenKhachSan} (${soDem} đêm, ${soPhong} phòng)`,
     soLuong: soLuongPhongDem,
     donGia: giaDem,
     thanhTien: thanhTienHotel,
-    refId: hHotel.id,
+    refId: selection.hotelId,
+    nguon: nguonKhachSan ?? null,
+    giaLaUocTinh: giaKhachSanLaUocTinh,
+    mapsUrl: khachSanLive?.mapsUrls?.xem,
   });
 
-  // 5.3. Ăn uống (Mỗi ngày 1 mục)
+  // 5.3. Ăn uống theo ngày (tính theo từng bữa hoặc dùng mặc định)
+  let tongAnUong = 0;
+
   for (let day = 1; day <= soNgay; day++) {
-    const thanhTienAnUong = AN_UONG_MOI_NGUOI_MOI_NGAY * soNguoi;
+    const bua = selection.buaAnTheoNgay?.[day - 1];
+
+    // --- Bữa trưa ---
+    const quanTrua = bua?.trua ? (quanAnMap.get(bua.trua) ?? null) : null;
+    const giaTriTrua = quanTrua?.giaUocTinhNguoi ?? AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA;
+    const thanhTienTrua = giaTriTrua * soNguoi;
+    tongAnUong += thanhTienTrua;
     items.push({
       ngay: day,
-      gio: null,
+      gio: "12:00",
       hangMuc: "Ăn uống",
-      noiDung: `Ăn uống ngày ${day} (${soNguoi} người)`,
+      noiDung: quanTrua
+        ? `Trưa: ${quanTrua.ten} (${soNguoi} người)`
+        : `Trưa ngày ${day} – ước tính (${soNguoi} người)`,
       soLuong: soNguoi,
-      donGia: AN_UONG_MOI_NGUOI_MOI_NGAY,
-      thanhTien: thanhTienAnUong,
-      refId: null,
+      donGia: giaTriTrua,
+      thanhTien: thanhTienTrua,
+      refId: quanTrua?.id ?? null,
+      nguon: quanTrua?.nguon ?? null,
+      doTinCay: quanTrua?.doTinCay,
+      giaLaUocTinh: quanTrua?.giaLaUocTinh ?? true,
+      mapsUrl: quanTrua?.nguon
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(quanTrua.ten + ", Đà Nẵng")}`
+        : undefined,
     });
+
+    // --- Bữa tối ---
+    const quanToi = bua?.toi ? (quanAnMap.get(bua.toi) ?? null) : null;
+    const giaTriToi = quanToi?.giaUocTinhNguoi ?? AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA;
+    const thanhTienToi = giaTriToi * soNguoi;
+    tongAnUong += thanhTienToi;
+    items.push({
+      ngay: day,
+      gio: "18:30",
+      hangMuc: "Ăn uống",
+      noiDung: quanToi
+        ? `Tối: ${quanToi.ten} (${soNguoi} người)`
+        : `Tối ngày ${day} – ước tính (${soNguoi} người)`,
+      soLuong: soNguoi,
+      donGia: giaTriToi,
+      thanhTien: thanhTienToi,
+      refId: quanToi?.id ?? null,
+      nguon: quanToi?.nguon ?? null,
+      doTinCay: quanToi?.doTinCay,
+      giaLaUocTinh: quanToi?.giaLaUocTinh ?? true,
+      mapsUrl: quanToi?.nguon
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(quanToi.ten + ", Đà Nẵng")}`
+        : undefined,
+    });
+
+    // --- Cafe (tuỳ chọn) ---
+    if (bua?.cafe) {
+      const quanCafe = cafeMap.get(bua.cafe) ?? null;
+      const giaTriCafe = quanCafe?.giaUocTinhNguoi ?? CAFE_MAC_DINH_MOI_NGUOI;
+      const thanhTienCafe = giaTriCafe * soNguoi;
+      tongAnUong += thanhTienCafe;
+      items.push({
+        ngay: day,
+        gio: "09:00",
+        hangMuc: "Ăn uống",
+        noiDung: quanCafe
+          ? `Cà phê: ${quanCafe.ten} (${soNguoi} người)`
+          : `Cà phê ngày ${day} – ước tính (${soNguoi} người)`,
+        soLuong: soNguoi,
+        donGia: giaTriCafe,
+        thanhTien: thanhTienCafe,
+        refId: quanCafe?.id ?? null,
+        nguon: quanCafe?.nguon ?? null,
+        doTinCay: quanCafe?.doTinCay,
+        giaLaUocTinh: quanCafe?.giaLaUocTinh ?? true,
+        mapsUrl: quanCafe?.nguon
+          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((quanCafe.ten) + ", Đà Nẵng")}`
+          : undefined,
+      });
+    }
   }
 
   // 5.4. Vui chơi theo ngày
@@ -179,10 +312,16 @@ export function buildPlan(
     const day = dayIdx + 1;
     dayActs.forEach((actId, actIdx) => {
       const act = activityMap.get(actId)!;
-      const donGiaVe = act.giaVeNguoi ?? act.pricePerPerson ?? 0;
+      const donGiaVe = (act as any).giaVeNguoi ?? (act as any).pricePerPerson ?? 0;
       const thanhTienAct = donGiaVe * soNguoi;
       const gioDanhNghia = actIdx === 0 ? "09:30" : "15:30";
-      const tenAct = act.ten || act.name || "Hoạt động";
+      const tenAct = (act as any).ten || (act as any).name || "Hoạt động";
+      const actAny = act as any;
+      const mapsUrl =
+        actAny.mapsUrls?.xem ??
+        (actAny.nguon
+          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(tenAct + ", Đà Nẵng")}`
+          : undefined);
 
       items.push({
         ngay: day,
@@ -193,6 +332,10 @@ export function buildPlan(
         donGia: donGiaVe,
         thanhTien: thanhTienAct,
         refId: act.id,
+        nguon: actAny.nguon ?? null,
+        doTinCay: actAny.doTinCay,
+        giaLaUocTinh: actAny.giaLaUocTinh,
+        mapsUrl,
       });
     });
   });
@@ -209,13 +352,16 @@ export function buildPlan(
     donGia: donGiaVeTransport,
     thanhTien: thanhTienVe,
     refId: tVe.id,
+    nguon: tVe.nguon ?? null,
+    doTinCay: tVe.doTinCay,
+    giaLaUocTinh: tVe.giaLaUocTinh,
   });
 
   // 6. Tính tổng kết
   const theoHangMuc: Record<PlanItemCategory, number> = {
     "Di chuyển": thanhTienDi + thanhTienVe,
     "Chỗ ở": thanhTienHotel,
-    "Ăn uống": AN_UONG_MOI_NGUOI_MOI_NGAY * soNguoi * soNgay,
+    "Ăn uống": tongAnUong,
     "Vui chơi": 0,
   };
 
@@ -269,6 +415,7 @@ export function buildPlan(
       trangThaiNganSach,
     },
     canhBao,
+    dataSourceUsed,
   };
 
   return { ok: true, plan };

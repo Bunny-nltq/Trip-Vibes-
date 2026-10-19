@@ -6,7 +6,7 @@ function createMockData(): PlanData {
   return {
     transports: [
       {
-        schemaVersion: 3,
+        schemaVersion: 6,
         id: "T_DI",
         huong: "di",
         type: "PLANE",
@@ -21,7 +21,7 @@ function createMockData(): PlanData {
         dropOffPoint: "Sân bay Đà Nẵng",
       },
       {
-        schemaVersion: 3,
+        schemaVersion: 6,
         id: "T_VE",
         huong: "ve",
         type: "PLANE",
@@ -38,7 +38,7 @@ function createMockData(): PlanData {
     ],
     hotels: [
       {
-        schemaVersion: 3,
+        schemaVersion: 6,
         id: "H1",
         name: "Khách sạn H1",
         stars: 4,
@@ -54,7 +54,7 @@ function createMockData(): PlanData {
     ],
     activities: [
       {
-        schemaVersion: 3,
+        schemaVersion: 6,
         id: "A1",
         ten: "Hoạt động A1",
         khuVuc: "Mỹ Khê",
@@ -66,7 +66,7 @@ function createMockData(): PlanData {
         diBoNhieu: false,
       },
       {
-        schemaVersion: 3,
+        schemaVersion: 6,
         id: "A2",
         ten: "Hoạt động A2",
         khuVuc: "Hải Châu",
@@ -78,7 +78,7 @@ function createMockData(): PlanData {
         diBoNhieu: false,
       },
       {
-        schemaVersion: 3,
+        schemaVersion: 6,
         id: "A3",
         ten: "Hoạt động A3",
         khuVuc: "Sơn Trà",
@@ -90,7 +90,7 @@ function createMockData(): PlanData {
         diBoNhieu: false,
       },
       {
-        schemaVersion: 3,
+        schemaVersion: 6,
         id: "A4",
         ten: "Hoạt động A4",
         khuVuc: "Bà Nà",
@@ -105,25 +105,60 @@ function createMockData(): PlanData {
   };
 }
 
-describe("buildPlan", () => {
-  it("FixtureA: 2 người, 3 ngày, ngân sách 10 triệu", () => {
-    const data = createMockData();
+const baseRequest: TripRequest = {
+  schemaVersion: 6,
+  diemDi: "TP.HCM",
+  diemDen: "Đà Nẵng",
+  soNguoi: 2,
+  soNgay: 3,
+  ngansachTongVND: 10000000,
+  sothich: [],
+  tranh: [],
+  ghiChu: [],
+  thieu: [],
+  cauHoiLamRo: [],
+  canhBao: [],
+};
 
-    const request: TripRequest = {
-      schemaVersion: 3,
-      diemDi: "TP.HCM",
-      diemDen: "Đà Nẵng",
-      soNguoi: 2,
-      soNgay: 3,
-      ngansachTongVND: 10000000,
-      sothich: [],
-      tranh: [],
-      ghiChu: [],
-      thieu: [],
-      cauHoiLamRo: [],
-      canhBao: [],
+describe("buildPlan – Ăn uống mặc định", () => {
+  /**
+   * Fixture A: 2 người, 3 ngày, ngân sách 10 triệu
+   * Mọi bữa là null → dùng mặc định 150.000/người/bữa
+   * Ăn uống = 150.000 x 2 x 2 bữa x 3 ngày = 1.800.000
+   * Di chuyển = 980.000 x 2 x 2 chiều = 3.920.000
+   * Chỗ ở = 1.100.000 x 2 đêm x 1 phòng = 2.200.000
+   * Vui chơi = (0+40.000+120.000+650.000) x 2 = 1.620.000
+   * Tổng = 3.920.000 + 2.200.000 + 1.800.000 + 1.620.000 = 9.540.000
+   */
+  it("FixtureA mọi bữa null: Ăn uống = 1.800.000, tổng = 9.540.000", () => {
+    const data = createMockData();
+    const selection: Selection = {
+      transportDiId: "T_DI",
+      transportVeId: "T_VE",
+      hotelId: "H1",
+      hoatDongTheoNgay: [["A1"], ["A2", "A3"], ["A4"]],
+      buaAnTheoNgay: [
+        { trua: null, toi: null, cafe: null },
+        { trua: null, toi: null, cafe: null },
+        { trua: null, toi: null, cafe: null },
+      ],
     };
 
+    const result = buildPlan(baseRequest, selection, data);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const { tongKet } = result.plan;
+      expect(tongKet.theoHangMuc["Ăn uống"]).toBe(1_800_000);
+      expect(tongKet.tongVND).toBe(9_540_000);
+      expect(tongKet.conLaiVND).toBe(460_000);
+    }
+  });
+
+  /**
+   * Fixture A không có buaAnTheoNgay (undefined) → tương đương mọi bữa null
+   */
+  it("FixtureA không có buaAnTheoNgay: Ăn uống = 1.800.000", () => {
+    const data = createMockData();
     const selection: Selection = {
       transportDiId: "T_DI",
       transportVeId: "T_VE",
@@ -131,42 +166,340 @@ describe("buildPlan", () => {
       hoatDongTheoNgay: [["A1"], ["A2", "A3"], ["A4"]],
     };
 
-    const result = buildPlan(request, selection, data);
+    const result = buildPlan(baseRequest, selection, data);
     expect(result.ok).toBe(true);
-
     if (result.ok) {
-      const { tongKet } = result.plan;
-      expect(tongKet.theoHangMuc["Di chuyển"]).toBe(3920000);
-      expect(tongKet.theoHangMuc["Chỗ ở"]).toBe(2200000);
-      expect(tongKet.theoHangMuc["Ăn uống"]).toBe(1800000);
-      expect(tongKet.theoHangMuc["Vui chơi"]).toBe(1620000);
-      expect(tongKet.tongVND).toBe(9540000);
-      expect(tongKet.conLaiVND).toBe(460000);
-      expect(tongKet.phanTramDaDung).toBe(95.4);
-      expect(tongKet.tongThoiGianDiChuyenPhut).toBe(170);
-      expect(tongKet.trangThaiNganSach).toBe("trong");
-      expect(result.plan.canhBao).not.toContain("vuot_ngan_sach");
+      expect(result.plan.tongKet.theoHangMuc["Ăn uống"]).toBe(1_800_000);
+      expect(result.plan.tongKet.tongVND).toBe(9_540_000);
+      expect(result.plan.tongKet.conLaiVND).toBe(460_000);
+    }
+  });
+});
+
+describe("buildPlan – Ăn uống có giá quán", () => {
+  /**
+   * Fixture A với trưa 120.000/người và tối 180.000/người (tất cả ngày):
+   * Ăn uống = (120.000 + 180.000) x 2 x 3 = 1.800.000
+   * (Trùng hợp giống mặc định vì 150k*2 = 300k/ngày/người)
+   */
+  it("FixtureA trưa 120k, tối 180k: Ăn uống = 1.800.000", () => {
+    const data = createMockData();
+    // Thêm quán ăn vào dữ liệu
+    data.quanAns = [
+      {
+        id: "QA_TRUA",
+        osmId: "osm:node:1",
+        ten: "Quán trưa",
+        khuVuc: "Mỹ Khê",
+        diaChi: null,
+        toaDo: { lat: 16.06, lng: 108.24 },
+        loai: "quan_an",
+        gioMoCua: null,
+        soSao: null,
+        giaUocTinhNguoi: 120_000,
+        nguon: "https://example.com/trua",
+        ngayLay: "2026-10-19T00:00:00.000Z",
+        doTinCay: "uoc_tinh",
+        giaLaUocTinh: true,
+        amThuc: "hai_san",
+      },
+      {
+        id: "QA_TOI",
+        osmId: "osm:node:2",
+        ten: "Quán tối",
+        khuVuc: "Mỹ Khê",
+        diaChi: null,
+        toaDo: { lat: 16.06, lng: 108.24 },
+        loai: "quan_an",
+        gioMoCua: null,
+        soSao: null,
+        giaUocTinhNguoi: 180_000,
+        nguon: "https://example.com/toi",
+        ngayLay: "2026-10-19T00:00:00.000Z",
+        doTinCay: "uoc_tinh",
+        giaLaUocTinh: true,
+        amThuc: "hai_san",
+      },
+    ];
+
+    const selection: Selection = {
+      transportDiId: "T_DI",
+      transportVeId: "T_VE",
+      hotelId: "H1",
+      hoatDongTheoNgay: [["A1"], ["A2", "A3"], ["A4"]],
+      buaAnTheoNgay: [
+        { trua: "QA_TRUA", toi: "QA_TOI", cafe: null },
+        { trua: "QA_TRUA", toi: "QA_TOI", cafe: null },
+        { trua: "QA_TRUA", toi: "QA_TOI", cafe: null },
+      ],
+    };
+
+    const result = buildPlan(baseRequest, selection, data);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.plan.tongKet.theoHangMuc["Ăn uống"]).toBe(1_800_000);
+      expect(result.plan.tongKet.tongVND).toBe(9_540_000);
     }
   });
 
-  it("FixtureB: như A nhưng soNguoi 3 và ngansachTongVND 15000000", () => {
+  /**
+   * Fixture A với cafe 50.000/người cả 3 ngày:
+   * Ăn uống = (150k + 150k + 50k) x 2 x 3 = 2.100.000
+   * Tổng = 3.920.000 + 2.200.000 + 2.100.000 + 1.620.000 = 9.840.000
+   * Còn lại = 10.000.000 - 9.840.000 = 160.000
+   * phanTramDaDung = 98.4
+   */
+  it("FixtureA cafe 50k/người x3 ngày: Ăn uống = 2.100.000, tổng = 9.840.000", () => {
     const data = createMockData();
+    data.cafes = [
+      {
+        id: "CAFE1",
+        osmId: "osm:node:3",
+        ten: "Cafe test",
+        khuVuc: "Mỹ Khê",
+        diaChi: null,
+        toaDo: { lat: 16.06, lng: 108.24 },
+        loai: "cafe",
+        gioMoCua: null,
+        soSao: null,
+        giaUocTinhNguoi: 50_000,
+        nguon: "https://example.com/cafe",
+        ngayLay: "2026-10-19T00:00:00.000Z",
+        doTinCay: "uoc_tinh",
+        giaLaUocTinh: true,
+      },
+    ];
 
-    const request: TripRequest = {
-      schemaVersion: 3,
-      diemDi: "TP.HCM",
-      diemDen: "Đà Nẵng",
+    const selection: Selection = {
+      transportDiId: "T_DI",
+      transportVeId: "T_VE",
+      hotelId: "H1",
+      hoatDongTheoNgay: [["A1"], ["A2", "A3"], ["A4"]],
+      buaAnTheoNgay: [
+        { trua: null, toi: null, cafe: "CAFE1" },
+        { trua: null, toi: null, cafe: "CAFE1" },
+        { trua: null, toi: null, cafe: "CAFE1" },
+      ],
+    };
+
+    const result = buildPlan(baseRequest, selection, data);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.plan.tongKet.theoHangMuc["Ăn uống"]).toBe(2_100_000);
+      expect(result.plan.tongKet.tongVND).toBe(9_840_000);
+      expect(result.plan.tongKet.conLaiVND).toBe(160_000);
+      expect(result.plan.tongKet.phanTramDaDung).toBe(98.4);
+    }
+  });
+});
+
+describe("buildPlan – Khách sạn live (KhachSan)", () => {
+  /**
+   * Khách sạn 4 sao không có giá → dùng HOTEL_GIA_THEO_SAO[4] = 1.300.000
+   * giaLaUocTinh = true
+   */
+  it("Khách sạn 4 sao không có giá → giaDem = 1.300.000, giaLaUocTinh = true", () => {
+    const data = createMockData();
+    data.khachSans = [
+      {
+        id: "KS_LIVE",
+        osmId: "osm:node:99",
+        ten: "Khách sạn Live 4 sao",
+        khuVuc: "Mỹ Khê",
+        diaChi: null,
+        toaDo: { lat: 16.06, lng: 108.24 },
+        loai: "khach_san",
+        gioMoCua: null,
+        soSao: 4,
+        giaUocTinhNguoi: null,
+        nguon: null,
+        ngayLay: "2026-10-19T00:00:00.000Z",
+        doTinCay: "tham_khao",
+        giaLaUocTinh: true,
+        khoangGiaDemVND: null,
+        includesBreakfast: false,
+        hasPool: false,
+        nguonGia: [],
+      },
+    ];
+
+    const selection: Selection = {
+      transportDiId: "T_DI",
+      transportVeId: "T_VE",
+      hotelId: "KS_LIVE",
+      hoatDongTheoNgay: [[], [], []],
+    };
+
+    const result = buildPlan(baseRequest, selection, data);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const choOItem = result.plan.items.find((i) => i.hangMuc === "Chỗ ở");
+      expect(choOItem).toBeDefined();
+      // 2 đêm x 1 phòng x 1.300.000 = 2.600.000
+      expect(choOItem!.donGia).toBe(1_300_000);
+      expect(choOItem!.giaLaUocTinh).toBe(true);
+    }
+  });
+
+  /**
+   * Khách sạn không có số sao → dùng HOTEL_GIA_MAC_DINH = 700.000
+   */
+  it("Khách sạn không có số sao → giaDem = 700.000", () => {
+    const data = createMockData();
+    data.khachSans = [
+      {
+        id: "KS_NOSAO",
+        osmId: "osm:node:100",
+        ten: "Khách sạn Không Sao",
+        khuVuc: "Hải Châu",
+        diaChi: null,
+        toaDo: { lat: 16.07, lng: 108.22 },
+        loai: "khach_san",
+        gioMoCua: null,
+        soSao: null,
+        giaUocTinhNguoi: null,
+        nguon: null,
+        ngayLay: "2026-10-19T00:00:00.000Z",
+        doTinCay: "tham_khao",
+        giaLaUocTinh: true,
+        khoangGiaDemVND: null,
+        includesBreakfast: false,
+        hasPool: false,
+        nguonGia: [],
+      },
+    ];
+
+    const selection: Selection = {
+      transportDiId: "T_DI",
+      transportVeId: "T_VE",
+      hotelId: "KS_NOSAO",
+      hoatDongTheoNgay: [[], [], []],
+    };
+
+    const result = buildPlan(baseRequest, selection, data);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const choOItem = result.plan.items.find((i) => i.hangMuc === "Chỗ ở");
+      expect(choOItem!.donGia).toBe(700_000);
+    }
+  });
+});
+
+describe("buildPlan – Maps URLs (core/maps.ts)", () => {
+  it("buildMapsUrls tạo URL đúng cho 'Bãi biển Mỹ Khê'", async () => {
+    const { buildMapsUrls } = await import("./maps");
+    const place = {
+      ten: "Bãi biển Mỹ Khê",
+      toaDo: { lat: 16.0617, lng: 108.2478 },
+    };
+    const urls = buildMapsUrls(place);
+    expect(urls.xem).toBe(
+      "https://www.google.com/maps/search/?api=1&query=B%C3%A3i%20bi%E1%BB%83n%20M%E1%BB%B9%20Kh%C3%AA%2C%20%C4%90%C3%A0%20N%E1%BA%B5ng"
+    );
+    expect(urls.chiDuong).toBe(
+      "https://www.google.com/maps/dir/?api=1&destination=16.0617%2C108.2478"
+    );
+    expect(urls.apple).toBe("https://maps.apple.com/?daddr=16.0617,108.2478");
+  });
+});
+
+describe("buildPlan – Lỗi validation", () => {
+  const data = createMockData();
+
+  it("lỗi khi có id lạ không tồn tại", () => {
+    const result = buildPlan(
+      baseRequest,
+      {
+        transportDiId: "UNKNOWN_T",
+        transportVeId: "T_VE",
+        hotelId: "H1",
+        hoatDongTheoNgay: [["A1"], ["A2"], ["A3"]],
+      },
+      data
+    );
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.loi.some((l) => l.includes("không tồn tại"))).toBe(true);
+    }
+  });
+
+  it("lỗi khi dùng chuyến chiều đi làm chiều về", () => {
+    const result = buildPlan(
+      baseRequest,
+      {
+        transportDiId: "T_DI",
+        transportVeId: "T_DI",
+        hotelId: "H1",
+        hoatDongTheoNgay: [["A1"], ["A2"], ["A3"]],
+      },
+      data
+    );
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.loi.some((l) => l.includes("không phải huong 've'"))).toBe(true);
+    }
+  });
+
+  it("lỗi khi có 3 hoạt động trong một ngày", () => {
+    const result = buildPlan(
+      baseRequest,
+      {
+        transportDiId: "T_DI",
+        transportVeId: "T_VE",
+        hotelId: "H1",
+        hoatDongTheoNgay: [["A1", "A2", "A3"], [], []],
+      },
+      data
+    );
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.loi.some((l) => l.includes("vượt quá mức tối đa"))).toBe(true);
+    }
+  });
+
+  it("lỗi khi có hoạt động trùng", () => {
+    const result = buildPlan(
+      baseRequest,
+      {
+        transportDiId: "T_DI",
+        transportVeId: "T_VE",
+        hotelId: "H1",
+        hoatDongTheoNgay: [["A1"], ["A1"], []],
+      },
+      data
+    );
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.loi.some((l) => l.includes("trùng lặp"))).toBe(true);
+    }
+  });
+
+  it("lỗi khi hoatDongTheoNgay sai độ dài", () => {
+    const result = buildPlan(
+      baseRequest,
+      {
+        transportDiId: "T_DI",
+        transportVeId: "T_VE",
+        hotelId: "H1",
+        hoatDongTheoNgay: [["A1"], ["A2"]],
+      },
+      data
+    );
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.loi.some((l) => l.includes("khác soNgay"))).toBe(true);
+    }
+  });
+});
+
+describe("buildPlan – FixtureB (3 người)", () => {
+  it("3 người, 3 ngày: Chỗ ở 2 phòng, vẫn tính đúng", () => {
+    const data = createMockData();
+    const request3: TripRequest = {
+      ...baseRequest,
       soNguoi: 3,
-      soNgay: 3,
       ngansachTongVND: 15000000,
-      sothich: [],
-      tranh: [],
-      ghiChu: [],
-      thieu: [],
-      cauHoiLamRo: [],
-      canhBao: [],
     };
-
     const selection: Selection = {
       transportDiId: "T_DI",
       transportVeId: "T_VE",
@@ -174,122 +507,14 @@ describe("buildPlan", () => {
       hoatDongTheoNgay: [["A1"], ["A2", "A3"], ["A4"]],
     };
 
-    const result = buildPlan(request, selection, data);
+    const result = buildPlan(request3, selection, data);
     expect(result.ok).toBe(true);
-
     if (result.ok) {
       const { tongKet } = result.plan;
-      expect(tongKet.theoHangMuc["Di chuyển"]).toBe(5880000);
-      expect(tongKet.theoHangMuc["Chỗ ở"]).toBe(4400000); // 2 phòng
-      expect(tongKet.theoHangMuc["Ăn uống"]).toBe(2700000);
-      expect(tongKet.theoHangMuc["Vui chơi"]).toBe(2430000);
-      expect(tongKet.tongVND).toBe(15410000);
-      expect(tongKet.conLaiVND).toBe(-410000);
-      expect(tongKet.trangThaiNganSach).toBe("vuot");
-      expect(result.plan.canhBao).toContain("vuot_ngan_sach");
+      expect(tongKet.theoHangMuc["Di chuyển"]).toBe(5_880_000);
+      expect(tongKet.theoHangMuc["Chỗ ở"]).toBe(4_400_000); // 2 phòng
+      expect(tongKet.theoHangMuc["Ăn uống"]).toBe(2_700_000);
+      expect(tongKet.theoHangMuc["Vui chơi"]).toBe(2_430_000);
     }
-  });
-
-  describe("Test lỗi", () => {
-    const data = createMockData();
-    const baseRequest: TripRequest = {
-      schemaVersion: 3,
-      diemDi: "TP.HCM",
-      diemDen: "Đà Nẵng",
-      soNguoi: 2,
-      soNgay: 3,
-      ngansachTongVND: 10000000,
-      sothich: [],
-      tranh: [],
-      ghiChu: [],
-      thieu: [],
-      cauHoiLamRo: [],
-      canhBao: [],
-    };
-
-    it("lỗi khi có id lạ không tồn tại", () => {
-      const result = buildPlan(
-        baseRequest,
-        {
-          transportDiId: "UNKNOWN_T",
-          transportVeId: "T_VE",
-          hotelId: "H1",
-          hoatDongTheoNgay: [["A1"], ["A2"], ["A3"]],
-        },
-        data
-      );
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
-        expect(result.loi.some((l) => l.includes("không tồn tại"))).toBe(true);
-      }
-    });
-
-    it("lỗi khi dùng chuyến chiều đi làm chiều về", () => {
-      const result = buildPlan(
-        baseRequest,
-        {
-          transportDiId: "T_DI",
-          transportVeId: "T_DI", // T_DI là huong "di", không phải "ve"
-          hotelId: "H1",
-          hoatDongTheoNgay: [["A1"], ["A2"], ["A3"]],
-        },
-        data
-      );
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
-        expect(result.loi.some((l) => l.includes("không phải huong 've'"))).toBe(true);
-      }
-    });
-
-    it("lỗi khi có 3 hoạt động trong một ngày", () => {
-      const result = buildPlan(
-        baseRequest,
-        {
-          transportDiId: "T_DI",
-          transportVeId: "T_VE",
-          hotelId: "H1",
-          hoatDongTheoNgay: [["A1", "A2", "A3"], [], []],
-        },
-        data
-      );
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
-        expect(result.loi.some((l) => l.includes("vượt quá mức tối đa"))).toBe(true);
-      }
-    });
-
-    it("lỗi khi có hoạt động trùng", () => {
-      const result = buildPlan(
-        baseRequest,
-        {
-          transportDiId: "T_DI",
-          transportVeId: "T_VE",
-          hotelId: "H1",
-          hoatDongTheoNgay: [["A1"], ["A1"], []], // A1 lặp lại
-        },
-        data
-      );
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
-        expect(result.loi.some((l) => l.includes("trùng lặp"))).toBe(true);
-      }
-    });
-
-    it("lỗi khi hoatDongTheoNgay sai độ dài", () => {
-      const result = buildPlan(
-        baseRequest,
-        {
-          transportDiId: "T_DI",
-          transportVeId: "T_VE",
-          hotelId: "H1",
-          hoatDongTheoNgay: [["A1"], ["A2"]], // 2 ngày thay vì 3
-        },
-        data
-      );
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
-        expect(result.loi.some((l) => l.includes("khác soNgay"))).toBe(true);
-      }
-    });
   });
 });

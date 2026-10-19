@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>W0 Màn chào - Trip Vibes</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;min-height:1024px;background:#F5F5F5;color:#222222;font-family:Inter,Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;position:relative}
+.Frame{width:1440px;height:1024px;overflow:hidden;position:relative}
+.TopBar{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 32px;background:#FFFFFF;border-bottom:1px solid #D0D0D0}
+.Logo{font-size:20px;line-height:28px;font-weight:700}
+.TripTitle{font-size:14px;color:#555555}
+.TopActions{display:flex;align-items:center;gap:12px}
+.Btn{display:flex;align-items:center;justify-content:center;height:40px;padding:0 18px;border:1px solid #888888;border-radius:8px;background:#FFFFFF;color:#222222;font-size:14px;font-weight:500;white-space:nowrap}
+.BtnGhost{color:#999999;border-color:#CCCCCC}
+.BtnPrimary{background:#222222;border-color:#222222;color:#FFFFFF;font-weight:600}
+.BtnSmall{height:32px;padding:0 12px;font-size:13px}
+.BtnFull{width:100%;height:44px}
+.BtnDone{background:#E8E8E8;border-color:#CCCCCC;color:#666666}
+.User{margin-left:8px;font-size:13px;color:#555555}
+.Layout{display:flex;align-items:stretch;min-height:960px}
+.SideNav{width:200px;flex:none;padding:24px 16px;background:#FFFFFF;border-right:1px solid #D0D0D0}
+.NavItem{display:flex;align-items:center;height:40px;padding:0 12px;margin-bottom:4px;border-radius:8px;font-size:14px;color:#999999}
+.NavOn{color:#222222}
+.NavActive{background:#E8E8E8;color:#222222;font-weight:600}
+.NavNote{margin-top:16px;padding:0 12px;font-size:12px;line-height:16px;color:#888888}
+.Main{width:880px;flex:none;padding:24px 32px}
+.MainWide{width:1240px;flex:none;padding:24px 32px}
+.Side{width:360px;flex:none;padding:24px 32px 24px 0}
+.Center{width:720px;margin:0 auto;padding:40px 0}
+.CenterNarrow{width:440px;margin:0 auto;padding:64px 0}
+.H1{font-size:24px;line-height:32px;font-weight:700;margin-bottom:6px}
+.Sub{font-size:14px;color:#666666;margin-bottom:20px}
+.SectionTitle{font-size:18px;line-height:26px;font-weight:600;margin-bottom:12px}
+.Back{font-size:13px;color:#555555;margin-bottom:12px}
+.Banner{display:flex;gap:12px;padding:14px 16px;margin-bottom:20px;background:#FFFFFF;border:1px solid #BBBBBB;border-left:4px solid #888888;border-radius:8px}
+.BannerWarn{border-left-color:#B7791F;background:#FFF8E6;border-color:#E0C27A}
+.BannerErr{border-left-color:#B00020;background:#FDECEE;border-color:#E2A3AB}
+.BannerMark{display:flex;align-items:center;justify-content:center;width:24px;height:24px;flex:none;border:1px solid #888888;border-radius:12px;font-size:13px;font-weight:700}
+.BannerTitle{font-weight:600;margin-bottom:2px}
+.BannerText{font-size:13px;color:#444444}
+.DayCard{background:#FFFFFF;border:1px solid #D0D0D0;border-radius:12px;margin-bottom:16px}
+.DayHead{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #E2E2E2}
+.DayName{font-size:16px;line-height:24px;font-weight:600}
+.DayTotal{font-size:14px;color:#555555}
+.Item{display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #EEEEEE}
+.NoLine{border-bottom:none}
+.Time{width:48px;flex:none;font-size:14px;color:#555555}
+.Tag{width:84px;flex:none;padding:3px 0;text-align:center;border:1px solid #AAAAAA;border-radius:12px;font-size:12px;line-height:16px;color:#444444}
+.Info{flex:1}
+.InfoRow{display:flex;gap:12px;align-items:center}
+.InfoTitle{font-weight:600}
+.InfoSub{font-size:13px;color:#666666}
+.Amount{width:150px;flex:none;text-align:right;font-size:14px;font-weight:500}
+.AmountSub{display:block;font-size:12px;font-weight:400;color:#777777}
+.Action{width:56px;flex:none;display:flex;justify-content:flex-end}
+.ItemExtra{padding:0 20px 14px 184px}
+.Photo{display:flex;align-items:center;justify-content:center;width:88px;height:64px;flex:none;background:#DDDDDD;border-radius:8px;font-size:12px;color:#777777}
+.PhotoBig{display:flex;align-items:center;justify-content:center;width:200px;height:140px;flex:none;background:#DDDDDD;border-radius:8px;font-size:13px;color:#777777}
+.Said{padding:8px 10px;background:#FFFFFF;border:1px solid #E0E0E0;border-radius:8px;font-size:12px;line-height:16px;color:#555555}
+.SaidTitle{font-weight:600;color:#333333;margin-bottom:2px}
+.PersonalPanel{margin-top:24px;padding:20px;background:#FFFFFF;border:1px dashed #888888;border-radius:12px}
+.PanelTitle{font-size:16px;line-height:24px;font-weight:600;margin-bottom:4px}
+.PanelSub{font-size:13px;color:#666666;margin-bottom:14px}
+.Chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.Chip{padding:6px 14px;border:1px solid #999999;border-radius:16px;font-size:14px;background:#FFFFFF}
+.ChipOn{background:#222222;border-color:#222222;color:#FFFFFF}
+.ChipFlag{padding:2px 10px;border:1px solid #B7791F;border-radius:12px;font-size:12px;line-height:16px;background:#FFF8E6;color:#7A4E00}
+.ChipRed{border-color:#B00020;background:#FDECEE;color:#8A0019}
+.Textarea{height:72px;padding:10px 12px;margin-bottom:6px;border:1px solid #AAAAAA;border-radius:8px;background:#FFFFFF;font-size:14px;color:#888888}
+.BudgetSummary{padding:20px;background:#FFFFFF;border:1px solid #D0D0D0;border-radius:12px}
+.Label{font-size:13px;color:#666666}
+.Big{margin-top:4px;font-size:28px;line-height:36px;font-weight:700}
+.BigSub{font-size:13px;color:#666666;margin-bottom:12px}
+.BarTrack{height:12px;background:#E4E4E4;border-radius:6px}
+.BarFill{height:12px;background:#444444;border-radius:6px}
+.BarRed{background:#B00020}
+.Remain{display:flex;justify-content:space-between;margin:10px 0 20px;font-size:14px}
+.CatRow{margin-bottom:14px}
+.CatHead{display:flex;justify-content:space-between;margin-bottom:6px;font-size:14px}
+.CatTrack{height:8px;background:#E4E4E4;border-radius:4px}
+.Divider{height:1px;background:#E2E2E2;margin:6px 0 14px}
+.Move{display:flex;justify-content:space-between;font-size:14px}
+.Caption{margin-top:16px;padding:0 4px;font-size:12px;line-height:16px;color:#777777}
+.Tabs{display:flex;gap:8px;margin-bottom:16px}
+.Tab{padding:8px 18px;border:1px solid #AAAAAA;border-radius:20px;background:#FFFFFF;font-size:14px}
+.TabOn{background:#222222;border-color:#222222;color:#FFFFFF;font-weight:600}
+.Card{background:#FFFFFF;border:1px solid #D0D0D0;border-radius:12px;padding:20px;margin-bottom:16px}
+.CardSel{border:2px solid #222222}
+.Row{display:flex;gap:16px;align-items:center}
+.RowTop{display:flex;gap:16px;align-items:flex-start}
+.Grow{flex:1}
+.Field{margin-bottom:16px}
+.FieldLabel{font-size:13px;font-weight:600;margin-bottom:6px}
+.Input{height:44px;padding:0 12px;display:flex;align-items:center;border:1px solid #888888;border-radius:8px;background:#FFFFFF;color:#444444;font-size:14px}
+.InputErr{border-color:#B00020;background:#FFF5F6}
+.InputBig{height:56px;font-size:24px;font-weight:700;color:#222222}
+.Hint{font-size:12px;line-height:16px;color:#777777;margin-top:6px}
+.Stepper{display:flex;align-items:center;gap:12px}
+.Step{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid #888888;border-radius:8px;background:#FFFFFF;font-size:18px}
+.StepNum{min-width:24px;text-align:center;font-size:18px;font-weight:600}
+.Presets{display:grid;grid-template-columns:repeat(3,200px);gap:12px;margin-bottom:24px}
+.Preset{padding:14px;border:1px solid #AAAAAA;border-radius:12px;background:#FFFFFF}
+.PresetName{font-weight:600;margin-bottom:2px}
+.Modal{position:absolute;background:#FFFFFF;border:1px solid #888888;border-radius:16px;padding:28px}
+.ModalTitle{font-size:20px;line-height:28px;font-weight:700;margin-bottom:4px}
+.Dim{opacity:0.3}
+.Table{width:100%;border-collapse:collapse}
+.Table td,.Table th{padding:10px 12px;border-bottom:1px solid #E6E6E6;text-align:left;font-size:14px}
+.Table th{font-size:13px;color:#666666;font-weight:600;background:#FAFAFA}
+.Num{text-align:right !important}
+.Toast{position:absolute;display:flex;align-items:center;gap:16px;padding:14px 18px;background:#222222;color:#FFFFFF;border-radius:12px;font-size:14px}
+.ToastBtn{padding:6px 14px;border:1px solid #FFFFFF;border-radius:8px;font-size:13px;font-weight:600}
+.Pop{position:absolute;width:300px;background:#FFFFFF;border:1px solid #888888;border-radius:12px;padding:8px}
+.PopTitle{padding:10px 12px 4px;font-weight:600}
+.PopSub{padding:0 12px 8px;font-size:12px;color:#666666}
+.PopItem{padding:10px 12px;border-radius:8px;font-size:14px}
+.Drop{display:flex;flex-direction:column;align-items:center;justify-content:center;height:220px;border:2px dashed #888888;border-radius:12px;background:#FAFAFA;text-align:center}
+.Bubble{max-width:560px;padding:12px 16px;border-radius:16px;margin-bottom:12px;font-size:14px;line-height:22px}
+.BubbleUser{margin-left:auto;background:#222222;color:#FFFFFF}
+.BubbleAi{background:#FFFFFF;border:1px solid #D0D0D0}
+.ChatBar{position:absolute;left:340px;bottom:32px;width:760px;display:flex;gap:12px}
+.ChatInput{flex:1;height:48px;padding:0 16px;display:flex;align-items:center;border:1px solid #888888;border-radius:24px;background:#FFFFFF;color:#888888}
+.Check{display:flex;gap:10px;align-items:flex-start;font-size:13px;margin-bottom:16px}
+.Box{width:18px;height:18px;flex:none;border:1px solid #888888;border-radius:4px;background:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.BoxOn{background:#222222;border-color:#222222;color:#FFFFFF}
+.Link{font-size:13px;color:#444444;text-decoration:underline}
+.Center1{text-align:center}
+.Strength{display:flex;gap:6px;margin-top:8px}
+.StrengthBar{flex:1;height:6px;border-radius:3px;background:#E0E0E0}
+.StrengthOn{background:#666666}
+.Grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.Grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.Stat{padding:16px;background:#FFFFFF;border:1px solid #D0D0D0;border-radius:12px}
+.StatNum{font-size:22px;line-height:30px;font-weight:700;margin-top:2px}
+.Pill{padding:2px 10px;border:1px solid #AAAAAA;border-radius:12px;font-size:12px;line-height:16px;color:#555555}
+</style>
+</head>
+<body>
+
+<div class="TopBar">
+  <div class="Logo">Trip Vibes</div>
+  <div class="TripTitle"></div>
+  <div class="TopActions"><div class="User">Khách</div></div>
+</div><div class="Center1" style="width:760px;margin:0 auto;padding:110px 0">
+<div class="Logo" style="font-size:32px;line-height:40px;margin-bottom:16px">Trip Vibes</div>
+<div class="H1" style="font-size:36px;line-height:46px">Lập kế hoạch du lịch Đà Nẵng, giữ đúng ngân sách</div>
+<div class="Sub" style="font-size:16px;margin-bottom:32px">Chọn vài nút bấm là có kế hoạch có giá, xem trước mọi thay đổi và theo dõi chi tiêu.</div>
+<div class="Row" style="justify-content:center;gap:16px;margin-bottom:36px"><div class="Card" style="width:220px;margin:0"><div class="InfoTitle">Kế hoạch có giá</div><div class="InfoSub">Phương tiện, khách sạn, hoạt động</div></div>
+<div class="Card" style="width:220px;margin:0"><div class="InfoTitle">Xem trước thay đổi</div><div class="InfoSub">Biết trước tiền, thời gian</div></div>
+<div class="Card" style="width:220px;margin:0"><div class="InfoTitle">Theo dõi chi tiêu</div><div class="InfoSub">Chụp bill, AI đọc giúp</div></div></div>
+<div class="Btn BtnPrimary" style="width:320px;height:52px;margin:0 auto">Bắt đầu lập kế hoạch</div><div style="height:16px"></div><div class="Link">Đăng nhập</div>
+<div class="Hint" style="margin-top:28px">Bản mô phỏng, dùng dữ liệu mẫu.</div></div>
+
+</body>
+</html>

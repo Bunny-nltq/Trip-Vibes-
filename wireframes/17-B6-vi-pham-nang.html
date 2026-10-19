@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>B6 Xem trước có vi phạm - Trip Vibes</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;min-height:1024px;background:#F5F5F5;color:#222222;font-family:Inter,Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;position:relative}
+.Frame{width:1440px;height:1024px;overflow:hidden;position:relative}
+.TopBar{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 32px;background:#FFFFFF;border-bottom:1px solid #D0D0D0}
+.Logo{font-size:20px;line-height:28px;font-weight:700}
+.TripTitle{font-size:14px;color:#555555}
+.TopActions{display:flex;align-items:center;gap:12px}
+.Btn{display:flex;align-items:center;justify-content:center;height:40px;padding:0 18px;border:1px solid #888888;border-radius:8px;background:#FFFFFF;color:#222222;font-size:14px;font-weight:500;white-space:nowrap}
+.BtnGhost{color:#999999;border-color:#CCCCCC}
+.BtnPrimary{background:#222222;border-color:#222222;color:#FFFFFF;font-weight:600}
+.BtnSmall{height:32px;padding:0 12px;font-size:13px}
+.BtnFull{width:100%;height:44px}
+.BtnDone{background:#E8E8E8;border-color:#CCCCCC;color:#666666}
+.User{margin-left:8px;font-size:13px;color:#555555}
+.Layout{display:flex;align-items:stretch;min-height:960px}
+.SideNav{width:200px;flex:none;padding:24px 16px;background:#FFFFFF;border-right:1px solid #D0D0D0}
+.NavItem{display:flex;align-items:center;height:40px;padding:0 12px;margin-bottom:4px;border-radius:8px;font-size:14px;color:#999999}
+.NavOn{color:#222222}
+.NavActive{background:#E8E8E8;color:#222222;font-weight:600}
+.NavNote{margin-top:16px;padding:0 12px;font-size:12px;line-height:16px;color:#888888}
+.Main{width:880px;flex:none;padding:24px 32px}
+.MainWide{width:1240px;flex:none;padding:24px 32px}
+.Side{width:360px;flex:none;padding:24px 32px 24px 0}
+.Center{width:720px;margin:0 auto;padding:40px 0}
+.CenterNarrow{width:440px;margin:0 auto;padding:64px 0}
+.H1{font-size:24px;line-height:32px;font-weight:700;margin-bottom:6px}
+.Sub{font-size:14px;color:#666666;margin-bottom:20px}
+.SectionTitle{font-size:18px;line-height:26px;font-weight:600;margin-bottom:12px}
+.Back{font-size:13px;color:#555555;margin-bottom:12px}
+.Banner{display:flex;gap:12px;padding:14px 16px;margin-bottom:20px;background:#FFFFFF;border:1px solid #BBBBBB;border-left:4px solid #888888;border-radius:8px}
+.BannerWarn{border-left-color:#B7791F;background:#FFF8E6;border-color:#E0C27A}
+.BannerErr{border-left-color:#B00020;background:#FDECEE;border-color:#E2A3AB}
+.BannerMark{display:flex;align-items:center;justify-content:center;width:24px;height:24px;flex:none;border:1px solid #888888;border-radius:12px;font-size:13px;font-weight:700}
+.BannerTitle{font-weight:600;margin-bottom:2px}
+.BannerText{font-size:13px;color:#444444}
+.DayCard{background:#FFFFFF;border:1px solid #D0D0D0;border-radius:12px;margin-bottom:16px}
+.DayHead{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #E2E2E2}
+.DayName{font-size:16px;line-height:24px;font-weight:600}
+.DayTotal{font-size:14px;color:#555555}
+.Item{display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid #EEEEEE}
+.NoLine{border-bottom:none}
+.Time{width:48px;flex:none;font-size:14px;color:#555555}
+.Tag{width:84px;flex:none;padding:3px 0;text-align:center;border:1px solid #AAAAAA;border-radius:12px;font-size:12px;line-height:16px;color:#444444}
+.Info{flex:1}
+.InfoRow{display:flex;gap:12px;align-items:center}
+.InfoTitle{font-weight:600}
+.InfoSub{font-size:13px;color:#666666}
+.Amount{width:150px;flex:none;text-align:right;font-size:14px;font-weight:500}
+.AmountSub{display:block;font-size:12px;font-weight:400;color:#777777}
+.Action{width:56px;flex:none;display:flex;justify-content:flex-end}
+.ItemExtra{padding:0 20px 14px 184px}
+.Photo{display:flex;align-items:center;justify-content:center;width:88px;height:64px;flex:none;background:#DDDDDD;border-radius:8px;font-size:12px;color:#777777}
+.PhotoBig{display:flex;align-items:center;justify-content:center;width:200px;height:140px;flex:none;background:#DDDDDD;border-radius:8px;font-size:13px;color:#777777}
+.Said{padding:8px 10px;background:#FFFFFF;border:1px solid #E0E0E0;border-radius:8px;font-size:12px;line-height:16px;color:#555555}
+.SaidTitle{font-weight:600;color:#333333;margin-bottom:2px}
+.PersonalPanel{margin-top:24px;padding:20px;background:#FFFFFF;border:1px dashed #888888;border-radius:12px}
+.PanelTitle{font-size:16px;line-height:24px;font-weight:600;margin-bottom:4px}
+.PanelSub{font-size:13px;color:#666666;margin-bottom:14px}
+.Chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.Chip{padding:6px 14px;border:1px solid #999999;border-radius:16px;font-size:14px;background:#FFFFFF}
+.ChipOn{background:#222222;border-color:#222222;color:#FFFFFF}
+.ChipFlag{padding:2px 10px;border:1px solid #B7791F;border-radius:12px;font-size:12px;line-height:16px;background:#FFF8E6;color:#7A4E00}
+.ChipRed{border-color:#B00020;background:#FDECEE;color:#8A0019}
+.Textarea{height:72px;padding:10px 12px;margin-bottom:6px;border:1px solid #AAAAAA;border-radius:8px;background:#FFFFFF;font-size:14px;color:#888888}
+.BudgetSummary{padding:20px;background:#FFFFFF;border:1px solid #D0D0D0;border-radius:12px}
+.Label{font-size:13px;color:#666666}
+.Big{margin-top:4px;font-size:28px;line-height:36px;font-weight:700}
+.BigSub{font-size:13px;color:#666666;margin-bottom:12px}
+.BarTrack{height:12px;background:#E4E4E4;border-radius:6px}
+.BarFill{height:12px;background:#444444;border-radius:6px}
+.BarRed{background:#B00020}
+.Remain{display:flex;justify-content:space-between;margin:10px 0 20px;font-size:14px}
+.CatRow{margin-bottom:14px}
+.CatHead{display:flex;justify-content:space-between;margin-bottom:6px;font-size:14px}
+.CatTrack{height:8px;background:#E4E4E4;border-radius:4px}
+.Divider{height:1px;background:#E2E2E2;margin:6px 0 14px}
+.Move{display:flex;justify-content:space-between;font-size:14px}
+.Caption{margin-top:16px;padding:0 4px;font-size:12px;line-height:16px;color:#777777}
+.Tabs{display:flex;gap:8px;margin-bottom:16px}
+.Tab{padding:8px 18px;border:1px solid #AAAAAA;border-radius:20px;background:#FFFFFF;font-size:14px}
+.TabOn{background:#222222;border-color:#222222;color:#FFFFFF;font-weight:600}
+.Card{background:#FFFFFF;border:1px solid #D0D0D0;border-radius:12px;padding:20px;margin-bottom:16px}
+.CardSel{border:2px solid #222222}
+.Row{display:flex;gap:16px;align-items:center}
+.RowTop{display:flex;gap:16px;align-items:flex-start}
+.Grow{flex:1}
+.Field{margin-bottom:16px}
+.FieldLabel{font-size:13px;font-weight:600;margin-bottom:6px}
+.Input{height:44px;padding:0 12px;display:flex;align-items:center;border:1px solid #888888;border-radius:8px;background:#FFFFFF;color:#444444;font-size:14px}
+.InputErr{border-color:#B00020;background:#FFF5F6}
+.InputBig{height:56px;font-size:24px;font-weight:700;color:#222222}
+.Hint{font-size:12px;line-height:16px;color:#777777;margin-top:6px}
+.Stepper{display:flex;align-items:center;gap:12px}
+.Step{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid #888888;border-radius:8px;background:#FFFFFF;font-size:18px}
+.StepNum{min-width:24px;text-align:center;font-size:18px;font-weight:600}
+.Presets{display:grid;grid-template-columns:repeat(3,200px);gap:12px;margin-bottom:24px}
+.Preset{padding:14px;border:1px solid #AAAAAA;border-radius:12px;background:#FFFFFF}
+.PresetName{font-weight:600;margin-bottom:2px}
+.Modal{position:absolute;background:#FFFFFF;border:1px solid #888888;border-radius:16px;padding:28px}
+.ModalTitle{font-size:20px;line-height:28px;font-weight:700;margin-bottom:4px}
+.Dim{opacity:0.3}
+.Table{width:100%;border-collapse:collapse}
+.Table td,.Table th{padding:10px 12px;border-bottom:1px solid #E6E6E6;text-align:left;font-size:14px}
+.Table th{font-size:13px;color:#666666;font-weight:600;background:#FAFAFA}
+.Num{text-align:right !important}
+.Toast{position:absolute;display:flex;align-items:center;gap:16px;padding:14px 18px;background:#222222;color:#FFFFFF;border-radius:12px;font-size:14px}
+.ToastBtn{padding:6px 14px;border:1px solid #FFFFFF;border-radius:8px;font-size:13px;font-weight:600}
+.Pop{position:absolute;width:300px;background:#FFFFFF;border:1px solid #888888;border-radius:12px;padding:8px}
+.PopTitle{padding:10px 12px 4px;font-weight:600}
+.PopSub{padding:0 12px 8px;font-size:12px;color:#666666}
+.PopItem{padding:10px 12px;border-radius:8px;font-size:14px}
+.Drop{display:flex;flex-direction:column;align-items:center;justify-content:center;height:220px;border:2px dashed #888888;border-radius:12px;background:#FAFAFA;text-align:center}
+.Bubble{max-width:560px;padding:12px 16px;border-radius:16px;margin-bottom:12px;font-size:14px;line-height:22px}
+.BubbleUser{margin-left:auto;background:#222222;color:#FFFFFF}
+.BubbleAi{background:#FFFFFF;border:1px solid #D0D0D0}
+.ChatBar{position:absolute;left:340px;bottom:32px;width:760px;display:flex;gap:12px}
+.ChatInput{flex:1;height:48px;padding:0 16px;display:flex;align-items:center;border:1px solid #888888;border-radius:24px;background:#FFFFFF;color:#888888}
+.Check{display:flex;gap:10px;align-items:flex-start;font-size:13px;margin-bottom:16px}
+.Box{width:18px;height:18px;flex:none;border:1px solid #888888;border-radius:4px;background:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.BoxOn{background:#222222;border-color:#222222;color:#FFFFFF}
+.Link{font-size:13px;color:#444444;text-decoration:underline}
+.Center1{text-align:center}
+.Strength{display:flex;gap:6px;margin-top:8px}
+.StrengthBar{flex:1;height:6px;border-radius:3px;background:#E0E0E0}
+.StrengthOn{background:#666666}
+.Grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.Grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.Stat{padding:16px;background:#FFFFFF;border:1px solid #D0D0D0;border-radius:12px}
+.StatNum{font-size:22px;line-height:30px;font-weight:700;margin-top:2px}
+.Pill{padding:2px 10px;border:1px solid #AAAAAA;border-radius:12px;font-size:12px;line-height:16px;color:#555555}
+</style>
+</head>
+<body>
+<div class="Frame">
+<div class="Dim"><div class="TopBar">
+  <div class="Logo">Trip Vibes</div>
+  <div class="TripTitle">TP.HCM → Đà Nẵng · 3 ngày 2 đêm · 2 người</div>
+  <div class="TopActions"><div class="Btn BtnGhost">Hoàn tác</div><div class="Btn BtnGhost">Làm lại</div><div class="Btn BtnPrimary">Xác nhận kế hoạch</div><div class="User">Khách</div></div>
+</div><div class="Layout"><div class="SideNav"><div class="NavItem NavActive">Kế hoạch</div><div class="NavItem">Chuyến đi</div><div class="NavItem">Ngân sách</div><div class="NavNote">Chuyến đi và Ngân sách mở sau khi bạn xác nhận kế hoạch.</div></div><div class="Main"><div class="Banner"><div class="BannerMark">!</div><div><div class="BannerTitle">Lưu ý</div><div class="BannerText">Đã dùng 95,4% ngân sách, còn lại 460.000 đ.</div><div class="BannerText">Máy bay đến lúc 07:55, sớm hơn giờ nhận phòng 14:00. Nên gửi hành lý tại khách sạn.</div></div></div><div class="SectionTitle">Kế hoạch theo ngày</div><div class="DayCard"><div class="DayHead"><div class="DayName">Ngày 1</div><div class="DayTotal">4.760.000 đ</div></div><div class="Item"><div class="Time">06:30</div><div class="Tag">Di chuyển</div>
+<div class="Info"><div class="InfoTitle">Máy bay TP.HCM → Đà Nẵng</div><div class="InfoSub">Hãng bay Mẫu B · đến 07:55 · 85 phút</div></div>
+<div class="Amount">1.960.000 đ<span class="AmountSub">2 vé × 980.000 đ</span></div><div class="Action"><div class="Btn BtnSmall">Đổi</div></div></div><div class="Item"><div class="Time">09:30</div><div class="Tag">Vui chơi</div>
+<div class="Info"><div class="InfoTitle">Bãi biển Mỹ Khê</div><div class="InfoSub">2 giờ · di chuyển 20 phút tới điểm kế</div></div>
+<div class="Amount">Miễn phí</div><div class="Action"><div class="Btn BtnSmall">Đổi</div></div></div><div class="Item"><div class="Time">—</div><div class="Tag">Ăn uống</div>
+<div class="Info"><div class="InfoTitle">Ăn uống cả ngày</div><div class="InfoSub">Ước tính 300.000 đ mỗi người</div></div>
+<div class="Amount">600.000 đ</div><div class="Action"></div></div><div class="Item NoLine"><div class="Time">14:00</div><div class="Tag">Chỗ ở</div>
+<div class="Info InfoRow"><div class="Photo">Ảnh</div><div>
+<div class="InfoTitle">Khách sạn Mẫu 02</div>
+<div class="InfoSub">4 sao · Mỹ Khê · Điểm 8,6</div>
+<div class="InfoSub">1.240 đánh giá · Có hồ bơi</div>
+<div class="InfoSub">Buffet sáng đã gồm · Khai trương 2019</div></div></div>
+<div class="Amount">2.200.000 đ<span class="AmountSub">2 đêm × 1.100.000 đ</span></div><div class="Action"><div class="Btn BtnSmall">Đổi</div></div></div>
+<div class="ItemExtra"><div class="Said"><div class="SaidTitle">Người đi trước nói gì</div>Khen: sạch sẽ, buffet đa dạng. Lưu ý: hồ bơi đông giờ chiều. Nguồn: tổng hợp từ đánh giá công khai (dữ liệu mẫu).</div></div></div><div class="DayCard"><div class="DayHead"><div class="DayName">Ngày 2</div><div class="DayTotal">920.000 đ</div></div><div class="Item"><div class="Time">09:30</div><div class="Tag">Vui chơi</div>
+<div class="Info"><div class="InfoTitle">Ngũ Hành Sơn</div><div class="InfoSub">2,5 giờ · di chuyển 25 phút tới điểm kế</div></div>
+<div class="Amount">80.000 đ<span class="AmountSub">2 vé × 40.000 đ</span></div><div class="Action"><div class="Btn BtnSmall">Đổi</div></div></div><div class="Item"><div class="Time">15:30</div><div class="Tag">Vui chơi</div>
+<div class="Info"><div class="InfoTitle">Phố cổ Hội An</div><div class="InfoSub">4 giờ · di chuyển 10 phút tới điểm kế</div></div>
+<div class="Amount">240.000 đ<span class="AmountSub">2 vé × 120.000 đ</span></div><div class="Action"><div class="Btn BtnSmall">Đổi</div></div></div><div class="Item"><div class="Time">—</div><div class="Tag">Ăn uống</div>
+<div class="Info"><div class="InfoTitle">Ăn uống cả ngày</div><div class="InfoSub">Ước tính 300.000 đ mỗi người</div></div>
+<div class="Amount">600.000 đ</div><div class="Action"></div></div></div><div class="DayCard"><div class="DayHead"><div class="DayName">Ngày 3</div><div class="DayTotal">3.860.000 đ</div></div><div class="Item"><div class="Time">09:30</div><div class="Tag">Vui chơi</div>
+<div class="Info"><div class="InfoTitle">Bà Nà Hills</div><div class="InfoSub">6 giờ · di chuyển 45 phút tới sân bay</div></div>
+<div class="Amount">1.300.000 đ<span class="AmountSub">2 vé × 650.000 đ</span></div><div class="Action"><div class="Btn BtnSmall">Đổi</div></div></div><div class="Item"><div class="Time">—</div><div class="Tag">Ăn uống</div>
+<div class="Info"><div class="InfoTitle">Ăn uống cả ngày</div><div class="InfoSub">Ước tính 300.000 đ mỗi người</div></div>
+<div class="Amount">600.000 đ</div><div class="Action"></div></div><div class="Item"><div class="Time">18:00</div><div class="Tag">Di chuyển</div>
+<div class="Info"><div class="InfoTitle">Máy bay Đà Nẵng → TP.HCM</div><div class="InfoSub">Hãng bay Mẫu B · đến 19:25 · 85 phút</div></div>
+<div class="Amount">1.960.000 đ<span class="AmountSub">2 vé × 980.000 đ</span></div><div class="Action"><div class="Btn BtnSmall">Đổi</div></div></div></div><div class="PersonalPanel"><div class="PanelTitle">Muốn kế hoạch hợp gu hơn?</div>
+<div class="PanelSub">Chọn điều bạn thích, AI sẽ gợi ý lại các hoạt động. Bạn xem trước thay đổi rồi mới áp dụng.</div>
+<div class="Chips"><div class="Chip">Biển</div><div class="Chip">Ẩm thực</div><div class="Chip">Hải sản</div><div class="Chip">Văn hóa</div><div class="Chip">Thiên nhiên</div><div class="Chip">Vui chơi</div><div class="Chip">Thư giãn</div><div class="Chip">Chụp ảnh</div><div class="Chip">Mua sắm</div></div>
+<div class="Textarea">Hoặc nhắn thêm, ví dụ: thêm một buổi cà phê view biển</div>
+<div style="height:14px"></div><div class="Btn BtnSmall" style="width:120px">Gợi ý lại</div></div></div><div class="Side"><div class="BudgetSummary">
+  <div class="Label">Tổng kế hoạch</div>
+  <div class="Big">9.540.000 đ</div>
+  <div class="BigSub">trên ngân sách 10.000.000 đ</div>
+  <div class="BarTrack"><div class="BarFill" style="width:95.4%"></div></div>
+  <div class="Remain"><span>Đã dùng 95,4%</span><span>Còn lại 460.000 đ</span></div>
+  <div class="CatRow"><div class="CatHead"><span>Di chuyển</span><span>3.920.000 đ</span></div><div class="CatTrack"><div class="BarFill" style="width:41%;height:8px;border-radius:4px;background:#333333"></div></div></div><div class="CatRow"><div class="CatHead"><span>Chỗ ở</span><span>2.200.000 đ</span></div><div class="CatTrack"><div class="BarFill" style="width:23%;height:8px;border-radius:4px;background:#666666"></div></div></div><div class="CatRow"><div class="CatHead"><span>Ăn uống</span><span>1.800.000 đ</span></div><div class="CatTrack"><div class="BarFill" style="width:19%;height:8px;border-radius:4px;background:#888888"></div></div></div><div class="CatRow"><div class="CatHead"><span>Vui chơi</span><span>1.620.000 đ</span></div><div class="CatTrack"><div class="BarFill" style="width:17%;height:8px;border-radius:4px;background:#AAAAAA"></div></div></div>
+  <div class="Divider"></div>
+  <div class="Move"><span>Tổng thời gian di chuyển</span><span>2 giờ 50 phút</span></div>
+</div><div class="Caption">Mỗi thay đổi sẽ cho bạn xem trước (trước và sau) rồi mới áp dụng.</div></div></div></div><div class="Modal" style="left:230px;top:70px;width:980px">
+<div class="ModalTitle">Xem trước thay đổi</div><div class="Sub">Khách sạn: Khách sạn Mẫu 02 đổi sang Khách sạn Mẫu 03. Chưa có gì thay đổi cho đến khi bạn bấm.</div>
+<div class="Banner BannerErr"><div class="BannerMark">!</div><div><div class="BannerTitle">Vượt ngân sách 2.240.000 đ</div><div class="BannerText">Lựa chọn này làm tổng kế hoạch lớn hơn ngân sách bạn đặt.</div></div></div>
+<table class="Table"><tr><th>Mục</th><th class="Num">Đang có (Mẫu 02)</th><th class="Num">Sau khi đổi (Mẫu 03)</th><th class="Num">Chênh lệch</th></tr><tr><td>Giá mỗi đêm</td><td class="Num">1.100.000 đ</td><td class="Num">2.450.000 đ</td><td class="Num"><b>+1.350.000 đ</b></td></tr><tr><td>Tổng chỗ ở (2 đêm, 1 phòng)</td><td class="Num">2.200.000 đ</td><td class="Num">4.900.000 đ</td><td class="Num"><b>+2.700.000 đ</b></td></tr><tr><td>Thời gian di chuyển</td><td class="Num">2 giờ 50 phút</td><td class="Num">2 giờ 50 phút</td><td class="Num"><b>không đổi</b></td></tr><tr><td>Tổng kế hoạch</td><td class="Num">9.540.000 đ</td><td class="Num">12.240.000 đ</td><td class="Num"><b>+2.700.000 đ</b></td></tr><tr><td>Còn lại so với ngân sách</td><td class="Num">460.000 đ</td><td class="Num">−2.240.000 đ</td><td class="Num"><b>−2.700.000 đ</b></td></tr></table>
+<div class="Card" style="margin:18px 0 0;padding:16px"><div class="FieldLabel">Ngày bị ảnh hưởng</div><div class="InfoSub">Chỉ đổi chỗ ở. Các hoạt động và chuyến bay không đổi.</div></div>
+<div class="Row" style="justify-content:flex-end;margin-top:22px"><div class="Btn" style="width:120px">Hủy</div><div class="Btn" style="width:180px">Vẫn áp dụng</div></div></div>
+</div>
+</body>
+</html>

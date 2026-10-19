@@ -1,5 +1,5 @@
 import type { TripRequest, Plan } from "@/contracts";
-import { JsonDataSource } from "@/data/JsonDataSource";
+import { LiveDataSource } from "@/data/live/LiveDataSource";
 import { buildPlan } from "@/core/buildPlan";
 import { validatePlan, type Violation } from "@/core/validatePlan";
 import { tinhNganSachToiThieu } from "@/core/minBudget";
@@ -29,6 +29,7 @@ export interface PlanRepairResult {
   soLanGoiAI: number;
   ms: number;
   toiThieuVND?: number;
+  dataSourceUsed: string;
 }
 
 export async function planWithRepair(
@@ -36,13 +37,30 @@ export async function planWithRepair(
   options?: { provider?: GeminiProvider }
 ): Promise<PlanRepairResult> {
   const startMs = Date.now();
-  const dataSource = new JsonDataSource();
-  const [transports, hotels, activities] = await Promise.all([
-    dataSource.getTransports(),
-    dataSource.getHotels(),
-    dataSource.getActivities(),
-  ]);
-  const data = { transports, hotels, activities };
+  const liveDataSource = new LiveDataSource();
+  const mode = liveDataSource.getMode();
+
+  // Lấy dữ liệu song song
+  const [transports, hotels, activities, khachSans, quanAns, cafes, hoatDongs] =
+    await Promise.all([
+      liveDataSource.getTransports(),
+      liveDataSource.getHotels(),
+      liveDataSource.getActivities(),
+      liveDataSource.getKhachSans(),
+      liveDataSource.getQuanAns(),
+      liveDataSource.getCafes(),
+      liveDataSource.getHoatDongs(),
+    ]);
+
+  const data = {
+    transports,
+    hotels,
+    activities,
+    khachSans,
+    quanAns,
+    cafes,
+    hoatDongs,
+  };
 
   const emptyResult: PlanRepairResult = {
     status: "can_lam_ro",
@@ -53,6 +71,7 @@ export async function planWithRepair(
     soVongSua: 0,
     soLanGoiAI: 0,
     ms: 0,
+    dataSourceUsed: mode,
   };
 
   // a) Kiểm tra điều kiện "cần làm rõ"
@@ -69,6 +88,8 @@ export async function planWithRepair(
   }
 
   // b) Kiểm tra ngân sách tối thiểu (không tốn quota AI)
+  // Gộp khachSans vào hotels để minBudget có thể tính
+  const hotelsMerged = [...hotels];
   const minBudgetRes = tinhNganSachToiThieu(request, data);
   if (!minBudgetRes.khaThi) {
     emptyResult.status =
@@ -77,7 +98,6 @@ export async function planWithRepair(
         : "khong_the_dat_ngan_sach";
     emptyResult.toiThieuVND = minBudgetRes.toiThieuVND;
     emptyResult.ms = Date.now() - startMs;
-    // Báo lỗi bằng chiTiet giả vào hard
     emptyResult.hard.push({
       code: "ngan_sach_toi_thieu",
       chiTiet:
@@ -93,6 +113,7 @@ export async function planWithRepair(
   // c) Vòng lặp sửa lỗi
   const provider = options?.provider ?? new GeminiProvider();
   const sharedSeenIds = new Set<string>();
+  const sharedFoodIds = new Set<string>();
   let soLanGoiAI = 0;
 
   let bestPlanInfo: {
@@ -111,8 +132,10 @@ export async function planWithRepair(
     try {
       agentResult = await runPlanAgent(request, {
         provider,
-        dataSource,
+        dataSource: liveDataSource,
+        liveDataSource,
         sharedSeenIds,
+        sharedFoodIds,
         repairInfo: currentRepairInfo,
       });
     } catch (err: unknown) {
@@ -128,7 +151,7 @@ export async function planWithRepair(
     }
 
     const { selection, trace } = agentResult;
-    const buildRes = buildPlan(request, selection, data);
+    const buildRes = buildPlan(request, selection, data, mode);
 
     let plan: Plan | undefined = undefined;
     let hard: Violation[] = [];
@@ -136,10 +159,9 @@ export async function planWithRepair(
     let tongVND = 0;
 
     if (!buildRes.ok) {
-      // Lỗi cấu trúc
       hard.push({
         code: "loi_cau_truc",
-        chiTiet: buildRes.loi?.join("; ") || "Lỗi khi build kế hoạch (có thể ID không hợp lệ).",
+        chiTiet: buildRes.loi?.join("; ") || "Lỗi khi build kế hoạch.",
       });
       tongVND = 0;
     } else {
@@ -159,7 +181,6 @@ export async function planWithRepair(
     });
 
     if (plan) {
-      // Cập nhật bestPlanInfo
       if (
         !bestPlanInfo ||
         hard.length < bestPlanInfo.hard.length ||
@@ -171,7 +192,6 @@ export async function planWithRepair(
     }
 
     if (hard.length === 0) {
-      // Thành công
       return {
         status: "ok",
         request,
@@ -179,14 +199,14 @@ export async function planWithRepair(
         hard,
         soft,
         lichSu,
-        soVongSua: vong, // Vòng 0 nghĩa là không sửa (đạt ngay lần đầu)
+        soVongSua: vong,
         soLanGoiAI,
         ms: Date.now() - startMs,
         toiThieuVND: minBudgetRes.toiThieuVND,
+        dataSourceUsed: mode,
       };
     }
 
-    // Gán dữ liệu sửa lỗi cho vòng sau
     currentRepairInfo = {
       selectionTruoc: selection,
       viPham: hard,
@@ -195,7 +215,6 @@ export async function planWithRepair(
     };
   }
 
-  // d) Kết thúc vòng lặp vẫn còn lỗi
   return {
     status: "co_vi_pham",
     request,
@@ -207,5 +226,6 @@ export async function planWithRepair(
     soLanGoiAI,
     ms: Date.now() - startMs,
     toiThieuVND: minBudgetRes.toiThieuVND,
+    dataSourceUsed: mode,
   };
 }

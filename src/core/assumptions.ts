@@ -7,14 +7,54 @@
  * đều sử dụng tập trung từ file này, không viết cứng số vào mã nguồn khác.
  */
 
-/** Chi phí ăn uống giả định cho một người trong một ngày (VND) */
-export const AN_UONG_MOI_NGUOI_MOI_NGAY = 300000;
+// ─── Ăn uống ────────────────────────────────────────────────────────────────
+
+/**
+ * Chi phí ăn uống mặc định cho một người một bữa (VND).
+ * GIẢ ĐỊNH đồ án: dùng khi quán ăn không có giá hoặc không chọn quán.
+ */
+export const AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA = 150_000;
+
+/**
+ * Chi phí cà phê mặc định cho một người (VND).
+ * GIẢ ĐỊNH đồ án: dùng khi cafe không có giá hoặc không chọn quán.
+ */
+export const CAFE_MAC_DINH_MOI_NGUOI = 50_000;
+
+/**
+ * Giá phòng khách sạn mặc định theo số sao (VND mỗi đêm mỗi phòng).
+ * GIẢ ĐỊNH đồ án: dùng khi khách sạn không có giá được xác minh.
+ */
+export const HOTEL_GIA_THEO_SAO: Record<number, number> = {
+  2: 450_000,
+  3: 750_000,
+  4: 1_300_000,
+  5: 2_600_000,
+};
+
+/**
+ * Giá phòng khách sạn mặc định khi không biết số sao (VND mỗi đêm mỗi phòng).
+ * GIẢ ĐỊNH đồ án.
+ */
+export const HOTEL_GIA_MAC_DINH = 700_000;
+
+// ─── Legacy alias (giữ để backward compat với tests cũ) ─────────────────────
+
+/** @deprecated dùng AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA * 2 thay thế */
+export const AN_UONG_MOI_NGUOI_MOI_NGAY =
+  AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA * 2;
+
+// ─── Người ở chung phòng ─────────────────────────────────────────────────────
 
 /** Số người tiêu chuẩn tối đa ở ghép trong 1 phòng khách sạn */
 export const NGUOI_MOI_PHONG = 2;
 
+// ─── Hoạt động ───────────────────────────────────────────────────────────────
+
 /** Số lượng hoạt động tối đa được xếp trong một ngày */
 export const SO_HOAT_DONG_TOI_DA_MOI_NGAY = 2;
+
+// ─── Di chuyển ───────────────────────────────────────────────────────────────
 
 /** Ngưỡng thời lượng di chuyển bị coi là lâu (phút) - 360 phút = 6 giờ */
 export const NGUONG_DI_CHUYEN_LAU_PHUT = 360;
@@ -30,6 +70,8 @@ export const GIO_DI_DEM_DEN = "05:00";
 
 /** Ngưỡng giờ đến nơi bị coi là quá sớm (trước 06:00 sáng) */
 export const GIO_DEN_SOM = "06:00";
+
+// ─── Thời gian danh nghĩa ────────────────────────────────────────────────────
 
 /** Giờ danh nghĩa cho hoạt động thứ nhất trong ngày */
 export const GIO_HOAT_DONG_1 = "09:30";
@@ -49,8 +91,12 @@ export const BUFFER_RA_BEN_PHUT = 120;
 /** Thời gian dự phòng tối thiểu (phút) giữa hai hoạt động trong cùng một ngày */
 export const BUFFER_GIUA_HOAT_DONG_PHUT = 30;
 
+// ─── Agent & Repair ─────────────────────────────────────────────────────────
+
 /** Số vòng tối đa AI được phép thử sửa lỗi tự động */
 export const MAX_REPAIR_ROUNDS = 2;
+
+// ─── Ngân sách ───────────────────────────────────────────────────────────────
 
 /** Ngưỡng phần trăm ngân sách bị coi là gần hết (để cảnh báo soft) */
 export const NGUONG_GAN_HET_NGAN_SACH_PHAN_TRAM = 95;

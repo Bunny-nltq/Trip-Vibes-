@@ -120,12 +120,14 @@ export function validatePlan(
   }
 
   // 3. Vi phạm điều cần tránh trên hoạt động và ràng buộc thời gian
-  const hoatDongTheoNgay: Array<Array<{ act: NonNullable<typeof data.activities[0]>; gioThucTe: string }>> = 
+  const hoatDongTheoNgay: Array<Array<{ act: any; gioThucTe: string }>> = 
     Array.from({ length: request.soNgay ?? 0 }, () => []);
 
   for (const item of plan.items) {
     if (item.hangMuc === "Vui chơi" && item.refId) {
-      const act = data.activities.find((a) => a.id === item.refId);
+      const act =
+        data.activities.find((a) => a.id === item.refId) ||
+        data.hoatDongs?.find((a) => a.id === item.refId);
       if (act) {
         hoatDongTheoNgay[item.ngay - 1].push({ act, gioThucTe: item.gio || "" });
         

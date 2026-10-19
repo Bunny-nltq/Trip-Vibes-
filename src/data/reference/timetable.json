@@ -1,0 +1,74 @@
+[
+  {
+    "id": "ref_vj_di_06",
+    "huong": "di",
+    "loai": "PLANE",
+    "nhaCungCap": "VietJet Air",
+    "gioDi": "06:10",
+    "thoiLuongPhut": 80,
+    "giaNguoi": 800000,
+    "seatClass": "Phổ thông",
+    "nguon": ["https://www.vietjetair.com"],
+    "doTinCay": "tham_khao"
+  },
+  {
+    "id": "ref_vn_di_09",
+    "huong": "di",
+    "loai": "PLANE",
+    "nhaCungCap": "Vietnam Airlines",
+    "gioDi": "09:00",
+    "thoiLuongPhut": 80,
+    "giaNguoi": 1200000,
+    "seatClass": "Phổ thông",
+    "nguon": ["https://www.vietnamairlines.com"],
+    "doTinCay": "tham_khao"
+  },
+  {
+    "id": "ref_bb_di_xu",
+    "huong": "di",
+    "loai": "BUS",
+    "nhaCungCap": "Xe khách Phương Trang",
+    "gioDi": "19:00",
+    "thoiLuongPhut": 960,
+    "giaNguoi": 350000,
+    "seatClass": "Giường nằm",
+    "nguon": ["https://www.futabus.vn"],
+    "doTinCay": "tham_khao"
+  },
+  {
+    "id": "ref_vj_ve_17",
+    "huong": "ve",
+    "loai": "PLANE",
+    "nhaCungCap": "VietJet Air",
+    "gioDi": "17:30",
+    "thoiLuongPhut": 80,
+    "giaNguoi": 800000,
+    "seatClass": "Phổ thông",
+    "nguon": ["https://www.vietjetair.com"],
+    "doTinCay": "tham_khao"
+  },
+  {
+    "id": "ref_vn_ve_20",
+    "huong": "ve",
+    "loai": "PLANE",
+    "nhaCungCap": "Vietnam Airlines",
+    "gioDi": "20:00",
+    "thoiLuongPhut": 80,
+    "giaNguoi": 1200000,
+    "seatClass": "Phổ thông",
+    "nguon": ["https://www.vietnamairlines.com"],
+    "doTinCay": "tham_khao"
+  },
+  {
+    "id": "ref_bb_ve_20",
+    "huong": "ve",
+    "loai": "BUS",
+    "nhaCungCap": "Xe khách Phương Trang",
+    "gioDi": "20:00",
+    "thoiLuongPhut": 960,
+    "giaNguoi": 350000,
+    "seatClass": "Giường nằm",
+    "nguon": ["https://www.futabus.vn"],
+    "doTinCay": "tham_khao"
+  }
+]

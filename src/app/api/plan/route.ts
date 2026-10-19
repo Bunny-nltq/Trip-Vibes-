@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { parseRequest } from "@/ai/parseRequest";
 import { planWithRepair } from "@/ai/planWithRepair";
-import { normalizeRequest, removeVietnameseDiacritics } from "@/core/normalizeRequest";
+import { normalizeRequest } from "@/core/normalizeRequest";
 import { TripRequestSchema, type TripRequest } from "@/contracts";
 
 /**
@@ -9,6 +9,7 @@ import { TripRequestSchema, type TripRequest } from "@/contracts";
  * Nhận { text } hoặc { request }.
  * - Có text thì chạy parse-request trước.
  * - Chạy qua planWithRepair (bao gồm cả kiểm tra điều kiện, minBudget, Agent + Repair).
+ * - Trả thêm dataSourceUsed, nguon, doTinCay, mapsUrl cho từng mục.
  */
 export async function POST(req: Request) {
   const start = Date.now();

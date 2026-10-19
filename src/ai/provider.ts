@@ -32,6 +32,10 @@ export class GeminiProvider implements LLMProvider {
     }
 
     this.modelName = model;
+    // Đảm bảo dùng GEMINI_API_KEY, tránh bị biến môi trường toàn cục GOOGLE_API_KEY ghi đè
+    if (process.env.GOOGLE_API_KEY && process.env.GOOGLE_API_KEY !== apiKey) {
+      delete process.env.GOOGLE_API_KEY;
+    }
     // Xác thực bằng auth key (tạo từ AI Studio từ 28/5/2026)
     // SDK tự động dùng header x-goog-api-key khi gọi Gemini API
     this.client = new GoogleGenAI({ apiKey });

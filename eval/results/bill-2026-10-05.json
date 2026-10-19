@@ -1,0 +1,102 @@
+{
+  "correctRealBills": 2,
+  "numRealBills": 2,
+  "correctNotBills": 0,
+  "numNotBills": 0,
+  "dangerousErrors": 0,
+  "avgTime": 7223,
+  "modelName": "gemini-3.8-flash",
+  "promptVersion": "v1",
+  "timestamp": "2026-10-05T08:40:08.798Z",
+  "details": [
+    {
+      "file": "b01_nhahang_haisan.jpg",
+      "extraction": {
+        "laChungTu": true,
+        "loaiChungTu": "hoa_don",
+        "tenCuaHang": "NHÀ HÀNG HẢI SẢN BIỂN XANH (mẫu)",
+        "ngay": "2026-09-20",
+        "tongTienVND": 560000,
+        "tamTinhVND": null,
+        "giamGiaVND": null,
+        "phuThuVND": null,
+        "thueVND": null,
+        "dongChiTiet": [
+          {
+            "ten": "Tôm hấp bia",
+            "soLuong": 1,
+            "thanhTienVND": 280000
+          },
+          {
+            "ten": "Mực nướng",
+            "soLuong": 1,
+            "thanhTienVND": 220000
+          },
+          {
+            "ten": "Rau muống xào",
+            "soLuong": 1,
+            "thanhTienVND": 30000
+          },
+          {
+            "ten": "Nước ngọt",
+            "soLuong": 2,
+            "thanhTienVND": 30000
+          }
+        ],
+        "hangMucGoiY": "an_uong",
+        "doTinCay": "cao",
+        "ghiChu": [],
+        "status": "can_xac_nhan",
+        "khopCacDong": true,
+        "chenhLechVND": 0,
+        "canhBao": []
+      },
+      "errors": [],
+      "dangerous": false,
+      "ms": 4814,
+      "isCorrect": true
+    },
+    {
+      "file": "b02_cafe.jpg",
+      "extraction": {
+        "laChungTu": true,
+        "loaiChungTu": "hoa_don",
+        "tenCuaHang": "CÀ PHÊ GÓC PHỐ (mẫu)",
+        "ngay": "2026-09-21",
+        "tongTienVND": 108000,
+        "tamTinhVND": 128000,
+        "giamGiaVND": 20000,
+        "phuThuVND": null,
+        "thueVND": null,
+        "dongChiTiet": [
+          {
+            "ten": "Cà phê sữa đá",
+            "soLuong": 2,
+            "thanhTienVND": 58000
+          },
+          {
+            "ten": "Bánh flan",
+            "soLuong": 1,
+            "thanhTienVND": 25000
+          },
+          {
+            "ten": "Trà đào",
+            "soLuong": 1,
+            "thanhTienVND": 45000
+          }
+        ],
+        "hangMucGoiY": "an_uong",
+        "doTinCay": "cao",
+        "ghiChu": [],
+        "status": "can_xac_nhan",
+        "khopCacDong": true,
+        "chenhLechVND": 0,
+        "canhBao": []
+      },
+      "errors": [],
+      "dangerous": false,
+      "ms": 9631,
+      "isCorrect": true
+    }
+  ]
+}

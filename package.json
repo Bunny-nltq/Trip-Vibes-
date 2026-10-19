@@ -13,13 +13,19 @@
     "try:plan": "tsx eval/try-plan.ts",
     "eval:repair": "tsx eval/run-repair.ts",
     "eval:bill": "tsx eval/run-bill.ts",
+    "eval:data": "tsx eval/run-data.ts",
+    "data:refresh": "tsx scripts/data-refresh.ts",
+    "data:snapshot": "tsx scripts/data-snapshot.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@google/genai": "^1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.54.0",
     "next": "16.3.8",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "tailwind-merge": "^3.7.0",
     "zod": "^3"
   },
   "devDependencies": {

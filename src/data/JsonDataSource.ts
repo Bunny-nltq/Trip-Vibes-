@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
 import { HotelSchema, TransportSchema, ActivitySchema } from "@/contracts";
-import type { Hotel, Transport, Activity } from "@/contracts";
+import type { Hotel, Transport, Activity, KhachSan, QuanAn, Cafe } from "@/contracts";
 import type { DataSource } from "./DataSource";
 
 /**
@@ -14,6 +14,14 @@ export class JsonDataSource implements DataSource {
   constructor(mockDir?: string) {
     this.mockDir =
       mockDir ?? path.join(process.cwd(), "src", "data", "mock");
+  }
+
+  getMode(): string {
+    return "mock";
+  }
+
+  getNgayLay(): string {
+    return new Date().toISOString();
   }
 
   private async readJson<T>(filename: string): Promise<T> {
@@ -35,5 +43,18 @@ export class JsonDataSource implements DataSource {
   async getActivities(): Promise<Activity[]> {
     const raw = await this.readJson<unknown[]>("activities.json");
     return raw.map((item) => ActivitySchema.parse(item));
+  }
+
+  /** Mock: không có dữ liệu live */
+  async getKhachSans(): Promise<KhachSan[]> {
+    return [];
+  }
+
+  async getQuanAns(): Promise<QuanAn[]> {
+    return [];
+  }
+
+  async getCafes(): Promise<Cafe[]> {
+    return [];
   }
 }
