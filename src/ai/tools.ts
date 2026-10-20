@@ -20,6 +20,9 @@ export interface ToolContext {
   seenIds: Set<string>;
   /** ID hợp lệ: bao gồm cả quán ăn và cafe trong lần chạy này */
   validFoodIds: Set<string>;
+  allowedTransportDiIds?: Set<string>;
+  allowedTransportVeIds?: Set<string>;
+  allowedHotelIds?: Set<string>;
 }
 
 // ─── KHAI BÁO CÔNG CỤ ────────────────────────────────────────────────────────
@@ -218,6 +221,12 @@ export async function executeTimPhuongTien(
   const allTransports = await ctx.dataSource.getTransports();
   const filtered = allTransports.filter((t) => {
     if (t.huong !== args.huong) return false;
+    if (args.huong === "di" && ctx.allowedTransportDiIds && !ctx.allowedTransportDiIds.has(t.id)) {
+      return false;
+    }
+    if (args.huong === "ve" && ctx.allowedTransportVeIds && !ctx.allowedTransportVeIds.has(t.id)) {
+      return false;
+    }
     if (args.toiDaGiaNguoi !== undefined && t.pricePerPerson > args.toiDaGiaNguoi)
       return false;
     if (args.loai && args.loai.length > 0 && !args.loai.includes(t.type))
@@ -267,6 +276,7 @@ export async function executeTimKhachSan(
   if (liveDS && liveDS.getMode() !== "mock") {
     const khachSans = await liveDS.getKhachSans();
     const filtered = khachSans.filter((h) => {
+      if (ctx.allowedHotelIds && !ctx.allowedHotelIds.has(h.id)) return false;
       if (args.saoToiThieu !== undefined && h.soSao !== null && h.soSao < args.saoToiThieu) return false;
       if (args.khuVuc) {
         const areaNorm = removeVietnameseDiacritics(h.khuVuc);
@@ -311,6 +321,7 @@ export async function executeTimKhachSan(
   // Fallback mock
   const allHotels = await ctx.dataSource.getHotels();
   const filtered = allHotels.filter((h) => {
+    if (ctx.allowedHotelIds && !ctx.allowedHotelIds.has(h.id)) return false;
     if (args.toiDaGiaDem !== undefined && h.pricePerNight > args.toiDaGiaDem)
       return false;
     if (args.saoToiThieu !== undefined && h.stars < args.saoToiThieu)

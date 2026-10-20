@@ -71,6 +71,8 @@ function getLyDoDuPhongText(lyDo?: string): string {
       return "lỗi kết nối mạng tới dịch vụ AI";
     case "ai_khong_sua_duoc_ngan_sach":
       return "AI không cân đối được chi phí trong ngân sách";
+    case "vuot_so_luot_goi_ai":
+      return "đã đạt số lượt tương tác AI tối đa cho phép";
     default:
       return "AI không thể hoàn tất kế hoạch";
   }

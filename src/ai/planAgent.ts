@@ -27,8 +27,9 @@ import {
   AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA,
   NGUOI_MOI_PHONG,
 } from "@/core/assumptions";
+import { locUngVienTheoNganSach } from "@/core/locUngVienTheoNganSach";
 
-export const AGENT_PROMPT_VERSION = "v3";
+export const AGENT_PROMPT_VERSION = "v4";
 export const AGENT_MAX_STEPS = 10;
 export const GEMINI_CALL_TIMEOUT_MS = 20_000;
 
@@ -71,6 +72,8 @@ NGUYÊN TẮC BẮT BUỘC:
 1. Bạn CHỈ ĐƯỢC CHỌN MÃ ID từ dữ liệu do các công cụ tìm kiếm trả về trong phiên này. Tuyệt đối KHÔNG tự tạo ID, giá, đánh giá hay bịa bất kỳ thông tin nào.
 2. Mọi phép tính tiền, số phòng, thời gian do hệ thống (code core) tính. Bạn chỉ xem con số do công cụ cung cấp (tongTienChoNhom, tongTienLuuTru).
 3. KHÔNG TỰ ĐIỀN số sao Google hay điểm đánh giá – chỉ dùng thông tin trong kết quả công cụ.
+4. TẤT CẢ ứng viên phương tiện và khách sạn trong công cụ tìm kiếm đã được lọc trước theo ngân sách (chỉ chứa các mục khả thi để không bị vượt ngân sách).
+5. Hãy ưu tiên chọn phương án phù hợp sở thích của khách hàng và có thời gian di chuyển ngắn.
 
 QUY TRÌNH LÀM VIỆC (thực hiện TUẦN TỰ):
   Bước 1: Gọi timPhuongTien cho chiều "di" và chiều "ve".
@@ -112,6 +115,12 @@ export interface PlanAgentOptions {
   sharedFoodIds?: Set<string>;
   timeBudgetMs?: number;
   startTimeOverall?: number;
+  maxAICallsOverall?: number;
+  currentAICallsCount?: number;
+  allowedTransportDiIds?: Set<string>;
+  allowedTransportVeIds?: Set<string>;
+  allowedHotelIds?: Set<string>;
+  toiThieuVND?: number;
 }
 
 /**
@@ -149,6 +158,30 @@ export async function runPlanAgent(
   const soPhong = Math.ceil(soNguoi / NGUOI_MOI_PHONG);
   const anUongDuKien = AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA * 2 * soNguoi * soNgay;
 
+  let allowedDi = options?.allowedTransportDiIds;
+  let allowedVe = options?.allowedTransportVeIds;
+  let allowedH = options?.allowedHotelIds;
+  let toiThieuVND = options?.toiThieuVND;
+
+  if (!allowedDi || !allowedVe || !allowedH) {
+    const [allTr, allKs, allH] = await Promise.all([
+      liveDataSource ? liveDataSource.getTransports() : dataSource.getTransports(),
+      liveDataSource && liveDataSource.getMode() !== "mock"
+        ? liveDataSource.getKhachSans()
+        : Promise.resolve([]),
+      dataSource.getHotels(),
+    ]);
+    const locRes = locUngVienTheoNganSach(request, {
+      transports: allTr,
+      hotels: allH,
+      khachSans: allKs,
+    });
+    allowedDi = new Set(locRes.phuongTienDi.map((t) => t.id));
+    allowedVe = new Set(locRes.phuongTienVe.map((t) => t.id));
+    allowedH = new Set(locRes.khachSan.map((h) => h.id));
+    toiThieuVND = locRes.toiThieuVND;
+  }
+
   const ctx: ToolContext = {
     dataSource,
     liveDataSource,
@@ -158,6 +191,9 @@ export async function runPlanAgent(
     soPhong,
     seenIds: options?.sharedSeenIds ?? new Set<string>(),
     validFoodIds: options?.sharedFoodIds ?? new Set<string>(),
+    allowedTransportDiIds: allowedDi,
+    allowedTransportVeIds: allowedVe,
+    allowedHotelIds: allowedH,
   };
 
   const allowAgentCache = process.env.NO_AGENT_CACHE !== "1";
@@ -237,12 +273,20 @@ export async function runPlanAgent(
   const tenDiemDi = typeof request.diemDi === "string" ? request.diemDi : request.diemDi.ten;
   const tenDiemDen = getDiemDenTen(request.diemDen);
 
+  const minCost = toiThieuVND ?? 0;
+  const nganSachConLai = request.ngansachTongVND
+    ? Math.max(0, request.ngansachTongVND - minCost)
+    : 0;
+
   let userPrompt = `Yêu cầu du lịch của khách hàng:
 - Điểm đi: ${tenDiemDi}
 - Điểm đến: ${tenDiemDen}
 - Số ngày: ${soNgay} ngày (${soDem} đêm)
 - Số người: ${soNguoi} người (${soPhong} phòng)
 - Ngân sách tổng: ${request.ngansachTongVND ? request.ngansachTongVND.toLocaleString("vi-VN") + " VND" : "Chưa có"}
+- Mức chi phí tối thiểu ước tính: ${minCost.toLocaleString("vi-VN")} VND
+- Ngân sách còn lại ước tính cho hoạt động và ăn uống: ${nganSachConLai.toLocaleString("vi-VN")} VND
+- Lưu ý quan trọng: TẤT CẢ ứng viên phương tiện và khách sạn trả về từ công cụ đã được lọc trước theo ngân sách. Hãy ưu tiên chọn theo sở thích và thời gian di chuyển ngắn.
 - Chi phí ăn uống dự kiến (ước tính, 2 bữa/ngày): ${anUongDuKien.toLocaleString("vi-VN")} VND
 - Sở thích: ${request.sothich.length > 0 ? request.sothich.join(", ") : "Không nêu cụ thể"}
 - Điều cần tránh: ${request.tranh.length > 0 ? request.tranh.join(", ") : "Không nêu cụ thể"}
@@ -284,6 +328,12 @@ Chỉ thị:
   let steps = 0;
 
   while (steps < AGENT_MAX_STEPS && !selection) {
+    const maxCalls = options?.maxAICallsOverall ?? (Number(process.env.PLAN_MAX_AI_CALLS) || 8);
+    const prevCalls = options?.currentAICallsCount ?? 0;
+    if (prevCalls + soLanGoiAI >= maxCalls) {
+      throw new Error("vuot_so_luot_goi_ai: Đã đạt giới hạn tối đa số lượt gọi AI (PLAN_MAX_AI_CALLS)");
+    }
+
     steps++;
     console.log(`[PlanAgent] Step ${steps}: Sending request to Gemini (${provider.modelName})...`);
 

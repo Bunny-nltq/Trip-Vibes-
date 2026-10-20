@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { planWithRepair } from "./planWithRepair";
+import { executeTimKhachSan } from "./tools";
+import { locUngVienTheoNganSach } from "@/core/locUngVienTheoNganSach";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
 import type { TripRequest, Transport, Hotel, Activity, KhachSan, QuanAn, Cafe, HoatDong } from "@/contracts";
 
@@ -59,7 +61,7 @@ describe("planWithRepair - Tích hợp giới hạn thời gian & dự phòng qu
     {
       id: "H1",
       name: "Khách sạn đắt",
-      pricePerNight: 8_000_000,
+      pricePerNight: 2_200_000,
       source: "test",
     },
     {
@@ -99,7 +101,7 @@ describe("planWithRepair - Tích hợp giới hạn thời gian & dự phòng qu
       id: "H1",
       ten: "Khách sạn đắt",
       soSao: 5,
-      khoangGiaDemVND: { min: 8_000_000, max: 8_000_000 },
+      khoangGiaDemVND: { min: 2_200_000, max: 2_200_000 },
       giaUocTinhNguoi: null,
       giaLaUocTinh: false,
       nguon: "osm:124",
@@ -338,7 +340,7 @@ describe("planWithRepair - Tích hợp giới hạn thời gian & dự phòng qu
                   name: "chotKeHoach",
                   args: {
                     transportDiId: "PT_A",
-                    transportVeId: "PT_D",
+                    transportVeId: "PT_C",
                     hotelId: "H1",
                     hoatDongTheoNgay: [[], [], []],
                   },
@@ -407,6 +409,93 @@ describe("planWithRepair - Tích hợp giới hạn thời gian & dự phòng qu
     const lowBudgetReq: TripRequest = {
       ...baseRequest,
       ngansachTongVND: 5_000_000, // Tối thiểu là 6.900.000
+    };
+
+    const generateFn = vi.fn();
+    const mockProvider = {
+      modelName: "test-model",
+      client: {
+        models: {
+          generateContent: generateFn,
+        },
+      },
+    } as any;
+
+    const result = await planWithRepair(lowBudgetReq, { provider: mockProvider });
+
+    expect(result.status).toBe("khong_the_dat_ngan_sach");
+    expect(result.soLanGoiAI).toBe(0);
+    expect(generateFn).not.toHaveBeenCalled();
+  });
+
+  it("Bước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8", async () => {
+    let callCount = 0;
+    const mockProvider = {
+      modelName: "test-model",
+      client: {
+        models: {
+          generateContent: vi.fn().mockImplementation(async () => {
+            callCount++;
+            return {
+              candidates: [{ content: { parts: [] } }],
+              functionCalls: [
+                { name: "timPhuongTien", args: { huong: "di" } },
+              ],
+            };
+          }),
+        },
+      },
+    } as any;
+
+    const result = await planWithRepair(baseRequest, { provider: mockProvider });
+
+    expect(result.phuongThucLap).toBe("quy_tac");
+    expect(result.lyDoDuPhong).toBe("vuot_so_luot_goi_ai");
+    expect(result.soLanGoiAI).toBe(8);
+    expect(callCount).toBe(8);
+  });
+
+  it("Bước 14 (b) công cụ timKhachSan với ngân sách 7.500.000 và ứng viên ở mục 1 chỉ trả [H2]", async () => {
+    const req = { ...baseRequest, ngansachTongVND: 7_500_000 };
+    const testTransports = [
+      { id: "PT_A", huong: "di", pricePerPerson: 980_000, departureTime: "06:30", durationMinutes: 85, type: "PLANE" },
+      { id: "PT_B", huong: "di", pricePerPerson: 1_350_000, departureTime: "09:15", durationMinutes: 85, type: "PLANE" },
+      { id: "PT_C", huong: "ve", pricePerPerson: 980_000, departureTime: "18:00", durationMinutes: 85, type: "PLANE" },
+      { id: "PT_D", huong: "ve", pricePerPerson: 790_000, departureTime: "22:40", durationMinutes: 85, type: "PLANE" },
+    ];
+    const testHotels = [
+      { id: "H1", name: "Khách sạn H1", pricePerNight: 1_100_000, stars: 4, area: "Đà Lạt" },
+      { id: "H2", name: "Khách sạn H2", pricePerNight: 780_000, stars: 3, area: "Đà Lạt" },
+    ];
+
+    const ctx: any = {
+      dataSource: {
+        getTransports: vi.fn().mockResolvedValue(testTransports),
+        getHotels: vi.fn().mockResolvedValue(testHotels),
+      },
+      liveDataSource: undefined,
+      soNguoi: 2,
+      soNgay: 3,
+      soDem: 2,
+      soPhong: 1,
+      seenIds: new Set(),
+      validFoodIds: new Set(),
+    };
+
+    const locRes = locUngVienTheoNganSach(req, {
+      transports: testTransports as any,
+      hotels: testHotels as any,
+    });
+    ctx.allowedHotelIds = new Set(locRes.khachSan.map((h) => h.id));
+
+    const result = await executeTimKhachSan({}, ctx);
+    expect(result.map((h) => h.id)).toEqual(["H2"]);
+  });
+
+  it("Bước 14 (c) khaThi false thì KHÔNG gọi provider (soLanGoiAI = 0) và trả khong_the_dat_ngan_sach", async () => {
+    const lowBudgetReq: TripRequest = {
+      ...baseRequest,
+      ngansachTongVND: 6_800_000,
     };
 
     const generateFn = vi.fn();

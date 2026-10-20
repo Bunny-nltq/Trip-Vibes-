@@ -1,0 +1,67 @@
+{
+  "summary": {
+    "ngay": "2026-10-20",
+    "tongSoKichBan": 10,
+    "soKichBanDaChay": 3,
+    "dungSomDo429": true,
+    "aiHopLeNgayLanDau": "0/3",
+    "aiHopLeSauSua": "2/3",
+    "phaiDuPhong": "1/3",
+    "lyDoDuPhong": [
+      "het_luot_ai"
+    ],
+    "trungBinhSoLuotGemini": 4.7,
+    "tongSoLuotGeminiDaDung": 14,
+    "msTrungBinh": 12612
+  },
+  "scenarios": [
+    {
+      "stt": 1,
+      "diemDen": "Đà Nẵng",
+      "heSo": "1.3x",
+      "ngansachTongVND": 7500000,
+      "phuongThucLap": "ai",
+      "lyDoDuPhong": "",
+      "soLanGoiAI": 8,
+      "ms": 16391,
+      "tongVND": 6044000,
+      "phanTramNganSach": "80.6%",
+      "oHoatDong": "3/4",
+      "tongThoiGianDiChuyen": 1334,
+      "soVongSua": 1,
+      "status": "ok"
+    },
+    {
+      "stt": 2,
+      "diemDen": "Đà Nẵng",
+      "heSo": "2.0x",
+      "ngansachTongVND": 11500000,
+      "phuongThucLap": "ai",
+      "lyDoDuPhong": "",
+      "soLanGoiAI": 3,
+      "ms": 9352,
+      "tongVND": 8688400,
+      "phanTramNganSach": "75.6%",
+      "oHoatDong": "3/4",
+      "tongThoiGianDiChuyen": 278,
+      "soVongSua": 1,
+      "status": "ok"
+    },
+    {
+      "stt": 3,
+      "diemDen": "Hà Nội",
+      "heSo": "1.3x",
+      "ngansachTongVND": 10200000,
+      "phuongThucLap": "quy_tac",
+      "lyDoDuPhong": "het_luot_ai",
+      "soLanGoiAI": 3,
+      "ms": 12093,
+      "tongVND": 7774000,
+      "phanTramNganSach": "76.2%",
+      "oHoatDong": "3/4",
+      "tongThoiGianDiChuyen": 2494,
+      "soVongSua": 1,
+      "status": "ok"
+    }
+  ]
+}
