@@ -314,8 +314,13 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
 
     // Kiểm tra xem kịch bản đã có trong tiến trình lưu trước chưa
     // Với test chạy options.planFn thì cho phép khớp p.stt, với chạy thực tế thì chỉ khớp đúng hashKey (v2)
-    const isV2Match = (p: ProgressRecord) =>
-      p.hashKey === hashKey || (Boolean(options.planFn) && p.stt === sc.stt);
+    const isV2Match = (p: ProgressRecord) => {
+      if (p.hashKey === hashKey) return true;
+      if (options.planFn && !p.hashKey.includes("legacy") && !p.hashKey.includes("v1")) {
+        return p.stt === sc.stt;
+      }
+      return false;
+    };
     const existingRecord = progressRecords.find(isV2Match);
     const legacyRecord = !existingRecord ? progressRecords.find((p) => p.stt === sc.stt) : null;
 
@@ -342,6 +347,7 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
           ...legacyRecord.scenarioResult,
           stt: sc.stt,
           nguonKetQua: "CŨ (quy tắc v1)",
+          oHoatDong: "(luật cũ)",
           hashKey: legacyRecord.hashKey,
         });
         continue;
@@ -478,38 +484,47 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
     }
   }
 
-  // Tổng hợp thống kê
+  // Tách kết quả quy tắc hiện tại và kết quả cũ
   const validRuns = results.filter((r) => !r.boQua);
-  const totalRuns = validRuns.length;
-  const numFirstOk = validRuns.filter(
+  const currentRuns = validRuns.filter((r) => r.nguonKetQua !== "CŨ (quy tắc v1)");
+  const oldRuns = validRuns.filter((r) => r.nguonKetQua === "CŨ (quy tắc v1)");
+
+  const totalRuns = currentRuns.length;
+  const numFirstOk = currentRuns.filter(
     (r) => r.phuongThucLap === "ai" && r.soVongSua === 0 && r.status === "ok"
   ).length;
-  const numRepairedOk = validRuns.filter(
+  const numRepairedOk = currentRuns.filter(
     (r) => r.phuongThucLap === "ai" && r.soVongSua > 0 && r.status === "ok"
   ).length;
-  const numFallback = validRuns.filter((r) => r.phuongThucLap === "quy_tac").length;
-  const fallbackReasons = validRuns
+  const numFallback = currentRuns.filter((r) => r.phuongThucLap === "quy_tac").length;
+  const fallbackReasons = currentRuns
     .filter((r) => r.phuongThucLap === "quy_tac")
     .map((r) => r.lyDoDuPhong);
 
-  const totalAICalls = validRuns.reduce((acc, r) => acc + r.soLanGoiAI, 0);
+  const totalAICalls = currentRuns.reduce((acc, r) => acc + r.soLanGoiAI, 0);
   const avgAICalls = totalRuns > 0 ? (totalAICalls / totalRuns).toFixed(1) : "0";
-  const totalMs = validRuns.reduce((acc, r) => acc + r.ms, 0);
+  const totalMs = currentRuns.reduce((acc, r) => acc + r.ms, 0);
   const avgMs = totalRuns > 0 ? Math.round(totalMs / totalRuns) : 0;
 
-  const summary = {
+  const summary: any = {
     ngay: dateStr,
     tongSoKichBan: scenarios.length,
     soKichBanDaChay: totalRuns,
     dungSomDo429: stopDueTo429,
-    aiHopLeNgayLanDau: `${numFirstOk}/${totalRuns}`,
-    aiHopLeSauSua: `${numRepairedOk}/${totalRuns}`,
-    phaiDuPhong: `${numFallback}/${totalRuns}`,
-    lyDoDuPhong: fallbackReasons,
-    trungBinhSoLuotGemini: Number(avgAICalls),
-    tongSoLuotGeminiDaDung: totalAICalls,
-    msTrungBinh: avgMs,
+    soKichBanCu: oldRuns.length,
   };
+
+  if (totalRuns === 0) {
+    summary.thongBao = "0/10 kịch bản đã chạy với quy tắc hiện tại. CHƯA CÓ KẾT QUẢ";
+  } else {
+    summary.aiHopLeNgayLanDau = `${numFirstOk}/${totalRuns}`;
+    summary.aiHopLeSauSua = `${numRepairedOk}/${totalRuns}`;
+    summary.phaiDuPhong = `${numFallback}/${totalRuns}`;
+    summary.lyDoDuPhong = fallbackReasons;
+    summary.trungBinhSoLuotGemini = Number(avgAICalls);
+    summary.tongSoLuotGeminiDaDung = totalAICalls;
+    summary.msTrungBinh = avgMs;
+  }
 
   const payload = {
     summary,
@@ -524,44 +539,75 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
     console.log("================================================================================");
   }
 
-  console.log("\n================================================================================");
-  console.log(`BẢNG KẾT QUẢ KỊCH BẢN (${totalRuns}/10 kịch bản đã chạy):`);
-  console.log("================================================================================");
-  console.table(
-    results.map((r) => ({
-      STT: r.stt,
-      "Điểm đến": r.diemDen,
-      Hệ: r.heSo,
-      "Ngân sách": r.ngansachTongVND.toLocaleString("vi-VN"),
-      "Phương thức": r.phuongThucLap,
-      "Lý do": r.lyDoDuPhong || "-",
-      "Lượt AI": r.soLanGoiAI,
-      "Tổng VND": r.tongVND.toLocaleString("vi-VN"),
-      "% NS": r.phanTramNganSach,
-      Ô: r.oHoatDong,
-      "Di chuyển": `${r.tongThoiGianDiChuyen}p`,
-      "Tỉ lệ DC": r.tiLeThoiGianDiChuyen,
-      "CB nhẹ": r.soCanhBaoNhe,
-      Nguồn: r.nguonKetQua ?? "mới",
-      ms: r.ms,
-    }))
-  );
+  if (oldRuns.length > 0) {
+    console.log("\n================================================================================");
+    console.log("Kết quả cũ, không dùng:");
+    console.log("================================================================================");
+    console.table(
+      oldRuns.map((r) => ({
+        STT: r.stt,
+        "Điểm đến": r.diemDen,
+        Hệ: r.heSo,
+        "Ngân sách": r.ngansachTongVND.toLocaleString("vi-VN"),
+        "Phương thức": r.phuongThucLap,
+        "Lý do": r.lyDoDuPhong || "-",
+        "Lượt AI": r.soLanGoiAI,
+        "Tổng VND": r.tongVND.toLocaleString("vi-VN"),
+        "% NS": r.phanTramNganSach,
+        Ô: "(luật cũ)",
+        "Di chuyển": `${r.tongThoiGianDiChuyen}p`,
+        "Tỉ lệ DC": r.tiLeThoiGianDiChuyen,
+        "CB nhẹ": r.soCanhBaoNhe,
+        Nguồn: r.nguonKetQua,
+        ms: r.ms,
+      }))
+    );
+  }
+
+  if (currentRuns.length > 0) {
+    console.log("\n================================================================================");
+    console.log(`BẢNG KẾT QUẢ KỊCH BẢN (${totalRuns}/10 kịch bản đã chạy với quy tắc hiện tại):`);
+    console.log("================================================================================");
+    console.table(
+      currentRuns.map((r) => ({
+        STT: r.stt,
+        "Điểm đến": r.diemDen,
+        Hệ: r.heSo,
+        "Ngân sách": r.ngansachTongVND.toLocaleString("vi-VN"),
+        "Phương thức": r.phuongThucLap,
+        "Lý do": r.lyDoDuPhong || "-",
+        "Lượt AI": r.soLanGoiAI,
+        "Tổng VND": r.tongVND.toLocaleString("vi-VN"),
+        "% NS": r.phanTramNganSach,
+        Ô: r.oHoatDong,
+        "Di chuyển": `${r.tongThoiGianDiChuyen}p`,
+        "Tỉ lệ DC": r.tiLeThoiGianDiChuyen,
+        "CB nhẹ": r.soCanhBaoNhe,
+        Nguồn: r.nguonKetQua ?? "mới",
+        ms: r.ms,
+      }))
+    );
+  }
 
   console.log("\n================================================================================");
-  console.log(`TỔNG HỢP (${totalRuns}/10 kịch bản đã chạy):`);
-  if (totalRuns < scenarios.length) {
-    console.log("⚠️ CHƯA ĐỦ MẪU, không dùng làm kết luận");
+  if (totalRuns === 0) {
+    console.log("0/10 kịch bản đã chạy với quy tắc hiện tại. CHƯA CÓ KẾT QUẢ");
+  } else {
+    console.log(`TỔNG HỢP (${totalRuns}/10 kịch bản đã chạy với quy tắc hiện tại):`);
+    if (totalRuns < scenarios.length) {
+      console.log("⚠️ CHƯA ĐỦ MẪU, không dùng làm kết luận");
+    }
+    console.log(`- Số ca AI lập hợp lệ ngay lần đầu: ${summary.aiHopLeNgayLanDau}`);
+    console.log(`- Số ca AI lập hợp lệ sau sửa: ${summary.aiHopLeSauSua}`);
+    console.log(
+      `- Số ca phải dự phòng: ${summary.phaiDuPhong} (${
+        fallbackReasons.length > 0 ? fallbackReasons.join(", ") : "không có"
+      })`
+    );
+    console.log(`- Trung bình số lượt Gemini: ${summary.trungBinhSoLuotGemini}`);
+    console.log(`- Tổng số lượt Gemini đã dùng: ${summary.tongSoLuotGeminiDaDung}`);
+    console.log(`- ms trung bình: ${summary.msTrungBinh} ms`);
   }
-  console.log(`- Số ca AI lập hợp lệ ngay lần đầu: ${summary.aiHopLeNgayLanDau}`);
-  console.log(`- Số ca AI lập hợp lệ sau sửa: ${summary.aiHopLeSauSua}`);
-  console.log(
-    `- Số ca phải dự phòng: ${summary.phaiDuPhong} (${
-      fallbackReasons.length > 0 ? fallbackReasons.join(", ") : "không có"
-    })`
-  );
-  console.log(`- Trung bình số lượt Gemini: ${summary.trungBinhSoLuotGemini}`);
-  console.log(`- Tổng số lượt Gemini đã dùng: ${summary.tongSoLuotGeminiDaDung}`);
-  console.log(`- ms trung bình: ${summary.msTrungBinh} ms`);
   console.log(`- Tiến trình đã lưu tại: ${progressFilePath}`);
   console.log(`- Báo cáo kết quả tại: ${resultFilePath}`);
   console.log("================================================================================\n");

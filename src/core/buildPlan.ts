@@ -18,8 +18,10 @@ import {
   HOTEL_GIA_MAC_DINH,
   NGUOI_MOI_PHONG,
   SO_HOAT_DONG_TOI_DA_MOI_NGAY,
+  GIO_HOAT_DONG_1,
+  GIO_HOAT_DONG_2,
 } from "./assumptions";
-import { mealTimeOrNull, hhmm2min } from "./mealTimes";
+import { mealTimeOrNull, hhmm2min, min2hhmm } from "./mealTimes";
 import { gioOHoatDongNgayDau } from "./gioONgayDau";
 
 export interface PlanData {
@@ -335,14 +337,14 @@ export function buildPlan(
       const thanhTienAct = donGiaVe * soNguoi;
       let gioDanhNghia: string;
       if (day === 1) {
-        if (request?.schemaVersion != null && request.schemaVersion < 7) {
-          gioDanhNghia = actIdx === 0 ? "09:30" : "15:30";
+        const slotNgay1 = gioOHoatDongNgayDau(gioDenNgay1Phut);
+        if (actIdx === 0) {
+          gioDanhNghia = slotNgay1 ? min2hhmm(slotNgay1) : min2hhmm(GIO_HOAT_DONG_1);
         } else {
-          const slotNgay1 = gioOHoatDongNgayDau(gioDenNgay1Phut);
-          gioDanhNghia = slotNgay1 === 930 ? "15:30" : "09:30";
+          gioDanhNghia = min2hhmm(GIO_HOAT_DONG_2);
         }
       } else {
-        gioDanhNghia = actIdx === 0 ? "09:30" : "15:30";
+        gioDanhNghia = actIdx === 0 ? min2hhmm(GIO_HOAT_DONG_1) : min2hhmm(GIO_HOAT_DONG_2);
       }
       const tenAct = (act as any).ten || (act as any).name || "Hoạt động";
       const actAny = act as any;

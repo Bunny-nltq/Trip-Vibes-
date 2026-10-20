@@ -550,4 +550,119 @@ describe("validatePlan", () => {
       expect(testVe(1320, 120)).toBe(true);
     });
   });
+
+  describe("Giờ dạng HH:MM trong cảnh báo (Bước 17)", () => {
+    it("gioDen 1087 cho chuỗi chứa 18:07 (ngay_dau_den_muon)", () => {
+      const req: TripRequest = {
+        schemaVersion: 9,
+        diemDi: "TP.HCM",
+        diemDen: "Đà Nẵng",
+        soNguoi: 2,
+        soNgay: 3,
+        ngansachTongVND: 15000000,
+        sothich: [],
+        tranh: [],
+        ghiChu: [],
+        thieu: [],
+        cauHoiLamRo: [],
+        canhBao: [],
+      };
+      const tDi: any = {
+        id: "T_DI_1087",
+        huong: "di",
+        departureTime: "17:07",
+        durationMinutes: 60, // 17:07 + 60 = 18:07 (1087 phút)
+        pricePerPerson: 100000,
+      };
+      const tVe: any = {
+        id: "T_VE",
+        huong: "ve",
+        departureTime: "18:00",
+        durationMinutes: 60,
+        pricePerPerson: 100000,
+      };
+      const plan: any = {
+        schemaVersion: 9,
+        request: req,
+        items: [
+          { hangMuc: "Di chuyển", refId: "T_DI_1087", ngay: 1 },
+          { hangMuc: "Di chuyển", refId: "T_VE", ngay: 3 },
+          { hangMuc: "Vui chơi", refId: "A1", ngay: 1 },
+        ],
+        tongKet: {
+          tongVND: 1000000,
+          conLaiVND: 14000000,
+          theoHangMuc: {},
+          tongThoiGianDiChuyenPhut: 120,
+          trangThaiNganSach: "trong",
+        },
+        canhBao: [],
+      };
+      const mockData: any = {
+        transports: [tDi, tVe],
+        hotels: [],
+        activities: [{ id: "A1", ten: "Hoạt động A1", thoiLuongPhut: 60 }],
+      };
+      const res = validatePlan(req, plan, mockData);
+      const v = res.hard.find((h) => h.code === "ngay_dau_den_muon");
+      expect(v).toBeDefined();
+      expect(v?.chiTiet).toContain("18:07");
+    });
+
+    it("gioDen 619 cho chuỗi chứa 10:19 (den_truoc_gio_nhan_phong)", () => {
+      const req: TripRequest = {
+        schemaVersion: 9,
+        diemDi: "TP.HCM",
+        diemDen: "Đà Nẵng",
+        soNguoi: 2,
+        soNgay: 3,
+        ngansachTongVND: 15000000,
+        sothich: [],
+        tranh: [],
+        ghiChu: [],
+        thieu: [],
+        cauHoiLamRo: [],
+        canhBao: [],
+      };
+      const tDi: any = {
+        id: "T_DI_619",
+        huong: "di",
+        departureTime: "08:54",
+        durationMinutes: 85, // 08:54 + 85 = 10:19 (619 phút)
+        pricePerPerson: 100000,
+      };
+      const tVe: any = {
+        id: "T_VE",
+        huong: "ve",
+        departureTime: "18:00",
+        durationMinutes: 60,
+        pricePerPerson: 100000,
+      };
+      const plan: any = {
+        schemaVersion: 9,
+        request: req,
+        items: [
+          { hangMuc: "Di chuyển", refId: "T_DI_619", ngay: 1 },
+          { hangMuc: "Di chuyển", refId: "T_VE", ngay: 3 },
+        ],
+        tongKet: {
+          tongVND: 1000000,
+          conLaiVND: 14000000,
+          theoHangMuc: {},
+          tongThoiGianDiChuyenPhut: 145,
+          trangThaiNganSach: "trong",
+        },
+        canhBao: [],
+      };
+      const mockData: any = {
+        transports: [tDi, tVe],
+        hotels: [],
+        activities: [],
+      };
+      const res = validatePlan(req, plan, mockData);
+      const v = res.soft.find((s) => s.code === "den_truoc_gio_nhan_phong");
+      expect(v).toBeDefined();
+      expect(v?.chiTiet).toContain("10:19");
+    });
+  });
 });

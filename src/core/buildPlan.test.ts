@@ -630,5 +630,55 @@ describe("buildPlan – N ngày, Fixture A", () => {
     const resNgayGiua = buildPlan(req3, selNgayGiua3, data);
     expect(resNgayGiua.ok).toBe(false);
   });
+
+  describe("Giờ hoạt động thống nhất (Bước 17)", () => {
+    it("Fixture A, 3 ngày, chiều đi đến 07:55: ngày 1 hoạt động giờ 09:30; ngày 2 hai hoạt động giờ 09:30 và 15:30; ngày 3 giờ 09:30", () => {
+      const data = createMockData();
+      const selection: Selection = {
+        transportDiId: "T_DI", // 06:30 + 85 = 07:55
+        transportVeId: "T_VE",
+        hotelId: "H1",
+        hoatDongTheoNgay: [["A1"], ["A2", "A3"], ["A4"]],
+      };
+      const res = buildPlan(baseRequest, selection, data);
+      expect(res.ok).toBe(true);
+      if (res.ok) {
+        const vuiChoi = res.plan.items.filter((i) => i.hangMuc === "Vui chơi");
+        const actNgay1 = vuiChoi.filter((i) => i.ngay === 1);
+        const actNgay2 = vuiChoi.filter((i) => i.ngay === 2);
+        const actNgay3 = vuiChoi.filter((i) => i.ngay === 3);
+
+        expect(actNgay1[0].gio).toBe("09:30");
+        expect(actNgay2[0].gio).toBe("09:30");
+        expect(actNgay2[1].gio).toBe("15:30");
+        expect(actNgay3[0].gio).toBe("09:30");
+      }
+    });
+
+    it("Với chiều đi đến 10:19: ngày 1 hoạt động giờ 15:30", () => {
+      const data = createMockData();
+      data.transports = [
+        {
+          ...data.transports[0],
+          departureTime: "08:54",
+          durationMinutes: 85, // 08:54 + 85 = 10:19 (619 phút)
+        },
+        data.transports[1],
+      ];
+      const selection: Selection = {
+        transportDiId: "T_DI",
+        transportVeId: "T_VE",
+        hotelId: "H1",
+        hoatDongTheoNgay: [["A1"], ["A2", "A3"], ["A4"]],
+      };
+      const res = buildPlan(baseRequest, selection, data);
+      expect(res.ok).toBe(true);
+      if (res.ok) {
+        const vuiChoi = res.plan.items.filter((i) => i.hangMuc === "Vui chơi");
+        const actNgay1 = vuiChoi.filter((i) => i.ngay === 1);
+        expect(actNgay1[0].gio).toBe("15:30");
+      }
+    });
+  });
 });
 

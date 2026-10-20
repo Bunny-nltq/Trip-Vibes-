@@ -12,6 +12,7 @@ import {
 } from "./assumptions";
 import { coCanhBaoDiChuyen, tiLeThoiGianDiChuyen } from "./tiLeDiChuyen";
 import { gioOHoatDongNgayDau } from "./gioONgayDau";
+import { min2hhmm } from "./mealTimes";
 
 export interface Violation {
   code: string;
@@ -89,7 +90,7 @@ export function validatePlan(
     if (flagsDi.gioDen < GIO_NHAN_PHONG) {
       soft.push({
         code: "den_truoc_gio_nhan_phong",
-        chiTiet: `Giờ đến (${flagsDi.gioDen}) sớm hơn giờ nhận phòng (${GIO_NHAN_PHONG}).`,
+        chiTiet: `Giờ đến (${min2hhmm(gioDenDiPhut)}) sớm hơn giờ nhận phòng (${GIO_NHAN_PHONG}).`,
       });
     }
 
@@ -190,13 +191,13 @@ export function validatePlan(
       if (gioDenDiPhut + BUFFER_SAU_KHI_DEN_PHUT > gioHoatDong1Phut) {
         hard.push({
           code: "ngay_dau_den_muon",
-          chiTiet: `Đến nơi lúc ${gioDenDiPhut} phút, không kịp tham gia hoạt động thứ nhất.`,
+          chiTiet: `Đến nơi lúc ${min2hhmm(gioDenDiPhut)}, không kịp tham gia hoạt động thứ nhất.`,
         });
       }
     } else if (gioOHoatDongNgayDau(gioDenDiPhut) === null) {
       hard.push({
         code: "ngay_dau_den_muon",
-        chiTiet: `Đến nơi lúc ${gioDenDiPhut} phút, không kịp tham gia hoạt động ngày 1.`,
+        chiTiet: `Đến nơi lúc ${min2hhmm(gioDenDiPhut)}, không còn ô hoạt động nào trong ngày đầu.`,
       });
     }
   }

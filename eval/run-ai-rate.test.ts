@@ -199,4 +199,112 @@ describe("Eval chạy tiếp được (run-ai-rate)", () => {
     );
     expect(savedRecords.length).toBe(2);
   });
+
+  // Bước 17 - (d) chỉ có kết quả CŨ thì tổng hợp ghi 0/10 và không có số x/y nào khác
+  it("(d) chỉ có kết quả CŨ thì tổng hợp ghi 0/10 và không có số x/y nào khác", async () => {
+    const progressFile = path.join(testTempDir, "progress-only-legacy.json");
+    const resultFile = path.join(testTempDir, "result-only-legacy.json");
+
+    const legacyRecords: ProgressRecord[] = [
+      {
+        hashKey: "mock-legacy-v1-kb-1",
+        ngayChay: "2026-10-20",
+        stt: 1,
+        scenarioResult: {
+          stt: 1,
+          diemDen: "Đà Nẵng",
+          heSo: "1.3x",
+          ngansachTongVND: 7500000,
+          phuongThucLap: "ai",
+          lyDoDuPhong: "",
+          soLanGoiAI: 8,
+          ms: 5000,
+          tongVND: 6044000,
+          phanTramNganSach: "80.6%",
+          oHoatDong: "3/3 (tối đa 4)",
+          tongThoiGianDiChuyen: 1334,
+          tiLeThoiGianDiChuyen: "30.9%",
+          soCanhBaoNhe: 0,
+          soVongSua: 1,
+          status: "ok",
+          nguonKetQua: "CŨ (quy tắc v1)",
+        },
+      },
+    ];
+    fs.writeFileSync(progressFile, JSON.stringify(legacyRecords, null, 2), "utf-8");
+
+    const { summary, results } = await runAiRate({
+      progressFilePath: progressFile,
+      resultsFilePath: resultFile,
+      maxNew: 0,
+      sleepBetweenMs: 0,
+    });
+
+    expect(results[0].oHoatDong).toBe("(luật cũ)");
+    expect(summary.soKichBanDaChay).toBe(0);
+    expect(summary.thongBao).toBe("0/10 kịch bản đã chạy với quy tắc hiện tại. CHƯA CÓ KẾT QUẢ");
+    expect(summary.aiHopLeNgayLanDau).toBeUndefined();
+    expect(summary.aiHopLeSauSua).toBeUndefined();
+    expect(summary.phaiDuPhong).toBeUndefined();
+  });
+
+  // Bước 17 - (e) 2 kịch bản v2 và 3 kịch bản cũ thì tổng hợp tính trên 2
+  it("(e) 2 kịch bản v2 và 3 kịch bản cũ thì tổng hợp tính trên 2", async () => {
+    const progressFile = path.join(testTempDir, "progress-v2-and-legacy.json");
+    const resultFile = path.join(testTempDir, "result-v2-and-legacy.json");
+
+    // 3 kịch bản cũ (stt: 1, 2, 3)
+    const legacyRecords: ProgressRecord[] = [1, 2, 3].map((stt) => ({
+      hashKey: `mock-legacy-v1-kb-${stt}`,
+      ngayChay: "2026-10-20",
+      stt,
+      scenarioResult: {
+        stt,
+        diemDen: stt <= 2 ? "Đà Nẵng" : "Hà Nội",
+        heSo: stt % 2 === 1 ? "1.3x" : "2.0x",
+        ngansachTongVND: 7500000,
+        phuongThucLap: "ai",
+        lyDoDuPhong: "",
+        soLanGoiAI: 3,
+        ms: 5000,
+        tongVND: 6044000,
+        phanTramNganSach: "80.6%",
+        oHoatDong: "3/3 (tối đa 4)",
+        tongThoiGianDiChuyen: 1334,
+        tiLeThoiGianDiChuyen: "30.9%",
+        soCanhBaoNhe: 0,
+        soVongSua: 1,
+        status: "ok",
+        nguonKetQua: "CŨ (quy tắc v1)",
+      },
+    }));
+    fs.writeFileSync(progressFile, JSON.stringify(legacyRecords, null, 2), "utf-8");
+
+    let newCount = 0;
+    const mockPlanFn = vi.fn().mockImplementation(async () => {
+      newCount++;
+      return createMockPlanResult(newCount);
+    });
+
+    const { summary, results } = await runAiRate({
+      progressFilePath: progressFile,
+      resultsFilePath: resultFile,
+      maxNew: 2,
+      planFn: mockPlanFn,
+      sleepBetweenMs: 0,
+    });
+
+    // 2 kịch bản v2 mới được chạy
+    expect(mockPlanFn).toHaveBeenCalledTimes(2);
+    // Kịch bản 3 có kết quả cũ
+    const legacyItem = results.find((r) => r.stt === 3);
+    expect(legacyItem).toBeDefined();
+    expect(legacyItem?.oHoatDong).toBe("(luật cũ)");
+
+    // Tổng hợp tính trên 2
+    expect(summary.soKichBanDaChay).toBe(2);
+    expect(summary.aiHopLeNgayLanDau).toBe("2/2");
+    expect(summary.aiHopLeSauSua).toBe("0/2");
+    expect(summary.phaiDuPhong).toBe("0/2");
+  });
 });
