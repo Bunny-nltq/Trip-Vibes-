@@ -43,6 +43,8 @@ describe("snapshotAudit - Chống dữ liệu dựng sẵn", () => {
         id: "tr_01",
         provider: "VietJet Air",
         nguon: "https://www.vietjetair.com",
+        doTinCay: "xac_minh",
+        nguonGia: ["https://www.vietjetair.com"],
       },
     ],
   };
@@ -149,11 +151,51 @@ describe("snapshotAudit - Chống dữ liệu dựng sẵn", () => {
     expect(res.errors).toEqual([]);
   });
 
+  it("quy tắc nguồn trung thực: uoc_luong, null, web url với uoc_tinh, osm node", () => {
+    // (a) "uoc_luong:khoang_cach:605km" hợp lệ
+    expect(isValidNguon("uoc_luong:khoang_cach:605km")).toBe(true);
+    // (b) nguon null thất bại
+    expect(isValidNguon(null)).toBe(false);
+    // (c) "https://www.vietnamairlines.com" kèm doTinCay "uoc_tinh" và nguonGia rỗng thất bại
+    expect(
+      isValidNguon("https://www.vietnamairlines.com", {
+        doTinCay: "uoc_tinh",
+        nguonGia: [],
+      })
+    ).toBe(false);
+    // (d) "osm:node:123" hợp lệ
+    expect(isValidNguon("osm:node:123")).toBe(true);
+  });
+
+  it("snapshot chứa phương tiện ước lượng est_* thì audit báo CŨ", () => {
+    const dataWithEst = {
+      ...sampleValidData,
+      transports: [
+        {
+          id: "est_di_xe_khach_0",
+          provider: "Ước tính theo quãng đường 609 km",
+          nguon: "uoc_luong:khoang_cach:609km",
+          doTinCay: "uoc_tinh",
+          giaLaUocTinh: true,
+          nguonGia: [],
+        },
+      ],
+    };
+    const withChecksum = {
+      ...dataWithEst,
+      checksum: computeSnapshotChecksum(dataWithEst),
+    };
+
+    const res = auditSnapshotData(withChecksum, "snapshot_da_nang_2026-10-20.json");
+    expect(res.status).toBe("CŨ");
+    expect(res.errors).toEqual([]);
+  });
+
   it("isValidNguon chỉ chấp nhận osm:node/way/relation hoặc URL web thật", () => {
     expect(isValidNguon("osm:node:123456")).toBe(true);
     expect(isValidNguon("osm:way:987654")).toBe(true);
     expect(isValidNguon("osm:relation:5555")).toBe(true);
-    expect(isValidNguon("https://vietnamairlines.com")).toBe(true);
+    expect(isValidNguon("https://vietnamairlines.com", { doTinCay: "xac_minh", nguonGia: ["https://vietnamairlines.com"] })).toBe(true);
     expect(isValidNguon("http://example.com/route")).toBe(true);
 
     expect(isValidNguon("AI")).toBe(false);

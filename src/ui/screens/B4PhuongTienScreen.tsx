@@ -283,7 +283,9 @@ export function B4PhuongTienScreen() {
                     </div>
                     <div style={{ marginLeft: 8 }}>
                       <div style={{ fontWeight: 700, fontSize: 14, color: "var(--navy)" }}>
-                        {f.carrier} {f.code && <span style={{ color: "var(--g500)", fontWeight: 500 }}>· {f.code}</span>}
+                        {f.nguon?.startsWith("uoc_luong:khoang_cach:")
+                          ? `Ước tính theo quãng đường ${f.nguon.replace("uoc_luong:khoang_cach:", "").replace("km", "")} km`
+                          : f.carrier} {f.code && <span style={{ color: "var(--g500)", fontWeight: 500 }}>· {f.code}</span>}
                       </div>
                       <div style={{ fontSize: 12, color: "var(--g500)" }}>
                         {fmt(f.pricePerPerson)} / người

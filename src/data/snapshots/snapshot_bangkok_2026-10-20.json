@@ -2,7 +2,7 @@
   "taoBoi": "script data:snapshot",
   "ngayTao": "2026-10-20T02:54:51.572Z",
   "diemDen": "Băng Cốc",
-  "checksum": "50cc065e1e923933fc9092303feeb074851b5198b579cb8c497a594fe4fc3cfd",
+  "checksum": "80fb35824d40526ca6c50467a05eb533101befb5d71cd2809d82b79748b528d6",
   "createdAt": "2026-10-20T02:54:51.572Z",
   "khachSans": [
     {
@@ -1536,7 +1536,7 @@
       "id": "est_di_may_bay_0",
       "huong": "di",
       "type": "PLANE",
-      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "provider": "Ước tính theo quãng đường 751 km",
       "origin": "TP.HCM",
       "destination": "Băng Cốc",
       "departureTime": "08:00",
@@ -1545,21 +1545,19 @@
       "seatClass": "Phổ thông",
       "boardingPoint": "Sân bay TP.HCM",
       "dropOffPoint": "Sân bay Băng Cốc",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://www.vietnamairlines.com",
+      "notes": "Ước tính theo quãng đường 751 km",
+      "nguon": "uoc_luong:khoang_cach:751km",
       "ngayLay": "2026-10-20T02:54:46.956Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://www.vietnamairlines.com"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_ve_may_bay_0",
       "huong": "ve",
       "type": "PLANE",
-      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "provider": "Ước tính theo quãng đường 751 km",
       "origin": "Băng Cốc",
       "destination": "TP.HCM",
       "departureTime": "17:30",
@@ -1568,14 +1566,12 @@
       "seatClass": "Phổ thông",
       "boardingPoint": "Sân bay Băng Cốc",
       "dropOffPoint": "Sân bay TP.HCM",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://www.vietnamairlines.com",
+      "notes": "Ước tính theo quãng đường 751 km",
+      "nguon": "uoc_luong:khoang_cach:751km",
       "ngayLay": "2026-10-20T02:54:46.956Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://www.vietnamairlines.com"
-      ]
+      "nguonGia": []
     }
   ]
 }

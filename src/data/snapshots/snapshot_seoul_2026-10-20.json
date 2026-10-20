@@ -2,7 +2,7 @@
   "taoBoi": "script data:snapshot",
   "ngayTao": "2026-10-20T02:54:56.951Z",
   "diemDen": "Seoul",
-  "checksum": "d17d598947151a6405b94faaf762852b13951feabbcbecbe5807f26e72864ceb",
+  "checksum": "6e93ce35f45a559ff83497eae64d2816c884b75d5cb127f63591eb57ee668892",
   "createdAt": "2026-10-20T02:54:56.951Z",
   "khachSans": [
     {
@@ -1533,7 +1533,7 @@
       "id": "est_di_may_bay_0",
       "huong": "di",
       "type": "PLANE",
-      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "provider": "Ước tính theo quãng đường 3602 km",
       "origin": "TP.HCM",
       "destination": "Seoul",
       "departureTime": "08:00",
@@ -1542,21 +1542,19 @@
       "seatClass": "Phổ thông",
       "boardingPoint": "Sân bay TP.HCM",
       "dropOffPoint": "Sân bay Seoul",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://www.vietnamairlines.com",
+      "notes": "Ước tính theo quãng đường 3602 km",
+      "nguon": "uoc_luong:khoang_cach:3602km",
       "ngayLay": "2026-10-20T02:54:51.983Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://www.vietnamairlines.com"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_ve_may_bay_0",
       "huong": "ve",
       "type": "PLANE",
-      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "provider": "Ước tính theo quãng đường 3602 km",
       "origin": "Seoul",
       "destination": "TP.HCM",
       "departureTime": "17:30",
@@ -1565,14 +1563,12 @@
       "seatClass": "Phổ thông",
       "boardingPoint": "Sân bay Seoul",
       "dropOffPoint": "Sân bay TP.HCM",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://www.vietnamairlines.com",
+      "notes": "Ước tính theo quãng đường 3602 km",
+      "nguon": "uoc_luong:khoang_cach:3602km",
       "ngayLay": "2026-10-20T02:54:51.983Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://www.vietnamairlines.com"
-      ]
+      "nguonGia": []
     }
   ]
 }

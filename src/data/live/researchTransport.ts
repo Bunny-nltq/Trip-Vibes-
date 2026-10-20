@@ -52,7 +52,10 @@ function readCache(diemDiTen: string, diemDenTen: string): Transport[] | null {
       transports: Transport[];
     };
     if (Date.now() - data.timestamp > DATA_TTL_MS) return null;
-    return data.transports;
+    const realTransports = (data.transports ?? []).filter(
+      (t) => !t.id.startsWith("est_") && !(t.nguon && t.nguon.startsWith("uoc_luong:"))
+    );
+    return realTransports.length > 0 ? realTransports : null;
   } catch {
     return null;
   }
@@ -150,6 +153,9 @@ export function taoPhuongTienUocLuong(
   if (loaiList.length === 0) return [];
 
   const distanceKm = khoangCachKm(diemDi.toaDo, diemDen.toaDo);
+  const kmNguyen = Math.round(distanceKm);
+  const nguonUocLuong = `uoc_luong:khoang_cach:${kmNguyen}km`;
+  const nhanUocLuong = `Ước tính theo quãng đường ${kmNguyen} km`;
   const transports: Transport[] = [];
   const nowIso = new Date().toISOString();
 
@@ -163,7 +169,6 @@ export function taoPhuongTienUocLuong(
       seatClass: string;
       boardingDi: string;
       boardingVe: string;
-      url: string;
     }
   > = {
     may_bay: {
@@ -174,7 +179,6 @@ export function taoPhuongTienUocLuong(
       seatClass: "Phổ thông",
       boardingDi: `Sân bay ${diemDi.ten}`,
       boardingVe: `Sân bay ${diemDen.ten}`,
-      url: "https://www.vietnamairlines.com",
     },
     tau: {
       type: "TRAIN",
@@ -184,7 +188,6 @@ export function taoPhuongTienUocLuong(
       seatClass: "Ngồi mềm",
       boardingDi: `Ga ${diemDi.ten}`,
       boardingVe: `Ga ${diemDen.ten}`,
-      url: "https://dsvn.vn",
     },
     xe_khach: {
       type: "BUS",
@@ -194,7 +197,6 @@ export function taoPhuongTienUocLuong(
       seatClass: "Giường nằm",
       boardingDi: `Bến xe ${diemDi.ten}`,
       boardingVe: `Bến xe ${diemDen.ten}`,
-      url: "https://vexere.com",
     },
   };
 
@@ -208,7 +210,7 @@ export function taoPhuongTienUocLuong(
       id: `est_di_${loai}_${idx}`,
       huong: "di",
       type: cfg.type,
-      provider: `Ước tính theo quãng đường (${cfg.tenLoai})`,
+      provider: nhanUocLuong,
       origin: diemDi.ten,
       destination: diemDen.ten,
       departureTime: cfg.gioDi,
@@ -217,12 +219,12 @@ export function taoPhuongTienUocLuong(
       seatClass: cfg.seatClass,
       boardingPoint: cfg.boardingDi,
       dropOffPoint: cfg.boardingVe,
-      notes: "Ước tính theo quãng đường",
-      nguon: cfg.url,
+      notes: nhanUocLuong,
+      nguon: nguonUocLuong,
       ngayLay: nowIso,
       doTinCay: "uoc_tinh",
       giaLaUocTinh: true,
-      nguonGia: [cfg.url],
+      nguonGia: [],
     });
 
     // Chiều về
@@ -231,7 +233,7 @@ export function taoPhuongTienUocLuong(
       id: `est_ve_${loai}_${idx}`,
       huong: "ve",
       type: cfg.type,
-      provider: `Ước tính theo quãng đường (${cfg.tenLoai})`,
+      provider: nhanUocLuong,
       origin: diemDen.ten,
       destination: diemDi.ten,
       departureTime: cfg.gioVe,
@@ -240,12 +242,12 @@ export function taoPhuongTienUocLuong(
       seatClass: cfg.seatClass,
       boardingPoint: cfg.boardingVe,
       dropOffPoint: cfg.boardingDi,
-      notes: "Ước tính theo quãng đường",
-      nguon: cfg.url,
+      notes: nhanUocLuong,
+      nguon: nguonUocLuong,
       ngayLay: nowIso,
       doTinCay: "uoc_tinh",
       giaLaUocTinh: true,
-      nguonGia: [cfg.url],
+      nguonGia: [],
     });
   });
 
@@ -421,10 +423,9 @@ async function doResearchTransports(
     }
   }
 
-  // 5. Fallback sang ước lượng quãng đường
+  // 5. Fallback sang ước lượng quãng đường (tính trực tiếp, không lưu vào cache)
   const estimated = taoPhuongTienUocLuong(diemDi, diemDen);
   if (estimated.length > 0) {
-    writeCache(diemDi.ten, diemDen.ten, estimated);
     return { transports: estimated, status: "thanh_cong" };
   }
 

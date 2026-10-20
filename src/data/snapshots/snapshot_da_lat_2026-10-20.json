@@ -2,7 +2,7 @@
   "taoBoi": "script data:snapshot",
   "ngayTao": "2026-10-20T02:54:36.905Z",
   "diemDen": "Đà Lạt",
-  "checksum": "0b9be46130a50295b3b19b00a93656ab3742a134c88b815f395110251279dfc8",
+  "checksum": "d712eb9c007c8289fdadbb5d3e73fdafe0f0caa88c1ac76d477e73977df5b94f",
   "createdAt": "2026-10-20T02:54:36.905Z",
   "khachSans": [
     {
@@ -1534,7 +1534,7 @@
       "id": "est_di_may_bay_0",
       "huong": "di",
       "type": "PLANE",
-      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "provider": "Ước tính theo quãng đường 231 km",
       "origin": "TP.HCM",
       "destination": "Đà Lạt",
       "departureTime": "08:00",
@@ -1543,21 +1543,19 @@
       "seatClass": "Phổ thông",
       "boardingPoint": "Sân bay TP.HCM",
       "dropOffPoint": "Sân bay Đà Lạt",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://www.vietnamairlines.com",
+      "notes": "Ước tính theo quãng đường 231 km",
+      "nguon": "uoc_luong:khoang_cach:231km",
       "ngayLay": "2026-10-20T02:54:36.897Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://www.vietnamairlines.com"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_ve_may_bay_0",
       "huong": "ve",
       "type": "PLANE",
-      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "provider": "Ước tính theo quãng đường 231 km",
       "origin": "Đà Lạt",
       "destination": "TP.HCM",
       "departureTime": "17:30",
@@ -1566,21 +1564,19 @@
       "seatClass": "Phổ thông",
       "boardingPoint": "Sân bay Đà Lạt",
       "dropOffPoint": "Sân bay TP.HCM",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://www.vietnamairlines.com",
+      "notes": "Ước tính theo quãng đường 231 km",
+      "nguon": "uoc_luong:khoang_cach:231km",
       "ngayLay": "2026-10-20T02:54:36.897Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://www.vietnamairlines.com"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_di_tau_1",
       "huong": "di",
       "type": "TRAIN",
-      "provider": "Ước tính theo quãng đường (Tàu hỏa)",
+      "provider": "Ước tính theo quãng đường 231 km",
       "origin": "TP.HCM",
       "destination": "Đà Lạt",
       "departureTime": "07:00",
@@ -1589,21 +1585,19 @@
       "seatClass": "Ngồi mềm",
       "boardingPoint": "Ga TP.HCM",
       "dropOffPoint": "Ga Đà Lạt",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://dsvn.vn",
+      "notes": "Ước tính theo quãng đường 231 km",
+      "nguon": "uoc_luong:khoang_cach:231km",
       "ngayLay": "2026-10-20T02:54:36.897Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://dsvn.vn"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_ve_tau_1",
       "huong": "ve",
       "type": "TRAIN",
-      "provider": "Ước tính theo quãng đường (Tàu hỏa)",
+      "provider": "Ước tính theo quãng đường 231 km",
       "origin": "Đà Lạt",
       "destination": "TP.HCM",
       "departureTime": "16:00",
@@ -1612,21 +1606,19 @@
       "seatClass": "Ngồi mềm",
       "boardingPoint": "Ga Đà Lạt",
       "dropOffPoint": "Ga TP.HCM",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://dsvn.vn",
+      "notes": "Ước tính theo quãng đường 231 km",
+      "nguon": "uoc_luong:khoang_cach:231km",
       "ngayLay": "2026-10-20T02:54:36.897Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://dsvn.vn"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_di_xe_khach_2",
       "huong": "di",
       "type": "BUS",
-      "provider": "Ước tính theo quãng đường (Xe khách)",
+      "provider": "Ước tính theo quãng đường 231 km",
       "origin": "TP.HCM",
       "destination": "Đà Lạt",
       "departureTime": "08:30",
@@ -1635,21 +1627,19 @@
       "seatClass": "Giường nằm",
       "boardingPoint": "Bến xe TP.HCM",
       "dropOffPoint": "Bến xe Đà Lạt",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://vexere.com",
+      "notes": "Ước tính theo quãng đường 231 km",
+      "nguon": "uoc_luong:khoang_cach:231km",
       "ngayLay": "2026-10-20T02:54:36.897Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://vexere.com"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_ve_xe_khach_2",
       "huong": "ve",
       "type": "BUS",
-      "provider": "Ước tính theo quãng đường (Xe khách)",
+      "provider": "Ước tính theo quãng đường 231 km",
       "origin": "Đà Lạt",
       "destination": "TP.HCM",
       "departureTime": "16:30",
@@ -1658,14 +1648,12 @@
       "seatClass": "Giường nằm",
       "boardingPoint": "Bến xe Đà Lạt",
       "dropOffPoint": "Bến xe TP.HCM",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://vexere.com",
+      "notes": "Ước tính theo quãng đường 231 km",
+      "nguon": "uoc_luong:khoang_cach:231km",
       "ngayLay": "2026-10-20T02:54:36.897Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://vexere.com"
-      ]
+      "nguonGia": []
     }
   ]
 }

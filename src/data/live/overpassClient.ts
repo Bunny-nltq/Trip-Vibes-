@@ -23,7 +23,9 @@ import { CAFE_MAC_DINH_MOI_NGUOI } from "@/core/assumptions";
 const USER_AGENT =
   process.env.NOMINATIM_USER_AGENT ||
   "TripVibes/1.0 (https://github.com/TripVibes; educational project)";
-const CACHE_TTL_MS = 168 * 60 * 60 * 1000; // 168 giờ
+function getCacheTtlMs(): number {
+  return parseInt(process.env.DATA_TTL_HOURS ?? "24", 10) * 60 * 60 * 1000;
+}
 const MAX_PER_TYPE = 15;
 
 export const DEFAULT_OVERPASS_ENDPOINTS = [
@@ -163,7 +165,7 @@ function readCacheWithInfo<T>(
   if (fs.existsSync(p)) {
     const stat = fs.statSync(p);
     const ageMs = Date.now() - stat.mtimeMs;
-    if (ageMs <= CACHE_TTL_MS) {
+    if (ageMs <= getCacheTtlMs()) {
       try {
         const raw = JSON.parse(fs.readFileSync(p, "utf-8"));
         if (raw && typeof raw === "object" && "metadata" in raw && "data" in raw) {

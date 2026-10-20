@@ -38,6 +38,14 @@ async function main() {
     }))
   );
 
+  const cuSnapshots = results.filter((r) => r.status === "CŨ");
+  if (cuSnapshots.length > 0) {
+    console.warn("\n⚠️ CẢNH BÁO: Phát hiện snapshot CŨ còn chứa phương tiện ước lượng (est_*):");
+    for (const item of cuSnapshots) {
+      console.warn(`   - ${item.file}: CŨ (chứa est_*, quy tắc mới: phương tiện ước lượng tính lúc đọc).`);
+    }
+  }
+
   const chuaXacThuc = results.filter((r) => r.status === "CHƯA XÁC THỰC");
   if (chuaXacThuc.length > 0) {
     console.warn("\n⚠️ CẢNH BÁO: Phát hiện snapshot cũ thiếu đầu file hợp lệ:");

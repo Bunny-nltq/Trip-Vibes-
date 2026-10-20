@@ -36,6 +36,10 @@ const VIBES: { label: string; key: Preference }[] = [
 
 function formatSource(source: string | null | undefined): string | null {
   if (!source) return null;
+  if (source.startsWith("uoc_luong:khoang_cach:")) {
+    const km = source.replace("uoc_luong:khoang_cach:", "").replace("km", "");
+    return `Ước tính theo quãng đường ${km} km`;
+  }
   try {
     if (source.startsWith("http://") || source.startsWith("https://")) {
       const u = new URL(source);
@@ -506,7 +510,7 @@ export function B3KeHoachScreen() {
 
                           {sourceShort && (
                             <span style={{ fontSize: 12, color: "var(--g500)" }}>
-                              Nguồn: {sourceShort}
+                              {sourceShort.startsWith("Ước tính") ? sourceShort : `Nguồn: ${sourceShort}`}
                             </span>
                           )}
                         </div>

@@ -35,23 +35,35 @@ export function computeSnapshotChecksum(content: {
   return crypto.createHash("sha256").update(payload).digest("hex");
 }
 
-export function isValidNguon(nguon?: string | null): boolean {
+export function isValidNguon(
+  nguon?: string | null,
+  context?: { doTinCay?: string; nguonGia?: string[] } | null
+): boolean {
   if (!nguon || typeof nguon !== "string") return false;
   const trimmed = nguon.trim();
   if (trimmed === "" || trimmed.toUpperCase() === "AI") return false;
 
-  // OSM node, way, relation
+  // 1. OSM node, way, relation
   if (/^osm:(node|way|relation):\d+$/i.test(trimmed)) return true;
 
-  // Đường dẫn web thật
-  if (/^https?:\/\/.+/i.test(trimmed)) return true;
+  // 2. Ước lượng theo khoảng cách: uoc_luong:khoang_cach:<số>km
+  if (/^uoc_luong:khoang_cach:\d+(\.\d+)?km$/i.test(trimmed)) return true;
+
+  // 3. Đường dẫn web thật: URL web chỉ được chấp nhận khi mục có nguonGia thật và doTinCay không phải ước lượng
+  if (/^https?:\/\/.+/i.test(trimmed)) {
+    if (context) {
+      if (context.doTinCay === "uoc_tinh") return false;
+      if (!Array.isArray(context.nguonGia) || context.nguonGia.length === 0) return false;
+    }
+    return true;
+  }
 
   return false;
 }
 
 export interface AuditItemResult {
   file: string;
-  status: "HỢP LỆ" | "CHƯA XÁC THỰC" | "THẤT BẠI";
+  status: "HỢP LỆ" | "CHƯA XÁC THỰC" | "THẤT BẠI" | "CŨ";
   ngayTao?: string;
   diemDen?: string;
   counts: {
@@ -113,7 +125,7 @@ export function auditSnapshotData(
   for (const group of checkList) {
     if (!Array.isArray(group.items)) continue;
     for (const item of group.items) {
-      if (!isValidNguon(item.nguon)) {
+      if (!isValidNguon(item.nguon, item)) {
         errors.push(
           `Mục ${group.name} id="${item.id || item.ten || "không_id"}" có nguồn không hợp lệ: "${item.nguon}"`
         );
@@ -121,9 +133,15 @@ export function auditSnapshotData(
     }
   }
 
-  let status: "HỢP LỆ" | "CHƯA XÁC THỰC" | "THẤT BẠI";
+  const hasEstTransports =
+    Array.isArray(data.transports) &&
+    data.transports.some((t: any) => t.id?.startsWith("est_"));
+
+  let status: "HỢP LỆ" | "CHƯA XÁC THỰC" | "THẤT BẠI" | "CŨ";
   if (errors.length > 0) {
     status = "THẤT BẠI";
+  } else if (hasEstTransports) {
+    status = "CŨ";
   } else if (!hasValidHeader) {
     status = "CHƯA XÁC THỰC";
   } else {

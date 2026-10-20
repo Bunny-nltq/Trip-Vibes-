@@ -11,7 +11,9 @@ import fs from "node:fs";
 import path from "node:path";
 
 const TAVILY_API_URL = "https://api.tavily.com/search";
-const MAX_PER_DAY = parseInt(process.env.DATA_MAX_SEARCH_PER_DAY ?? "30", 10);
+function getMaxPerDay(): number {
+  return parseInt(process.env.DATA_MAX_SEARCH_PER_DAY ?? "30", 10);
+}
 const COUNTER_FILE = path.join(process.cwd(), ".cache", "data", "tavily_counter.json");
 
 interface CounterData {
@@ -46,7 +48,7 @@ export function getTavilyUsageToday(): number {
 }
 
 export function isTavilyLimitReached(): boolean {
-  return loadCounter().count >= MAX_PER_DAY;
+  return loadCounter().count >= getMaxPerDay();
 }
 
 export interface TavilyResult {
@@ -79,11 +81,12 @@ export async function tavilySearch(
   }
 
   const counter = loadCounter();
-  if (counter.count >= MAX_PER_DAY) {
+  const maxPerDay = getMaxPerDay();
+  if (counter.count >= maxPerDay) {
     return {
       ok: false,
       reason: "limit_reached",
-      message: `Đã vượt giới hạn ${MAX_PER_DAY} lượt Tavily/ngày.`,
+      message: `Đã vượt giới hạn ${maxPerDay} lượt Tavily/ngày.`,
     };
   }
 

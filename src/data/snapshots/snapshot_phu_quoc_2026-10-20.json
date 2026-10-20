@@ -2,7 +2,7 @@
   "taoBoi": "script data:snapshot",
   "ngayTao": "2026-10-20T02:54:41.934Z",
   "diemDen": "Đặc khu Phú Quốc",
-  "checksum": "0a7d7391de3e18fb326376e14374174e44ea8f128405ddaffbcde8b9bc9f7bc2",
+  "checksum": "c1a32de74c0dbfa44990e4f3be71234f0ba3fddd2ad27c4bd1dc361a80efaaf7",
   "createdAt": "2026-10-20T02:54:41.934Z",
   "khachSans": [
     {
@@ -1533,7 +1533,7 @@
       "id": "est_di_may_bay_0",
       "huong": "di",
       "type": "PLANE",
-      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "provider": "Ước tính theo quãng đường 302 km",
       "origin": "TP.HCM",
       "destination": "Đặc khu Phú Quốc",
       "departureTime": "08:00",
@@ -1542,21 +1542,19 @@
       "seatClass": "Phổ thông",
       "boardingPoint": "Sân bay TP.HCM",
       "dropOffPoint": "Sân bay Đặc khu Phú Quốc",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://www.vietnamairlines.com",
+      "notes": "Ước tính theo quãng đường 302 km",
+      "nguon": "uoc_luong:khoang_cach:302km",
       "ngayLay": "2026-10-20T02:54:41.929Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://www.vietnamairlines.com"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_ve_may_bay_0",
       "huong": "ve",
       "type": "PLANE",
-      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "provider": "Ước tính theo quãng đường 302 km",
       "origin": "Đặc khu Phú Quốc",
       "destination": "TP.HCM",
       "departureTime": "17:30",
@@ -1565,21 +1563,19 @@
       "seatClass": "Phổ thông",
       "boardingPoint": "Sân bay Đặc khu Phú Quốc",
       "dropOffPoint": "Sân bay TP.HCM",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://www.vietnamairlines.com",
+      "notes": "Ước tính theo quãng đường 302 km",
+      "nguon": "uoc_luong:khoang_cach:302km",
       "ngayLay": "2026-10-20T02:54:41.929Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://www.vietnamairlines.com"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_di_tau_1",
       "huong": "di",
       "type": "TRAIN",
-      "provider": "Ước tính theo quãng đường (Tàu hỏa)",
+      "provider": "Ước tính theo quãng đường 302 km",
       "origin": "TP.HCM",
       "destination": "Đặc khu Phú Quốc",
       "departureTime": "07:00",
@@ -1588,21 +1584,19 @@
       "seatClass": "Ngồi mềm",
       "boardingPoint": "Ga TP.HCM",
       "dropOffPoint": "Ga Đặc khu Phú Quốc",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://dsvn.vn",
+      "notes": "Ước tính theo quãng đường 302 km",
+      "nguon": "uoc_luong:khoang_cach:302km",
       "ngayLay": "2026-10-20T02:54:41.929Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://dsvn.vn"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_ve_tau_1",
       "huong": "ve",
       "type": "TRAIN",
-      "provider": "Ước tính theo quãng đường (Tàu hỏa)",
+      "provider": "Ước tính theo quãng đường 302 km",
       "origin": "Đặc khu Phú Quốc",
       "destination": "TP.HCM",
       "departureTime": "16:00",
@@ -1611,21 +1605,19 @@
       "seatClass": "Ngồi mềm",
       "boardingPoint": "Ga Đặc khu Phú Quốc",
       "dropOffPoint": "Ga TP.HCM",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://dsvn.vn",
+      "notes": "Ước tính theo quãng đường 302 km",
+      "nguon": "uoc_luong:khoang_cach:302km",
       "ngayLay": "2026-10-20T02:54:41.929Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://dsvn.vn"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_di_xe_khach_2",
       "huong": "di",
       "type": "BUS",
-      "provider": "Ước tính theo quãng đường (Xe khách)",
+      "provider": "Ước tính theo quãng đường 302 km",
       "origin": "TP.HCM",
       "destination": "Đặc khu Phú Quốc",
       "departureTime": "08:30",
@@ -1634,21 +1626,19 @@
       "seatClass": "Giường nằm",
       "boardingPoint": "Bến xe TP.HCM",
       "dropOffPoint": "Bến xe Đặc khu Phú Quốc",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://vexere.com",
+      "notes": "Ước tính theo quãng đường 302 km",
+      "nguon": "uoc_luong:khoang_cach:302km",
       "ngayLay": "2026-10-20T02:54:41.929Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://vexere.com"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_ve_xe_khach_2",
       "huong": "ve",
       "type": "BUS",
-      "provider": "Ước tính theo quãng đường (Xe khách)",
+      "provider": "Ước tính theo quãng đường 302 km",
       "origin": "Đặc khu Phú Quốc",
       "destination": "TP.HCM",
       "departureTime": "16:30",
@@ -1657,14 +1647,12 @@
       "seatClass": "Giường nằm",
       "boardingPoint": "Bến xe Đặc khu Phú Quốc",
       "dropOffPoint": "Bến xe TP.HCM",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://vexere.com",
+      "notes": "Ước tính theo quãng đường 302 km",
+      "nguon": "uoc_luong:khoang_cach:302km",
       "ngayLay": "2026-10-20T02:54:41.929Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://vexere.com"
-      ]
+      "nguonGia": []
     }
   ]
 }

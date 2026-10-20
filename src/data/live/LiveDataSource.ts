@@ -31,13 +31,26 @@ import {
   fetchHoatDongsOSM,
   lastOverpassStats,
 } from "./overpassClient";
-import { researchTransports } from "./researchTransport";
+import {
+  researchTransports,
+  taoPhuongTienUocLuong,
+} from "./researchTransport";
 import { researchGiaDiemDen } from "./researchGiaDiemDen";
 import { computeSnapshotChecksum } from "../snapshots/snapshotAudit";
 
 export type DataMode = "live" | "snapshot" | "mock";
 
 const DEFAULT_COORD = { lat: 10.7769, lng: 106.7009 }; // default center if not specified
+
+function ensureDoTinCay<T extends { nguon?: string | null; doTinCay?: any }>(item: T): T {
+  if (!item.nguon || item.nguon.trim() === "") {
+    return {
+      ...item,
+      doTinCay: "uoc_tinh",
+    };
+  }
+  return item;
+}
 
 export class LiveDataSource implements DataSource {
   private readonly mode: DataMode;
@@ -163,15 +176,26 @@ export class LiveDataSource implements DataSource {
     if (this.memoTransports) return this.memoTransports;
     if (this.mode === "mock") {
       this.dataSourceUsed = "mock";
-      return (this.memoTransports = (await this.mockSource?.getTransports()) ?? []);
+      return (this.memoTransports = ((await this.mockSource?.getTransports()) ?? []).map(ensureDoTinCay));
     }
 
     if (this.mode === "snapshot") {
       const snap = this.loadSnapshot();
-      if (snap?.transports && snap.transports.length > 0) {
+      const realTransports = (snap?.transports ?? []).filter(
+        (t) => !t.id.startsWith("est_") && !(t.nguon && t.nguon.startsWith("uoc_luong:"))
+      );
+      if (realTransports.length > 0) {
         this.dataSourceUsed = "snapshot";
-        this.snapshotDate = snap.createdAt;
-        return (this.memoTransports = snap.transports);
+        this.snapshotDate = snap?.createdAt;
+        return (this.memoTransports = realTransports.map(ensureDoTinCay));
+      }
+      if (this.diemDen) {
+        const est = taoPhuongTienUocLuong(this.diemDi ?? DEFAULT_DIEM_DI, this.diemDen);
+        if (est.length > 0) {
+          this.dataSourceUsed = "snapshot";
+          this.snapshotDate = snap?.createdAt;
+          return (this.memoTransports = est.map(ensureDoTinCay));
+        }
       }
       return (this.memoTransports = []);
     }
@@ -184,7 +208,10 @@ export class LiveDataSource implements DataSource {
           this.soNgay,
           this.giaVeTuNhap
         );
-        if (res.transports.length > 0) return (this.memoTransports = res.transports);
+        const realTransports = res.transports.filter(
+          (t) => !t.id.startsWith("est_") && !(t.nguon && t.nguon.startsWith("uoc_luong:"))
+        );
+        if (realTransports.length > 0) return (this.memoTransports = realTransports.map(ensureDoTinCay));
       }
     } catch {
       // ignore
@@ -192,10 +219,20 @@ export class LiveDataSource implements DataSource {
 
     if (this.isFallbackAllowed()) {
       const snap = this.loadSnapshotForDestination();
-      if (snap?.transports && snap.transports.length > 0) {
+      const realTransports = (snap?.transports ?? []).filter(
+        (t) => !t.id.startsWith("est_") && !(t.nguon && t.nguon.startsWith("uoc_luong:"))
+      );
+      if (realTransports.length > 0) {
         this.dataSourceUsed = "snapshot";
-        this.snapshotDate = snap.createdAt;
-        return (this.memoTransports = snap.transports);
+        this.snapshotDate = snap?.createdAt;
+        return (this.memoTransports = realTransports.map(ensureDoTinCay));
+      }
+    }
+
+    if (this.diemDen) {
+      const est = taoPhuongTienUocLuong(this.diemDi ?? DEFAULT_DIEM_DI, this.diemDen);
+      if (est.length > 0) {
+        return (this.memoTransports = est.map(ensureDoTinCay));
       }
     }
 
@@ -215,7 +252,7 @@ export class LiveDataSource implements DataSource {
 
     if (this.mode === "snapshot") {
       const snap = this.loadSnapshot();
-      if (snap?.khachSans) return snap.khachSans;
+      if (snap?.khachSans) return (this.memoKhachSans = snap.khachSans.map(ensureDoTinCay));
       return [];
     }
 
@@ -232,7 +269,7 @@ export class LiveDataSource implements DataSource {
         if (snap?.khachSans && snap.khachSans.length > 0) {
           this.dataSourceUsed = "snapshot";
           this.snapshotDate = snap.createdAt;
-          return (this.memoKhachSans = snap.khachSans);
+          return (this.memoKhachSans = snap.khachSans.map(ensureDoTinCay));
         }
       }
 
@@ -259,7 +296,7 @@ export class LiveDataSource implements DataSource {
           },
         };
       });
-      return (this.memoKhachSans = res);
+      return (this.memoKhachSans = res.map(ensureDoTinCay));
     } catch (err) {
       console.error("[LiveDataSource] getKhachSans lỗi:", err instanceof Error ? err.message : err);
       if (!this.isFallbackAllowed()) {
@@ -269,7 +306,7 @@ export class LiveDataSource implements DataSource {
       if (snap?.khachSans && snap.khachSans.length > 0) {
         this.dataSourceUsed = "snapshot";
         this.snapshotDate = snap.createdAt;
-        return (this.memoKhachSans = snap.khachSans);
+        return (this.memoKhachSans = snap.khachSans.map(ensureDoTinCay));
       }
       return (this.memoKhachSans = []);
     }
@@ -281,7 +318,7 @@ export class LiveDataSource implements DataSource {
 
     if (this.mode === "snapshot") {
       const snap = this.loadSnapshot();
-      if (snap?.quanAns) return (this.memoQuanAns = snap.quanAns);
+      if (snap?.quanAns) return (this.memoQuanAns = snap.quanAns.map(ensureDoTinCay));
       return [];
     }
 
@@ -298,7 +335,7 @@ export class LiveDataSource implements DataSource {
         if (snap?.quanAns && snap.quanAns.length > 0) {
           this.dataSourceUsed = "snapshot";
           this.snapshotDate = snap.createdAt;
-          return (this.memoQuanAns = snap.quanAns);
+          return (this.memoQuanAns = snap.quanAns.map(ensureDoTinCay));
         }
       }
 
@@ -316,7 +353,7 @@ export class LiveDataSource implements DataSource {
         ...qa,
         giaUocTinhNguoi: giaBuaAn,
       }));
-      return (this.memoQuanAns = res);
+      return (this.memoQuanAns = res.map(ensureDoTinCay));
     } catch (err) {
       console.error("[LiveDataSource] getQuanAns lỗi:", err instanceof Error ? err.message : err);
       if (!this.isFallbackAllowed()) {
@@ -326,7 +363,7 @@ export class LiveDataSource implements DataSource {
       if (snap?.quanAns && snap.quanAns.length > 0) {
         this.dataSourceUsed = "snapshot";
         this.snapshotDate = snap.createdAt;
-        return (this.memoQuanAns = snap.quanAns);
+        return (this.memoQuanAns = snap.quanAns.map(ensureDoTinCay));
       }
       return (this.memoQuanAns = []);
     }
@@ -338,7 +375,7 @@ export class LiveDataSource implements DataSource {
 
     if (this.mode === "snapshot") {
       const snap = this.loadSnapshot();
-      if (snap?.cafes) return (this.memoCafes = snap.cafes);
+      if (snap?.cafes) return (this.memoCafes = snap.cafes.map(ensureDoTinCay));
       return [];
     }
 
@@ -354,10 +391,10 @@ export class LiveDataSource implements DataSource {
         if (snap?.cafes && snap.cafes.length > 0) {
           this.dataSourceUsed = "snapshot";
           this.snapshotDate = snap.createdAt;
-          return (this.memoCafes = snap.cafes);
+          return (this.memoCafes = snap.cafes.map(ensureDoTinCay));
         }
       }
-      return (this.memoCafes = res);
+      return (this.memoCafes = res.map(ensureDoTinCay));
     } catch (err) {
       console.error("[LiveDataSource] getCafes lỗi:", err instanceof Error ? err.message : err);
       if (!this.isFallbackAllowed()) {
@@ -367,7 +404,7 @@ export class LiveDataSource implements DataSource {
       if (snap?.cafes && snap.cafes.length > 0) {
         this.dataSourceUsed = "snapshot";
         this.snapshotDate = snap.createdAt;
-        return (this.memoCafes = snap.cafes);
+        return (this.memoCafes = snap.cafes.map(ensureDoTinCay));
       }
       return (this.memoCafes = []);
     }
@@ -379,7 +416,7 @@ export class LiveDataSource implements DataSource {
 
     if (this.mode === "snapshot") {
       const snap = this.loadSnapshot();
-      if (snap?.hoatDongs) return (this.memoHoatDongs = snap.hoatDongs);
+      if (snap?.hoatDongs) return (this.memoHoatDongs = snap.hoatDongs.map(ensureDoTinCay));
       return [];
     }
 
@@ -395,10 +432,10 @@ export class LiveDataSource implements DataSource {
         if (snap?.hoatDongs && snap.hoatDongs.length > 0) {
           this.dataSourceUsed = "snapshot";
           this.snapshotDate = snap.createdAt;
-          return (this.memoHoatDongs = snap.hoatDongs);
+          return (this.memoHoatDongs = snap.hoatDongs.map(ensureDoTinCay));
         }
       }
-      return (this.memoHoatDongs = res);
+      return (this.memoHoatDongs = res.map(ensureDoTinCay));
     } catch (err) {
       console.error("[LiveDataSource] getHoatDongs lỗi:", err instanceof Error ? err.message : err);
       if (!this.isFallbackAllowed()) {
@@ -408,7 +445,7 @@ export class LiveDataSource implements DataSource {
       if (snap?.hoatDongs && snap.hoatDongs.length > 0) {
         this.dataSourceUsed = "snapshot";
         this.snapshotDate = snap.createdAt;
-        return (this.memoHoatDongs = snap.hoatDongs);
+        return (this.memoHoatDongs = snap.hoatDongs.map(ensureDoTinCay));
       }
       return (this.memoHoatDongs = []);
     }
@@ -489,28 +526,6 @@ export class LiveDataSource implements DataSource {
     return this.loadSnapshotForDestination();
   }
 
-  private loadLatestSnapshot(): SnapshotData | null {
-    const dir = this.getSnapshotDir();
-    if (!fs.existsSync(dir)) return null;
-    const files = fs
-      .readdirSync(dir)
-      .filter((f) => f.endsWith(".json"))
-      .map((f) => ({
-        name: f,
-        mtime: fs.statSync(path.join(dir, f)).mtimeMs,
-      }))
-      .sort((a, b) => b.mtime - a.mtime);
-
-    if (files.length === 0) return null;
-    try {
-      return JSON.parse(
-        fs.readFileSync(path.join(dir, files[0].name), "utf-8")
-      ) as SnapshotData;
-    } catch {
-      return null;
-    }
-  }
-
   /** Đóng băng dữ liệu hiện tại vào snapshot */
   async saveSnapshot(name: string): Promise<string> {
     const dir = this.getSnapshotDir();
@@ -525,6 +540,11 @@ export class LiveDataSource implements DataSource {
         this.getTransports(),
       ]);
 
+    // Không lưu phương tiện ước lượng vào snapshot
+    const realTransports = transports.filter(
+      (t) => !t.id.startsWith("est_") && !(t.nguon && t.nguon.startsWith("uoc_luong:"))
+    );
+
     const now = new Date().toISOString();
     const diemDenTen = this.diemDen?.ten ?? "Chưa xác định";
     const checksum = computeSnapshotChecksum({
@@ -532,7 +552,7 @@ export class LiveDataSource implements DataSource {
       quanAns,
       cafes,
       hoatDongs,
-      transports,
+      transports: realTransports,
     });
 
     const data: SnapshotData = {
@@ -545,12 +565,44 @@ export class LiveDataSource implements DataSource {
       quanAns,
       cafes,
       hoatDongs,
-      transports,
+      transports: realTransports,
     };
 
     const filePath = path.join(dir, `${name}.json`);
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
     return filePath;
+  }
+
+  /** Kiểm tra tính đầy đủ của kho dữ liệu */
+  async kiemTraDuLieu(): Promise<
+    | { status: "du" }
+    | { status: "khong_du_du_lieu"; loaiThieu: string[]; chiTiet: Record<string, number> }
+  > {
+    const [ks, qa, hd, pt] = await Promise.all([
+      this.getKhachSans(),
+      this.getQuanAns(),
+      this.getHoatDongs(),
+      this.getTransports(),
+    ]);
+    const loaiThieu: string[] = [];
+    if (ks.length < 3) loaiThieu.push("khach_san");
+    if (qa.length < 2) loaiThieu.push("quan_an");
+    if (hd.length < 3) loaiThieu.push("hoat_dong");
+    if (pt.length === 0) loaiThieu.push("phuong_tien");
+
+    if (loaiThieu.length > 0) {
+      return {
+        status: "khong_du_du_lieu",
+        loaiThieu,
+        chiTiet: {
+          khachSan: ks.length,
+          quanAn: qa.length,
+          hoatDong: hd.length,
+          phuongTien: pt.length,
+        },
+      };
+    }
+    return { status: "du" };
   }
 }
 

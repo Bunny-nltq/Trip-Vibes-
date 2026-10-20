@@ -2,7 +2,7 @@
   "taoBoi": "script data:snapshot",
   "ngayTao": "2026-10-20T02:54:26.849Z",
   "diemDen": "Thành phố Đà Nẵng",
-  "checksum": "28f42927584daa19a461d63e57ed8aff2a235b0a4f9ac3495716939a330604db",
+  "checksum": "320ea4d726ee29052e2c8a24d24d098ab765219172185ab20eb795fb8e118534",
   "createdAt": "2026-10-20T02:54:26.849Z",
   "khachSans": [
     {
@@ -1533,7 +1533,7 @@
       "id": "est_di_may_bay_0",
       "huong": "di",
       "type": "PLANE",
-      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "provider": "Ước tính theo quãng đường 609 km",
       "origin": "TP.HCM",
       "destination": "Thành phố Đà Nẵng",
       "departureTime": "08:00",
@@ -1542,21 +1542,19 @@
       "seatClass": "Phổ thông",
       "boardingPoint": "Sân bay TP.HCM",
       "dropOffPoint": "Sân bay Thành phố Đà Nẵng",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://www.vietnamairlines.com",
+      "notes": "Ước tính theo quãng đường 609 km",
+      "nguon": "uoc_luong:khoang_cach:609km",
       "ngayLay": "2026-10-20T02:54:26.844Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://www.vietnamairlines.com"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_ve_may_bay_0",
       "huong": "ve",
       "type": "PLANE",
-      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "provider": "Ước tính theo quãng đường 609 km",
       "origin": "Thành phố Đà Nẵng",
       "destination": "TP.HCM",
       "departureTime": "17:30",
@@ -1565,21 +1563,19 @@
       "seatClass": "Phổ thông",
       "boardingPoint": "Sân bay Thành phố Đà Nẵng",
       "dropOffPoint": "Sân bay TP.HCM",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://www.vietnamairlines.com",
+      "notes": "Ước tính theo quãng đường 609 km",
+      "nguon": "uoc_luong:khoang_cach:609km",
       "ngayLay": "2026-10-20T02:54:26.844Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://www.vietnamairlines.com"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_di_tau_1",
       "huong": "di",
       "type": "TRAIN",
-      "provider": "Ước tính theo quãng đường (Tàu hỏa)",
+      "provider": "Ước tính theo quãng đường 609 km",
       "origin": "TP.HCM",
       "destination": "Thành phố Đà Nẵng",
       "departureTime": "07:00",
@@ -1588,21 +1584,19 @@
       "seatClass": "Ngồi mềm",
       "boardingPoint": "Ga TP.HCM",
       "dropOffPoint": "Ga Thành phố Đà Nẵng",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://dsvn.vn",
+      "notes": "Ước tính theo quãng đường 609 km",
+      "nguon": "uoc_luong:khoang_cach:609km",
       "ngayLay": "2026-10-20T02:54:26.844Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://dsvn.vn"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_ve_tau_1",
       "huong": "ve",
       "type": "TRAIN",
-      "provider": "Ước tính theo quãng đường (Tàu hỏa)",
+      "provider": "Ước tính theo quãng đường 609 km",
       "origin": "Thành phố Đà Nẵng",
       "destination": "TP.HCM",
       "departureTime": "16:00",
@@ -1611,21 +1605,19 @@
       "seatClass": "Ngồi mềm",
       "boardingPoint": "Ga Thành phố Đà Nẵng",
       "dropOffPoint": "Ga TP.HCM",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://dsvn.vn",
+      "notes": "Ước tính theo quãng đường 609 km",
+      "nguon": "uoc_luong:khoang_cach:609km",
       "ngayLay": "2026-10-20T02:54:26.844Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://dsvn.vn"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_di_xe_khach_2",
       "huong": "di",
       "type": "BUS",
-      "provider": "Ước tính theo quãng đường (Xe khách)",
+      "provider": "Ước tính theo quãng đường 609 km",
       "origin": "TP.HCM",
       "destination": "Thành phố Đà Nẵng",
       "departureTime": "08:30",
@@ -1634,21 +1626,19 @@
       "seatClass": "Giường nằm",
       "boardingPoint": "Bến xe TP.HCM",
       "dropOffPoint": "Bến xe Thành phố Đà Nẵng",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://vexere.com",
+      "notes": "Ước tính theo quãng đường 609 km",
+      "nguon": "uoc_luong:khoang_cach:609km",
       "ngayLay": "2026-10-20T02:54:26.844Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://vexere.com"
-      ]
+      "nguonGia": []
     },
     {
       "schemaVersion": 7,
       "id": "est_ve_xe_khach_2",
       "huong": "ve",
       "type": "BUS",
-      "provider": "Ước tính theo quãng đường (Xe khách)",
+      "provider": "Ước tính theo quãng đường 609 km",
       "origin": "Thành phố Đà Nẵng",
       "destination": "TP.HCM",
       "departureTime": "16:30",
@@ -1657,14 +1647,12 @@
       "seatClass": "Giường nằm",
       "boardingPoint": "Bến xe Thành phố Đà Nẵng",
       "dropOffPoint": "Bến xe TP.HCM",
-      "notes": "Ước tính theo quãng đường",
-      "nguon": "https://vexere.com",
+      "notes": "Ước tính theo quãng đường 609 km",
+      "nguon": "uoc_luong:khoang_cach:609km",
       "ngayLay": "2026-10-20T02:54:26.844Z",
       "doTinCay": "uoc_tinh",
       "giaLaUocTinh": true,
-      "nguonGia": [
-        "https://vexere.com"
-      ]
+      "nguonGia": []
     }
   ]
 }
