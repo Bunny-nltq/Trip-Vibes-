@@ -14,6 +14,7 @@ import {
   TrendingUp,
   Sparkles,
 } from "lucide-react";
+import { moTaCanhBao } from "@/ui/messages/canhBao";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
 
@@ -55,6 +56,7 @@ export function B6XemTruocScreen() {
               { ten: "Vui chơi", truoc: 1620000, sau: 940000, chenh: -680000 },
             ],
             canhBaoMoi: [],
+            canhBaoDaSua: [],
             canhBaoGiaiQuyet: [],
           },
           hard: [],
@@ -447,15 +449,34 @@ export function B6XemTruocScreen() {
           </div>
         )}
 
-        {/* Cảnh báo mới & Cảnh báo đã giải quyết */}
-        {diff.canhBaoMoi.length > 0 && (
+        {/* Cảnh báo mới */}
+        {diff.canhBaoMoi && diff.canhBaoMoi.length > 0 && (
           <div className="banner banner-warn" style={{ marginBottom: 16 }}>
-            <div className="banner-mark">!</div>
+            <div className="banner-mark">
+              <AlertTriangle size={14} />
+            </div>
             <div>
-              <div className="banner-title">Cảnh báo mới phát sinh:</div>
+              <div className="banner-title">Cảnh báo mới:</div>
               {diff.canhBaoMoi.map((cb, idx) => (
                 <div key={idx} className="banner-text">
-                  • {cb}
+                  • {moTaCanhBao(cb)}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Cảnh báo đã hết */}
+        {diff.canhBaoDaSua && diff.canhBaoDaSua.length > 0 && (
+          <div className="banner banner-success" style={{ marginBottom: 16 }}>
+            <div className="banner-mark">
+              <Check size={14} />
+            </div>
+            <div>
+              <div className="banner-title">Cảnh báo đã hết:</div>
+              {diff.canhBaoDaSua.map((cb, idx) => (
+                <div key={idx} className="banner-text">
+                  • {moTaCanhBao(cb)}
                 </div>
               ))}
             </div>

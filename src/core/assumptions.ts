@@ -129,3 +129,31 @@ export const THOI_GIAN_CO_DINH_MAY_BAY_PHUT = 90;
 export const GIA_CO_DINH_MAY_BAY_VND = 600_000;
 export const DON_GIA_MAY_BAY_D_KM = 1_100;
 
+// ─── Danh sách mã cảnh báo hệ thống ─────────────────────────────────────────
+
+export const DANH_SACH_MA_CANH_BAO = [
+  "ve_den_ngay_sau",
+  "den_vao_ngay_sau",
+  "di_chuyen_chiem_nhieu_thoi_gian",
+  "den_truoc_gio_nhan_phong",
+  "gan_het_ngan_sach",
+  "vuot_ngan_sach",
+  "ngay_dau_den_muon",
+  "bo_hoat_dong_do_gio_giac",
+  "o_trong_do_rang_buoc",
+  "vi_pham_khong_day_som",
+  "vi_pham_khong_di_dem",
+  "vi_pham_tranh_di_chuyen_lau",
+  "vi_pham_tranh_dong_nguoi",
+  "vi_pham_tranh_di_bo_nhieu",
+  "hoat_dong_chong_len",
+  "ngay_cuoi_khong_kip",
+  "so_nguoi_khong_hop_le",
+  "ngoai_pham_vi_so_ngay",
+  "so_ngay_khong_hop_le",
+  "ngan_sach_khong_hop_le",
+  "diem_den_mac_dinh",
+] as const;
+
+export type MaCanhBao = (typeof DANH_SACH_MA_CANH_BAO)[number];
+

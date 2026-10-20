@@ -9,10 +9,13 @@ import {
   BUFFER_RA_BEN_PHUT,
   BUFFER_GIUA_HOAT_DONG_PHUT,
   NGUONG_GAN_HET_NGAN_SACH_PHAN_TRAM,
+  DANH_SACH_MA_CANH_BAO,
 } from "./assumptions";
 import { coCanhBaoDiChuyen, tiLeThoiGianDiChuyen } from "./tiLeDiChuyen";
 import { gioOHoatDongNgayDau } from "./gioONgayDau";
 import { min2hhmm } from "./mealTimes";
+
+export { DANH_SACH_MA_CANH_BAO };
 
 export interface Violation {
   code: string;
@@ -186,15 +189,7 @@ export function validatePlan(
   // 4. Ràng buộc thời gian hoạt động ngày 1
   const hoatDongNgay1 = hoatDongTheoNgay[0] || [];
   if (hoatDongNgay1.length > 0 && tDi) {
-    if (request?.schemaVersion != null && request.schemaVersion < 7) {
-      const gioHoatDong1Phut = timeToMinutes(GIO_HOAT_DONG_1);
-      if (gioDenDiPhut + BUFFER_SAU_KHI_DEN_PHUT > gioHoatDong1Phut) {
-        hard.push({
-          code: "ngay_dau_den_muon",
-          chiTiet: `Đến nơi lúc ${min2hhmm(gioDenDiPhut)}, không kịp tham gia hoạt động thứ nhất.`,
-        });
-      }
-    } else if (gioOHoatDongNgayDau(gioDenDiPhut) === null) {
+    if (gioOHoatDongNgayDau(gioDenDiPhut) === null) {
       hard.push({
         code: "ngay_dau_den_muon",
         chiTiet: `Đến nơi lúc ${min2hhmm(gioDenDiPhut)}, không còn ô hoạt động nào trong ngày đầu.`,

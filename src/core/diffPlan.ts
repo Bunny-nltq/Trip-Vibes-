@@ -54,6 +54,7 @@ export interface PlanDiff {
   doiMuc: DoiMuc[];
   ngayAnhHuong: NgayAnhHuong[];
   canhBaoMoi: string[];
+  canhBaoDaSua: string[];
   trangThaiNganSach: { truoc: "trong" | "vuot"; sau: "trong" | "vuot" };
 }
 
@@ -66,10 +67,10 @@ const HANG_MUCKS: Array<"Di chuyển" | "Chỗ ở" | "Ăn uống" | "Vui chơi"
   "Vui chơi",
 ];
 
-/** Trả tập mã vi phạm (hard) của một plan */
+/** Trả tập mã vi phạm (hard + soft) của một plan */
 function allCodes(plan: Plan, data: PlanData): Set<string> {
-  const { hard } = validatePlan(plan.request, plan, data);
-  return new Set(hard.map((v) => v.code));
+  const { hard, soft } = validatePlan(plan.request, plan, data);
+  return new Set([...hard.map((v) => v.code), ...soft.map((v) => v.code)]);
 }
 
 /**
@@ -297,10 +298,11 @@ export function diffPlan(
   // Sắp xếp theo ngày
   ngayAnhHuong.sort((a, b) => a.ngay - b.ngay);
 
-  // 6. Cảnh báo mới: codes có trong SAU mà không có trong TRUOC
+  // 6. Cảnh báo mới & Cảnh báo đã sửa:
   const codesTruoc = allCodes(truoc, data);
   const codesSau = allCodes(sau, data);
   const canhBaoMoi = Array.from(codesSau).filter((c) => !codesTruoc.has(c));
+  const canhBaoDaSua = Array.from(codesTruoc).filter((c) => !codesSau.has(c));
 
   // 7. Trạng thái ngân sách
   const trangThaiNganSach = {
@@ -316,6 +318,7 @@ export function diffPlan(
     doiMuc,
     ngayAnhHuong,
     canhBaoMoi,
+    canhBaoDaSua,
     trangThaiNganSach,
   };
 }

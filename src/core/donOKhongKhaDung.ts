@@ -14,6 +14,7 @@ import {
   THOI_LUONG_TOI_THIEU_HOAT_DONG,
 } from "./assumptions";
 import { gioOHoatDongNgayDau } from "./gioONgayDau";
+import { min2hhmm } from "./mealTimes";
 
 const GIO_HOAT_DONG_1_PHUT = 9 * 60 + 30; // 570 phút ("09:30")
 const NGUONG_VE_PHUT =
@@ -123,21 +124,22 @@ export function donOKhongKhaDung(
   // Clone mảng hoạt động để cập nhật
   const hoatDongMoi = selection.hoatDongTheoNgay.map((dayActs) => [...dayActs]);
 
-  // Kiểm tra ngày đầu (ngày 1)
-  const isLegacyTest =
-    plan?.items &&
-    plan.items.some(
-      (i: any) =>
-        i.hangMuc === "Vui chơi" &&
-        i.ngay === 1 &&
-        !i.gio &&
-        gioDenPhutNgay1 !== null &&
-        gioDenPhutNgay1 + BUFFER_SAU_KHI_DEN_PHUT > GIO_HOAT_DONG_1_PHUT
-    );
+  // Nếu plan thiếu thuộc tính gio cho hoạt động ngày 1, tự tính từ gioOHoatDongNgayDau
+  if (plan && Array.isArray(plan.items) && gioDenPhutNgay1 !== null) {
+    const slotNgay1 = gioOHoatDongNgayDau(gioDenPhutNgay1);
+    if (slotNgay1 !== null) {
+      for (const it of plan.items) {
+        if (it.hangMuc === "Vui chơi" && it.ngay === 1 && !it.gio) {
+          it.gio = min2hhmm(slotNgay1);
+        }
+      }
+    }
+  }
 
+  // Kiểm tra ngày đầu (ngày 1)
   if (
     gioDenPhutNgay1 !== null &&
-    (gioOHoatDongNgayDau(gioDenPhutNgay1) === null || isLegacyTest)
+    gioOHoatDongNgayDau(gioDenPhutNgay1) === null
   ) {
     if (hoatDongMoi[0] && hoatDongMoi[0].length > 0) {
       hoatDongMoi[0] = [];
@@ -170,7 +172,7 @@ export function donOKhongKhaDung(
 
   // Nếu plan được truyền vào, loại bỏ các items Vui chơi của ngày bị gỡ
   if (plan && Array.isArray(plan.items) && daDon) {
-    if (hoatDongMoi[0]?.length === 0 && gioDenPhutNgay1 !== null && (gioOHoatDongNgayDau(gioDenPhutNgay1) === null || isLegacyTest)) {
+    if (hoatDongMoi[0]?.length === 0 && gioDenPhutNgay1 !== null && gioOHoatDongNgayDau(gioDenPhutNgay1) === null) {
       plan.items = plan.items.filter((i: any) => !(i.hangMuc === "Vui chơi" && i.ngay === 1));
     }
     if (hoatDongMoi[lastIdx]?.length === 0 && gioKhoiHanhVePhut !== null && gioKhoiHanhVePhut < NGUONG_VE_PHUT) {

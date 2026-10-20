@@ -3,7 +3,7 @@ import { donOKhongKhaDung } from "./donOKhongKhaDung";
 import type { Selection, Plan } from "@/contracts";
 
 describe("donOKhongKhaDung", () => {
-  it("chiều đi đến 10:19, ngày 1 có [A1] -> sau dọn, ngày 1 là [] và có cảnh báo bo_hoat_dong_do_gio_giac", () => {
+  it("chiều đi đến 10:19, ngày 1 có [A1] -> sau dọn, ngày 1 vẫn là [A1], không có cảnh báo bo_hoat_dong_do_gio_giac", () => {
     const selection: Selection = {
       transportDiId: "t_di",
       transportVeId: "t_ve",
@@ -19,6 +19,88 @@ describe("donOKhongKhaDung", () => {
           ngay: 1,
           gio: "10:19",
           arrivalTime: "10:19",
+        },
+        {
+          hangMuc: "Di chuyển",
+          ngay: 3,
+          gio: "18:00",
+        },
+        {
+          hangMuc: "Vui chơi",
+          ngay: 1,
+          noiDung: "Hoạt động A1",
+          refId: "A1",
+        },
+      ],
+      canhBao: [],
+    };
+
+    const res = donOKhongKhaDung(selection, plan);
+
+    expect(res.selection.hoatDongTheoNgay[0]).toEqual(["A1"]);
+    expect(res.hoatDongTheoNgay[0]).toEqual(["A1"]);
+    expect(selection.hoatDongTheoNgay[0]).toEqual(["A1"]);
+    expect(res.canhBao.some((cb) => cb.includes("bo_hoat_dong_do_gio_giac"))).toBe(false);
+    expect(res.daDon).toBe(false);
+  });
+
+  it("chuyến đi đến 15:00 (900), ngày 1 có [A1] thì sau dọn ngày 1 là [] và có cảnh báo bo_hoat_dong_do_gio_giac", () => {
+    const selection: Selection = {
+      transportDiId: "t_di",
+      transportVeId: "t_ve",
+      hotelId: "h1",
+      hoatDongTheoNgay: [["A1"], ["A2", "A3"], ["A4"]],
+    };
+
+    const plan: any = {
+      request: { soNgay: 3 },
+      items: [
+        {
+          hangMuc: "Di chuyển",
+          ngay: 1,
+          gio: "15:00",
+          arrivalTime: "15:00",
+        },
+        {
+          hangMuc: "Di chuyển",
+          ngay: 3,
+          gio: "18:00",
+        },
+        {
+          hangMuc: "Vui chơi",
+          ngay: 1,
+          noiDung: "Hoạt động A1",
+          refId: "A1",
+        },
+      ],
+      canhBao: [],
+    };
+
+    const res = donOKhongKhaDung(selection, plan);
+
+    expect(res.selection.hoatDongTheoNgay[0]).toEqual([]);
+    expect(res.hoatDongTheoNgay[0]).toEqual([]);
+    expect(selection.hoatDongTheoNgay[0]).toEqual([]);
+    expect(res.canhBao.some((cb) => cb.includes("bo_hoat_dong_do_gio_giac"))).toBe(true);
+    expect(res.daDon).toBe(true);
+  });
+
+  it("chuyến đi đến 18:07 (1087), ngày 1 có [A1] thì sau dọn ngày 1 là [] và có cảnh báo bo_hoat_dong_do_gio_giac", () => {
+    const selection: Selection = {
+      transportDiId: "t_di",
+      transportVeId: "t_ve",
+      hotelId: "h1",
+      hoatDongTheoNgay: [["A1"], ["A2", "A3"], ["A4"]],
+    };
+
+    const plan: any = {
+      request: { soNgay: 3 },
+      items: [
+        {
+          hangMuc: "Di chuyển",
+          ngay: 1,
+          gio: "18:07",
+          arrivalTime: "18:07",
         },
         {
           hangMuc: "Di chuyển",

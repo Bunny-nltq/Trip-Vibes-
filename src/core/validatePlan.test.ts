@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { validatePlan } from "./validatePlan";
-import { buildPlan } from "./buildPlan";
+import { buildPlan, type PlanData } from "./buildPlan";
 import type { TripRequest, Selection } from "@/contracts";
 
 function createMockData() {
@@ -259,9 +259,9 @@ describe("validatePlan", () => {
     }
   });
 
-  it("ngay_dau_den_muon: đi 09:15 có A1 vs không có hoạt động", () => {
+  it("đến 10:40, ngày 1 có A1 (giờ 15:30): không vi phạm", () => {
     const req: TripRequest = {
-      schemaVersion: 4,
+      schemaVersion: 9,
       diemDi: "TP.HCM",
       diemDen: "Đà Nẵng",
       soNguoi: 2,
@@ -285,7 +285,7 @@ describe("validatePlan", () => {
     let plan = buildPlan(req, sel, data);
     if (plan.ok) {
       let v = validatePlan(req, plan.plan, data);
-      expect(v.hard.some((h) => h.code === "ngay_dau_den_muon")).toBe(true);
+      expect(v.hard.some((h) => h.code === "ngay_dau_den_muon")).toBe(false);
     }
 
     // Không có hoạt động
@@ -299,6 +299,54 @@ describe("validatePlan", () => {
     if (plan.ok) {
       let v = validatePlan(req, plan.plan, data);
       expect(v.hard.some((h) => h.code === "ngay_dau_den_muon")).toBe(false);
+    }
+  });
+
+  it("chuyến đi đến 15:00 (900 phút), ngày 1 có A1: hard chứa ngay_dau_den_muon và chi tiết chứa 15:00", () => {
+    const req: TripRequest = {
+      schemaVersion: 9,
+      diemDi: "TP.HCM",
+      diemDen: "Đà Nẵng",
+      soNguoi: 2,
+      soNgay: 3,
+      ngansachTongVND: 15000000,
+      sothich: [],
+      tranh: [],
+      ghiChu: [],
+      thieu: [],
+      cauHoiLamRo: [],
+      canhBao: [],
+    };
+    const tDi1500: any = {
+      id: "T_DI_1500",
+      huong: "di",
+      type: "PLANE",
+      provider: "Hãng A",
+      origin: "TP.HCM",
+      destination: "Đà Nẵng",
+      departureTime: "13:00",
+      durationMinutes: 120, // 13:00 + 120 = 15:00 (900 phút)
+      pricePerPerson: 980000,
+      seatClass: "Phổ thông",
+      boardingPoint: "Sân bay",
+      dropOffPoint: "Sân bay",
+    };
+    const customData: PlanData = {
+      ...data,
+      transports: [tDi1500, ...data.transports.filter((t) => t.id !== "T_DI_1500")],
+    };
+    const sel: Selection = {
+      transportDiId: "T_DI_1500",
+      transportVeId: "T_VE",
+      hotelId: "H1",
+      hoatDongTheoNgay: [["A1"], [], []],
+    };
+    const plan = buildPlan(req, sel, customData);
+    if (plan.ok) {
+      const v = validatePlan(req, plan.plan, customData);
+      const err = v.hard.find((h) => h.code === "ngay_dau_den_muon");
+      expect(err).toBeDefined();
+      expect(err?.chiTiet).toContain("15:00");
     }
   });
 

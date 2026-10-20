@@ -234,8 +234,9 @@ describe("diffPlan – Fixture A (2 người, 3 ngày, 10 triệu)", () => {
     // Trạng thái ngân sách
     expect(diff.trangThaiNganSach.sau).toBe("trong");
 
-    // request không có tranh_di_chuyen_lau → canhBaoMoi rỗng
-    expect(diff.canhBaoMoi).toEqual([]);
+    // canhBaoMoi có ve_den_ngay_sau; canhBaoDaSua có gan_het_ngan_sach
+    expect(diff.canhBaoMoi).toEqual(["ve_den_ngay_sau"]);
+    expect(diff.canhBaoDaSua).toEqual(["gan_het_ngan_sach"]);
   });
 
   it("Đổi chiều về sang tàu VỚI tranh_di_chuyen_lau → canhBaoMoi có mã vi phạm", () => {
