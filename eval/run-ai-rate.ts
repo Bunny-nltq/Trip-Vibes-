@@ -131,6 +131,7 @@ export interface ProgressRecord {
   ngayChay: string;
   stt: number;
   scenarioResult: ScenarioResult;
+  quyTacVersion?: string;
 }
 
 export function createScenarioHash(
@@ -313,16 +314,37 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
     const hashKey = createScenarioHash(request, candidateIds);
 
     // Kiểm tra xem kịch bản đã có trong tiến trình lưu trước chưa
-    // Với test chạy options.planFn thì cho phép khớp p.stt, với chạy thực tế thì chỉ khớp đúng hashKey (v2)
-    const isV2Match = (p: ProgressRecord) => {
-      if (p.hashKey === hashKey) return true;
-      if (options.planFn && !p.hashKey.includes("legacy") && !p.hashKey.includes("v1")) {
+    // Khớp bản ghi quy tắc v3 (theo hashKey hoặc stt khi đã đánh dấu v3), các bản ghi v1/v2 là legacy
+    const isV3Match = (p: ProgressRecord) => {
+      if (p.quyTacVersion === "3") {
+        if (p.hashKey === hashKey) return true;
+        if (p.stt === sc.stt) return true;
+      }
+      if (!p.quyTacVersion && p.hashKey === hashKey) return true;
+      if (
+        options.planFn &&
+        !p.hashKey.includes("legacy") &&
+        !p.hashKey.includes("v1") &&
+        !p.hashKey.includes("v2") &&
+        (p.quyTacVersion === "3" || !p.quyTacVersion)
+      ) {
         return p.stt === sc.stt;
       }
       return false;
     };
-    const existingRecord = progressRecords.find(isV2Match);
-    const legacyRecord = !existingRecord ? progressRecords.find((p) => p.stt === sc.stt) : null;
+    const existingRecord = progressRecords.find(isV3Match);
+    const legacyRecord = !existingRecord
+      ? progressRecords.find(
+          (p) =>
+            p.stt === sc.stt &&
+            (p.quyTacVersion === "1" ||
+              p.quyTacVersion === "2" ||
+              p.hashKey.includes("legacy") ||
+              p.hashKey.includes("v1") ||
+              p.hashKey.includes("v2") ||
+              (!p.quyTacVersion && p.hashKey !== hashKey))
+        )
+      : null;
 
     if (existingRecord) {
       console.log(
@@ -339,14 +361,19 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
     }
 
     if (legacyRecord) {
+      const verStr = legacyRecord.quyTacVersion
+        ? `v${legacyRecord.quyTacVersion}`
+        : legacyRecord.hashKey.includes("v2")
+        ? "v2"
+        : "v1";
       console.log(
-        ` -> [CŨ (quy tắc v1)]: Kịch bản ${sc.stt} (${destConfig.ten} ${heSo}) có kết quả cũ từ ngày ${legacyRecord.ngayChay} (quy tắc v1). KHÔNG dùng lại như hợp lệ; để chạy lại khi có lượt Gemini.`
+        ` -> [CŨ (quy tắc ${verStr})]: Kịch bản ${sc.stt} (${destConfig.ten} ${heSo}) có kết quả cũ từ ngày ${legacyRecord.ngayChay} (quy tắc ${verStr}). KHÔNG dùng lại như hợp lệ; để chạy lại khi có lượt Gemini.`
       );
       if (maxNew !== undefined && countNew >= maxNew) {
         results.push({
           ...legacyRecord.scenarioResult,
           stt: sc.stt,
-          nguonKetQua: "CŨ (quy tắc v1)",
+          nguonKetQua: `CŨ (quy tắc ${verStr})`,
           oHoatDong: "(luật cũ)",
           hashKey: legacyRecord.hashKey,
         });
@@ -455,6 +482,7 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
       ngayChay: dateStr,
       stt: sc.stt,
       scenarioResult: scRes,
+      quyTacVersion: QUY_TAC_VERSION,
     };
     if (recordIndex >= 0) {
       progressRecords[recordIndex] = newRecord;
@@ -484,10 +512,13 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
     }
   }
 
-  // Tách kết quả quy tắc hiện tại và kết quả cũ
+  // Tách kết quả quy tắc hiện tại (v3) và kết quả cũ (v1, v2)
+  const isOldResult = (r: ScenarioResult) =>
+    Boolean(r.nguonKetQua?.startsWith("CŨ") || r.oHoatDong === "(luật cũ)");
+
   const validRuns = results.filter((r) => !r.boQua);
-  const currentRuns = validRuns.filter((r) => r.nguonKetQua !== "CŨ (quy tắc v1)");
-  const oldRuns = validRuns.filter((r) => r.nguonKetQua === "CŨ (quy tắc v1)");
+  const currentRuns = validRuns.filter((r) => !isOldResult(r));
+  const oldRuns = validRuns.filter(isOldResult);
 
   const totalRuns = currentRuns.length;
   const numFirstOk = currentRuns.filter(

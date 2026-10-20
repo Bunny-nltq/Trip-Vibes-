@@ -1,9 +1,9 @@
 {
   "taoBoi": "script data:snapshot",
-  "ngayTao": "2026-10-20T02:54:36.905Z",
+  "ngayTao": "2026-10-20T15:27:16.190Z",
   "diemDen": "Đà Lạt",
-  "checksum": "d712eb9c007c8289fdadbb5d3e73fdafe0f0caa88c1ac76d477e73977df5b94f",
-  "createdAt": "2026-10-20T02:54:36.905Z",
+  "checksum": "6e39bd8bf1a3326292bcfeaa34ee9f32b29fb5cdaac38acd38e85935d243c404",
+  "createdAt": "2026-10-20T15:27:16.190Z",
   "khachSans": [
     {
       "id": "osm:node:10925751839",
@@ -20,7 +20,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:10925751839",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -51,7 +51,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:4471127791",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -82,7 +82,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:8777130293",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -113,7 +113,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:5170755822",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -126,37 +126,6 @@
         "xem": "https://www.google.com/maps/search/?api=1&query=Cherry%20villa%20%26%20Bungalow%2C%20%C4%90%C3%A0%20L%E1%BA%A1t",
         "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=11.9286698%2C108.4430775",
         "apple": "https://maps.apple.com/?daddr=11.9286698,108.4430775"
-      },
-      "nguonGia": []
-    },
-    {
-      "id": "osm:node:13811008201",
-      "osmId": "osm:node:13811008201",
-      "ten": "Dream Flower Dalat Hotel",
-      "khuVuc": "Trung tâm",
-      "diaChi": "57 An Bình",
-      "toaDo": {
-        "lat": 11.9243425,
-        "lng": 108.4370584
-      },
-      "loai": "khach_san",
-      "gioMoCua": null,
-      "soSao": null,
-      "giaUocTinhNguoi": 375000,
-      "nguon": "osm:node:13811008201",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
-      "doTinCay": "tham_khao",
-      "giaLaUocTinh": true,
-      "khoangGiaDemVND": {
-        "min": 637500,
-        "max": 862500
-      },
-      "includesBreakfast": false,
-      "hasPool": false,
-      "mapsUrls": {
-        "xem": "https://www.google.com/maps/search/?api=1&query=Dream%20Flower%20Dalat%20Hotel%2C%20%C4%90%C3%A0%20L%E1%BA%A1t",
-        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=11.9243425%2C108.4370584",
-        "apple": "https://maps.apple.com/?daddr=11.9243425,108.4370584"
       },
       "nguonGia": []
     },
@@ -175,7 +144,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:4268048589",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -206,7 +175,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:4212676677",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -237,7 +206,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:5599652325",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -268,7 +237,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:4965398822",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -299,7 +268,7 @@
       "soSao": 4,
       "giaUocTinhNguoi": 650000,
       "nguon": "osm:node:1150926740",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -330,7 +299,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:11917141669",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -361,7 +330,7 @@
       "soSao": 2,
       "giaUocTinhNguoi": 225000,
       "nguon": "osm:node:1152315808",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -378,21 +347,21 @@
       "nguonGia": []
     },
     {
-      "id": "osm:node:13140492701",
-      "osmId": "osm:node:13140492701",
-      "ten": "Yên Homestay in Da Lat",
+      "id": "osm:node:12357250301",
+      "osmId": "osm:node:12357250301",
+      "ten": "Mộc Trà Hotel",
       "khuVuc": "Trung tâm",
-      "diaChi": "9 Phê Thạch",
+      "diaChi": "Bà Triệu",
       "toaDo": {
-        "lat": 11.9343961,
-        "lng": 108.4192577
+        "lat": 11.9366572,
+        "lng": 108.4330553
       },
       "loai": "khach_san",
       "gioMoCua": null,
       "soSao": null,
       "giaUocTinhNguoi": 375000,
-      "nguon": "osm:node:13140492701",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "nguon": "osm:node:12357250301",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -402,28 +371,28 @@
       "includesBreakfast": false,
       "hasPool": false,
       "mapsUrls": {
-        "xem": "https://www.google.com/maps/search/?api=1&query=Y%C3%AAn%20Homestay%20in%20Da%20Lat%2C%20%C4%90%C3%A0%20L%E1%BA%A1t",
-        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=11.9343961%2C108.4192577",
-        "apple": "https://maps.apple.com/?daddr=11.9343961,108.4192577"
+        "xem": "https://www.google.com/maps/search/?api=1&query=M%E1%BB%99c%20Tr%C3%A0%20Hotel%2C%20%C4%90%C3%A0%20L%E1%BA%A1t",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=11.9366572%2C108.4330553",
+        "apple": "https://maps.apple.com/?daddr=11.9366572,108.4330553"
       },
       "nguonGia": []
     },
     {
-      "id": "osm:node:5588055721",
-      "osmId": "osm:node:5588055721",
-      "ten": "Vie Dallat",
+      "id": "osm:node:6324811885",
+      "osmId": "osm:node:6324811885",
+      "ten": "Tia Du Homestay",
       "khuVuc": "Trung tâm",
-      "diaChi": "14C Đống Đa",
+      "diaChi": "60 Đống Đa",
       "toaDo": {
-        "lat": 11.9241195,
-        "lng": 108.4428484
+        "lat": 11.9263312,
+        "lng": 108.4398455
       },
       "loai": "khach_san",
       "gioMoCua": null,
       "soSao": null,
       "giaUocTinhNguoi": 375000,
-      "nguon": "osm:node:5588055721",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "nguon": "osm:node:6324811885",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -433,28 +402,28 @@
       "includesBreakfast": false,
       "hasPool": false,
       "mapsUrls": {
-        "xem": "https://www.google.com/maps/search/?api=1&query=Vie%20Dallat%2C%20%C4%90%C3%A0%20L%E1%BA%A1t",
-        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=11.9241195%2C108.4428484",
-        "apple": "https://maps.apple.com/?daddr=11.9241195,108.4428484"
+        "xem": "https://www.google.com/maps/search/?api=1&query=Tia%20Du%20Homestay%2C%20%C4%90%C3%A0%20L%E1%BA%A1t",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=11.9263312%2C108.4398455",
+        "apple": "https://maps.apple.com/?daddr=11.9263312,108.4398455"
       },
       "nguonGia": []
     },
     {
-      "id": "osm:node:5227714322",
-      "osmId": "osm:node:5227714322",
-      "ten": "The Shelter",
+      "id": "osm:node:11925562369",
+      "osmId": "osm:node:11925562369",
+      "ten": "Rose Valley Hotel Da Lat Vietnam",
       "khuVuc": "Trung tâm",
-      "diaChi": "36 Triệu Việt Vương",
+      "diaChi": "36 Ngô Thì Sĩ",
       "toaDo": {
-        "lat": 11.9247839,
-        "lng": 108.4362405
+        "lat": 11.9312842,
+        "lng": 108.4253918
       },
       "loai": "khach_san",
       "gioMoCua": null,
       "soSao": null,
       "giaUocTinhNguoi": 375000,
-      "nguon": "osm:node:5227714322",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "nguon": "osm:node:11925562369",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -464,9 +433,40 @@
       "includesBreakfast": false,
       "hasPool": false,
       "mapsUrls": {
-        "xem": "https://www.google.com/maps/search/?api=1&query=The%20Shelter%2C%20%C4%90%C3%A0%20L%E1%BA%A1t",
-        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=11.9247839%2C108.4362405",
-        "apple": "https://maps.apple.com/?daddr=11.9247839,108.4362405"
+        "xem": "https://www.google.com/maps/search/?api=1&query=Rose%20Valley%20Hotel%20Da%20Lat%20Vietnam%2C%20%C4%90%C3%A0%20L%E1%BA%A1t",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=11.9312842%2C108.4253918",
+        "apple": "https://maps.apple.com/?daddr=11.9312842,108.4253918"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:13788711302",
+      "osmId": "osm:node:13788711302",
+      "ten": "NO Mini Homestay",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 11.9449047,
+        "lng": 108.4224216
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:13788711302",
+      "ngayLay": "2026-10-20T15:27:16.189Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=NO%20Mini%20Homestay%2C%20%C4%90%C3%A0%20L%E1%BA%A1t",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=11.9449047%2C108.4224216",
+        "apple": "https://maps.apple.com/?daddr=11.9449047,108.4224216"
       },
       "nguonGia": []
     }
@@ -487,7 +487,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:13243073854",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "vietnamese"
@@ -507,7 +507,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:12429519884",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "soup"
@@ -527,7 +527,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:4749866721",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "chicken;deli;grill;barbecue;fish;seafood;diner"
@@ -547,7 +547,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:12770400501",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "bagel;breakfast;burger;international;italian;italian_pizza;pizza"
@@ -567,7 +567,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:11899737758",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -587,7 +587,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:11837003283",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -607,7 +607,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:11899734417",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -627,7 +627,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:11899749041",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -647,7 +647,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:13898329801",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "vietnamese"
@@ -667,7 +667,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:11920969536",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -687,7 +687,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:14182804401",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -707,7 +707,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:11840645593",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -727,7 +727,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:4590730119",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "regional"
@@ -747,7 +747,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:7045201185",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -767,7 +767,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:4314055603",
-      "ngayLay": "2026-10-20T02:54:36.898Z",
+      "ngayLay": "2026-10-20T15:25:05.843Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -789,7 +789,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:11836717645",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -808,7 +808,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:11840636053",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -827,7 +827,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:11899834395",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -846,7 +846,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:13420491001",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -865,7 +865,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:13805824401",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -884,7 +884,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:11840689717",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -903,7 +903,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:11918234758",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -922,7 +922,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:11899845106",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -941,7 +941,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:11918255875",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -960,7 +960,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:13580576901",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -979,7 +979,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:13788702101",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -998,7 +998,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:11899840075",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -1017,7 +1017,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:7236155987",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -1036,7 +1036,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:13789278303",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -1055,7 +1055,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:7106039085",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:26:43.768Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     }
@@ -1076,7 +1076,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:13059586149",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1107,7 +1107,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:4589456390",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1138,7 +1138,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:2706917665",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1169,7 +1169,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:4096525696",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1200,7 +1200,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:5274759821",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1231,7 +1231,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:13953793101",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1262,7 +1262,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:11365555079",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1293,7 +1293,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:4368051989",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1324,7 +1324,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:12878563601",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1355,7 +1355,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:13072770501",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1386,7 +1386,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:11598941137",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1418,7 +1418,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:6322222686",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1449,7 +1449,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:1164597191",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1480,7 +1480,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:1152350875",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1511,7 +1511,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:13057481101",
-      "ngayLay": "2026-10-20T02:54:36.899Z",
+      "ngayLay": "2026-10-20T15:27:01.220Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1528,132 +1528,5 @@
       }
     }
   ],
-  "transports": [
-    {
-      "schemaVersion": 7,
-      "id": "est_di_may_bay_0",
-      "huong": "di",
-      "type": "PLANE",
-      "provider": "Ước tính theo quãng đường 231 km",
-      "origin": "TP.HCM",
-      "destination": "Đà Lạt",
-      "departureTime": "08:00",
-      "durationMinutes": 108,
-      "pricePerPerson": 852230,
-      "seatClass": "Phổ thông",
-      "boardingPoint": "Sân bay TP.HCM",
-      "dropOffPoint": "Sân bay Đà Lạt",
-      "notes": "Ước tính theo quãng đường 231 km",
-      "nguon": "uoc_luong:khoang_cach:231km",
-      "ngayLay": "2026-10-20T02:54:36.897Z",
-      "doTinCay": "uoc_tinh",
-      "giaLaUocTinh": true,
-      "nguonGia": []
-    },
-    {
-      "schemaVersion": 7,
-      "id": "est_ve_may_bay_0",
-      "huong": "ve",
-      "type": "PLANE",
-      "provider": "Ước tính theo quãng đường 231 km",
-      "origin": "Đà Lạt",
-      "destination": "TP.HCM",
-      "departureTime": "17:30",
-      "durationMinutes": 108,
-      "pricePerPerson": 852230,
-      "seatClass": "Phổ thông",
-      "boardingPoint": "Sân bay Đà Lạt",
-      "dropOffPoint": "Sân bay TP.HCM",
-      "notes": "Ước tính theo quãng đường 231 km",
-      "nguon": "uoc_luong:khoang_cach:231km",
-      "ngayLay": "2026-10-20T02:54:36.897Z",
-      "doTinCay": "uoc_tinh",
-      "giaLaUocTinh": true,
-      "nguonGia": []
-    },
-    {
-      "schemaVersion": 7,
-      "id": "est_di_tau_1",
-      "huong": "di",
-      "type": "TRAIN",
-      "provider": "Ước tính theo quãng đường 231 km",
-      "origin": "TP.HCM",
-      "destination": "Đà Lạt",
-      "departureTime": "07:00",
-      "durationMinutes": 250,
-      "pricePerPerson": 229300,
-      "seatClass": "Ngồi mềm",
-      "boardingPoint": "Ga TP.HCM",
-      "dropOffPoint": "Ga Đà Lạt",
-      "notes": "Ước tính theo quãng đường 231 km",
-      "nguon": "uoc_luong:khoang_cach:231km",
-      "ngayLay": "2026-10-20T02:54:36.897Z",
-      "doTinCay": "uoc_tinh",
-      "giaLaUocTinh": true,
-      "nguonGia": []
-    },
-    {
-      "schemaVersion": 7,
-      "id": "est_ve_tau_1",
-      "huong": "ve",
-      "type": "TRAIN",
-      "provider": "Ước tính theo quãng đường 231 km",
-      "origin": "Đà Lạt",
-      "destination": "TP.HCM",
-      "departureTime": "16:00",
-      "durationMinutes": 250,
-      "pricePerPerson": 229300,
-      "seatClass": "Ngồi mềm",
-      "boardingPoint": "Ga Đà Lạt",
-      "dropOffPoint": "Ga TP.HCM",
-      "notes": "Ước tính theo quãng đường 231 km",
-      "nguon": "uoc_luong:khoang_cach:231km",
-      "ngayLay": "2026-10-20T02:54:36.897Z",
-      "doTinCay": "uoc_tinh",
-      "giaLaUocTinh": true,
-      "nguonGia": []
-    },
-    {
-      "schemaVersion": 7,
-      "id": "est_di_xe_khach_2",
-      "huong": "di",
-      "type": "BUS",
-      "provider": "Ước tính theo quãng đường 231 km",
-      "origin": "TP.HCM",
-      "destination": "Đà Lạt",
-      "departureTime": "08:30",
-      "durationMinutes": 275,
-      "pricePerPerson": 229300,
-      "seatClass": "Giường nằm",
-      "boardingPoint": "Bến xe TP.HCM",
-      "dropOffPoint": "Bến xe Đà Lạt",
-      "notes": "Ước tính theo quãng đường 231 km",
-      "nguon": "uoc_luong:khoang_cach:231km",
-      "ngayLay": "2026-10-20T02:54:36.897Z",
-      "doTinCay": "uoc_tinh",
-      "giaLaUocTinh": true,
-      "nguonGia": []
-    },
-    {
-      "schemaVersion": 7,
-      "id": "est_ve_xe_khach_2",
-      "huong": "ve",
-      "type": "BUS",
-      "provider": "Ước tính theo quãng đường 231 km",
-      "origin": "Đà Lạt",
-      "destination": "TP.HCM",
-      "departureTime": "16:30",
-      "durationMinutes": 275,
-      "pricePerPerson": 229300,
-      "seatClass": "Giường nằm",
-      "boardingPoint": "Bến xe Đà Lạt",
-      "dropOffPoint": "Bến xe TP.HCM",
-      "notes": "Ước tính theo quãng đường 231 km",
-      "nguon": "uoc_luong:khoang_cach:231km",
-      "ngayLay": "2026-10-20T02:54:36.897Z",
-      "doTinCay": "uoc_tinh",
-      "giaLaUocTinh": true,
-      "nguonGia": []
-    }
-  ]
+  "transports": []
 }

@@ -1,9 +1,9 @@
 {
   "taoBoi": "script data:snapshot",
-  "ngayTao": "2026-10-20T02:54:51.572Z",
+  "ngayTao": "2026-10-20T15:38:18.712Z",
   "diemDen": "Băng Cốc",
-  "checksum": "80fb35824d40526ca6c50467a05eb533101befb5d71cd2809d82b79748b528d6",
-  "createdAt": "2026-10-20T02:54:51.572Z",
+  "checksum": "dc1b8b20aee38e289cfcf5f7174573927833b6d3571fcdc3dd3602e7ce87f02b",
+  "createdAt": "2026-10-20T15:38:18.712Z",
   "khachSans": [
     {
       "id": "osm:node:6407176806",
@@ -20,7 +20,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:6407176806",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -51,7 +51,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:9599444682",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -82,7 +82,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:11115619749",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -113,7 +113,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:4739296321",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -144,7 +144,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:13759014801",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -175,7 +175,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:12409927201",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -206,7 +206,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:10925639147",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -237,7 +237,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:11811569598",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -268,7 +268,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:12352447101",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -299,7 +299,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:4816850221",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -330,7 +330,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:12428813854",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -361,7 +361,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:1887121773",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -392,7 +392,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:6548672685",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -423,7 +423,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:4173566689",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -454,7 +454,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 375000,
       "nguon": "osm:node:4161559690",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:35:41.871Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "khoangGiaDemVND": {
@@ -487,7 +487,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:12645513299",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "thai"
@@ -507,7 +507,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:11049564606",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "chinese;asian"
@@ -527,7 +527,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:4928977922",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "thai"
@@ -547,7 +547,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:13570073638",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "thai"
@@ -567,7 +567,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:7132484943",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -587,7 +587,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:9666206917",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "fine_dining"
@@ -607,7 +607,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:6946994143",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "noodles;Thai"
@@ -627,7 +627,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:7072267488",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -647,7 +647,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:7121019985",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "thai"
@@ -667,7 +667,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:8120240943",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -687,7 +687,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:4366333024",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "regional"
@@ -707,7 +707,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:12253843001",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "fine_dining;thai"
@@ -727,7 +727,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:5031707522",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": "seafood"
@@ -747,7 +747,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:7178478481",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -767,7 +767,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 150000,
       "nguon": "osm:node:4642387813",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:37:47.890Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true,
       "amThuc": null
@@ -789,7 +789,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:13513865131",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -808,7 +808,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:3431325825",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -827,7 +827,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:6735095037",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -846,7 +846,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:6282634785",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -865,7 +865,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:12432520802",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -884,7 +884,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:12428815001",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -903,7 +903,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:7233637090",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -922,7 +922,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:6965560248",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -941,7 +941,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:11510249969",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -960,7 +960,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:6338208285",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -979,7 +979,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:10705709305",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -998,7 +998,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:10538698062",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -1017,7 +1017,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:8120513722",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -1036,7 +1036,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:10925662013",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     },
@@ -1055,7 +1055,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 50000,
       "nguon": "osm:node:3036731573",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:04.484Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": true
     }
@@ -1076,7 +1076,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:10792898504",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1107,7 +1107,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:5342565921",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1138,7 +1138,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:6259620985",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1170,7 +1170,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:11463141290",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1201,7 +1201,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:6069909589",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1232,7 +1232,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:5362733473",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1263,7 +1263,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:6232721188",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1295,7 +1295,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:2397987931",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1326,7 +1326,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:3096836185",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1357,7 +1357,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:4257127190",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1388,7 +1388,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:11806216522",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1420,7 +1420,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:5887764787",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1451,7 +1451,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:3568027498",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1482,7 +1482,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:6285636993",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1513,7 +1513,7 @@
       "soSao": null,
       "giaUocTinhNguoi": 0,
       "nguon": "osm:node:4605868307",
-      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "ngayLay": "2026-10-20T15:38:18.712Z",
       "doTinCay": "tham_khao",
       "giaLaUocTinh": false,
       "giaVeNguoi": 0,
@@ -1530,48 +1530,5 @@
       }
     }
   ],
-  "transports": [
-    {
-      "schemaVersion": 7,
-      "id": "est_di_may_bay_0",
-      "huong": "di",
-      "type": "PLANE",
-      "provider": "Ước tính theo quãng đường 751 km",
-      "origin": "TP.HCM",
-      "destination": "Băng Cốc",
-      "departureTime": "08:00",
-      "durationMinutes": 150,
-      "pricePerPerson": 1426320,
-      "seatClass": "Phổ thông",
-      "boardingPoint": "Sân bay TP.HCM",
-      "dropOffPoint": "Sân bay Băng Cốc",
-      "notes": "Ước tính theo quãng đường 751 km",
-      "nguon": "uoc_luong:khoang_cach:751km",
-      "ngayLay": "2026-10-20T02:54:46.956Z",
-      "doTinCay": "uoc_tinh",
-      "giaLaUocTinh": true,
-      "nguonGia": []
-    },
-    {
-      "schemaVersion": 7,
-      "id": "est_ve_may_bay_0",
-      "huong": "ve",
-      "type": "PLANE",
-      "provider": "Ước tính theo quãng đường 751 km",
-      "origin": "Băng Cốc",
-      "destination": "TP.HCM",
-      "departureTime": "17:30",
-      "durationMinutes": 150,
-      "pricePerPerson": 1426320,
-      "seatClass": "Phổ thông",
-      "boardingPoint": "Sân bay Băng Cốc",
-      "dropOffPoint": "Sân bay TP.HCM",
-      "notes": "Ước tính theo quãng đường 751 km",
-      "nguon": "uoc_luong:khoang_cach:751km",
-      "ngayLay": "2026-10-20T02:54:46.956Z",
-      "doTinCay": "uoc_tinh",
-      "giaLaUocTinh": true,
-      "nguonGia": []
-    }
-  ]
+  "transports": []
 }

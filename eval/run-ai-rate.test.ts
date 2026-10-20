@@ -200,16 +200,17 @@ describe("Eval chạy tiếp được (run-ai-rate)", () => {
     expect(savedRecords.length).toBe(2);
   });
 
-  // Bước 17 - (d) chỉ có kết quả CŨ thì tổng hợp ghi 0/10 và không có số x/y nào khác
-  it("(d) chỉ có kết quả CŨ thì tổng hợp ghi 0/10 và không có số x/y nào khác", async () => {
+  // Bước 20 - (d) có đủ 0 kịch bản phiên bản "3": in "0/10 kịch bản đã chạy với quy tắc hiện tại. CHƯA CÓ KẾT QUẢ"
+  it("(d) có đủ 0 kịch bản phiên bản '3': in '0/10 kịch bản đã chạy với quy tắc hiện tại. CHƯA CÓ KẾT QUẢ'", async () => {
     const progressFile = path.join(testTempDir, "progress-only-legacy.json");
     const resultFile = path.join(testTempDir, "result-only-legacy.json");
 
     const legacyRecords: ProgressRecord[] = [
       {
-        hashKey: "mock-legacy-v1-kb-1",
+        hashKey: "mock-legacy-v2-kb-1",
         ngayChay: "2026-10-20",
         stt: 1,
+        quyTacVersion: "2",
         scenarioResult: {
           stt: 1,
           diemDen: "Đà Nẵng",
@@ -227,7 +228,7 @@ describe("Eval chạy tiếp được (run-ai-rate)", () => {
           soCanhBaoNhe: 0,
           soVongSua: 1,
           status: "ok",
-          nguonKetQua: "CŨ (quy tắc v1)",
+          nguonKetQua: "CŨ (quy tắc v2)",
         },
       },
     ];
@@ -248,20 +249,48 @@ describe("Eval chạy tiếp được (run-ai-rate)", () => {
     expect(summary.phaiDuPhong).toBeUndefined();
   });
 
-  // Bước 17 - (e) 2 kịch bản v2 và 3 kịch bản cũ thì tổng hợp tính trên 2
-  it("(e) 2 kịch bản v2 và 3 kịch bản cũ thì tổng hợp tính trên 2", async () => {
-    const progressFile = path.join(testTempDir, "progress-v2-and-legacy.json");
-    const resultFile = path.join(testTempDir, "result-v2-and-legacy.json");
+  // Bước 20 - (e) tiến trình có 2 kịch bản phiên bản "3" và 3 kịch bản phiên bản "2": tổng hợp tính trên 2 kịch bản
+  it("(e) tiến trình có 2 kịch bản phiên bản '3' và 3 kịch bản phiên bản '2': tổng hợp tính trên 2 kịch bản", async () => {
+    const progressFile = path.join(testTempDir, "progress-v3-and-v2.json");
+    const resultFile = path.join(testTempDir, "result-v3-and-v2.json");
 
-    // 3 kịch bản cũ (stt: 1, 2, 3)
-    const legacyRecords: ProgressRecord[] = [1, 2, 3].map((stt) => ({
-      hashKey: `mock-legacy-v1-kb-${stt}`,
+    // 2 kịch bản phiên bản "3" (stt: 1, 2)
+    const v3Records: ProgressRecord[] = [1, 2].map((stt) => ({
+      hashKey: `mock-v3-kb-${stt}`,
       ngayChay: "2026-10-20",
       stt,
+      quyTacVersion: "3",
       scenarioResult: {
         stt,
-        diemDen: stt <= 2 ? "Đà Nẵng" : "Hà Nội",
-        heSo: stt % 2 === 1 ? "1.3x" : "2.0x",
+        diemDen: "Đà Nẵng",
+        heSo: stt === 1 ? "1.3x" : "2.0x",
+        ngansachTongVND: 7500000,
+        phuongThucLap: "ai",
+        lyDoDuPhong: "",
+        soLanGoiAI: 1,
+        ms: 100,
+        tongVND: 5000000,
+        phanTramNganSach: "66.7%",
+        oHoatDong: "1/4 (tối đa 4)",
+        tongThoiGianDiChuyen: 200,
+        tiLeThoiGianDiChuyen: "4.6%",
+        soCanhBaoNhe: 0,
+        soVongSua: 0,
+        status: "ok",
+        nguonKetQua: "từ lần chạy ngày 2026-10-20",
+      },
+    }));
+
+    // 3 kịch bản phiên bản "2" (stt: 3, 4, 5)
+    const v2Records: ProgressRecord[] = [3, 4, 5].map((stt) => ({
+      hashKey: `mock-v2-kb-${stt}`,
+      ngayChay: "2026-10-20",
+      stt,
+      quyTacVersion: "2",
+      scenarioResult: {
+        stt,
+        diemDen: stt === 3 ? "Hà Nội" : "Đà Lạt",
+        heSo: "1.3x",
         ngansachTongVND: 7500000,
         phuongThucLap: "ai",
         lyDoDuPhong: "",
@@ -269,42 +298,35 @@ describe("Eval chạy tiếp được (run-ai-rate)", () => {
         ms: 5000,
         tongVND: 6044000,
         phanTramNganSach: "80.6%",
-        oHoatDong: "3/3 (tối đa 4)",
+        oHoatDong: "(luật cũ)",
         tongThoiGianDiChuyen: 1334,
         tiLeThoiGianDiChuyen: "30.9%",
         soCanhBaoNhe: 0,
         soVongSua: 1,
         status: "ok",
-        nguonKetQua: "CŨ (quy tắc v1)",
+        nguonKetQua: "CŨ (quy tắc v2)",
       },
     }));
-    fs.writeFileSync(progressFile, JSON.stringify(legacyRecords, null, 2), "utf-8");
 
-    let newCount = 0;
-    const mockPlanFn = vi.fn().mockImplementation(async () => {
-      newCount++;
-      return createMockPlanResult(newCount);
-    });
+    const initialRecords = [...v3Records, ...v2Records];
+    fs.writeFileSync(progressFile, JSON.stringify(initialRecords, null, 2), "utf-8");
 
     const { summary, results } = await runAiRate({
       progressFilePath: progressFile,
       resultsFilePath: resultFile,
-      maxNew: 2,
-      planFn: mockPlanFn,
+      maxNew: 0,
       sleepBetweenMs: 0,
     });
 
-    // 2 kịch bản v2 mới được chạy
-    expect(mockPlanFn).toHaveBeenCalledTimes(2);
-    // Kịch bản 3 có kết quả cũ
-    const legacyItem = results.find((r) => r.stt === 3);
-    expect(legacyItem).toBeDefined();
-    expect(legacyItem?.oHoatDong).toBe("(luật cũ)");
-
-    // Tổng hợp tính trên 2
+    // 2 kịch bản v3 được đưa vào tổng hợp
     expect(summary.soKichBanDaChay).toBe(2);
     expect(summary.aiHopLeNgayLanDau).toBe("2/2");
     expect(summary.aiHopLeSauSua).toBe("0/2");
     expect(summary.phaiDuPhong).toBe("0/2");
+
+    // Các kịch bản phiên bản "2" bị đánh dấu là CŨ
+    const oldItems = results.filter((r) => r.nguonKetQua?.startsWith("CŨ"));
+    expect(oldItems.length).toBe(3);
+    expect(oldItems.every((r) => r.oHoatDong === "(luật cũ)")).toBe(true);
   });
 });
