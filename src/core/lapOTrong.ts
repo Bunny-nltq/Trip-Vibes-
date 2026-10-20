@@ -16,6 +16,7 @@ import type {
   TripRequest,
   HoatDong,
   Activity,
+  Transport,
 } from "@/contracts";
 import {
   BUFFER_SAU_KHI_DEN_PHUT,
@@ -65,7 +66,8 @@ export function lapOTrong(
   selection: Selection,
   plan: Plan,
   ungVien: (HoatDong | Activity)[],
-  request: TripRequest
+  request: TripRequest,
+  transports?: Transport[]
 ): LapOTrongResult {
   const soNgay = request.soNgay ?? 3;
   const soNguoi = request.soNguoi ?? 2;
@@ -78,17 +80,38 @@ export function lapOTrong(
   const diItem = plan.items.find(
     (it) => it.hangMuc === "Di chuyển" && it.ngay === 1
   );
-  if (diItem?.gio) {
+  const veItem = plan.items.find(
+    (it) => it.hangMuc === "Di chuyển" && it.ngay === soNgay
+  );
+
+  const tDi = transports?.find(
+    (t) => t.id === selection.transportDiId || t.id === diItem?.refId
+  );
+  const tVe = transports?.find(
+    (t) => t.id === selection.transportVeId || t.id === veItem?.refId
+  );
+
+  if (tDi) {
+    const dep = parseTimeToMinutes(tDi.departureTime) ?? 420;
+    if (dep + tDi.durationMinutes >= 1440) {
+      // Chuyến đi kéo dài sang ngày hôm sau -> Ngày 1 đang trên phương tiện, không thể tham gia hoạt động
+      gioDenPhutNgay1 = 9999;
+    } else {
+      gioDenPhutNgay1 = dep + tDi.durationMinutes;
+    }
+  } else if (diItem?.gio) {
     const dep = parseTimeToMinutes(diItem.gio);
     if (dep !== null) {
       gioDenPhutNgay1 = dep + ((diItem as any).thoiLuongPhut ?? 120);
     }
   }
 
-  const veItem = plan.items.find(
-    (it) => it.hangMuc === "Di chuyển" && it.ngay === soNgay
-  );
-  if (veItem?.gio) {
+  if (tVe) {
+    const dep = parseTimeToMinutes(tVe.departureTime);
+    if (dep !== null) {
+      gioKhoiHanhVePhut = dep;
+    }
+  } else if (veItem?.gio) {
     const dep = parseTimeToMinutes(veItem.gio);
     if (dep !== null) {
       gioKhoiHanhVePhut = dep;

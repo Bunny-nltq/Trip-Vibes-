@@ -59,6 +59,12 @@ export const SO_HOAT_DONG_TOI_DA_MOI_NGAY = 2;
 /** Ngưỡng thời lượng di chuyển bị coi là lâu (phút) - 360 phút = 6 giờ */
 export const NGUONG_DI_CHUYEN_LAU_PHUT = 360;
 
+/**
+ * Tỉ lệ thời gian di chuyển tối đa khuyến nghị so với tổng thời gian chuyến đi (35%).
+ * GIẢ ĐỊNH đồ án: nếu vượt quá ngưỡng này sẽ kích hoạt cảnh báo soft "di_chuyen_chiem_nhieu_thoi_gian".
+ */
+export const DI_CHUYEN_TOI_DA_TI_LE = 0.35;
+
 /** Ngưỡng giờ khởi hành bị coi là sớm (trước 08:00 sáng) */
 export const GIO_KHOI_HANH_SOM = "08:00";
 

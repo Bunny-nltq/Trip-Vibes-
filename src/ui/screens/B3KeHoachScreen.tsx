@@ -6,6 +6,7 @@ import { BudgetBox } from "@/ui/components/BudgetBox";
 import type { PlanItem, Preference, DiemDen } from "@/contracts";
 import { getDiemDenTen } from "@/contracts";
 import { nhanNguonDuLieu } from "@/core/nhanNguon";
+import { tiLeThoiGianDiChuyen, coCanhBaoDiChuyen } from "@/core/tiLeDiChuyen";
 import {
   Map as MapIcon,
   Sparkles,
@@ -265,6 +266,16 @@ export function B3KeHoachScreen() {
   softViolations.forEach((sv) => {
     warningList.push(sv.chiTiet);
   });
+
+  const tongPhutDiChuyen = plan.tongKet.tongThoiGianDiChuyenPhut ?? 0;
+  if (coCanhBaoDiChuyen(tongPhutDiChuyen, soNgay)) {
+    const phanTram = tiLeThoiGianDiChuyen(tongPhutDiChuyen, soNgay);
+    const tongGio = Math.round((tongPhutDiChuyen / 60) * 10) / 10;
+    const msgDiChuyen = `Di chuyển chiếm khoảng ${phanTram.toFixed(1).replace(".", ",")}% thời gian chuyến đi (${tongGio} giờ). Bạn có thể tăng ngân sách để đi nhanh hơn hoặc giảm số ngày.`;
+    if (!warningList.some((w) => w.includes("Di chuyển chiếm khoảng"))) {
+      warningList.push(msgDiChuyen);
+    }
+  }
 
   return (
     <div className="tv-layout">

@@ -153,7 +153,8 @@ export function lapKeHoachTuDong(
     baseSelection,
     baseBuild.plan,
     availableActivities,
-    currentRequest
+    currentRequest,
+    planData.transports
   );
 
   const finalSelection = lapRes.selection;

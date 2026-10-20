@@ -443,7 +443,8 @@ export async function planWithRepair(
         activeSelection,
         plan,
         data.hoatDongs ?? data.activities ?? [],
-        request
+        request,
+        data.transports
       );
       if (lapRes.daLap) {
         activeSelection = lapRes.selection;

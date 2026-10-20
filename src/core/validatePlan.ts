@@ -10,6 +10,7 @@ import {
   BUFFER_GIUA_HOAT_DONG_PHUT,
   NGUONG_GAN_HET_NGAN_SACH_PHAN_TRAM,
 } from "./assumptions";
+import { coCanhBaoDiChuyen, tiLeThoiGianDiChuyen } from "./tiLeDiChuyen";
 
 export interface Violation {
   code: string;
@@ -195,6 +196,23 @@ export function validatePlan(
         }
       }
     }
+  }
+
+  // 7. Cảnh báo soft: di_chuyen_chiem_nhieu_thoi_gian
+  const tongPhutDiChuyen = plan.tongKet.tongThoiGianDiChuyenPhut ?? 0;
+  const soNgay = request.soNgay ?? 3;
+  if (coCanhBaoDiChuyen(tongPhutDiChuyen, soNgay)) {
+    const phanTram = tiLeThoiGianDiChuyen(tongPhutDiChuyen, soNgay);
+    const tongGio = Math.round((tongPhutDiChuyen / 60) * 10) / 10;
+    soft.push({
+      code: "di_chuyen_chiem_nhieu_thoi_gian",
+      chiTiet: `Di chuyển chiếm khoảng ${phanTram.toFixed(1).replace(".", ",")}% thời gian chuyến đi (${tongGio} giờ). Bạn có thể tăng ngân sách để đi nhanh hơn hoặc giảm số ngày.`,
+      duLieu: {
+        tiLe: phanTram,
+        tongPhut: tongPhutDiChuyen,
+        tongGio,
+      },
+    });
   }
 
   return { hard, soft };
