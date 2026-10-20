@@ -2,14 +2,17 @@ import { NextResponse } from "next/server";
 import { parseRequest } from "@/ai/parseRequest";
 import { planWithRepair } from "@/ai/planWithRepair";
 import { normalizeRequest } from "@/core/normalizeRequest";
-import { TripRequestSchema, type TripRequest } from "@/contracts";
+import { TripRequestSchema, type TripRequest, type DiemDen } from "@/contracts";
+import { isDataReadyForDestination } from "@/data/prepareDestination";
+
+export const maxDuration = 60;
 
 /**
  * POST /api/plan
  * Nhận { text } hoặc { request }.
  * - Có text thì chạy parse-request trước.
- * - Chạy qua planWithRepair (bao gồm cả kiểm tra điều kiện, minBudget, Agent + Repair).
- * - Trả thêm dataSourceUsed, nguon, doTinCay, mapsUrl cho từng mục.
+ * - Yêu cầu 2: Chỉ dùng dữ liệu ĐÃ SẴN SÀNG. Chưa sẵn sàng thì trả 409 "du_lieu_chua_san_sang".
+ * - Chạy qua planWithRepair (Agent + Repair tối đa 60s).
  */
 export async function POST(req: Request) {
   const start = Date.now();
@@ -61,6 +64,28 @@ export async function POST(req: Request) {
         { ok: false, error: "Cần cung cấp trường 'text' hoặc 'request'." },
         { status: 400 }
       );
+    }
+
+    // Kiểm tra dữ liệu đã sẵn sàng chưa (yêu cầu 2: /api/plan chỉ dùng dữ liệu ĐÃ SẴN SÀNG)
+    if (tripRequest.diemDen && typeof tripRequest.diemDen === "object") {
+      const isReady = isDataReadyForDestination(
+        tripRequest.diemDen as DiemDen,
+        tripRequest.diemDi && typeof tripRequest.diemDi === "object"
+          ? (tripRequest.diemDi as DiemDen)
+          : undefined,
+        tripRequest.soNgay ?? 3
+      );
+      if (!isReady) {
+        return NextResponse.json(
+          {
+            ok: false,
+            status: "du_lieu_chua_san_sang",
+            maLoi: "du_lieu_chua_san_sang",
+            error: "Dữ liệu cho điểm đến này chưa sẵn sàng. Vui lòng gọi /api/destination/prepare trước.",
+          },
+          { status: 409 }
+        );
+      }
     }
 
     const result = await planWithRepair(tripRequest);
