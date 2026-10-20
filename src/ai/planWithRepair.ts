@@ -3,6 +3,7 @@ import { DEFAULT_DIEM_DI, getDiemDenTen } from "@/contracts";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
 import { buildPlan } from "@/core/buildPlan";
 import { validatePlan, type Violation } from "@/core/validatePlan";
+import { donOKhongKhaDung } from "@/core/donOKhongKhaDung";
 import { tinhNganSachToiThieu } from "@/core/minBudget";
 import { runPlanAgent, type AgentTraceItem } from "./planAgent";
 import { GeminiProvider } from "./provider";
@@ -288,6 +289,18 @@ export async function planWithRepair(
       tongVND = 0;
     } else {
       plan = buildRes.plan;
+      // Dọn các ô không khả dụng do giờ giấc di chuyển trước khi kiểm tra hard
+      const donRes = donOKhongKhaDung(selection, plan, data.transports);
+      if (donRes.daDon) {
+        const rebuild = buildPlan(request, donRes.selection, data, mode);
+        if (rebuild.ok) {
+          plan = rebuild.plan;
+          for (const cb of donRes.canhBao) {
+            if (!plan.canhBao.includes(cb)) plan.canhBao.push(cb);
+          }
+        }
+      }
+
       tongVND = plan.tongKet.tongVND;
       const v = validatePlan(request, plan, data);
       hard = v.hard;

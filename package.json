@@ -18,6 +18,7 @@
     "eval:diadiem": "tsx eval/run-diadiem.ts",
     "data:refresh": "tsx scripts/data-refresh.ts",
     "data:snapshot": "tsx scripts/data-snapshot.ts",
+    "audit:snapshots": "tsx scripts/audit-snapshots.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

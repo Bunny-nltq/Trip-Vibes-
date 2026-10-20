@@ -32,6 +32,7 @@ import {
 } from "./overpassClient";
 import { researchTransports } from "./researchTransport";
 import { researchGiaDiemDen } from "./researchGiaDiemDen";
+import { computeSnapshotChecksum } from "../snapshots/snapshotAudit";
 
 export type DataMode = "live" | "snapshot" | "mock";
 
@@ -433,14 +434,27 @@ export class LiveDataSource implements DataSource {
         this.getTransports(),
       ]);
 
-    const data: SnapshotData = {
-      createdAt: new Date().toISOString(),
+    const now = new Date().toISOString();
+    const diemDenTen = this.diemDen?.ten ?? "Chưa xác định";
+    const checksum = computeSnapshotChecksum({
       khachSans,
       quanAns,
       cafes,
       hoatDongs,
       transports,
-      diemDen: this.diemDen,
+    });
+
+    const data: SnapshotData = {
+      taoBoi: "script data:snapshot",
+      ngayTao: now,
+      diemDen: diemDenTen,
+      checksum,
+      createdAt: now,
+      khachSans,
+      quanAns,
+      cafes,
+      hoatDongs,
+      transports,
     };
 
     const filePath = path.join(dir, `${name}.json`);
@@ -450,11 +464,14 @@ export class LiveDataSource implements DataSource {
 }
 
 export interface SnapshotData {
+  taoBoi?: string;
+  ngayTao?: string;
+  diemDen?: DiemDen | string;
+  checksum?: string;
   createdAt: string;
   khachSans: KhachSan[];
   quanAns: QuanAn[];
   cafes: Cafe[];
   hoatDongs: HoatDong[];
   transports: Transport[];
-  diemDen?: DiemDen;
 }

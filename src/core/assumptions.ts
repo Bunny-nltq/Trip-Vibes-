@@ -91,6 +91,9 @@ export const BUFFER_RA_BEN_PHUT = 120;
 /** Thời gian dự phòng tối thiểu (phút) giữa hai hoạt động trong cùng một ngày */
 export const BUFFER_GIUA_HOAT_DONG_PHUT = 30;
 
+/** Thời lượng tối thiểu cho một hoạt động tham quan (phút). GIẢ ĐỊNH đồ án. */
+export const THOI_LUONG_TOI_THIEU_HOAT_DONG = 60;
+
 // ─── Agent & Repair ─────────────────────────────────────────────────────────
 
 /** Số vòng tối đa AI được phép thử sửa lỗi tự động */

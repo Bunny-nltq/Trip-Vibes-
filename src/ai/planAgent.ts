@@ -1,3 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
 import {
   type TripRequest,
   type Selection,
@@ -116,6 +119,74 @@ export async function runPlanAgent(
     seenIds: options?.sharedSeenIds ?? new Set<string>(),
     validFoodIds: options?.sharedFoodIds ?? new Set<string>(),
   };
+
+  const allowAgentCache = process.env.NO_AGENT_CACHE !== "1";
+  let cacheKey = "";
+  let cacheFilePath = "";
+
+  if (allowAgentCache) {
+    try {
+      const [allKs, allQa, allCf, allHd, allTr] = await Promise.all([
+        liveDataSource.getKhachSans(),
+        liveDataSource.getQuanAns(),
+        liveDataSource.getCafes(),
+        liveDataSource.getHoatDongs(),
+        liveDataSource.getTransports(),
+      ]);
+      const candidateIds = [
+        ...allKs.map((k) => k.id),
+        ...allQa.map((q) => q.id),
+        ...allCf.map((c) => c.id),
+        ...allHd.map((h) => h.id),
+        ...allTr.map((t) => t.id),
+      ]
+        .filter(Boolean)
+        .sort();
+
+      const hashPayload = JSON.stringify({
+        req: {
+          diemDi: request.diemDi,
+          diemDen: request.diemDen,
+          soNgay: request.soNgay,
+          soNguoi: request.soNguoi,
+          ngansachTongVND: request.ngansachTongVND,
+          sothich: request.sothich,
+          tranh: request.tranh,
+          repair: options?.repairInfo
+            ? {
+                vong: options.repairInfo.viPham.map((v) => v.code),
+                sel: options.repairInfo.selectionTruoc,
+              }
+            : null,
+        },
+        model: process.env.GEMINI_MODEL ?? "gemini-2.5-flash",
+        promptVersion: AGENT_PROMPT_VERSION,
+        candidateIds,
+      });
+
+      cacheKey = crypto.createHash("sha256").update(hashPayload).digest("hex");
+      const cacheDir = path.join(process.cwd(), ".cache", "agent_eval");
+      cacheFilePath = path.join(cacheDir, `${cacheKey}.json`);
+
+      if (fs.existsSync(cacheFilePath)) {
+        try {
+          const cached = JSON.parse(
+            fs.readFileSync(cacheFilePath, "utf-8")
+          ) as PlanAgentResult;
+          if (cached?.selection) {
+            console.log(
+              `[AgentCache] Sử dụng lựa chọn agent từ cache (${cacheKey.slice(0, 8)}).`
+            );
+            return cached;
+          }
+        } catch {
+          // ignore corrupted cache
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
 
   const trace: AgentTraceItem[] = [];
   let selection: Selection | null = null;
@@ -346,9 +417,20 @@ Chỉ thị:
     throw new Error("agent_vuot_qua_so_buoc_toi_da");
   }
 
-  return {
+  const agentRes: PlanAgentResult = {
     selection,
     trace,
     dataSourceUsed: liveDataSource.getMode(),
   };
+
+  if (allowAgentCache && cacheFilePath) {
+    try {
+      fs.mkdirSync(path.dirname(cacheFilePath), { recursive: true });
+      fs.writeFileSync(cacheFilePath, JSON.stringify(agentRes, null, 2), "utf-8");
+    } catch {
+      // ignore
+    }
+  }
+
+  return agentRes;
 }

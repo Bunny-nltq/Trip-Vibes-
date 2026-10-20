@@ -1,0 +1,293 @@
+[
+  {
+    "diemDen": "Đà Nẵng",
+    "geocodeThanhCong": true,
+    "chiTietDiemDen": {
+      "ten": "Thành phố Đà Nẵng",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 16.068501,
+        "lng": 108.2240242
+      },
+      "tienTe": "VND",
+      "nguon": "nominatim",
+      "ngayLay": "2026-10-19T11:21:42.761Z"
+    },
+    "soLuongTheoLoai": {
+      "khachSan": 15,
+      "quanAn": 15,
+      "cafe": 15,
+      "hoatDong": 15
+    },
+    "tongSoMuc": 60,
+    "tyLeCoNguon": 1,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 6,
+    "keHoachHopLe": true,
+    "coNoiDung": true,
+    "trangThaiNoiDung": "CÓ NỘI DUNG",
+    "nguonDL": "cache (tuổi 0.5 giờ)",
+    "ngayDuLieu": "2026-10-20T01:55:13.017Z",
+    "tyLeLapHD": 1,
+    "tyLeLapAn": 1,
+    "overpassSummary": "[khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.6h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.6h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h)",
+    "overpassServer": "cache",
+    "overpassAttempts": 0,
+    "loiHard": [],
+    "soSlotChuaLap": {
+      "hoatDong": 0,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 2
+    },
+    "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng và ăn uống, không vi phạm hard)."
+  },
+  {
+    "diemDen": "Hà Nội",
+    "geocodeThanhCong": true,
+    "chiTietDiemDen": {
+      "ten": "Hà Nội",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 21.0283334,
+        "lng": 105.854041
+      },
+      "tienTe": "VND",
+      "nguon": "nominatim",
+      "ngayLay": "2026-10-19T11:39:00.089Z"
+    },
+    "soLuongTheoLoai": {
+      "khachSan": 15,
+      "quanAn": 15,
+      "cafe": 15,
+      "hoatDong": 15
+    },
+    "tongSoMuc": 60,
+    "tyLeCoNguon": 1,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 6,
+    "keHoachHopLe": true,
+    "coNoiDung": false,
+    "trangThaiNoiDung": "CÓ VI PHẠM",
+    "nguonDL": "cache (tuổi 0.5 giờ)",
+    "ngayDuLieu": "2026-10-20T01:55:18.038Z",
+    "tyLeLapHD": 0.67,
+    "tyLeLapAn": 1,
+    "overpassSummary": "[khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [quan_an_half] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.6h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [quan_an] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [quan_an_half] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h)",
+    "overpassServer": "cache",
+    "overpassAttempts": 2,
+    "overpassError": "The operation was aborted due to timeout",
+    "loiHard": [
+      "[chua_lap_du_80%_o_kha_dung]"
+    ],
+    "soSlotChuaLap": {
+      "hoatDong": 1,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 1
+    },
+    "danhGia": "CÓ VI PHẠM: còn lỗi hard []"
+  },
+  {
+    "diemDen": "Đà Lạt",
+    "geocodeThanhCong": true,
+    "chiTietDiemDen": {
+      "ten": "Đà Lạt",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 11.9402416,
+        "lng": 108.4375758
+      },
+      "tienTe": "VND",
+      "nguon": "nominatim",
+      "ngayLay": "2026-10-20T00:57:31.712Z"
+    },
+    "soLuongTheoLoai": {
+      "khachSan": 15,
+      "quanAn": 15,
+      "cafe": 15,
+      "hoatDong": 15
+    },
+    "tongSoMuc": 60,
+    "tyLeCoNguon": 1,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 6,
+    "keHoachHopLe": true,
+    "coNoiDung": false,
+    "trangThaiNoiDung": "CÓ VI PHẠM",
+    "nguonDL": "cache (tuổi 0.5 giờ)",
+    "ngayDuLieu": "2026-10-20T01:58:26.909Z",
+    "tyLeLapHD": 0.67,
+    "tyLeLapAn": 1,
+    "overpassSummary": "[khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h)",
+    "overpassServer": "cache",
+    "overpassAttempts": 0,
+    "loiHard": [
+      "[chua_lap_du_80%_o_kha_dung]"
+    ],
+    "soSlotChuaLap": {
+      "hoatDong": 1,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 2
+    },
+    "danhGia": "CÓ VI PHẠM: còn lỗi hard []"
+  },
+  {
+    "diemDen": "Phú Quốc",
+    "geocodeThanhCong": true,
+    "chiTietDiemDen": {
+      "ten": "Đặc khu Phú Quốc",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 10.2163457,
+        "lng": 103.9587878
+      },
+      "tienTe": "VND",
+      "nguon": "nominatim",
+      "ngayLay": "2026-10-20T00:57:32.721Z"
+    },
+    "soLuongTheoLoai": {
+      "khachSan": 15,
+      "quanAn": 15,
+      "cafe": 15,
+      "hoatDong": 15
+    },
+    "tongSoMuc": 60,
+    "tyLeCoNguon": 1,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 6,
+    "keHoachHopLe": true,
+    "coNoiDung": true,
+    "trangThaiNoiDung": "CÓ NỘI DUNG",
+    "nguonDL": "cache (tuổi 0.4 giờ)",
+    "ngayDuLieu": "2026-10-20T01:58:31.929Z",
+    "tyLeLapHD": 1,
+    "tyLeLapAn": 1,
+    "overpassSummary": "[khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.4h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.4h); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe_half] Server: cache (0 lần thử, status: 200, 21 mục, tuổi 0.4h); [khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.4h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.5h); [cafe] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe_half] Server: cache (0 lần thử, status: 200, 21 mục, tuổi 0.4h)",
+    "overpassServer": "cache",
+    "overpassAttempts": 2,
+    "overpassError": "The operation was aborted due to timeout",
+    "loiHard": [],
+    "soSlotChuaLap": {
+      "hoatDong": 0,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 2
+    },
+    "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng và ăn uống, không vi phạm hard)."
+  },
+  {
+    "diemDen": "Bangkok",
+    "geocodeThanhCong": true,
+    "chiTietDiemDen": {
+      "ten": "Băng Cốc",
+      "quocGia": "Thái Lan",
+      "maQuocGia": "TH",
+      "toaDo": {
+        "lat": 13.7524938,
+        "lng": 100.4935089
+      },
+      "tienTe": "THB",
+      "nguon": "nominatim",
+      "ngayLay": "2026-10-19T11:39:49.360Z"
+    },
+    "soLuongTheoLoai": {
+      "khachSan": 15,
+      "quanAn": 15,
+      "cafe": 15,
+      "hoatDong": 15
+    },
+    "tongSoMuc": 60,
+    "tyLeCoNguon": 1,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 2,
+    "keHoachHopLe": true,
+    "coNoiDung": true,
+    "trangThaiNoiDung": "CÓ NỘI DUNG",
+    "nguonDL": "cache (tuổi 0.3 giờ)",
+    "ngayDuLieu": "2026-10-20T02:01:40.721Z",
+    "tyLeLapHD": 1,
+    "tyLeLapAn": 1,
+    "overpassSummary": "[khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.4h); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.3h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.3h); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [hoat_dong_half] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.3h); [khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.4h); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.3h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.4h); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [hoat_dong_half] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.4h)",
+    "overpassServer": "cache",
+    "overpassAttempts": 2,
+    "overpassError": "The operation was aborted due to timeout",
+    "loiHard": [],
+    "soSlotChuaLap": {
+      "hoatDong": 0,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 2
+    },
+    "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng và ăn uống, không vi phạm hard)."
+  },
+  {
+    "diemDen": "Seoul",
+    "geocodeThanhCong": true,
+    "chiTietDiemDen": {
+      "ten": "Seoul",
+      "quocGia": "Hàn Quốc",
+      "maQuocGia": "KR",
+      "toaDo": {
+        "lat": 37.5666791,
+        "lng": 126.9782914
+      },
+      "tienTe": "KRW",
+      "nguon": "nominatim",
+      "ngayLay": "2026-10-19T11:40:36.377Z"
+    },
+    "soLuongTheoLoai": {
+      "khachSan": 15,
+      "quanAn": 15,
+      "cafe": 15,
+      "hoatDong": 15
+    },
+    "tongSoMuc": 60,
+    "tyLeCoNguon": 1,
+    "soPhuongTienWeb": 0,
+    "soPhuongTienUocLuong": 2,
+    "keHoachHopLe": true,
+    "coNoiDung": false,
+    "trangThaiNoiDung": "CÓ VI PHẠM",
+    "nguonDL": "mới từ mạng",
+    "ngayDuLieu": "2026-10-20T02:04:48.677Z",
+    "tyLeLapHD": 0.67,
+    "tyLeLapAn": 1,
+    "overpassSummary": "[quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.3h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.2h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.2h); [khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.3h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.2h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.2h)",
+    "overpassServer": "cache",
+    "overpassAttempts": 1,
+    "loiHard": [
+      "[chua_lap_du_80%_o_kha_dung]"
+    ],
+    "soSlotChuaLap": {
+      "hoatDong": 1,
+      "buaAn": 0
+    },
+    "soLuotGoi": {
+      "nominatim": 1,
+      "tavily": 0,
+      "gemini": 1
+    },
+    "danhGia": "CÓ VI PHẠM: còn lỗi hard []"
+  }
+]

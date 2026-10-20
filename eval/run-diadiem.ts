@@ -5,8 +5,9 @@
  * 6 điểm đến mẫu: Đà Nẵng, Hà Nội, Đà Lạt, Phú Quốc, Bangkok, Seoul.
  * (điểm đi TP.HCM, 2 người, 15 triệu, 3 ngày; riêng Bangkok và Seoul đặt 25 triệu).
  *
- * Hỗ trợ chế độ --live-only (DATA_FALLBACK=off) để đo ĐỘ TIN CẬY THẬT của mạng
- * và in 2 bảng: (a) live-only, (b) có dự phòng.
+ * Hỗ trợ cờ:
+ *   --live-only: chỉ chạy bảng Live-Only (DATA_FALLBACK=off) và xóa cache Overpass trước khi chạy để đo mạng thật.
+ *   --no-agent-cache: bỏ qua cache lựa chọn agent.
  */
 
 import fs from "node:fs";
@@ -19,6 +20,14 @@ if (!process.env.NOMINATIM_USER_AGENT) {
   process.env.NOMINATIM_USER_AGENT = "TripVibes/1.0 (student-project@tripvibes.vn)";
 }
 
+const args = process.argv.slice(2);
+const isLiveOnlyFlag = args.includes("--live-only");
+const isNoAgentCacheFlag = args.includes("--no-agent-cache");
+
+if (isNoAgentCacheFlag) {
+  process.env.NO_AGENT_CACHE = "1";
+}
+
 import { geocodeDestination } from "../src/data/live/geocodeClient";
 import { LiveDataSource } from "../src/data/live/LiveDataSource";
 import { planWithRepair } from "../src/ai/planWithRepair";
@@ -27,7 +36,10 @@ import { isTavilyLimitReached } from "../src/data/live/searchClient";
 import {
   getLastOverpassStatsSummary,
   lastOverpassStats,
+  clearAllOverpassCache,
+  type OverpassExecutionStats,
 } from "../src/data/live/overpassClient";
+import { soOKhaDung } from "../src/core/oKhaDung";
 
 interface DestinationTestCase {
   name: string;
@@ -61,8 +73,8 @@ export interface DiadiemResult {
   soPhuongTienUocLuong: number;
   keHoachHopLe: boolean;
   coNoiDung: boolean;
-  trangThaiNoiDung: "CÓ NỘI DUNG" | "THIẾU DỮ LIỆU";
-  dataSourceUsed: string;
+  trangThaiNoiDung: "CÓ NỘI DUNG" | "THIẾU DỮ LIỆU" | "CÓ VI PHẠM";
+  nguonDL: "mới từ mạng" | string;
   ngayDuLieu: string;
   snapshotDate?: string;
   ghiChuNguon?: string;
@@ -86,12 +98,54 @@ export interface DiadiemResult {
   error?: string;
 }
 
+function parseTimeToMinutes(timeStr?: string): number | null {
+  if (!timeStr) return null;
+  const parts = timeStr.split(":");
+  if (parts.length >= 2) {
+    const h = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10);
+    if (!isNaN(h) && !isNaN(m)) return h * 60 + m;
+  }
+  return null;
+}
+
+function determineNguonDL(
+  totalItems: number,
+  dsSource: string,
+  snapshotDate: string | undefined,
+  stats: OverpassExecutionStats[]
+): string {
+  if (totalItems === 0) return "không có";
+  if (dsSource === "snapshot") {
+    const d = snapshotDate ? snapshotDate.slice(0, 10) : "2026-10-19";
+    return `snapshot (ngày ${d})`;
+  }
+  const fromNetwork = stats.some((s) => !s.fromCache && s.itemCount > 0);
+  if (fromNetwork) {
+    return "mới từ mạng";
+  }
+  const cachedStats = stats.filter((s) => s.fromCache);
+  if (cachedStats.length > 0) {
+    const avgAge = (
+      cachedStats.reduce((sum, s) => sum + (s.cacheAgeHours ?? 0), 0) /
+      cachedStats.length
+    ).toFixed(1);
+    return `cache (tuổi ${avgAge} giờ)`;
+  }
+  return "không có";
+}
+
 async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
   process.env.DATA_FALLBACK = allowFallback ? "on" : "off";
   const modeTitle = allowFallback ? "CÓ DỰ PHÒNG SNAPSHOT" : "LIVE-ONLY (TẮT DỰ PHÒNG)";
   console.log(`\n================================================================================`);
   console.log(`▶ BẮT ĐẦU CHẠY ĐÁNH GIÁ CHẾ ĐỘ: ${modeTitle}`);
   console.log(`================================================================================`);
+
+  if (!allowFallback) {
+    console.log("🧹 Xóa cache Overpass trước lượt chạy LIVE-ONLY để đo mạng thật...");
+    clearAllOverpassCache();
+  }
 
   const results: DiadiemResult[] = [];
 
@@ -125,7 +179,7 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
           keHoachHopLe: false,
           coNoiDung: false,
           trangThaiNoiDung: "THIẾU DỮ LIỆU",
-          dataSourceUsed: "none",
+          nguonDL: "không có",
           ngayDuLieu: new Date().toISOString(),
           tyLeLapHD: 0,
           tyLeLapAn: 0,
@@ -203,34 +257,83 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
       geminiCalls += planRes.soLanGoiAI || 0;
 
       const keHoachHopLe = planRes.status === "ok" && planRes.hard.length === 0 && Boolean(planRes.plan);
-      const hardErrors = planRes.hard.map((h) => h.chiTiet);
+      const hardCodes = planRes.hard.map((h) => h.code);
+      const hardErrors = planRes.hard.map((h) => `[${h.code}] ${h.chiTiet || ""}`);
 
-      // Đếm slot chưa lấp
-      let slotHDChuaLap = 0;
-      let slotAnChuaLap = 0;
-      if (planRes.plan) {
-        for (let d = 1; d <= tc.days; d++) {
-          const dayItems = planRes.plan.items.filter((it) => it.ngay === d);
-          const hdCount = dayItems.filter((it) => it.hangMuc === "Vui chơi").length;
-          const maxHd = d === 1 || d === tc.days ? 1 : 2;
-          if (hdCount < maxHd) slotHDChuaLap += maxHd - hdCount;
-
-          const anCount = dayItems.filter((it) => it.hangMuc === "Ăn uống").length;
-          if (anCount < 2) slotAnChuaLap += 2 - anCount;
+      // 4. Tính toán số ô khả dụng theo hàm chuẩn core soOKhaDung
+      let gioDenPhutNgay1 = 475; // default 07:55
+      const diItem = planRes.plan?.items.find(
+        (it) => it.hangMuc === "Di chuyển" && it.ngay === 1
+      );
+      if (diItem) {
+        const tDi = transports.find((t) => t.id === diItem.refId);
+        if (tDi?.departureTime) {
+          const dep = parseTimeToMinutes(tDi.departureTime);
+          const dur = tDi.durationMinutes ?? 120;
+          if (dep !== null) gioDenPhutNgay1 = dep + dur;
+        } else if (diItem.gio) {
+          const dep = parseTimeToMinutes(diItem.gio);
+          if (dep !== null) gioDenPhutNgay1 = dep + 120;
         }
       }
 
-      const tongSlotHD = tc.days === 1 ? 1 : tc.days === 2 ? 2 : (tc.days - 2) * 2 + 2;
-      const tongSlotAn = tc.days * 2;
-      const tyLeLapHD = Math.max(0, (tongSlotHD - slotHDChuaLap) / tongSlotHD);
-      const tyLeLapAn = Math.max(0, (tongSlotAn - slotAnChuaLap) / tongSlotAn);
+      let gioKhoiHanhVePhut = 1080; // default 18:00
+      const veItem = planRes.plan?.items.find(
+        (it) => it.hangMuc === "Di chuyển" && it.ngay === tc.days
+      );
+      if (veItem) {
+        const tVe = transports.find((t) => t.id === veItem.refId);
+        if (tVe?.departureTime) {
+          const dep = parseTimeToMinutes(tVe.departureTime);
+          if (dep !== null) gioKhoiHanhVePhut = dep;
+        } else if (veItem.gio) {
+          const dep = parseTimeToMinutes(veItem.gio);
+          if (dep !== null) gioKhoiHanhVePhut = dep;
+        }
+      }
 
-      // Định nghĩa "CÓ NỘI DUNG" = không có vi phạm hard VÀ lấp được ít nhất 80% ô hoạt động và 80% bữa ăn
-      const coNoiDung = keHoachHopLe && tyLeLapHD >= 0.8 && tyLeLapAn >= 0.8;
-      const trangThaiNoiDung: "CÓ NỘI DUNG" | "THIẾU DỮ LIỆU" = coNoiDung ? "CÓ NỘI DUNG" : "THIẾU DỮ LIỆU";
+      const oKhaDungHD = soOKhaDung(tc.days, gioDenPhutNgay1, gioKhoiHanhVePhut);
+      const hdDaXep = planRes.plan
+        ? planRes.plan.items.filter((it) => it.hangMuc === "Vui chơi").length
+        : 0;
+      const tyLeLapHD = oKhaDungHD > 0 ? Math.min(1, hdDaXep / oKhaDungHD) : 1;
+      const slotHDChuaLap = Math.max(0, oKhaDungHD - hdDaXep);
+
+      const tongSlotAn = tc.days * 2;
+      const anDaXep = planRes.plan
+        ? planRes.plan.items.filter((it) => it.hangMuc === "Ăn uống").length
+        : 0;
+      const tyLeLapAn = Math.min(1, anDaXep / tongSlotAn);
+      const slotAnChuaLap = Math.max(0, tongSlotAn - anDaXep);
+
+      // 5. Xác định TRẠNG THÁI (3 loại) và NGUỒN DL (4 giá trị)
+      const isKhoDuLieuThieu = countKS < 1 || countQA < 1 || countHD < 1;
+      let trangThaiNoiDung: "CÓ NỘI DUNG" | "THIẾU DỮ LIỆU" | "CÓ VI PHẠM";
+
+      if (isKhoDuLieuThieu || planRes.status === "khong_du_du_lieu") {
+        trangThaiNoiDung = "THIẾU DỮ LIỆU";
+      } else if (planRes.hard.length > 0) {
+        trangThaiNoiDung = "CÓ VI PHẠM";
+      } else if (tyLeLapHD >= 0.8 && tyLeLapAn >= 0.8) {
+        trangThaiNoiDung = "CÓ NỘI DUNG";
+      } else {
+        trangThaiNoiDung = "CÓ VI PHẠM";
+        if (hardErrors.length === 0) {
+          hardErrors.push("[chua_lap_du_80%_o_kha_dung]");
+        }
+      }
+
+      const coNoiDung = trangThaiNoiDung === "CÓ NỘI DUNG";
+
+      const currentStats = [...lastOverpassStats];
+      const nguonDL = determineNguonDL(
+        totalItems,
+        dsUsedInfo.source,
+        dsUsedInfo.snapshotDate,
+        currentStats
+      );
 
       // Thống kê Overpass
-      const currentStats = [...lastOverpassStats];
       const successfulStats = currentStats.filter((s) => s.itemCount > 0);
       let overpassServer = "N/A";
       if (successfulStats.length > 0) {
@@ -260,9 +363,14 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
         ghiChuNguon = `từ snapshot ngày ${snapDate}, dữ liệu live lấy ngày ${liveDate}`;
       }
 
-      let danhGia = coNoiDung
-        ? "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% hoạt động và ăn uống, không vi phạm hard)."
-        : `THIẾU DỮ LIỆU: ${hardErrors.join("; ") || planRes.status || "Chưa lấp đủ 80% slot hoạt động hoặc ăn uống"}`;
+      let danhGia = "";
+      if (trangThaiNoiDung === "CÓ NỘI DUNG") {
+        danhGia = "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng và ăn uống, không vi phạm hard).";
+      } else if (trangThaiNoiDung === "CÓ VI PHẠM") {
+        danhGia = `CÓ VI PHẠM: còn lỗi hard [${hardCodes.join(", ")}]`;
+      } else {
+        danhGia = `THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu`;
+      }
 
       const resItem: DiadiemResult = {
         diemDen: tc.name,
@@ -281,7 +389,7 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
         keHoachHopLe,
         coNoiDung,
         trangThaiNoiDung,
-        dataSourceUsed: dsUsedInfo.source,
+        nguonDL,
         ngayDuLieu: dsUsedInfo.ngayDuLieu,
         snapshotDate: dsUsedInfo.snapshotDate,
         ghiChuNguon,
@@ -305,9 +413,9 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
       };
 
       results.push(resItem);
-      console.log(`   🏁 Kết quả: ${trangThaiNoiDung} | Nguồn: ${dsUsedInfo.source} | Máy chủ Overpass: ${overpassServer} (${overpassAttempts} lần thử)`);
+      console.log(`   🏁 Kết quả: ${trangThaiNoiDung} | Nguồn: ${nguonDL} | Máy chủ Overpass: ${overpassServer} (${overpassAttempts} lần thử)`);
       if (overpassError) console.log(`   ℹ️ Lý do lỗi/thiếu: ${overpassError}`);
-      console.log(`   📊 Tỷ lệ lấp: HĐ ${(tyLeLapHD * 100).toFixed(0)}%, Ăn ${(tyLeLapAn * 100).toFixed(0)}% | Đánh giá: ${danhGia}`);
+      console.log(`   📊 Tỷ lệ lấp: HĐ ${(tyLeLapHD * 100).toFixed(0)}% (${hdDaXep}/${oKhaDungHD} ô khả dụng), Ăn ${(tyLeLapAn * 100).toFixed(0)}% | Đánh giá: ${danhGia}`);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error(`   ❌ Lỗi khi xử lý ${tc.name}: ${msg}`);
@@ -317,7 +425,7 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
       }
     }
 
-    // Nghỉ 5 giây giữa các điểm đến theo yêu cầu B.5
+    // Nghỉ 5 giây giữa các điểm đến theo yêu cầu
     console.log(`   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...`);
     await new Promise((r) => setTimeout(r, 5000));
   }
@@ -331,11 +439,13 @@ async function main() {
   console.log("================================================================================");
   console.log("6 điểm đến mẫu: Đà Nẵng, Hà Nội, Đà Lạt, Phú Quốc, Bangkok, Seoul");
   console.log("Điểm khởi hành: TP.HCM");
+  if (isLiveOnlyFlag) console.log("Cờ: --live-only (chỉ chạy bảng Live-Only)");
+  if (isNoAgentCacheFlag) console.log("Cờ: --no-agent-cache (bỏ qua agent choice cache)");
 
-  // 1. Chạy lượt Live-Only (đo độ tin cậy thực tế từ mạng, không snapshot, không mock)
+  // 1. Chạy lượt Live-Only (đo độ tin cậy thực tế từ mạng, không snapshot, xóa cache trước khi chạy)
   const resultsLive = await runSingleEval(false);
 
-  // 2. Chạy lượt Có Dự Phòng (nếu live rỗng thì fallback snapshot nếu có)
+  // 2. Chạy lượt Có Dự Phòng (sử dụng cache vừa thu được từ Live + snapshot nếu thiếu)
   const resultsFallback = await runSingleEval(true);
 
   // 3. In BẢNG A: LIVE-ONLY
@@ -351,10 +461,13 @@ async function main() {
       "Cafe": r.soLuongTheoLoai.cafe,
       "H.Động": r.soLuongTheoLoai.hoatDong,
       "Trạng thái": r.trangThaiNoiDung,
-      "Nguồn DL": r.dataSourceUsed,
+      "Nguồn DL": r.nguonDL,
       "Lấp (HĐ/Ăn)": `${(r.tyLeLapHD * 100).toFixed(0)}% / ${(r.tyLeLapAn * 100).toFixed(0)}%`,
       "Máy chủ Overpass / Thử": `${r.overpassServer} (${r.overpassAttempts} lần)`,
-      "Lý do lỗi (nếu có)": r.overpassError ?? (r.loiHard.length > 0 ? r.loiHard.join("; ") : ""),
+      "Lý do lỗi / vi phạm":
+        r.loiHard.length > 0
+          ? r.loiHard.join("; ")
+          : (r.overpassError ?? ""),
     }))
   );
 
@@ -371,10 +484,14 @@ async function main() {
       "Cafe": r.soLuongTheoLoai.cafe,
       "H.Động": r.soLuongTheoLoai.hoatDong,
       "Trạng thái": r.trangThaiNoiDung,
-      "Nguồn DL": r.dataSourceUsed,
+      "Nguồn DL": r.nguonDL,
       "Lấp (HĐ/Ăn)": `${(r.tyLeLapHD * 100).toFixed(0)}% / ${(r.tyLeLapAn * 100).toFixed(0)}%`,
       "Máy chủ Overpass / Thử": `${r.overpassServer} (${r.overpassAttempts} lần)`,
-      "Ghi chú nguồn / Lý do": r.ghiChuNguon ?? (r.overpassError ?? (r.loiHard.length > 0 ? r.loiHard.join("; ") : "")),
+      "Ghi chú nguồn / Lý do":
+        r.ghiChuNguon ??
+        (r.loiHard.length > 0
+          ? r.loiHard.join("; ")
+          : (r.overpassError ?? "")),
     }))
   );
   console.log("================================================================================\n");
@@ -388,11 +505,13 @@ async function main() {
     JSON.stringify(resultsLive, null, 2),
     "utf-8"
   );
-  fs.writeFileSync(
-    path.join(resultsDir, `diadiem-fallback-${dateStr}.json`),
-    JSON.stringify(resultsFallback, null, 2),
-    "utf-8"
-  );
+  if (!isLiveOnlyFlag) {
+    fs.writeFileSync(
+      path.join(resultsDir, `diadiem-fallback-${dateStr}.json`),
+      JSON.stringify(resultsFallback, null, 2),
+      "utf-8"
+    );
+  }
 }
 
 main().catch((err) => {

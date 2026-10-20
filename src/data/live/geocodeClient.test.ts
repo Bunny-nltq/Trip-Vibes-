@@ -127,4 +127,143 @@ describe("geocodeClient", () => {
     expect(executionTimes.length).toBe(2);
     expect(executionTimes[1] - executionTimes[0]).toBeGreaterThanOrEqual(1000);
   });
+
+  describe("Hợp nhất kết quả trùng (G1, G2, G3, G4)", () => {
+    it("G1: hai kết quả Đà Lạt cùng tên, cùng vn, cách nhau ~1.9km -> HỢP NHẤT thành 1 ứng viên (chọn importance 0.6)", async () => {
+      const mockFetch = vi.fn(async () => ({
+        ok: true,
+        json: async () => [
+          {
+            place_id: 1,
+            class: "boundary",
+            type: "administrative",
+            display_name: "Đà Lạt, Lâm Đồng, Việt Nam",
+            lat: "11.9404",
+            lon: "108.4583",
+            importance: 0.6,
+            address: { country_code: "vn" },
+          },
+          {
+            place_id: 2,
+            class: "place",
+            type: "city",
+            display_name: "Đà Lạt, Lâm Đồng, Việt Nam",
+            lat: "11.9465",
+            lon: "108.4419",
+            importance: 0.55,
+            address: { country_code: "vn" },
+          },
+        ],
+      })) as any;
+
+      const res = await geocodeDestination("Đà Lạt Mock G1", {
+        skipCache: true,
+        fetchFn: mockFetch,
+      });
+
+      expect(res.status).toBe("thanh_cong");
+      if (res.status === "thanh_cong") {
+        expect(res.ungVien.length).toBe(1);
+        expect(res.diemDen.toaDo.lat).toBe(11.9404);
+        expect(res.diemDen.toaDo.lng).toBe(108.4583);
+        expect(res.ungVien[0].importance).toBe(0.6);
+      }
+    });
+
+    it("G2: hai kết quả cùng tên 'Victoria' nhưng country_code 'ca' và 'au' -> 2 ứng viên, can_lam_ro", async () => {
+      const mockFetch = vi.fn(async () => ({
+        ok: true,
+        json: async () => [
+          {
+            place_id: 11,
+            type: "city",
+            display_name: "Victoria, BC, Canada",
+            lat: "48.4284",
+            lon: "-123.3656",
+            importance: 0.7,
+            address: { country_code: "ca" },
+          },
+          {
+            place_id: 12,
+            type: "administrative",
+            display_name: "Victoria, Australia",
+            lat: "-37.4713",
+            lon: "144.7852",
+            importance: 0.8,
+            address: { country_code: "au" },
+          },
+        ],
+      })) as any;
+
+      const res = await geocodeDestination("Victoria Mock G2", {
+        skipCache: true,
+        fetchFn: mockFetch,
+      });
+
+      expect(res.status).toBe("can_lam_ro");
+      expect(res.ungVien.length).toBe(2);
+    });
+
+    it("G3: hai kết quả cùng tên, cùng country_code 'vn', tọa độ cách nhau 122 km -> 2 ứng viên, can_lam_ro", async () => {
+      const mockFetch = vi.fn(async () => ({
+        ok: true,
+        json: async () => [
+          {
+            place_id: 21,
+            type: "city",
+            display_name: "Thị trấn X, Tỉnh A, Việt Nam",
+            lat: "12.0",
+            lon: "108.0",
+            importance: 0.5,
+            address: { country_code: "vn" },
+          },
+          {
+            place_id: 22,
+            type: "city",
+            display_name: "Thị trấn X, Tỉnh B, Việt Nam",
+            lat: "13.1",
+            lon: "108.0",
+            importance: 0.5,
+            address: { country_code: "vn" },
+          },
+        ],
+      })) as any;
+
+      const res = await geocodeDestination("Thị trấn X Mock G3", {
+        skipCache: true,
+        fetchFn: mockFetch,
+      });
+
+      expect(res.status).toBe("can_lam_ro");
+      expect(res.ungVien.length).toBe(2);
+    });
+
+    it("G4: một kết quả duy nhất -> 1 ứng viên, không hỏi lại", async () => {
+      const mockFetch = vi.fn(async () => ({
+        ok: true,
+        json: async () => [
+          {
+            place_id: 31,
+            type: "city",
+            display_name: "Đà Nẵng, Việt Nam",
+            lat: "16.0685",
+            lon: "108.2240",
+            importance: 0.85,
+            address: { country_code: "vn" },
+          },
+        ],
+      })) as any;
+
+      const res = await geocodeDestination("Đà Nẵng Mock G4", {
+        skipCache: true,
+        fetchFn: mockFetch,
+      });
+
+      expect(res.status).toBe("thanh_cong");
+      if (res.status === "thanh_cong") {
+        expect(res.ungVien.length).toBe(1);
+        expect(res.diemDen.ten).toBe("Đà Nẵng");
+      }
+    });
+  });
 });

@@ -27,10 +27,40 @@ const CACHE_TTL_MS = 168 * 60 * 60 * 1000; // 168 giờ
 const MAX_PER_TYPE = 15;
 
 export const DEFAULT_OVERPASS_ENDPOINTS = [
-  "https://overpass-api.de/api/interpreter",
-  "https://overpass.private.coffee/api/interpreter",
   "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+  "https://overpass.private.coffee/api/interpreter",
+  "https://overpass-api.de/api/interpreter",
 ];
+
+export interface BoundingBoxResult {
+  south: number;
+  north: number;
+  west: number;
+  east: number;
+}
+
+/**
+ * Tính bounding box từ tâm và nửa cạnh vĩ độ
+ * Nửa cạnh kinh độ = nuaCanhVi / cos(vĩ độ tâm)
+ */
+export function boundingBox(
+  tam: { lat: number; lng: number },
+  nuaCanhVi: number
+): BoundingBoxResult {
+  const south = tam.lat - nuaCanhVi;
+  const north = tam.lat + nuaCanhVi;
+  const cosLat = Math.cos((tam.lat * Math.PI) / 180);
+  const nuaCanhKinh = nuaCanhVi / cosLat;
+  const west = tam.lng - nuaCanhKinh;
+  const east = tam.lng + nuaCanhKinh;
+
+  return {
+    south: Number(south.toFixed(5)),
+    north: Number(north.toFixed(5)),
+    west: Number(west.toFixed(5)),
+    east: Number(east.toFixed(5)),
+  };
+}
 
 export function getOverpassEndpoints(): string[] {
   const envEndpoints = process.env.OVERPASS_ENDPOINTS;
@@ -52,6 +82,8 @@ export interface OverpassExecutionStats {
   itemCount: number;
   loai: string;
   error?: string;
+  fromCache?: boolean;
+  cacheAgeHours?: number;
 }
 
 export const lastOverpassStats: OverpassExecutionStats[] = [];
@@ -61,7 +93,7 @@ export function getLastOverpassStatsSummary(): string {
   return lastOverpassStats
     .map(
       (s) =>
-        `[${s.loai}] Server: ${s.server} (${s.attempts} lần thử, status: ${s.status}, ${s.itemCount} mục)`
+        `[${s.loai}] Server: ${s.server} (${s.attempts} lần thử, status: ${s.status}, ${s.itemCount} mục${s.fromCache ? `, tuổi ${s.cacheAgeHours}h` : ""})`
     )
     .join("; ");
 }
@@ -72,15 +104,31 @@ function getCacheDir(): string {
   return dir;
 }
 
+export function clearAllOverpassCache(): void {
+  const dir = getCacheDir();
+  if (fs.existsSync(dir)) {
+    const files = fs.readdirSync(dir);
+    for (const f of files) {
+      if (f.startsWith("osm_") && f.endsWith(".json")) {
+        try {
+          fs.unlinkSync(path.join(dir, f));
+        } catch {
+          // ignore
+        }
+      }
+    }
+  }
+}
+
 function getCacheKey(
   lat: number,
   lng: number,
-  radiusM: number,
+  nuaCanhVi: number,
   loai: string
 ): string {
   return crypto
     .createHash("sha256")
-    .update(`${lat.toFixed(4)},${lng.toFixed(4)}_${radiusM}_${loai}`)
+    .update(`${lat.toFixed(4)},${lng.toFixed(4)}_${nuaCanhVi.toFixed(4)}_${loai}`)
     .digest("hex");
 }
 
@@ -88,18 +136,25 @@ function getCachePath(key: string): string {
   return path.join(getCacheDir(), `osm_${key}.json`);
 }
 
-function readCache<T>(
+export interface CacheResult<T> {
+  data: T;
+  ageHours: number;
+}
+
+function readCacheWithInfo<T>(
   key: string,
   loaiKey?: string,
   lat?: number,
   lng?: number
-): T | null {
+): CacheResult<T> | null {
   const p = getCachePath(key);
   if (fs.existsSync(p)) {
     const stat = fs.statSync(p);
-    if (Date.now() - stat.mtimeMs <= CACHE_TTL_MS) {
+    const ageMs = Date.now() - stat.mtimeMs;
+    if (ageMs <= CACHE_TTL_MS) {
       try {
-        return JSON.parse(fs.readFileSync(p, "utf-8")) as T;
+        const data = JSON.parse(fs.readFileSync(p, "utf-8")) as T;
+        return { data, ageHours: ageMs / (1000 * 3600) };
       } catch {
         // ignore
       }
@@ -121,8 +176,11 @@ function readCache<T>(
       if (legacyFile) {
         const legacyPath = path.join(getCacheDir(), legacyFile);
         if (fs.existsSync(legacyPath)) {
+          const stat = fs.statSync(legacyPath);
+          const ageMs = Date.now() - stat.mtimeMs;
           try {
-            return JSON.parse(fs.readFileSync(legacyPath, "utf-8")) as T;
+            const data = JSON.parse(fs.readFileSync(legacyPath, "utf-8")) as T;
+            return { data, ageHours: ageMs / (1000 * 3600) };
           } catch {
             // ignore
           }
@@ -132,6 +190,16 @@ function readCache<T>(
   }
 
   return null;
+}
+
+function readCache<T>(
+  key: string,
+  loaiKey?: string,
+  lat?: number,
+  lng?: number
+): T | null {
+  const res = readCacheWithInfo<T>(key, loaiKey, lat, lng);
+  return res ? res.data : null;
 }
 
 function writeCache(key: string, data: unknown): void {
@@ -170,17 +238,39 @@ async function queryOverpass(
   loaiKey?: string,
   toaDo?: { lat: number; lng: number }
 ): Promise<OsmElement[]> {
-  const cached = readCache<OsmElement[]>(cacheKey, loaiKey, toaDo?.lat, toaDo?.lng);
-  if (cached) {
-    console.log(`[Overpass] [${loai}] Lấy từ cache (${cached.length} phần tử).`);
-    return cached;
+  const cachedHit = readCacheWithInfo<OsmElement[]>(cacheKey, loaiKey, toaDo?.lat, toaDo?.lng);
+  if (cachedHit) {
+    console.log(`[Overpass] [${loai}] Lấy từ cache (${cachedHit.data.length} phần tử, tuổi: ${cachedHit.ageHours.toFixed(1)}h).`);
+    lastOverpassStats.push({
+      server: "cache",
+      attempts: 0,
+      status: 200,
+      durationMs: 0,
+      itemCount: cachedHit.data.length,
+      loai,
+      fromCache: true,
+      cacheAgeHours: Number(cachedHit.ageHours.toFixed(1)),
+    });
+    return cachedHit.data;
   }
 
   const runQuery = async (): Promise<OsmElement[]> => {
-    const doubleCheck = readCache<OsmElement[]>(cacheKey, loaiKey, toaDo?.lat, toaDo?.lng);
-    if (doubleCheck) return doubleCheck;
+    const doubleCheck = readCacheWithInfo<OsmElement[]>(cacheKey, loaiKey, toaDo?.lat, toaDo?.lng);
+    if (doubleCheck) {
+      lastOverpassStats.push({
+        server: "cache",
+        attempts: 0,
+        status: 200,
+        durationMs: 0,
+        itemCount: doubleCheck.data.length,
+        loai,
+        fromCache: true,
+        cacheAgeHours: Number(doubleCheck.ageHours.toFixed(1)),
+      });
+      return doubleCheck.data;
+    }
 
-    const body = `[out:json][timeout:25];\n${ql}\nout center 50;`;
+    const body = `[out:json][timeout:20];\n${ql}\nout center qt 30;`;
     const endpoints = getOverpassEndpoints();
     let bestElements: OsmElement[] = [];
 
@@ -202,7 +292,7 @@ async function queryOverpass(
               "User-Agent": USER_AGENT,
             },
             body: `data=${encodeURIComponent(body)}`,
-            signal: AbortSignal.timeout(8000),
+            signal: AbortSignal.timeout(30000),
           });
 
           const durationMs = Date.now() - startTime;
@@ -214,12 +304,11 @@ async function queryOverpass(
             response.status === 503 ||
             response.status === 504
           ) {
-            console.warn(
-              `[Overpass] [${loai}] ${endpoint} trả HTTP ${response.status} (lần ${attempt}).`
+            console.log(
+              `[Overpass] [${loai}] ${endpoint} | ${durationMs}ms | 0 phần tử | status: ${response.status} (lần ${attempt})`
             );
-            if (attempt <= 2) {
-              const delay = retryDelays[attempt - 1] ?? 5000;
-              await sleep(delay);
+            if (attempt <= 1) {
+              await sleep(1000);
               continue;
             }
             break; // Chuyển máy chủ kế tiếp
@@ -231,6 +320,11 @@ async function queryOverpass(
 
           const json = (await response.json()) as OsmResponse;
           const elements = json.elements ?? [];
+
+          // Log mỗi truy vấn: máy chủ, thời gian ms, số phần tử, status
+          console.log(
+            `[Overpass] [${loai}] ${endpoint} | ${durationMs}ms | ${elements.length} phần tử | status: ${response.status}`
+          );
 
           // Nếu máy chủ trả 0 phần tử, thử máy chủ kế tiếp trước khi kết luận là 0
           if (elements.length === 0 && endpoints.indexOf(endpoint) < endpoints.length - 1) {
@@ -248,11 +342,6 @@ async function queryOverpass(
             break; // chuyển sang endpoint kế tiếp
           }
 
-          // Thành công có kết quả hoặc là máy chủ cuối cùng
-          console.log(
-            `[Overpass] [${loai}] Thành công từ ${endpoint} (lần thử ${attempt}, ${durationMs}ms, ${elements.length} phần tử).`
-          );
-
           lastOverpassStats.push({
             server: endpoint,
             attempts: attempt,
@@ -267,13 +356,18 @@ async function queryOverpass(
         } catch (err: unknown) {
           const durationMs = Date.now() - startTime;
           const errorMsg = err instanceof Error ? err.message : String(err);
-          console.warn(
-            `[Overpass] [${loai}] Lỗi kết nối tới ${endpoint} (lần ${attempt}): ${errorMsg}`
+          console.log(
+            `[Overpass] [${loai}] ${endpoint} | ${durationMs}ms | 0 phần tử | status: ERR | lỗi: ${errorMsg} (lần ${attempt})`
           );
 
-          if (attempt <= 2) {
-            const delay = retryDelays[attempt - 1] ?? 5000;
-            await sleep(delay);
+          // Nếu lỗi không thể kết nối mạng (fetch failed / connect timeout), chuyển ngay máy chủ khác
+          const isConnectionDead =
+            errorMsg.includes("fetch failed") ||
+            errorMsg.includes("CONNECT_TIMEOUT") ||
+            errorMsg.includes("ECONNREFUSED");
+
+          if (!isConnectionDead && attempt <= 1) {
+            await sleep(1000);
             continue;
           }
 
@@ -330,34 +424,37 @@ function extractKhuVuc(tags: Record<string, string>): string {
 
 const NOW_ISO = () => new Date().toISOString();
 
-// ─── Khách sạn (5 km ban đầu, nhân đôi nếu 0) ─────────────────────────────────
+// ─── Khách sạn (bbox 0.03 độ, thử hộp nhỏ hơn một nửa nếu lỗi/0) ──────────────
 
 export async function fetchKhachSansOSM(
   toaDo: { lat: number; lng: number },
   tenDiemDen: string = ""
 ): Promise<KhachSan[]> {
-  let radius = 5000;
+  let nuaCanhVi = 0.03;
+  let b = boundingBox(toaDo, nuaCanhVi);
   let ql = `
 (
-  node["tourism"~"hotel|hostel|guest_house"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  way["tourism"~"hotel|hostel|guest_house"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  relation["tourism"~"hotel|hostel|guest_house"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
+  node["tourism"~"hotel|hostel|guest_house"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["tourism"~"hotel|hostel|guest_house"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
 
-  let cacheKey = getCacheKey(toaDo.lat, toaDo.lng, radius, "hotels");
+  let cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "hotels");
   let elements = await queryOverpass(ql, cacheKey, "khach_san", "hotels", toaDo);
 
-  // Nếu 0 phần tử, mở rộng bán kính gấp đôi 1 lần (10.000m)
+  // Nếu 0 phần tử hoặc lỗi timeout mọi server: thử MỘT lần với hộp nhỏ hơn một nửa
   if (elements.length === 0) {
-    radius = 10000;
+    nuaCanhVi = 0.015;
+    b = boundingBox(toaDo, nuaCanhVi);
     ql = `
 (
-  node["tourism"~"hotel|hostel|guest_house"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  way["tourism"~"hotel|hostel|guest_house"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  relation["tourism"~"hotel|hostel|guest_house"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
+  node["tourism"~"hotel|hostel|guest_house"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["tourism"~"hotel|hostel|guest_house"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
-    cacheKey = getCacheKey(toaDo.lat, toaDo.lng, radius, "hotels");
-    elements = await queryOverpass(ql, cacheKey, "khach_san_expanded", "hotels", toaDo);
+    cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "hotels");
+    elements = await queryOverpass(ql, cacheKey, "khach_san_half", "hotels", toaDo);
+    if (elements.length === 0) {
+      console.warn(`[Overpass] [khach_san] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
+    }
   }
 
   const filtered = sortByRichness(elements.filter((el) => el.tags?.name)).slice(
@@ -399,34 +496,39 @@ export async function fetchKhachSansOSM(
   });
 }
 
-// ─── Quán ăn (5 km ban đầu, nhân đôi nếu 0) ───────────────────────────────────
+// ─── Quán ăn (bbox 0.03 độ, thử hộp nhỏ hơn một nửa nếu lỗi/0) ─────────────────
 
 export async function fetchQuanAnsOSM(
   toaDo: { lat: number; lng: number },
   tenDiemDen: string = ""
 ): Promise<QuanAn[]> {
-  let radius = 5000;
+  let nuaCanhVi = 0.03;
+  let b = boundingBox(toaDo, nuaCanhVi);
   let ql = `
 (
-  node["amenity"="restaurant"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  way["amenity"="restaurant"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  node["amenity"="food_court"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
+  node["amenity"="restaurant"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["amenity"="restaurant"]["name"](${b.south},${b.west},${b.north},${b.east});
+  node["amenity"="food_court"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
 
-  let cacheKey = getCacheKey(toaDo.lat, toaDo.lng, radius, "restaurants");
+  let cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "restaurants");
   let elements = await queryOverpass(ql, cacheKey, "quan_an", "restaurants", toaDo);
 
-  // Nếu 0 phần tử, mở rộng gấp đôi (10.000m)
+  // Nếu 0 phần tử, thử MỘT lần với hộp nhỏ hơn một nửa
   if (elements.length === 0) {
-    radius = 10000;
+    nuaCanhVi = 0.015;
+    b = boundingBox(toaDo, nuaCanhVi);
     ql = `
 (
-  node["amenity"="restaurant"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  way["amenity"="restaurant"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  node["amenity"="food_court"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
+  node["amenity"="restaurant"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["amenity"="restaurant"]["name"](${b.south},${b.west},${b.north},${b.east});
+  node["amenity"="food_court"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
-    cacheKey = getCacheKey(toaDo.lat, toaDo.lng, radius, "restaurants");
-    elements = await queryOverpass(ql, cacheKey, "quan_an_expanded", "restaurants", toaDo);
+    cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "restaurants");
+    elements = await queryOverpass(ql, cacheKey, "quan_an_half", "restaurants", toaDo);
+    if (elements.length === 0) {
+      console.warn(`[Overpass] [quan_an] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
+    }
   }
 
   const filtered = sortByRichness(elements.filter((el) => el.tags?.name)).slice(
@@ -463,32 +565,37 @@ export async function fetchQuanAnsOSM(
   });
 }
 
-// ─── Cafe (5 km ban đầu, nhân đôi nếu 0) ──────────────────────────────────────
+// ─── Cafe (bbox 0.03 độ, thử hộp nhỏ hơn một nửa nếu lỗi/0) ───────────────────
 
 export async function fetchCafesOSM(
   toaDo: { lat: number; lng: number },
   tenDiemDen: string = ""
 ): Promise<Cafe[]> {
-  let radius = 5000;
+  let nuaCanhVi = 0.03;
+  let b = boundingBox(toaDo, nuaCanhVi);
   let ql = `
 (
-  node["amenity"="cafe"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  way["amenity"="cafe"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
+  node["amenity"="cafe"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["amenity"="cafe"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
 
-  let cacheKey = getCacheKey(toaDo.lat, toaDo.lng, radius, "cafes");
+  let cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "cafes");
   let elements = await queryOverpass(ql, cacheKey, "cafe", "cafes", toaDo);
 
-  // Nếu 0 phần tử, mở rộng gấp đôi (10.000m)
+  // Nếu 0 phần tử, thử MỘT lần với hộp nhỏ hơn một nửa
   if (elements.length === 0) {
-    radius = 10000;
+    nuaCanhVi = 0.015;
+    b = boundingBox(toaDo, nuaCanhVi);
     ql = `
 (
-  node["amenity"="cafe"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  way["amenity"="cafe"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
+  node["amenity"="cafe"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["amenity"="cafe"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
-    cacheKey = getCacheKey(toaDo.lat, toaDo.lng, radius, "cafes");
-    elements = await queryOverpass(ql, cacheKey, "cafe_expanded", "cafes", toaDo);
+    cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "cafes");
+    elements = await queryOverpass(ql, cacheKey, "cafe_half", "cafes", toaDo);
+    if (elements.length === 0) {
+      console.warn(`[Overpass] [cafe] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
+    }
   }
 
   const filtered = sortByRichness(elements.filter((el) => el.tags?.name)).slice(
@@ -524,7 +631,7 @@ export async function fetchCafesOSM(
   });
 }
 
-// ─── Hoạt động / Điểm tham quan (20 km ban đầu, nhân đôi nếu 0) ──────────────
+// ─── Hoạt động / Điểm tham quan (bbox 0.15 độ, thử hộp nhỏ hơn một nửa nếu lỗi/0) ──
 
 const ATTRACTION_NHAN: Record<string, Preference[]> = {
   attraction: ["giai_tri_vui_choi"],
@@ -539,30 +646,35 @@ export async function fetchHoatDongsOSM(
   toaDo: { lat: number; lng: number },
   tenDiemDen: string = ""
 ): Promise<HoatDong[]> {
-  let radius = 20000;
+  let nuaCanhVi = 0.15;
+  let b = boundingBox(toaDo, nuaCanhVi);
   let ql = `
 (
-  node["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  way["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  node["natural"="beach"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  way["natural"="beach"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
+  node["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](${b.south},${b.west},${b.north},${b.east});
+  node["natural"="beach"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["natural"="beach"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
 
-  let cacheKey = getCacheKey(toaDo.lat, toaDo.lng, radius, "attractions");
+  let cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "attractions");
   let elements = await queryOverpass(ql, cacheKey, "hoat_dong", "attractions", toaDo);
 
-  // Nếu 0 phần tử, mở rộng gấp đôi (40.000m)
+  // Nếu 0 phần tử, thử MỘT lần với hộp nhỏ hơn một nửa (0.075 độ)
   if (elements.length === 0) {
-    radius = 40000;
+    nuaCanhVi = 0.075;
+    b = boundingBox(toaDo, nuaCanhVi);
     ql = `
 (
-  node["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  way["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  node["natural"="beach"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
-  way["natural"="beach"]["name"](around:${radius},${toaDo.lat},${toaDo.lng});
+  node["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](${b.south},${b.west},${b.north},${b.east});
+  node["natural"="beach"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["natural"="beach"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
-    cacheKey = getCacheKey(toaDo.lat, toaDo.lng, radius, "attractions");
-    elements = await queryOverpass(ql, cacheKey, "hoat_dong_expanded", "attractions", toaDo);
+    cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "attractions");
+    elements = await queryOverpass(ql, cacheKey, "hoat_dong_half", "attractions", toaDo);
+    if (elements.length === 0) {
+      console.warn(`[Overpass] [hoat_dong] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
+    }
   }
 
   const filtered = sortByRichness(elements.filter((el) => el.tags?.name)).slice(

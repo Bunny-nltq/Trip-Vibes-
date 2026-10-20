@@ -19,6 +19,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import type { DiemDen } from "@/contracts";
+import { khoangCachKm } from "@/core/haversine";
 
 export interface GeocodeCandidate {
   ten: string;
@@ -28,6 +29,7 @@ export interface GeocodeCandidate {
   tienTe: string;
   loai: string;
   moTa: string;
+  importance?: number;
   nguon: "nominatim";
   ngayLay: string;
 }
@@ -168,7 +170,7 @@ function writeCache(query: string, data: GeocodeResult): void {
 
 export function parseNominatimItem(item: any, nowIso: string = new Date().toISOString()): GeocodeCandidate {
   const address = item.address || {};
-  const countryCode = (address.country_code || "vn").toUpperCase();
+  const countryCode = (address.country_code || item.country_code || "vn").toUpperCase();
   const country = address.country || (countryCode === "VN" ? "Việt Nam" : countryCode);
 
   const name =
@@ -177,7 +179,15 @@ export function parseNominatimItem(item: any, nowIso: string = new Date().toISOS
     address.town ||
     address.municipality ||
     address.state ||
-    item.display_name.split(",")[0].trim();
+    (item.display_name ? item.display_name.split(",")[0].trim() : "Điểm đến");
+
+  const rawImportance = item.importance;
+  const importance =
+    typeof rawImportance === "number"
+      ? rawImportance
+      : typeof rawImportance === "string"
+      ? parseFloat(rawImportance) || 0
+      : 0;
 
   return {
     ten: name,
@@ -188,25 +198,75 @@ export function parseNominatimItem(item: any, nowIso: string = new Date().toISOS
       lng: parseFloat(item.lon),
     },
     tienTe: suyRaTienTeTuMaQuocGia(countryCode),
-    loai: item.type || "place",
-    moTa: item.display_name,
+    loai: item.type || item.class || "place",
+    moTa: item.display_name || name,
+    importance,
     nguon: "nominatim",
     ngayLay: nowIso,
   };
 }
 
-function normalizePlaceName(s: string): string {
-  return s
-    .toLowerCase()
-    .replace(/^thành phố\s+/i, "")
-    .replace(/^đặc khu\s+/i, "")
-    .replace(/^tỉnh\s+/i, "")
-    .replace(/^quận\s+/i, "")
-    .replace(/^huyện\s+/i, "")
+export function chuanHoaTen(tenHoacDisplayName: string): string {
+  const first = tenHoacDisplayName.split(",")[0].trim().toLowerCase();
+  const noDiacritics = first
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/đ/g, "d")
     .trim();
+
+  return noDiacritics
+    .replace(/^(thanh pho|dac khu|tinh|quan|huyen|thi xa|thi tran|city of)\s+/i, "")
+    .trim();
+}
+
+export function getLoaiPriority(loai: string): number {
+  const l = loai.toLowerCase();
+  if (l === "city") return 4;
+  if (l === "town") return 3;
+  if (l === "administrative") return 2;
+  if (l === "village") return 1;
+  return 0;
+}
+
+export function chonUngVienTotHon(a: GeocodeCandidate, b: GeocodeCandidate): GeocodeCandidate {
+  const impA = a.importance ?? 0;
+  const impB = b.importance ?? 0;
+  if (impA > impB) return a;
+  if (impB > impA) return b;
+  const prioA = getLoaiPriority(a.loai);
+  const prioB = getLoaiPriority(b.loai);
+  if (prioA >= prioB) return a;
+  return b;
+}
+
+export function hopNhatUngVien(danhSach: GeocodeCandidate[]): GeocodeCandidate[] {
+  const ketQua: GeocodeCandidate[] = [];
+
+  for (const cand of danhSach) {
+    const tenCand = chuanHoaTen(cand.moTa || cand.ten);
+    let daHopNhat = false;
+
+    for (let i = 0; i < ketQua.length; i++) {
+      const existing = ketQua[i];
+      const tenExist = chuanHoaTen(existing.moTa || existing.ten);
+
+      const cungQuocGia = cand.maQuocGia.toUpperCase() === existing.maQuocGia.toUpperCase();
+      const cungTen = tenCand === tenExist;
+      const cachNhauKm = khoangCachKm(cand.toaDo, existing.toaDo);
+
+      if (cungQuocGia && cungTen && cachNhauKm <= 25) {
+        ketQua[i] = chonUngVienTotHon(existing, cand);
+        daHopNhat = true;
+        break;
+      }
+    }
+
+    if (!daHopNhat) {
+      ketQua.push(cand);
+    }
+  }
+
+  return ketQua.slice(0, 3);
 }
 
 // ─── Main Geocode Function ───────────────────────────────────────────────────
@@ -295,23 +355,21 @@ export async function geocodeDestination(
   }
 
   const nowIso = new Date().toISOString();
-  const ungVien: GeocodeCandidate[] = rawData.slice(0, 3).map((item) => parseNominatimItem(item, nowIso));
+  const rawCandidates: GeocodeCandidate[] = rawData.map((item) => parseNominatimItem(item, nowIso));
+  const ungVien = hopNhatUngVien(rawCandidates);
 
-  // Kiểm tra mơ hồ:
-  // Mơ hồ khi các ứng viên thuộc các quốc gia khác nhau
-  const distinctCountries = new Set(ungVien.map((u) => u.maQuocGia));
-  let isAmbiguous = distinctCountries.size > 1;
-
-  if (!isAmbiguous && ungVien.length > 1) {
-    // Nếu cùng quốc gia: kiểm tra xem có phải cùng tên thành phố/địa danh không
-    const normalizedNames = new Set(ungVien.map((u) => normalizePlaceName(u.ten)));
-    if (normalizedNames.size > 1) {
-      // Tên chuẩn hóa khác nhau -> Có nhiều địa danh khác nhau cùng từ khóa tìm kiếm
-      isAmbiguous = true;
-    }
+  if (ungVien.length === 0) {
+    const result: GeocodeResult = {
+      status: "khong_tim_thay",
+      ungVien: [],
+      nguon: "OpenStreetMap contributors",
+    };
+    writeCache(cleanQuery, result);
+    return result;
   }
 
-  if (isAmbiguous) {
+  // Nếu sau khi hợp nhất vẫn còn từ 2 ứng viên khác nhau -> cần làm rõ
+  if (ungVien.length >= 2) {
     const result: GeocodeResult = {
       status: "can_lam_ro",
       lyDo: "diem_den_mo_ho",
@@ -322,13 +380,8 @@ export async function geocodeDestination(
     return result;
   }
 
-  // Chọn ứng viên ưu tiên nhất: ưu tiên city/administrative hơn historic
-  const sorted = [...ungVien].sort((a, b) => {
-    const score = (u: GeocodeCandidate) => (u.loai === "city" || u.loai === "administrative" ? 2 : 1);
-    return score(b) - score(a);
-  });
-
-  const primary = sorted[0];
+  // 1 ứng viên duy nhất -> Thành công!
+  const primary = ungVien[0];
   const diemDen: DiemDen = {
     ten: primary.ten,
     quocGia: primary.quocGia,
