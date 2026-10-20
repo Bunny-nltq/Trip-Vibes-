@@ -8,6 +8,7 @@ import { lapOTrong } from "@/core/lapOTrong";
 import { tinhNganSachToiThieu } from "@/core/minBudget";
 import { runPlanAgent, type AgentTraceItem } from "./planAgent";
 import { GeminiProvider } from "./provider";
+import { lapKeHoachTuDong } from "@/core/lapKeHoachTuDong";
 import { MAX_REPAIR_ROUNDS } from "@/core/assumptions";
 import { geocodeDestination, type GeocodeCandidate } from "@/data/live/geocodeClient";
 
@@ -48,8 +49,15 @@ export interface PlanRepairResult {
   }>;
   soVongSua: number;
   soLanGoiAI: number;
+  soLan429: number;
   ms: number;
   toiThieuVND?: number;
+  phuongThucLap?: "ai" | "quy_tac";
+  lyDoDuPhong?:
+    | "het_luot_ai"
+    | "qua_thoi_gian"
+    | "loi_mang_ai"
+    | "ai_khong_sua_duoc_ngan_sach";
   dataSourceUsed: string;
   ngayDuLieu?: string;
   snapshotDate?: string;
@@ -72,6 +80,7 @@ export async function planWithRepair(
     lichSu: [],
     soVongSua: 0,
     soLanGoiAI: 0,
+    soLan429: 0,
     ms: 0,
     dataSourceUsed: "live",
   };
@@ -194,6 +203,7 @@ export async function planWithRepair(
     emptyResult.status = "khong_du_du_lieu";
     emptyResult.lyDo = "khong_du_du_lieu";
     emptyResult.soLanGoiAI = 0;
+    emptyResult.soLan429 = 0;
     emptyResult.ms = Date.now() - startMs;
     emptyResult.chiTietThieu = {
       phuongTien: transports.length,
@@ -213,12 +223,14 @@ export async function planWithRepair(
 
   // b) Kiểm tra ngân sách tối thiểu (không tốn quota AI)
   const minBudgetRes = tinhNganSachToiThieu(request, data);
-  if (!minBudgetRes.khaThi) {
+  if (!minBudgetRes.khaThi || (request.ngansachTongVND && minBudgetRes.toiThieuVND > request.ngansachTongVND)) {
     emptyResult.status =
       minBudgetRes.lyDo === "khong_co_phuong_tien_phu_hop"
         ? "khong_co_phuong_an"
         : "khong_the_dat_ngan_sach";
     emptyResult.toiThieuVND = minBudgetRes.toiThieuVND;
+    emptyResult.soLanGoiAI = 0;
+    emptyResult.soLan429 = 0;
     emptyResult.ms = Date.now() - startMs;
     emptyResult.hard.push({
       code: "ngan_sach_toi_thieu",
@@ -237,6 +249,7 @@ export async function planWithRepair(
   const sharedSeenIds = new Set<string>();
   const sharedFoodIds = new Set<string>();
   let soLanGoiAI = 0;
+  let soLan429 = 0;
 
   let bestPlanInfo: {
     plan: Plan;
@@ -248,28 +261,128 @@ export async function planWithRepair(
   const lichSu: PlanRepairResult["lichSu"] = [];
   let currentRepairInfo: any = undefined;
 
+  const fallbackToRules = (
+    lyDo: "het_luot_ai" | "qua_thoi_gian" | "loi_mang_ai" | "ai_khong_sua_duoc_ngan_sach",
+    curSoLanGoiAI: number,
+    curSoLan429: number,
+    vong: number
+  ): PlanRepairResult => {
+    const autoRes = lapKeHoachTuDong(request, data, request.soNgay ?? 3);
+    if (autoRes.status === "khong_the_dat_ngan_sach") {
+      return {
+        status: "khong_the_dat_ngan_sach",
+        request,
+        hard: [
+          {
+            code: "ngan_sach_toi_thieu",
+            chiTiet: `Ngân sách không đủ. Tối thiểu cần khoảng ${autoRes.toiThieuVND.toLocaleString(
+              "vi-VN"
+            )} ₫.`,
+          },
+        ],
+        soft: [],
+        lichSu,
+        soVongSua: vong,
+        soLanGoiAI: curSoLanGoiAI,
+        soLan429: curSoLan429,
+        ms: Date.now() - startMs,
+        toiThieuVND: autoRes.toiThieuVND,
+        phuongThucLap: "quy_tac",
+        lyDoDuPhong: lyDo,
+        dataSourceUsed: dsUsedInfo.source,
+        ngayDuLieu: dsUsedInfo.ngayDuLieu,
+        snapshotDate: dsUsedInfo.snapshotDate,
+        tuoiGioCache: dsUsedInfo.tuoiGio,
+      };
+    }
+
+    return {
+      status: "ok",
+      request,
+      plan: {
+        ...autoRes.plan,
+        phuongThucLap: "quy_tac",
+        lyDoDuPhong: lyDo,
+      },
+      hard: [],
+      soft: [],
+      lichSu,
+      soVongSua: vong,
+      soLanGoiAI: curSoLanGoiAI,
+      soLan429: curSoLan429,
+      ms: Date.now() - startMs,
+      toiThieuVND: autoRes.toiThieuVND,
+      phuongThucLap: "quy_tac",
+      lyDoDuPhong: lyDo,
+      dataSourceUsed: dsUsedInfo.source,
+      ngayDuLieu: dsUsedInfo.ngayDuLieu,
+      snapshotDate: dsUsedInfo.snapshotDate,
+      tuoiGioCache: dsUsedInfo.tuoiGio,
+    };
+  };
+
   for (let vong = 0; vong <= MAX_REPAIR_ROUNDS; vong++) {
-    soLanGoiAI++;
+    const timeBudget = Number(process.env.PLAN_TIME_BUDGET_MS) || 50_000;
+    const remainingBudget = Math.max(0, timeBudget - (Date.now() - startMs));
+    if (remainingBudget <= 0) {
+      return fallbackToRules("qua_thoi_gian", soLanGoiAI, soLan429, vong);
+    }
+
     let agentResult;
+    let budgetTimer: NodeJS.Timeout;
+    const budgetPromise = new Promise<never>((_, reject) => {
+      budgetTimer = setTimeout(() => {
+        const err = new Error("qua_thoi_gian: Quá ngân sách thời gian lập kế hoạch");
+        reject(err);
+      }, remainingBudget);
+    });
+
     try {
-      agentResult = await runPlanAgent(request, {
+      const agentPromise = runPlanAgent(request, {
         provider,
         dataSource: liveDataSource,
         liveDataSource,
         sharedSeenIds,
         sharedFoodIds,
         repairInfo: currentRepairInfo,
+        timeBudgetMs: timeBudget,
+        startTimeOverall: startMs,
       });
+
+      agentResult = await Promise.race([agentPromise, budgetPromise]);
+      soLanGoiAI += agentResult.soLanGoiAI ?? 1;
+      soLan429 += agentResult.soLan429 ?? 0;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
+      let lyDo: "het_luot_ai" | "qua_thoi_gian" | "loi_mang_ai" = "loi_mang_ai";
+
       if (
+        msg.includes("het_luot_ai") ||
         msg.includes("429") ||
         msg.includes("RESOURCE_EXHAUSTED") ||
         msg.includes("quota")
       ) {
-        throw new Error("Lỗi API Gemini 429: " + msg);
+        lyDo = "het_luot_ai";
+        soLan429 = Math.max(soLan429 + 1, 1);
+        soLanGoiAI = Math.max(soLanGoiAI + 1, 1);
+      } else if (
+        msg.includes("qua_thoi_gian") ||
+        msg.includes("timed out") ||
+        Date.now() - startMs >= timeBudget
+      ) {
+        lyDo = "qua_thoi_gian";
+      } else if (
+        msg.includes("loi_mang_ai") ||
+        msg.includes("fetch failed") ||
+        msg.includes("503") ||
+        msg.includes("UNAVAILABLE")
+      ) {
+        lyDo = "loi_mang_ai";
       }
-      throw err;
+
+      return fallbackToRules(lyDo, soLanGoiAI, soLan429, vong);
+    } finally {
+      clearTimeout(budgetTimer!);
     }
 
     const { selection, trace } = agentResult;
@@ -347,18 +460,23 @@ export async function planWithRepair(
       }
     }
 
-    if (hard.length === 0) {
+    if (hard.length === 0 && plan) {
       return {
         status: "ok",
         request,
-        plan,
+        plan: {
+          ...plan,
+          phuongThucLap: "ai",
+        } as any,
         hard,
         soft,
         lichSu,
         soVongSua: vong,
         soLanGoiAI,
+        soLan429,
         ms: Date.now() - startMs,
         toiThieuVND: minBudgetRes.toiThieuVND,
+        phuongThucLap: "ai",
         dataSourceUsed: dsUsedInfo.source,
         ngayDuLieu: dsUsedInfo.ngayDuLieu,
         snapshotDate: dsUsedInfo.snapshotDate,
@@ -374,6 +492,16 @@ export async function planWithRepair(
     };
   }
 
+  // Nếu sau mọi vòng sửa vẫn còn vuot_ngan_sach hoặc vi phạm trong khi toiThieuVND <= ngân sách:
+  if (minBudgetRes.toiThieuVND <= (request.ngansachTongVND ?? 0)) {
+    return fallbackToRules(
+      "ai_khong_sua_duoc_ngan_sach",
+      soLanGoiAI,
+      soLan429,
+      MAX_REPAIR_ROUNDS
+    );
+  }
+
   return {
     status: "co_vi_pham",
     request,
@@ -383,6 +511,7 @@ export async function planWithRepair(
     lichSu,
     soVongSua: MAX_REPAIR_ROUNDS,
     soLanGoiAI,
+    soLan429,
     ms: Date.now() - startMs,
     toiThieuVND: minBudgetRes.toiThieuVND,
     dataSourceUsed: dsUsedInfo.source,

@@ -30,6 +30,26 @@ import {
 
 export const AGENT_PROMPT_VERSION = "v3";
 export const AGENT_MAX_STEPS = 10;
+export const GEMINI_CALL_TIMEOUT_MS = 20_000;
+
+export async function callGeminiWithTimeout<T>(
+  fn: () => Promise<T>,
+  timeoutMs = GEMINI_CALL_TIMEOUT_MS
+): Promise<T> {
+  let timer: NodeJS.Timeout;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => {
+      const err = new Error(`qua_thoi_gian: Gemini call timed out after ${timeoutMs}ms`);
+      err.name = "TimeoutError";
+      reject(err);
+    }, timeoutMs);
+  });
+  try {
+    return await Promise.race([fn(), timeoutPromise]);
+  } finally {
+    clearTimeout(timer!);
+  }
+}
 
 export interface AgentTraceItem {
   tool: string;
@@ -41,6 +61,8 @@ export interface PlanAgentResult {
   selection: Selection;
   trace: AgentTraceItem[];
   dataSourceUsed: string;
+  soLanGoiAI: number;
+  soLan429: number;
 }
 
 export const AGENT_SYSTEM_PROMPT = `Bạn là trợ lý AI chuyên lập kế hoạch du lịch của hệ thống Trip Vibes.
@@ -88,6 +110,8 @@ export interface PlanAgentOptions {
   };
   sharedSeenIds?: Set<string>;
   sharedFoodIds?: Set<string>;
+  timeBudgetMs?: number;
+  startTimeOverall?: number;
 }
 
 /**
@@ -207,6 +231,8 @@ export async function runPlanAgent(
   const trace: AgentTraceItem[] = [];
   let selection: Selection | null = null;
   let idRetryCount = 0;
+  let soLanGoiAI = 0;
+  let soLan429 = 0;
 
   const tenDiemDi = typeof request.diemDi === "string" ? request.diemDi : request.diemDi.ten;
   const tenDiemDen = getDiemDenTen(request.diemDen);
@@ -264,36 +290,76 @@ Chỉ thị:
     let response;
     let attempts = 0;
     while (attempts < 2) {
+      if (options?.startTimeOverall && options?.timeBudgetMs) {
+        if (Date.now() - options.startTimeOverall >= options.timeBudgetMs) {
+          throw new Error("qua_thoi_gian: Đã hết ngân sách thời gian lập kế hoạch");
+        }
+      }
+
       attempts++;
+      soLanGoiAI++;
       try {
-        response = await provider.client.models.generateContent({
-          model: provider.modelName,
-          contents: contents as never,
-          config: {
-            systemInstruction: AGENT_SYSTEM_PROMPT,
-            temperature: 0,
-            tools: [{ functionDeclarations: AGENT_TOOLS_DECLARATIONS as never }],
-          },
-        });
+        response = await callGeminiWithTimeout(() =>
+          provider.client.models.generateContent({
+            model: provider.modelName,
+            contents: contents as never,
+            config: {
+              systemInstruction: AGENT_SYSTEM_PROMPT,
+              temperature: 0,
+              tools: [{ functionDeclarations: AGENT_TOOLS_DECLARATIONS as never }],
+            },
+          })
+        );
         break;
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err);
-        if (
+        const is429 =
           msg.includes("429") ||
           msg.includes("RESOURCE_EXHAUSTED") ||
-          msg.includes("quota")
-        ) {
+          msg.includes("quota");
+        const is503 =
+          msg.includes("503") ||
+          msg.includes("UNAVAILABLE") ||
+          msg.includes("demand");
+        const isTimeout =
+          (err instanceof Error && err.name === "TimeoutError") ||
+          msg.includes("timed out") ||
+          msg.includes("qua_thoi_gian");
+
+        if (is429) {
+          soLan429++;
+          if (attempts < 2) {
+            // Tối đa 1 lần thử lại sau không quá 3 giây (ở đây 2000ms <= 3000ms)
+            await new Promise((r) => setTimeout(r, 2000));
+            continue;
+          }
           throw new Error(
-            "Đã vượt hạn mức gọi Gemini API (429 / RESOURCE_EXHAUSTED). Vui lòng thử lại sau."
+            "het_luot_ai: Đã vượt hạn mức gọi Gemini API (429 / RESOURCE_EXHAUSTED)."
           );
         }
-        if (
-          attempts < 2 &&
-          (msg.includes("503") || msg.includes("UNAVAILABLE") || msg.includes("demand"))
-        ) {
-          await new Promise((r) => setTimeout(r, 2000));
-          continue;
+
+        if (is503) {
+          if (attempts < 2) {
+            await new Promise((r) => setTimeout(r, 2000));
+            continue;
+          }
+          throw new Error("loi_mang_ai: Dịch vụ Gemini tạm thời không khả dụng (503).");
         }
+
+        if (isTimeout) {
+          throw new Error("qua_thoi_gian: Quá thời gian gọi Gemini (20000ms)");
+        }
+
+        if (
+          msg.includes("fetch failed") ||
+          msg.includes("ENOTFOUND") ||
+          msg.includes("ECONNRESET") ||
+          msg.includes("ETIMEDOUT") ||
+          msg.includes("NetworkError")
+        ) {
+          throw new Error("loi_mang_ai: Lỗi kết nối mạng tới Gemini: " + msg);
+        }
+
         throw err;
       }
     }
@@ -437,6 +503,8 @@ Chỉ thị:
     selection,
     trace,
     dataSourceUsed: liveDataSource.getMode(),
+    soLanGoiAI,
+    soLan429,
   };
 
   if (allowAgentCache && cacheFilePath) {

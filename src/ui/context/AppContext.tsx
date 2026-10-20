@@ -174,6 +174,8 @@ export interface AppCtx extends AppState {
   dataSourceUsed: string;
   ngayDuLieu?: string;
   tuoiGioCache?: number;
+  phuongThucLap?: "ai" | "quy_tac";
+  lyDoDuPhong?: string;
 
   // Plan History (Undo / Redo)
   canUndo: boolean;
@@ -652,6 +654,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         dataSourceUsed: planState.dataSourceUsed,
         ngayDuLieu: planState.ngayDuLieu,
         tuoiGioCache: planState.tuoiGioCache,
+        phuongThucLap: planState.phuongThucLap,
+        lyDoDuPhong: planState.lyDoDuPhong,
 
         // History
         canUndo: history.canUndo,

@@ -18,6 +18,7 @@ import {
   Loader2,
   AlertCircle,
   Info,
+  RefreshCw,
 } from "lucide-react";
 
 const VIBES: { label: string; key: Preference }[] = [
@@ -60,6 +61,21 @@ function getTagClass(hangMuc: string): string {
   }
 }
 
+function getLyDoDuPhongText(lyDo?: string): string {
+  switch (lyDo) {
+    case "het_luot_ai":
+      return "AI đã hết hạn mức lượt gọi";
+    case "qua_thoi_gian":
+      return "thời gian xử lý của AI vượt quá giới hạn";
+    case "loi_mang_ai":
+      return "lỗi kết nối mạng tới dịch vụ AI";
+    case "ai_khong_sua_duoc_ngan_sach":
+      return "AI không cân đối được chi phí trong ngân sách";
+    default:
+      return "AI không thể hoàn tất kế hoạch";
+  }
+}
+
 export function B3KeHoachScreen() {
   const {
     nav,
@@ -75,6 +91,9 @@ export function B3KeHoachScreen() {
     dataSourceUsed,
     ngayDuLieu,
     tuoiGioCache,
+    phuongThucLap,
+    lyDoDuPhong,
+    retryPlan,
   } = useApp();
 
   const [selectedVibes, setSelectedVibes] = useState<Preference[]>(() =>
@@ -272,6 +291,55 @@ export function B3KeHoachScreen() {
               </span>
             </div>
           )}
+
+        {/* Banner xanh khi lập bằng quy tắc tự động */}
+        {(phuongThucLap === "quy_tac" ||
+          planResult?.phuongThucLap === "quy_tac" ||
+          (plan as any)?.phuongThucLap === "quy_tac") && (
+          <div className="banner banner-success" style={{ marginBottom: 16 }}>
+            <div
+              className="banner-mark"
+              style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+            >
+              <Check size={14} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <div className="banner-title" style={{ color: "#166534" }}>
+                Kế hoạch được lập bằng quy tắc tự động
+              </div>
+              <div className="banner-text" style={{ color: "#14532d" }}>
+                Kế hoạch này được lập bằng quy tắc tự động (phương án rẻ nhất phù hợp yêu cầu) vì{" "}
+                {getLyDoDuPhongText(
+                  lyDoDuPhong ?? planResult?.lyDoDuPhong ?? (plan as any)?.lyDoDuPhong
+                )}
+                . Bạn vẫn có thể đổi từng mục.
+              </div>
+              <div style={{ marginTop: 8 }}>
+                <button
+                  type="button"
+                  onClick={() => retryPlan()}
+                  className="btn"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "4px 10px",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    borderRadius: "var(--r-sm)",
+                    background: "#ffffff",
+                    border: "1px solid #86efac",
+                    color: "#166534",
+                    cursor: "pointer",
+                  }}
+                >
+                  <RefreshCw size={13} />
+                  Thử lại bằng AI
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Banner lỗi nếu có vi phạm cứng */}
         {planStatus === "co_vi_pham" && hardViolations.length > 0 && (

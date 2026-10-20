@@ -68,8 +68,11 @@ export interface PlanApiResponse {
   lichSu?: unknown[];
   soVongSua?: number;
   soLanGoiAI?: number;
+  soLan429?: number;
   ms?: number;
   toiThieuVND?: number;
+  phuongThucLap?: "ai" | "quy_tac";
+  lyDoDuPhong?: string;
   dataSourceUsed?: string;
   ngayDuLieu?: string;
   snapshotDate?: string;
@@ -146,10 +149,10 @@ export function usePlan() {
     setError(null);
     setLoadingStep(0);
 
-    // Timeout 60 giây
+    // Timeout 65 giây (lớn hơn ngân sách máy chủ 50-60s)
     const timeoutId = setTimeout(() => {
       controller.abort();
-    }, 60_000);
+    }, 65_000);
 
     // Cập nhật tiến trình hiển thị thật theo thời gian trôi qua trong lúc đợi
     const stepTimer1 = setTimeout(() => setLoadingStep(1), 1500);
@@ -235,7 +238,28 @@ export function usePlan() {
       const data: PlanApiResponse = await res.json();
 
       if (!res.ok || !data.ok) {
-        const errorMsg = data.error || `Lỗi máy chủ (${res.status})`;
+        let errorMsg = data.error || `Lỗi máy chủ (${res.status})`;
+        const raw = (data.error || "").toLowerCase();
+        if (
+          raw.includes("429") ||
+          raw.includes("resource_exhausted") ||
+          raw.includes("het_luot_ai") ||
+          raw.includes("hạn mức")
+        ) {
+          errorMsg = "AI đã hết lượt gọi trong khoảng thời gian này. Vui lòng bấm 'Thử lại' sau ít phút.";
+        } else if (
+          raw.includes("qua_thoi_gian") ||
+          raw.includes("timeout") ||
+          raw.includes("quá thời gian")
+        ) {
+          errorMsg = "Quá thời gian xử lý yêu cầu. Vui lòng bấm 'Thử lại'.";
+        } else if (
+          raw.includes("loi_mang_ai") ||
+          raw.includes("fetch failed") ||
+          raw.includes("mạng")
+        ) {
+          errorMsg = "Lỗi kết nối mạng tới dịch vụ AI. Vui lòng kiểm tra kết nối và bấm 'Thử lại'.";
+        }
         setError(errorMsg);
         setStatus("error");
         setResult(data);
@@ -253,13 +277,16 @@ export function usePlan() {
       clearTimeout(stepTimer3);
 
       if (err instanceof Error && err.name === "AbortError") {
-        const msg = "Yêu cầu đã quá thời gian chờ (60 giây) hoặc bị hủy.";
+        const msg = "Yêu cầu đã quá thời gian chờ (65 giây). Vui lòng bấm 'Thử lại'.";
         setError(msg);
         setStatus("error");
         return { ok: false, error: msg };
       }
 
-      const msg = err instanceof Error ? err.message : "Lỗi kết nối tới máy chủ.";
+      let msg = "Lỗi kết nối mạng tới máy chủ. Vui lòng kiểm tra kết nối và bấm 'Thử lại'.";
+      if (err instanceof Error && !err.message.includes("fetch failed")) {
+        msg = err.message;
+      }
       setError(msg);
       setStatus("error");
       return { ok: false, error: msg };
@@ -287,6 +314,11 @@ export function usePlan() {
     hardViolations: result?.hard ?? [],
     softViolations: result?.soft ?? [],
     toiThieuVND: result?.toiThieuVND ?? 0,
+    phuongThucLap: result?.phuongThucLap ?? (result?.plan as any)?.phuongThucLap ?? "ai",
+    lyDoDuPhong: result?.lyDoDuPhong ?? (result?.plan as any)?.lyDoDuPhong,
+    soLanGoiAI: result?.soLanGoiAI,
+    soLan429: result?.soLan429,
+    ms: result?.ms,
     dataSourceUsed: result?.dataSourceUsed ?? "",
     ngayDuLieu: result?.snapshotDate ?? result?.ngayDuLieu,
     tuoiGioCache: result?.tuoiGioCache,

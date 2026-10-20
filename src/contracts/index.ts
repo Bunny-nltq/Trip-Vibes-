@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const schemaVersion = 7;
+export const schemaVersion = 8;
 
 // ─── Enums cho TripRequest & Activity ────────────────────────────────────────
 
@@ -359,6 +359,17 @@ export const PlanSchema = z.object({
   canhBao: z.array(z.string()),
   /** Nguồn dữ liệu đã sử dụng: "live" | "snapshot" | "mock" */
   dataSourceUsed: z.string().optional(),
+  /** Phương thức lập kế hoạch: "ai" hoặc "quy_tac" */
+  phuongThucLap: z.enum(["ai", "quy_tac"]).optional(),
+  /** Lý do dự phòng nếu dùng quy tắc */
+  lyDoDuPhong: z
+    .enum([
+      "het_luot_ai",
+      "qua_thoi_gian",
+      "loi_mang_ai",
+      "ai_khong_sua_duoc_ngan_sach",
+    ])
+    .optional(),
 });
 export type Plan = z.infer<typeof PlanSchema>;
 

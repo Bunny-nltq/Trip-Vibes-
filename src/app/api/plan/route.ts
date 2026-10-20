@@ -89,7 +89,15 @@ export async function POST(req: Request) {
     }
 
     const result = await planWithRepair(tripRequest);
-    return NextResponse.json({ ok: true, ...result });
+    return NextResponse.json({
+      ok: true,
+      ...result,
+      phuongThucLap: result.phuongThucLap ?? "ai",
+      lyDoDuPhong: result.lyDoDuPhong,
+      soLanGoiAI: result.soLanGoiAI ?? 0,
+      soLan429: result.soLan429 ?? 0,
+      ms: result.ms ?? Date.now() - start,
+    });
   } catch (err: unknown) {
     const ms = Date.now() - start;
     const raw = err instanceof Error ? err.message : String(err);

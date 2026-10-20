@@ -57,11 +57,28 @@ export class GeminiProvider implements LLMProvider {
       config.responseSchema = options.responseSchema;
     }
 
-    const response = await this.client.models.generateContent({
-      model: this.modelName,
-      contents: prompt,
-      config: Object.keys(config).length > 0 ? (config as never) : undefined,
+    let timer: NodeJS.Timeout;
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => {
+        const err = new Error("qua_thoi_gian: Gemini call timed out after 20000ms");
+        err.name = "TimeoutError";
+        reject(err);
+      }, 20_000);
     });
+
+    let response;
+    try {
+      response = await Promise.race([
+        this.client.models.generateContent({
+          model: this.modelName,
+          contents: prompt,
+          config: Object.keys(config).length > 0 ? (config as never) : undefined,
+        }),
+        timeoutPromise,
+      ]);
+    } finally {
+      clearTimeout(timer!);
+    }
 
     const text = response.text;
     if (!text) {

@@ -181,6 +181,7 @@ body {
 .banner-info  { background: var(--p100); border-color: var(--p300); border-left-color: var(--p500); }
 .banner-warn  { background: #FFF8E6; border-color: #E0C27A; border-left-color: var(--warning); }
 .banner-error { background: #FFF0F0; border-color: #FECACA; border-left-color: var(--error); }
+.banner-success { background: #F0FDF4; border-color: #BBF7D0; border-left-color: var(--success); }
 .banner-mark {
   display: flex; align-items: center; justify-content: center;
   width: 24px; height: 24px; flex: none;
@@ -188,6 +189,7 @@ body {
 }
 .banner-warn .banner-mark  { background: #FEF3C7; color: #92400E; border: 1px solid var(--warning); }
 .banner-error .banner-mark { background: #FEE2E2; color: var(--error); border: 1px solid var(--error); }
+.banner-success .banner-mark { background: #DCFCE7; color: #166534; border: 1px solid var(--success); }
 .banner-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
 .banner-text  { font-size: 13px; color: var(--g700); line-height: 1.5; }
 

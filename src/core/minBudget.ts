@@ -1,4 +1,4 @@
-import type { TripRequest, Transport } from "@/contracts";
+import type { TripRequest, Transport, Hotel } from "@/contracts";
 import type { PlanData } from "./buildPlan";
 import { calculateTransportFlags } from "./flags";
 import {
@@ -19,6 +19,73 @@ export interface MinBudgetResult {
   lyDo?: string;
 }
 
+export function isTransportValidForAvoidance(
+  t: Transport,
+  tranh: string[]
+): boolean {
+  const flags = calculateTransportFlags(t.departureTime, t.durationMinutes);
+  const tranhDaySom = tranh.includes("khong_day_som") || tranh.includes("sang");
+  const tranhDiDem = tranh.includes("khong_di_dem") || tranh.includes("dem");
+  const tranhDiChuyenLau =
+    tranh.includes("tranh_di_chuyen_lau") || tranh.includes("lau");
+
+  if (tranhDaySom && (flags.khoiHanhSom || flags.denSom)) return false;
+  if (tranhDiDem && flags.diDem) return false;
+  if (tranhDiChuyenLau && flags.diChuyenLau) return false;
+  return true;
+}
+
+export function getHotelPricePerNight(h: Hotel | any): number {
+  if ("pricePerNight" in h && typeof h.pricePerNight === "number") {
+    return h.pricePerNight;
+  }
+  if (h.khoangGiaDemVND) {
+    return Math.round((h.khoangGiaDemVND.min + h.khoangGiaDemVND.max) / 2);
+  }
+  if (h.giaUocTinhNguoi !== null && h.giaUocTinhNguoi !== undefined) {
+    return h.giaUocTinhNguoi;
+  }
+  const sao = h.soSao;
+  return sao !== null && sao !== undefined && HOTEL_GIA_THEO_SAO[sao] !== undefined
+    ? HOTEL_GIA_THEO_SAO[sao]
+    : HOTEL_GIA_MAC_DINH;
+}
+
+export function findCheapestHotel(data: {
+  hotels?: Hotel[];
+  khachSans?: any[];
+}): { hotelId: string; minGiaDem: number } | null {
+  if (data.khachSans && data.khachSans.length > 0) {
+    let cheapest = Infinity;
+    let minGiaDem = HOTEL_GIA_MAC_DINH;
+    let minHotelId = data.khachSans[0].id;
+    for (const ks of data.khachSans) {
+      const giaDem = getHotelPricePerNight(ks);
+      if (giaDem < cheapest) {
+        cheapest = giaDem;
+        minGiaDem = giaDem;
+        minHotelId = ks.id;
+      }
+    }
+    return { hotelId: minHotelId, minGiaDem };
+  }
+  if (data.hotels && data.hotels.length > 0) {
+    let cheapest = Infinity;
+    let minGiaDem = HOTEL_GIA_MAC_DINH;
+    let minHotelId = data.hotels[0].id;
+    for (const h of data.hotels) {
+      const giaDem = h.pricePerNight;
+      if (giaDem < cheapest) {
+        cheapest = giaDem;
+        minGiaDem = giaDem;
+        minHotelId = h.id;
+      }
+    }
+    return { hotelId: minHotelId, minGiaDem };
+  }
+  return null;
+}
+
 export function tinhNganSachToiThieu(
   request: TripRequest,
   data: PlanData
@@ -30,19 +97,13 @@ export function tinhNganSachToiThieu(
   const ngansach = request.ngansachTongVND ?? 0;
 
   // 1. Lọc phương tiện
-  let validDi = data.transports.filter((t) => t.huong === "di");
-  let validVe = data.transports.filter((t) => t.huong === "ve");
-
-  function isValidTransport(t: Transport): boolean {
-    const flags = calculateTransportFlags(t.departureTime, t.durationMinutes);
-    if (request.tranh.includes("khong_day_som") && (flags.khoiHanhSom || flags.denSom)) return false;
-    if (request.tranh.includes("khong_di_dem") && flags.diDem) return false;
-    if (request.tranh.includes("tranh_di_chuyen_lau") && flags.diChuyenLau) return false;
-    return true;
-  }
-
-  validDi = validDi.filter(isValidTransport);
-  validVe = validVe.filter(isValidTransport);
+  const tranhList = request.tranh ?? [];
+  const validDi = data.transports.filter(
+    (t) => t.huong === "di" && isTransportValidForAvoidance(t, tranhList)
+  );
+  const validVe = data.transports.filter(
+    (t) => t.huong === "ve" && isTransportValidForAvoidance(t, tranhList)
+  );
 
   if (validDi.length === 0 || validVe.length === 0) {
     return {
@@ -62,42 +123,15 @@ export function tinhNganSachToiThieu(
     validVe[0]
   );
 
-  // Khách sạn rẻ nhất: ưu tiên KhachSan live trước
-  let minGiaDem = HOTEL_GIA_MAC_DINH;
-  let minHotelId = "fallback";
-
-  if (data.khachSans && data.khachSans.length > 0) {
-    // Tính giá cho từng khách sạn live
-    let cheapest = Infinity;
-    for (const ks of data.khachSans) {
-      let giaDem: number;
-      if (ks.khoangGiaDemVND) {
-        giaDem = Math.round((ks.khoangGiaDemVND.min + ks.khoangGiaDemVND.max) / 2);
-      } else if (ks.giaUocTinhNguoi !== null) {
-        giaDem = ks.giaUocTinhNguoi;
-      } else {
-        const sao = ks.soSao;
-        giaDem =
-          sao !== null && HOTEL_GIA_THEO_SAO[sao] !== undefined
-            ? HOTEL_GIA_THEO_SAO[sao]
-            : HOTEL_GIA_MAC_DINH;
-      }
-      if (giaDem < cheapest) {
-        cheapest = giaDem;
-        minGiaDem = giaDem;
-        minHotelId = ks.id;
-      }
-    }
-  } else if (data.hotels.length > 0) {
-    const minHotel = data.hotels.reduce(
-      (min, curr) => (curr.pricePerNight < min.pricePerNight ? curr : min),
-      data.hotels[0]
-    );
-    minGiaDem = minHotel.pricePerNight;
-    minHotelId = minHotel.id;
-  } else {
+  // Khách sạn rẻ nhất
+  const cheapestHotel = findCheapestHotel(data);
+  if (!cheapestHotel) {
     return { khaThi: false, toiThieuVND: 0, lyDo: "khong_co_khach_san" };
   }
+  const { minHotelId, minGiaDem } = {
+    minHotelId: cheapestHotel.hotelId,
+    minGiaDem: cheapestHotel.minGiaDem,
+  };
 
   const chiPhiDi = minDi.pricePerPerson * soNguoi;
   const chiPhiVe = minVe.pricePerPerson * soNguoi;
