@@ -14,6 +14,7 @@
       "nguon": "nominatim",
       "ngayLay": "2026-10-19T11:21:42.761Z"
     },
+    "durationMs": 339737,
     "soLuongTheoLoai": {
       "khachSan": 15,
       "quanAn": 15,
@@ -22,17 +23,25 @@
     },
     "tongSoMuc": 60,
     "tyLeCoNguon": 1,
-    "soPhuongTienWeb": 0,
-    "soPhuongTienUocLuong": 6,
+    "soPhuongTienWeb": 6,
+    "soPhuongTienUocLuong": 0,
     "keHoachHopLe": true,
     "coNoiDung": true,
     "trangThaiNoiDung": "CÓ NỘI DUNG",
     "nguonDL": "mới từ mạng",
-    "ngayDuLieu": "2026-10-20T01:19:15.890Z",
+    "ngayDuLieu": "2026-10-20T02:58:08.224Z",
     "tyLeLapHD": 1,
     "tyLeLapAn": 1,
-    "overpassSummary": "[khach_san] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [khach_san_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [cafe_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 30 mục)",
-    "overpassServer": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+    "hienThiAn": "100%",
+    "chiTietCache": [
+      "quan_an: tuổi 0h từ https://overpass.private.coffee/api/interpreter [run_2026-10-20]",
+      "quan_an: tuổi 0.1h từ https://overpass.private.coffee/api/interpreter [run_2026-10-20]",
+      "cafe: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "hoat_dong: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "khach_san_half: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]"
+    ],
+    "overpassSummary": "[khach_san] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [quan_an] Cache (30 mục, tuổi 0h từ https://overpass.private.coffee/api/interpreter [run_2026-10-20]); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [khach_san_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 30 mục); [hoat_dong_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [quan_an] Cache (30 mục, tuổi 0.1h từ https://overpass.private.coffee/api/interpreter [run_2026-10-20]); [cafe] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [hoat_dong] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [khach_san] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [khach_san_half] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20])",
+    "overpassServer": "overpass.private.coffee, maps.mail.ru",
     "overpassAttempts": 2,
     "overpassError": "The operation was aborted due to timeout",
     "loiHard": [],
@@ -43,9 +52,9 @@
     "soLuotGoi": {
       "nominatim": 1,
       "tavily": 0,
-      "gemini": 2
+      "gemini": 1
     },
-    "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng và ăn uống, không vi phạm hard)."
+    "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard)."
   },
   {
     "diemDen": "Hà Nội",
@@ -62,32 +71,37 @@
       "nguon": "nominatim",
       "ngayLay": "2026-10-19T11:39:00.089Z"
     },
+    "durationMs": 310200,
     "soLuongTheoLoai": {
       "khachSan": 15,
       "quanAn": 15,
-      "cafe": 15,
+      "cafe": 0,
       "hoatDong": 15
     },
-    "tongSoMuc": 60,
+    "tongSoMuc": 45,
     "tyLeCoNguon": 1,
-    "soPhuongTienWeb": 0,
-    "soPhuongTienUocLuong": 6,
+    "soPhuongTienWeb": 6,
+    "soPhuongTienUocLuong": 0,
     "keHoachHopLe": true,
-    "coNoiDung": false,
-    "trangThaiNoiDung": "CÓ VI PHẠM",
+    "coNoiDung": true,
+    "trangThaiNoiDung": "CÓ NỘI DUNG",
     "nguonDL": "mới từ mạng",
-    "ngayDuLieu": "2026-10-20T01:23:42.055Z",
-    "tyLeLapHD": 0.67,
+    "ngayDuLieu": "2026-10-20T03:03:52.971Z",
+    "tyLeLapHD": 1,
     "tyLeLapAn": 1,
-    "overpassSummary": "[khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 30 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 30 mục); [quan_an_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 30 mục); [khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [quan_an] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [quan_an_half] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h)",
-    "overpassServer": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+    "hienThiAn": "100%",
+    "chiTietCache": [
+      "khach_san: tuổi 0.1h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "quan_an: tuổi 0.1h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "hoat_dong: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]"
+    ],
+    "overpassSummary": "[khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 30 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [cafe_half] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe_half] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [khach_san] Cache (30 mục, tuổi 0.1h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [quan_an] Cache (30 mục, tuổi 0.1h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [hoat_dong] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục)",
+    "overpassServer": "maps.mail.ru",
     "overpassAttempts": 2,
     "overpassError": "The operation was aborted due to timeout",
-    "loiHard": [
-      "[chua_lap_du_80%_o_kha_dung]"
-    ],
+    "loiHard": [],
     "soSlotChuaLap": {
-      "hoatDong": 1,
+      "hoatDong": 0,
       "buaAn": 0
     },
     "soLuotGoi": {
@@ -95,7 +109,7 @@
       "tavily": 0,
       "gemini": 1
     },
-    "danhGia": "CÓ VI PHẠM: còn lỗi hard []"
+    "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard)."
   },
   {
     "diemDen": "Đà Lạt",
@@ -112,39 +126,46 @@
       "nguon": "nominatim",
       "ngayLay": "2026-10-20T00:57:31.712Z"
     },
+    "durationMs": 557585,
     "soLuongTheoLoai": {
       "khachSan": 15,
       "quanAn": 15,
-      "cafe": 15,
+      "cafe": 0,
       "hoatDong": 15
     },
-    "tongSoMuc": 60,
+    "tongSoMuc": 45,
     "tyLeCoNguon": 1,
-    "soPhuongTienWeb": 0,
-    "soPhuongTienUocLuong": 6,
+    "soPhuongTienWeb": 6,
+    "soPhuongTienUocLuong": 0,
     "keHoachHopLe": true,
-    "coNoiDung": false,
-    "trangThaiNoiDung": "CÓ VI PHẠM",
+    "coNoiDung": true,
+    "trangThaiNoiDung": "CÓ NỘI DUNG",
     "nguonDL": "mới từ mạng",
-    "ngayDuLieu": "2026-10-20T01:27:42.241Z",
-    "tyLeLapHD": 0.67,
+    "ngayDuLieu": "2026-10-20T03:09:08.178Z",
+    "tyLeLapHD": 1,
     "tyLeLapAn": 1,
-    "overpassSummary": "[khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 30 mục); [khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h)",
-    "overpassServer": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
-    "overpassAttempts": 2,
-    "loiHard": [
-      "[chua_lap_du_80%_o_kha_dung]"
+    "hienThiAn": "100%",
+    "chiTietCache": [
+      "hoat_dong: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "quan_an: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "khach_san_half: tuổi 0.1h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "cafe: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]"
     ],
+    "overpassSummary": "[khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [khach_san_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 30 mục); [quan_an_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [cafe_half] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe_half] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [hoat_dong] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [quan_an] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [khach_san_half] Cache (30 mục, tuổi 0.1h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [cafe] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20])",
+    "overpassServer": "maps.mail.ru",
+    "overpassAttempts": 2,
+    "overpassError": "The operation was aborted due to timeout",
+    "loiHard": [],
     "soSlotChuaLap": {
-      "hoatDong": 1,
+      "hoatDong": 0,
       "buaAn": 0
     },
     "soLuotGoi": {
       "nominatim": 1,
       "tavily": 0,
-      "gemini": 2
+      "gemini": 1
     },
-    "danhGia": "CÓ VI PHẠM: còn lỗi hard []"
+    "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard)."
   },
   {
     "diemDen": "Phú Quốc",
@@ -161,27 +182,36 @@
       "nguon": "nominatim",
       "ngayLay": "2026-10-20T00:57:32.721Z"
     },
+    "durationMs": 43348,
     "soLuongTheoLoai": {
       "khachSan": 15,
-      "quanAn": 0,
-      "cafe": 0,
+      "quanAn": 15,
+      "cafe": 15,
       "hoatDong": 15
     },
-    "tongSoMuc": 30,
+    "tongSoMuc": 60,
     "tyLeCoNguon": 1,
-    "soPhuongTienWeb": 0,
-    "soPhuongTienUocLuong": 6,
+    "soPhuongTienWeb": 6,
+    "soPhuongTienUocLuong": 0,
     "keHoachHopLe": true,
-    "coNoiDung": false,
-    "trangThaiNoiDung": "THIẾU DỮ LIỆU",
+    "coNoiDung": true,
+    "trangThaiNoiDung": "CÓ NỘI DUNG",
     "nguonDL": "mới từ mạng",
-    "ngayDuLieu": "2026-10-20T01:29:28.519Z",
+    "ngayDuLieu": "2026-10-20T03:18:30.770Z",
     "tyLeLapHD": 1,
     "tyLeLapAn": 1,
-    "overpassSummary": "[khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 30 mục); [quan_an_half] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [quan_an_half] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe_half] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe_half] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.1h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.1h); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 21 mục)",
-    "overpassServer": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
-    "overpassAttempts": 2,
-    "overpassError": "The operation was aborted due to timeout",
+    "hienThiAn": "100%",
+    "chiTietCache": [
+      "khach_san: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "quan_an: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "khach_san: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "quan_an: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "cafe: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "hoat_dong: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]"
+    ],
+    "overpassSummary": "[khach_san] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [quan_an] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [khach_san] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [quan_an] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [cafe] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [hoat_dong] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20])",
+    "overpassServer": "maps.mail.ru",
+    "overpassAttempts": 1,
     "loiHard": [],
     "soSlotChuaLap": {
       "hoatDong": 0,
@@ -190,9 +220,9 @@
     "soLuotGoi": {
       "nominatim": 1,
       "tavily": 0,
-      "gemini": 2
+      "gemini": 1
     },
-    "danhGia": "THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu"
+    "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard)."
   },
   {
     "diemDen": "Bangkok",
@@ -209,25 +239,33 @@
       "nguon": "nominatim",
       "ngayLay": "2026-10-19T11:39:49.360Z"
     },
+    "durationMs": 232684,
     "soLuongTheoLoai": {
-      "khachSan": 15,
+      "khachSan": 0,
       "quanAn": 15,
       "cafe": 15,
       "hoatDong": 15
     },
-    "tongSoMuc": 60,
+    "tongSoMuc": 45,
     "tyLeCoNguon": 1,
-    "soPhuongTienWeb": 0,
-    "soPhuongTienUocLuong": 2,
+    "soPhuongTienWeb": 2,
+    "soPhuongTienUocLuong": 0,
     "keHoachHopLe": true,
-    "coNoiDung": true,
-    "trangThaiNoiDung": "CÓ NỘI DUNG",
+    "coNoiDung": false,
+    "trangThaiNoiDung": "THIẾU DỮ LIỆU",
     "nguonDL": "mới từ mạng",
-    "ngayDuLieu": "2026-10-20T01:38:42.173Z",
+    "ngayDuLieu": "2026-10-20T03:19:19.123Z",
     "tyLeLapHD": 1,
     "tyLeLapAn": 1,
-    "overpassSummary": "[khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [quan_an] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [quan_an] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: 200, 30 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [quan_an_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 30 mục); [hoat_dong_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [khach_san] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.1h); [cafe] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: 200, 30 mục); [hoat_dong] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [hoat_dong_half] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h)",
-    "overpassServer": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+    "hienThiAn": "100%",
+    "chiTietCache": [
+      "khach_san: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "quan_an: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "cafe: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "hoat_dong: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]"
+    ],
+    "overpassSummary": "[khach_san] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [khach_san_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san_half] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san_half] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [khach_san] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [quan_an] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [cafe] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [hoat_dong] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20])",
+    "overpassServer": "maps.mail.ru",
     "overpassAttempts": 2,
     "overpassError": "The operation was aborted due to timeout",
     "loiHard": [],
@@ -240,7 +278,7 @@
       "tavily": 0,
       "gemini": 2
     },
-    "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng và ăn uống, không vi phạm hard)."
+    "danhGia": "THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu"
   },
   {
     "diemDen": "Seoul",
@@ -257,39 +295,46 @@
       "nguon": "nominatim",
       "ngayLay": "2026-10-19T11:40:36.377Z"
     },
+    "durationMs": 38424,
     "soLuongTheoLoai": {
-      "khachSan": 0,
+      "khachSan": 15,
       "quanAn": 15,
       "cafe": 15,
       "hoatDong": 15
     },
-    "tongSoMuc": 45,
+    "tongSoMuc": 60,
     "tyLeCoNguon": 1,
-    "soPhuongTienWeb": 0,
-    "soPhuongTienUocLuong": 2,
-    "keHoachHopLe": false,
-    "coNoiDung": false,
-    "trangThaiNoiDung": "THIẾU DỮ LIỆU",
+    "soPhuongTienWeb": 2,
+    "soPhuongTienUocLuong": 0,
+    "keHoachHopLe": true,
+    "coNoiDung": true,
+    "trangThaiNoiDung": "CÓ NỘI DUNG",
     "nguonDL": "mới từ mạng",
-    "ngayDuLieu": "2026-10-20T01:45:07.093Z",
-    "tyLeLapHD": 0,
-    "tyLeLapAn": 0,
-    "overpassSummary": "[khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [khach_san_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san_half] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san_half] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.1h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [khach_san] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [khach_san_half] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san_half] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục)",
-    "overpassServer": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
-    "overpassAttempts": 2,
-    "overpassError": "The operation was aborted due to timeout",
-    "loiHard": [
-      "[khong_du_du_lieu] Dữ liệu địa phương tại Seoul chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3). Nguồn: OpenStreetMap. Chi tiết máy chủ: [khach_san] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [quan_an] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [cafe] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [khach_san_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san_half] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san_half] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe_half] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [quan_an] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0.1h); [hoat_dong] Server: cache (0 lần thử, status: 200, 30 mục, tuổi 0h); [khach_san] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [khach_san_half] Server: https://overpass.private.coffee/api/interpreter (2 lần thử, status: ERR, 0 mục); [khach_san_half] Server: https://overpass-api.de/api/interpreter (1 lần thử, status: ERR, 0 mục)"
+    "ngayDuLieu": "2026-10-20T03:23:16.812Z",
+    "tyLeLapHD": 1,
+    "tyLeLapAn": 1,
+    "hienThiAn": "100%",
+    "chiTietCache": [
+      "khach_san: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "quan_an: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "khach_san: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "quan_an: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "cafe: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]",
+      "hoat_dong: tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]"
     ],
+    "overpassSummary": "[khach_san] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [quan_an] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [cafe] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [hoat_dong] Server: https://maps.mail.ru/osm/tools/overpass/api/interpreter (1 lần thử, status: 200, 30 mục); [khach_san] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [quan_an] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [cafe] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20]); [hoat_dong] Cache (30 mục, tuổi 0h từ https://maps.mail.ru/osm/tools/overpass/api/interpreter [run_2026-10-20])",
+    "overpassServer": "maps.mail.ru",
+    "overpassAttempts": 1,
+    "loiHard": [],
     "soSlotChuaLap": {
-      "hoatDong": 4,
-      "buaAn": 6
+      "hoatDong": 0,
+      "buaAn": 0
     },
     "soLuotGoi": {
       "nominatim": 1,
       "tavily": 0,
-      "gemini": 0
+      "gemini": 1
     },
-    "danhGia": "THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu"
+    "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard)."
   }
 ]

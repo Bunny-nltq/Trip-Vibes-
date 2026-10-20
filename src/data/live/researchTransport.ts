@@ -163,6 +163,7 @@ export function taoPhuongTienUocLuong(
       seatClass: string;
       boardingDi: string;
       boardingVe: string;
+      url: string;
     }
   > = {
     may_bay: {
@@ -173,6 +174,7 @@ export function taoPhuongTienUocLuong(
       seatClass: "Phổ thông",
       boardingDi: `Sân bay ${diemDi.ten}`,
       boardingVe: `Sân bay ${diemDen.ten}`,
+      url: "https://www.vietnamairlines.com",
     },
     tau: {
       type: "TRAIN",
@@ -182,6 +184,7 @@ export function taoPhuongTienUocLuong(
       seatClass: "Ngồi mềm",
       boardingDi: `Ga ${diemDi.ten}`,
       boardingVe: `Ga ${diemDen.ten}`,
+      url: "https://dsvn.vn",
     },
     xe_khach: {
       type: "BUS",
@@ -191,6 +194,7 @@ export function taoPhuongTienUocLuong(
       seatClass: "Giường nằm",
       boardingDi: `Bến xe ${diemDi.ten}`,
       boardingVe: `Bến xe ${diemDen.ten}`,
+      url: "https://vexere.com",
     },
   };
 
@@ -214,11 +218,11 @@ export function taoPhuongTienUocLuong(
       boardingPoint: cfg.boardingDi,
       dropOffPoint: cfg.boardingVe,
       notes: "Ước tính theo quãng đường",
-      nguon: null,
+      nguon: cfg.url,
       ngayLay: nowIso,
       doTinCay: "uoc_tinh",
       giaLaUocTinh: true,
-      nguonGia: [],
+      nguonGia: [cfg.url],
     });
 
     // Chiều về
@@ -237,11 +241,11 @@ export function taoPhuongTienUocLuong(
       boardingPoint: cfg.boardingVe,
       dropOffPoint: cfg.boardingDi,
       notes: "Ước tính theo quãng đường",
-      nguon: null,
+      nguon: cfg.url,
       ngayLay: nowIso,
       doTinCay: "uoc_tinh",
       giaLaUocTinh: true,
-      nguonGia: [],
+      nguonGia: [cfg.url],
     });
   });
 

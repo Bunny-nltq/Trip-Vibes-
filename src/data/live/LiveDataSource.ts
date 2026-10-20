@@ -378,17 +378,51 @@ export class LiveDataSource implements DataSource {
     }
 
     const target = (destName ?? this.getTenDiemDen()).toLowerCase();
-    let matchedFile: string | null = null;
-    if (target.includes("đà nẵng") || target.includes("da nang")) {
-      matchedFile = fs.existsSync(path.join(dir, "snapshot_2026-10-19.json"))
-        ? "snapshot_2026-10-19.json"
-        : null;
+    const normalizeStr = (s: string) =>
+      s
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+    const targetNorm = normalizeStr(target);
+
+    const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json"));
+
+    // 2. Ưu tiên khớp theo tên file
+    for (const f of files) {
+      const fNorm = normalizeStr(f);
+      if (targetNorm && fNorm.includes(targetNorm)) {
+        try {
+          return JSON.parse(fs.readFileSync(path.join(dir, f), "utf-8")) as SnapshotData;
+        } catch {}
+      }
     }
 
-    if (matchedFile) {
+    // 3. Khớp theo trường diemDen bên trong file
+    for (const f of files) {
       try {
-        return JSON.parse(fs.readFileSync(path.join(dir, matchedFile), "utf-8")) as SnapshotData;
+        const raw = JSON.parse(fs.readFileSync(path.join(dir, f), "utf-8")) as SnapshotData;
+        const dName = (typeof raw.diemDen === "string" ? raw.diemDen : (raw.diemDen as any)?.ten ?? "").toLowerCase();
+        if (dName) {
+          const dNorm = normalizeStr(dName);
+          if (targetNorm && (dNorm.includes(targetNorm) || targetNorm.includes(dNorm))) {
+            return raw;
+          }
+        }
       } catch {}
+    }
+
+    // Fallback Đà Nẵng với file cũ nếu có
+    if (target.includes("đà nẵng") || target.includes("da nang")) {
+      const oldSnap = path.join(dir, "snapshot_2026-10-19.json");
+      if (fs.existsSync(oldSnap)) {
+        try {
+          return JSON.parse(fs.readFileSync(oldSnap, "utf-8")) as SnapshotData;
+        } catch {}
+      }
     }
 
     return null;

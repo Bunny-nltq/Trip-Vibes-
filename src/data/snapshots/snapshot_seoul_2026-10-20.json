@@ -1,0 +1,1578 @@
+{
+  "taoBoi": "script data:snapshot",
+  "ngayTao": "2026-10-20T02:54:56.951Z",
+  "diemDen": "Seoul",
+  "checksum": "d17d598947151a6405b94faaf762852b13951feabbcbecbe5807f26e72864ceb",
+  "createdAt": "2026-10-20T02:54:56.951Z",
+  "khachSans": [
+    {
+      "id": "osm:node:6698262065",
+      "osmId": "osm:node:6698262065",
+      "ten": "K Pop Hotel",
+      "khuVuc": "중구",
+      "diaChi": "17 후암로60길",
+      "toaDo": {
+        "lat": 37.5547727,
+        "lng": 126.9741041
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:6698262065",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=K%20Pop%20Hotel%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5547727%2C126.9741041",
+        "apple": "https://maps.apple.com/?daddr=37.5547727,126.9741041"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:5585977121",
+      "osmId": "osm:node:5585977121",
+      "ten": "롯데시티호텔 마포",
+      "khuVuc": "마포구",
+      "diaChi": "109 마포대로",
+      "toaDo": {
+        "lat": 37.5447608,
+        "lng": 126.9506748
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:5585977121",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EB%A1%AF%EB%8D%B0%EC%8B%9C%ED%8B%B0%ED%98%B8%ED%85%94%20%EB%A7%88%ED%8F%AC%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5447608%2C126.9506748",
+        "apple": "https://maps.apple.com/?daddr=37.5447608,126.9506748"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:11896325838",
+      "osmId": "osm:node:11896325838",
+      "ten": "호텔 나루 서울 엠갤러리",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5372038,
+        "lng": 126.9443228
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:11896325838",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%ED%98%B8%ED%85%94%20%EB%82%98%EB%A3%A8%20%EC%84%9C%EC%9A%B8%20%EC%97%A0%EA%B0%A4%EB%9F%AC%EB%A6%AC%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5372038%2C126.9443228",
+        "apple": "https://maps.apple.com/?daddr=37.5372038,126.9443228"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:4149191789",
+      "osmId": "osm:node:4149191789",
+      "ten": "코스테이 서울역점",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5461074,
+        "lng": 126.9724056
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:4149191789",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EC%BD%94%EC%8A%A4%ED%85%8C%EC%9D%B4%20%EC%84%9C%EC%9A%B8%EC%97%AD%EC%A0%90%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5461074%2C126.9724056",
+        "apple": "https://maps.apple.com/?daddr=37.5461074,126.9724056"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:11149266969",
+      "osmId": "osm:node:11149266969",
+      "ten": "로이넷 호텔",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5418159,
+        "lng": 126.9482176
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": 3,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:11149266969",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EB%A1%9C%EC%9D%B4%EB%84%B7%20%ED%98%B8%ED%85%94%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5418159%2C126.9482176",
+        "apple": "https://maps.apple.com/?daddr=37.5418159,126.9482176"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:368663086",
+      "osmId": "osm:node:368663086",
+      "ten": "명성콘도",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5440587,
+        "lng": 126.9528662
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:368663086",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EB%AA%85%EC%84%B1%EC%BD%98%EB%8F%84%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5440587%2C126.9528662",
+        "apple": "https://maps.apple.com/?daddr=37.5440587,126.9528662"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:6927474129",
+      "osmId": "osm:node:6927474129",
+      "ten": "계림모텔&게스트하우스",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5541774,
+        "lng": 126.9668316
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:6927474129",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EA%B3%84%EB%A6%BC%EB%AA%A8%ED%85%94%26%EA%B2%8C%EC%8A%A4%ED%8A%B8%ED%95%98%EC%9A%B0%EC%8A%A4%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5541774%2C126.9668316",
+        "apple": "https://maps.apple.com/?daddr=37.5541774,126.9668316"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:368951957",
+      "osmId": "osm:node:368951957",
+      "ten": "호텔신라삼성프라자",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5616129,
+        "lng": 126.9750559
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:368951957",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%ED%98%B8%ED%85%94%EC%8B%A0%EB%9D%BC%EC%82%BC%EC%84%B1%ED%94%84%EB%9D%BC%EC%9E%90%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5616129%2C126.9750559",
+        "apple": "https://maps.apple.com/?daddr=37.5616129,126.9750559"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:368663433",
+      "osmId": "osm:node:368663433",
+      "ten": "일성콘도미니엄",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.545515,
+        "lng": 126.944581
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:368663433",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EC%9D%BC%EC%84%B1%EC%BD%98%EB%8F%84%EB%AF%B8%EB%8B%88%EC%97%84%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.545515%2C126.944581",
+        "apple": "https://maps.apple.com/?daddr=37.545515,126.944581"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:368951809",
+      "osmId": "osm:node:368951809",
+      "ten": "제주선샤인호텔",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5435026,
+        "lng": 126.9527178
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:368951809",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EC%A0%9C%EC%A3%BC%EC%84%A0%EC%83%A4%EC%9D%B8%ED%98%B8%ED%85%94%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5435026%2C126.9527178",
+        "apple": "https://maps.apple.com/?daddr=37.5435026,126.9527178"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:4620336495",
+      "osmId": "osm:node:4620336495",
+      "ten": "코업시티하우스 공덕",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5478673,
+        "lng": 126.9583923
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:4620336495",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EC%BD%94%EC%97%85%EC%8B%9C%ED%8B%B0%ED%95%98%EC%9A%B0%EC%8A%A4%20%EA%B3%B5%EB%8D%95%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5478673%2C126.9583923",
+        "apple": "https://maps.apple.com/?daddr=37.5478673,126.9583923"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:368951516",
+      "osmId": "osm:node:368951516",
+      "ten": "바비앵호텔",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.565302,
+        "lng": 126.967838
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:368951516",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EB%B0%94%EB%B9%84%EC%95%B5%ED%98%B8%ED%85%94%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.565302%2C126.967838",
+        "apple": "https://maps.apple.com/?daddr=37.565302,126.967838"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:368951563",
+      "osmId": "osm:node:368951563",
+      "ten": "바비엔호텔",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.565302,
+        "lng": 126.967838
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:368951563",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EB%B0%94%EB%B9%84%EC%97%94%ED%98%B8%ED%85%94%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.565302%2C126.967838",
+        "apple": "https://maps.apple.com/?daddr=37.565302,126.967838"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:368951685",
+      "osmId": "osm:node:368951685",
+      "ten": "조선비치호텔",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.566004,
+        "lng": 126.967737
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:368951685",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EC%A1%B0%EC%84%A0%EB%B9%84%EC%B9%98%ED%98%B8%ED%85%94%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.566004%2C126.967737",
+        "apple": "https://maps.apple.com/?daddr=37.566004,126.967737"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:368951907",
+      "osmId": "osm:node:368951907",
+      "ten": "바비엥스위트호텔",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.565302,
+        "lng": 126.967838
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:368951907",
+      "ngayLay": "2026-10-20T02:54:56.947Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EB%B0%94%EB%B9%84%EC%97%A5%EC%8A%A4%EC%9C%84%ED%8A%B8%ED%98%B8%ED%85%94%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.565302%2C126.967838",
+        "apple": "https://maps.apple.com/?daddr=37.565302,126.967838"
+      },
+      "nguonGia": []
+    }
+  ],
+  "quanAns": [
+    {
+      "id": "osm:node:12074634817",
+      "osmId": "osm:node:12074634817",
+      "ten": "계모임(마포직영점)",
+      "khuVuc": "마포구",
+      "diaChi": "295 토정로",
+      "toaDo": {
+        "lat": 37.5411313,
+        "lng": 126.9420705
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:12074634817",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946952888",
+      "osmId": "osm:node:13946952888",
+      "ten": "연고지",
+      "khuVuc": "마포구",
+      "diaChi": "286-1 토정로",
+      "toaDo": {
+        "lat": 37.5413665,
+        "lng": 126.9411582
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946952888",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946953039",
+      "osmId": "osm:node:13946953039",
+      "ten": "에디슨치킨(EDISON)",
+      "khuVuc": "마포구",
+      "diaChi": "279 토정로",
+      "toaDo": {
+        "lat": 37.5420635,
+        "lng": 126.9408043
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946953039",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946953235",
+      "osmId": "osm:node:13946953235",
+      "ten": "리즈",
+      "khuVuc": "마포구",
+      "diaChi": "304 토정로",
+      "toaDo": {
+        "lat": 37.5402575,
+        "lng": 126.9426879
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946953235",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946953416",
+      "osmId": "osm:node:13946953416",
+      "ten": "마포용강빈대떡",
+      "khuVuc": "마포구",
+      "diaChi": "278 토정로",
+      "toaDo": {
+        "lat": 37.5418427,
+        "lng": 126.9404885
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946953416",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946953520",
+      "osmId": "osm:node:13946953520",
+      "ten": "내고기",
+      "khuVuc": "마포구",
+      "diaChi": "78 대흥로4길",
+      "toaDo": {
+        "lat": 37.5404179,
+        "lng": 126.9406775
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946953520",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946953698",
+      "osmId": "osm:node:13946953698",
+      "ten": "주막 밀길따라",
+      "khuVuc": "마포구",
+      "diaChi": "288 토정로",
+      "toaDo": {
+        "lat": 37.5413321,
+        "lng": 126.9412243
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946953698",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946953747",
+      "osmId": "osm:node:13946953747",
+      "ten": "토정식당",
+      "khuVuc": "마포구",
+      "diaChi": "295 토정로",
+      "toaDo": {
+        "lat": 37.5412196,
+        "lng": 126.9421963
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946953747",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946953872",
+      "osmId": "osm:node:13946953872",
+      "ten": "구자춘참치",
+      "khuVuc": "마포구",
+      "diaChi": "17 토정로32길",
+      "toaDo": {
+        "lat": 37.5397785,
+        "lng": 126.9405816
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946953872",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946953890",
+      "osmId": "osm:node:13946953890",
+      "ten": "남도 사계절 맛집",
+      "khuVuc": "마포구",
+      "diaChi": "3 토정로32길",
+      "toaDo": {
+        "lat": 37.5407897,
+        "lng": 126.9416766
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946953890",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946953955",
+      "osmId": "osm:node:13946953955",
+      "ten": "어거스트치킨 마포역점",
+      "khuVuc": "마포구",
+      "diaChi": "303 토정로",
+      "toaDo": {
+        "lat": 37.5406145,
+        "lng": 126.9428358
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946953955",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946954175",
+      "osmId": "osm:node:13946954175",
+      "ten": "투다리 용강점",
+      "khuVuc": "마포구",
+      "diaChi": "23 토정로31길",
+      "toaDo": {
+        "lat": 37.5416402,
+        "lng": 126.9414692
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946954175",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946954322",
+      "osmId": "osm:node:13946954322",
+      "ten": "하야시",
+      "khuVuc": "마포구",
+      "diaChi": "280 토정로",
+      "toaDo": {
+        "lat": 37.5417566,
+        "lng": 126.940608
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946954322",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946954348",
+      "osmId": "osm:node:13946954348",
+      "ten": "마포구이마당",
+      "khuVuc": "마포구",
+      "diaChi": "284-1 토정로",
+      "toaDo": {
+        "lat": 37.541518,
+        "lng": 126.940931
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946954348",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:13946954431",
+      "osmId": "osm:node:13946954431",
+      "ten": "하루",
+      "khuVuc": "마포구",
+      "diaChi": "288-1 토정로",
+      "toaDo": {
+        "lat": 37.5412708,
+        "lng": 126.9412841
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13946954431",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    }
+  ],
+  "cafes": [
+    {
+      "id": "osm:node:4489660477",
+      "osmId": "osm:node:4489660477",
+      "ten": "스타벅스",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5462827,
+        "lng": 126.9531556
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:4489660477",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:12192195696",
+      "osmId": "osm:node:12192195696",
+      "ten": "투썸플레이스",
+      "khuVuc": "마포구",
+      "diaChi": "156 마포대로",
+      "toaDo": {
+        "lat": 37.5477061,
+        "lng": 126.9543549
+      },
+      "loai": "cafe",
+      "gioMoCua": "Mo-Su 07:00-22:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:12192195696",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:12192202020",
+      "osmId": "osm:node:12192202020",
+      "ten": "할리스",
+      "khuVuc": "마포구",
+      "diaChi": "22 백범로28길",
+      "toaDo": {
+        "lat": 37.5446281,
+        "lng": 126.9466191
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:12192202020",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:12357312075",
+      "osmId": "osm:node:12357312075",
+      "ten": "영앤도터스",
+      "khuVuc": "마포구",
+      "diaChi": "156 마포대로",
+      "toaDo": {
+        "lat": 37.5480583,
+        "lng": 126.9543487
+      },
+      "loai": "cafe",
+      "gioMoCua": "Mo-Fr 07:00-17:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:12357312075",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:12357312082",
+      "osmId": "osm:node:12357312082",
+      "ten": "커피사피엔스 공덕파크팰리스점",
+      "khuVuc": "마포구",
+      "diaChi": "143 마포대로",
+      "toaDo": {
+        "lat": 37.5475931,
+        "lng": 126.9533437
+      },
+      "loai": "cafe",
+      "gioMoCua": "Mo-Sa 07:00-21:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:12357312082",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:11109156884",
+      "osmId": "osm:node:11109156884",
+      "ten": "Cafe A:E",
+      "khuVuc": "마포구",
+      "diaChi": "28 도화2길",
+      "toaDo": {
+        "lat": 37.5393334,
+        "lng": 126.9494192
+      },
+      "loai": "cafe",
+      "gioMoCua": "Mo-Sa 08:00-2:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:11109156884",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:12357312085",
+      "osmId": "osm:node:12357312085",
+      "ten": "마시그래이 마포공덕점",
+      "khuVuc": "마포구",
+      "diaChi": "156 마포대로",
+      "toaDo": {
+        "lat": 37.5479559,
+        "lng": 126.9544983
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:12357312085",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:12854968128",
+      "osmId": "osm:node:12854968128",
+      "ten": "아이에떼커피 공덕점",
+      "khuVuc": "마포구",
+      "diaChi": "12 마포대로10길",
+      "toaDo": {
+        "lat": 37.5470917,
+        "lng": 126.9542656
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:12854968128",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:12854968843",
+      "osmId": "osm:node:12854968843",
+      "ten": "비앙비앙",
+      "khuVuc": "마포구",
+      "diaChi": "32 만리재옛길",
+      "toaDo": {
+        "lat": 37.5469098,
+        "lng": 126.9562105
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:12854968843",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:11879135070",
+      "osmId": "osm:node:11879135070",
+      "ten": "빈즈 인더스트리",
+      "khuVuc": "마포구",
+      "diaChi": "18 만리재옛길",
+      "toaDo": {
+        "lat": 37.5455701,
+        "lng": 126.9551372
+      },
+      "loai": "cafe",
+      "gioMoCua": "Su-Fr 08:00-17:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:11879135070",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:11149319234",
+      "osmId": "osm:node:11149319234",
+      "ten": "투썸플레이스",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5416895,
+        "lng": 126.9481272
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:11149319234",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:11186986054",
+      "osmId": "osm:node:11186986054",
+      "ten": "빽다방",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5422154,
+        "lng": 126.9517934
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:11186986054",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:12125872743",
+      "osmId": "osm:node:12125872743",
+      "ten": "썸이프",
+      "khuVuc": "마포구",
+      "diaChi": "3 백범로16안길",
+      "toaDo": {
+        "lat": 37.5467087,
+        "lng": 126.9421826
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:12125872743",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:3331283594",
+      "osmId": "osm:node:3331283594",
+      "ten": "이디야커피",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5431771,
+        "lng": 126.9477512
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:3331283594",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:12074599969",
+      "osmId": "osm:node:12074599969",
+      "ten": "다람제과",
+      "khuVuc": "마포구",
+      "diaChi": "205 백범로",
+      "toaDo": {
+        "lat": 37.5439245,
+        "lng": 126.9539129
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:12074599969",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    }
+  ],
+  "hoatDongs": [
+    {
+      "id": "osm:node:3042620911",
+      "osmId": "osm:node:3042620911",
+      "ten": "광명동굴",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.4268147,
+        "lng": 126.8655162
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:3042620911",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EA%B4%91%EB%AA%85%EB%8F%99%EA%B5%B4%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.4268147%2C126.8655162",
+        "apple": "https://maps.apple.com/?daddr=37.4268147,126.8655162"
+      }
+    },
+    {
+      "id": "osm:node:368734296",
+      "osmId": "osm:node:368734296",
+      "ten": "평강성서유물박물관",
+      "khuVuc": "구로구",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.4921151,
+        "lng": 126.8449499
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:368734296",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%ED%8F%89%EA%B0%95%EC%84%B1%EC%84%9C%EC%9C%A0%EB%AC%BC%EB%B0%95%EB%AC%BC%EA%B4%80%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.4921151%2C126.8449499",
+        "apple": "https://maps.apple.com/?daddr=37.4921151,126.8449499"
+      }
+    },
+    {
+      "id": "osm:node:368734194",
+      "osmId": "osm:node:368734194",
+      "ten": "활박물관",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5008197,
+        "lng": 126.7974137
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:368734194",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%ED%99%9C%EB%B0%95%EB%AC%BC%EA%B4%80%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5008197%2C126.7974137",
+        "apple": "https://maps.apple.com/?daddr=37.5008197,126.7974137"
+      }
+    },
+    {
+      "id": "osm:node:368734611",
+      "osmId": "osm:node:368734611",
+      "ten": "충현박물관",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.4336934,
+        "lng": 126.878416
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:368734611",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EC%B6%A9%ED%98%84%EB%B0%95%EB%AC%BC%EA%B4%80%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.4336934%2C126.878416",
+        "apple": "https://maps.apple.com/?daddr=37.4336934,126.878416"
+      }
+    },
+    {
+      "id": "osm:node:368735811",
+      "osmId": "osm:node:368735811",
+      "ten": "자연생태박물관",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5048266,
+        "lng": 126.8165464
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:368735811",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EC%9E%90%EC%97%B0%EC%83%9D%ED%83%9C%EB%B0%95%EB%AC%BC%EA%B4%80%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5048266%2C126.8165464",
+        "apple": "https://maps.apple.com/?daddr=37.5048266,126.8165464"
+      }
+    },
+    {
+      "id": "osm:node:368868795",
+      "osmId": "osm:node:368868795",
+      "ten": "부천식물원",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5051268,
+        "lng": 126.8157133
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:368868795",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EB%B6%80%EC%B2%9C%EC%8B%9D%EB%AC%BC%EC%9B%90%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5051268%2C126.8157133",
+        "apple": "https://maps.apple.com/?daddr=37.5051268,126.8157133"
+      }
+    },
+    {
+      "id": "osm:node:368733950",
+      "osmId": "osm:node:368733950",
+      "ten": "한국만화박물관.부천수석박물관",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5026714,
+        "lng": 126.7975489
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:368733950",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%ED%95%9C%EA%B5%AD%EB%A7%8C%ED%99%94%EB%B0%95%EB%AC%BC%EA%B4%80.%EB%B6%80%EC%B2%9C%EC%88%98%EC%84%9D%EB%B0%95%EB%AC%BC%EA%B4%80%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5026714%2C126.7975489",
+        "apple": "https://maps.apple.com/?daddr=37.5026714,126.7975489"
+      }
+    },
+    {
+      "id": "osm:node:368734451",
+      "osmId": "osm:node:368734451",
+      "ten": "부천교육박물관",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5022266,
+        "lng": 126.7975736
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:368734451",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EB%B6%80%EC%B2%9C%EA%B5%90%EC%9C%A1%EB%B0%95%EB%AC%BC%EA%B4%80%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5022266%2C126.7975736",
+        "apple": "https://maps.apple.com/?daddr=37.5022266,126.7975736"
+      }
+    },
+    {
+      "id": "osm:node:368734236",
+      "osmId": "osm:node:368734236",
+      "ten": "유럽자기박물관",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.503263,
+        "lng": 126.7977153
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:368734236",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EC%9C%A0%EB%9F%BD%EC%9E%90%EA%B8%B0%EB%B0%95%EB%AC%BC%EA%B4%80%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.503263%2C126.7977153",
+        "apple": "https://maps.apple.com/?daddr=37.503263,126.7977153"
+      }
+    },
+    {
+      "id": "osm:node:368871432",
+      "osmId": "osm:node:368871432",
+      "ten": "부천향토역사관",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.515833,
+        "lng": 126.789502
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:368871432",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EB%B6%80%EC%B2%9C%ED%96%A5%ED%86%A0%EC%97%AD%EC%82%AC%EA%B4%80%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.515833%2C126.789502",
+        "apple": "https://maps.apple.com/?daddr=37.515833,126.789502"
+      }
+    },
+    {
+      "id": "osm:node:368734389",
+      "osmId": "osm:node:368734389",
+      "ten": "생명과학체험박물관",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.523919,
+        "lng": 126.871874
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:368734389",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EC%83%9D%EB%AA%85%EA%B3%BC%ED%95%99%EC%B2%B4%ED%97%98%EB%B0%95%EB%AC%BC%EA%B4%80%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.523919%2C126.871874",
+        "apple": "https://maps.apple.com/?daddr=37.523919,126.871874"
+      }
+    },
+    {
+      "id": "osm:node:442878169",
+      "osmId": "osm:node:442878169",
+      "ten": "관악문",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.4464644,
+        "lng": 126.967632
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:442878169",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EA%B4%80%EC%95%85%EB%AC%B8%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.4464644%2C126.967632",
+        "apple": "https://maps.apple.com/?daddr=37.4464644,126.967632"
+      }
+    },
+    {
+      "id": "osm:node:368735446",
+      "osmId": "osm:node:368735446",
+      "ten": "생명과학박물관",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.523901,
+        "lng": 126.871863
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:368735446",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EC%83%9D%EB%AA%85%EA%B3%BC%ED%95%99%EB%B0%95%EB%AC%BC%EA%B4%80%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.523901%2C126.871863",
+        "apple": "https://maps.apple.com/?daddr=37.523901,126.871863"
+      }
+    },
+    {
+      "id": "osm:node:5593697721",
+      "osmId": "osm:node:5593697721",
+      "ten": "물박물관",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.5069942,
+        "lng": 126.8182919
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:5593697721",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%EB%AC%BC%EB%B0%95%EB%AC%BC%EA%B4%80%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.5069942%2C126.8182919",
+        "apple": "https://maps.apple.com/?daddr=37.5069942,126.8182919"
+      }
+    },
+    {
+      "id": "osm:node:11049194407",
+      "osmId": "osm:node:11049194407",
+      "ten": "Striped Hyena",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 37.4233001,
+        "lng": 127.0242442
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:11049194407",
+      "ngayLay": "2026-10-20T02:54:56.948Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Striped%20Hyena%2C%20Seoul",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=37.4233001%2C127.0242442",
+        "apple": "https://maps.apple.com/?daddr=37.4233001,127.0242442"
+      }
+    }
+  ],
+  "transports": [
+    {
+      "schemaVersion": 7,
+      "id": "est_di_may_bay_0",
+      "huong": "di",
+      "type": "PLANE",
+      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "origin": "TP.HCM",
+      "destination": "Seoul",
+      "departureTime": "08:00",
+      "durationMinutes": 378,
+      "pricePerPerson": 4561980,
+      "seatClass": "Phổ thông",
+      "boardingPoint": "Sân bay TP.HCM",
+      "dropOffPoint": "Sân bay Seoul",
+      "notes": "Ước tính theo quãng đường",
+      "nguon": "https://www.vietnamairlines.com",
+      "ngayLay": "2026-10-20T02:54:51.983Z",
+      "doTinCay": "uoc_tinh",
+      "giaLaUocTinh": true,
+      "nguonGia": [
+        "https://www.vietnamairlines.com"
+      ]
+    },
+    {
+      "schemaVersion": 7,
+      "id": "est_ve_may_bay_0",
+      "huong": "ve",
+      "type": "PLANE",
+      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "origin": "Seoul",
+      "destination": "TP.HCM",
+      "departureTime": "17:30",
+      "durationMinutes": 378,
+      "pricePerPerson": 4561980,
+      "seatClass": "Phổ thông",
+      "boardingPoint": "Sân bay Seoul",
+      "dropOffPoint": "Sân bay TP.HCM",
+      "notes": "Ước tính theo quãng đường",
+      "nguon": "https://www.vietnamairlines.com",
+      "ngayLay": "2026-10-20T02:54:51.983Z",
+      "doTinCay": "uoc_tinh",
+      "giaLaUocTinh": true,
+      "nguonGia": [
+        "https://www.vietnamairlines.com"
+      ]
+    }
+  ]
+}

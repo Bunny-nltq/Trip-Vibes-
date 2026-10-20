@@ -69,6 +69,14 @@ Trip_Vibes/
   - Đổi ngoại tệ sang VND theo tỷ giá hiện hành.
   - Cache 168 giờ. Fallback về giả định trong `src/core/assumptions.ts` (`giaLaUocTinh = true`).
 
+### 3.6. Dữ liệu Dự phòng Snapshot & Kiểm toán Nguồn gốc
+- **Dữ liệu Snapshot**:
+  Được dùng làm cơ chế dự phòng an toàn khi mạng Overpass/Nominatim công cộng bị nghẽn hoặc quá tải.
+- **Giới hạn của Checksum & Quy trình kiểm toán**:
+  - Mỗi snapshot được tạo qua script `npm run data:snapshot` kèm metadata `{ taoBoi, ngayTao, diemDen, checksum }`.
+  - **Lưu ý cốt lõi**: Mã băm `checksum` chỉ giúp phát hiện tập tin bị sửa đổi SAU KHI TẠO, KHÔNG chứng minh được nguồn gốc thật của dữ liệu bên trong.
+  - Tính chân thực của dữ liệu (thật hay dựng sẵn/mock) được kiểm soát bởi quy trình: chỉ có script `data:snapshot` mới được ghi snapshot từ mạng thật (tự động từ chối nếu thiếu loại dữ liệu), kết hợp lệnh kiểm toán nguồn gốc độc lập `npm run audit:snapshots` và kiểm tra thủ công.
+
 ---
 
 ## 4. Nguyên tắc Bất biến (Core Invariants)

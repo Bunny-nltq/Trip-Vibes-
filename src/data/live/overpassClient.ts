@@ -84,6 +84,7 @@ export interface OverpassExecutionStats {
   error?: string;
   fromCache?: boolean;
   cacheAgeHours?: number;
+  cacheMetadata?: CacheMetadata;
 }
 
 export const lastOverpassStats: OverpassExecutionStats[] = [];
@@ -91,10 +92,14 @@ export const lastOverpassStats: OverpassExecutionStats[] = [];
 export function getLastOverpassStatsSummary(): string {
   if (lastOverpassStats.length === 0) return "Chưa có lượt gọi Overpass nào.";
   return lastOverpassStats
-    .map(
-      (s) =>
-        `[${s.loai}] Server: ${s.server} (${s.attempts} lần thử, status: ${s.status}, ${s.itemCount} mục${s.fromCache ? `, tuổi ${s.cacheAgeHours}h` : ""})`
-    )
+    .map((s) => {
+      if (s.fromCache) {
+        const originServer = s.cacheMetadata?.mayChu ? ` từ ${s.cacheMetadata.mayChu}` : "";
+        const runIdInfo = s.cacheMetadata?.runId ? ` [${s.cacheMetadata.runId}]` : "";
+        return `[${s.loai}] Cache (${s.itemCount} mục, tuổi ${s.cacheAgeHours}h${originServer}${runIdInfo})`;
+      }
+      return `[${s.loai}] Server: ${s.server} (${s.attempts} lần thử, status: ${s.status}, ${s.itemCount} mục)`;
+    })
     .join("; ");
 }
 
@@ -136,9 +141,16 @@ function getCachePath(key: string): string {
   return path.join(getCacheDir(), `osm_${key}.json`);
 }
 
+export interface CacheMetadata {
+  ngay: string;
+  mayChu: string;
+  runId: string;
+}
+
 export interface CacheResult<T> {
   data: T;
   ageHours: number;
+  metadata?: CacheMetadata;
 }
 
 function readCacheWithInfo<T>(
@@ -153,8 +165,15 @@ function readCacheWithInfo<T>(
     const ageMs = Date.now() - stat.mtimeMs;
     if (ageMs <= CACHE_TTL_MS) {
       try {
-        const data = JSON.parse(fs.readFileSync(p, "utf-8")) as T;
-        return { data, ageHours: ageMs / (1000 * 3600) };
+        const raw = JSON.parse(fs.readFileSync(p, "utf-8"));
+        if (raw && typeof raw === "object" && "metadata" in raw && "data" in raw) {
+          return {
+            data: raw.data as T,
+            ageHours: ageMs / (1000 * 3600),
+            metadata: raw.metadata as CacheMetadata,
+          };
+        }
+        return { data: raw as T, ageHours: ageMs / (1000 * 3600) };
       } catch {
         // ignore
       }
@@ -179,8 +198,15 @@ function readCacheWithInfo<T>(
           const stat = fs.statSync(legacyPath);
           const ageMs = Date.now() - stat.mtimeMs;
           try {
-            const data = JSON.parse(fs.readFileSync(legacyPath, "utf-8")) as T;
-            return { data, ageHours: ageMs / (1000 * 3600) };
+            const raw = JSON.parse(fs.readFileSync(legacyPath, "utf-8"));
+            if (raw && typeof raw === "object" && "metadata" in raw && "data" in raw) {
+              return {
+                data: raw.data as T,
+                ageHours: ageMs / (1000 * 3600),
+                metadata: raw.metadata as CacheMetadata,
+              };
+            }
+            return { data: raw as T, ageHours: ageMs / (1000 * 3600) };
           } catch {
             // ignore
           }
@@ -202,9 +228,24 @@ function readCache<T>(
   return res ? res.data : null;
 }
 
-function writeCache(key: string, data: unknown): void {
+function writeCache(
+  key: string,
+  data: unknown,
+  mayChu: string = "unknown"
+): void {
   try {
-    fs.writeFileSync(getCachePath(key), JSON.stringify(data, null, 2), "utf-8");
+    const payload = {
+      metadata: {
+        ngay: new Date().toISOString(),
+        mayChu,
+        runId:
+          process.env.RUN_ID ||
+          process.env.OVERPASS_RUN_ID ||
+          "run_" + new Date().toISOString().slice(0, 10),
+      },
+      data,
+    };
+    fs.writeFileSync(getCachePath(key), JSON.stringify(payload, null, 2), "utf-8");
   } catch {
     // ignore
   }
@@ -240,9 +281,10 @@ async function queryOverpass(
 ): Promise<OsmElement[]> {
   const cachedHit = readCacheWithInfo<OsmElement[]>(cacheKey, loaiKey, toaDo?.lat, toaDo?.lng);
   if (cachedHit) {
-    console.log(`[Overpass] [${loai}] Lấy từ cache (${cachedHit.data.length} phần tử, tuổi: ${cachedHit.ageHours.toFixed(1)}h).`);
+    const originInfo = cachedHit.metadata?.mayChu ? ` từ ${cachedHit.metadata.mayChu}` : "";
+    console.log(`[Overpass] [${loai}] Lấy từ cache (${cachedHit.data.length} phần tử, tuổi: ${cachedHit.ageHours.toFixed(1)}h${originInfo}).`);
     lastOverpassStats.push({
-      server: "cache",
+      server: cachedHit.metadata?.mayChu || "cache",
       attempts: 0,
       status: 200,
       durationMs: 0,
@@ -250,6 +292,7 @@ async function queryOverpass(
       loai,
       fromCache: true,
       cacheAgeHours: Number(cachedHit.ageHours.toFixed(1)),
+      cacheMetadata: cachedHit.metadata,
     });
     return cachedHit.data;
   }
@@ -258,7 +301,7 @@ async function queryOverpass(
     const doubleCheck = readCacheWithInfo<OsmElement[]>(cacheKey, loaiKey, toaDo?.lat, toaDo?.lng);
     if (doubleCheck) {
       lastOverpassStats.push({
-        server: "cache",
+        server: doubleCheck.metadata?.mayChu || "cache",
         attempts: 0,
         status: 200,
         durationMs: 0,
@@ -266,6 +309,7 @@ async function queryOverpass(
         loai,
         fromCache: true,
         cacheAgeHours: Number(doubleCheck.ageHours.toFixed(1)),
+        cacheMetadata: doubleCheck.metadata,
       });
       return doubleCheck.data;
     }
@@ -351,7 +395,7 @@ async function queryOverpass(
             loai,
           });
 
-          writeCache(cacheKey, elements);
+          writeCache(cacheKey, elements, endpoint);
           return elements;
         } catch (err: unknown) {
           const durationMs = Date.now() - startTime;

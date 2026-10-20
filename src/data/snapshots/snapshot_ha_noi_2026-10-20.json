@@ -1,0 +1,1672 @@
+{
+  "taoBoi": "script data:snapshot",
+  "ngayTao": "2026-10-20T02:54:31.870Z",
+  "diemDen": "Hà Nội",
+  "checksum": "617e86b64ba60d9442ab845063aeee54d78176800e1180f1566b316f99ebc9f8",
+  "createdAt": "2026-10-20T02:54:31.870Z",
+  "khachSans": [
+    {
+      "id": "osm:node:442033049",
+      "osmId": "osm:node:442033049",
+      "ten": "Somerset Grand Hanoi",
+      "khuVuc": "Hoàn Kiếm",
+      "diaChi": "49 Phố Hai Bà Trưng",
+      "toaDo": {
+        "lat": 21.0258326,
+        "lng": 105.8463672
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": 5,
+      "giaUocTinhNguoi": 1300000,
+      "nguon": "osm:node:442033049",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 2210000,
+        "max": 2990000
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Somerset%20Grand%20Hanoi%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0258326%2C105.8463672",
+        "apple": "https://maps.apple.com/?daddr=21.0258326,105.8463672"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:4355016890",
+      "osmId": "osm:node:4355016890",
+      "ten": "Gowhere Hanoi",
+      "khuVuc": "Dong Da",
+      "diaChi": "1B Phố Quốc Tử Giám",
+      "toaDo": {
+        "lat": 21.0259464,
+        "lng": 105.8379641
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:4355016890",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Gowhere%20Hanoi%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0259464%2C105.8379641",
+        "apple": "https://maps.apple.com/?daddr=21.0259464,105.8379641"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:2366843101",
+      "osmId": "osm:node:2366843101",
+      "ten": "Khách Sạn Green Park",
+      "khuVuc": "Trung tâm",
+      "diaChi": "48 Phố Trần Nhân Tông",
+      "toaDo": {
+        "lat": 21.0171605,
+        "lng": 105.848638
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": 3,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:2366843101",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Kh%C3%A1ch%20S%E1%BA%A1n%20Green%20Park%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0171605%2C105.848638",
+        "apple": "https://maps.apple.com/?daddr=21.0171605,105.848638"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:1388478348",
+      "osmId": "osm:node:1388478348",
+      "ten": "Royal Hotel",
+      "khuVuc": "Đống Đa",
+      "diaChi": "19 Phố Hàng Cháo",
+      "toaDo": {
+        "lat": 21.0295866,
+        "lng": 105.8349908
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": 1,
+      "giaUocTinhNguoi": 350000,
+      "nguon": "osm:node:1388478348",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 595000,
+        "max": 805000
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Royal%20Hotel%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0295866%2C105.8349908",
+        "apple": "https://maps.apple.com/?daddr=21.0295866,105.8349908"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:6094307685",
+      "osmId": "osm:node:6094307685",
+      "ten": "Shendo’s Penthouse",
+      "khuVuc": "Trung tâm",
+      "diaChi": "12 Ngõ Thanh Miến",
+      "toaDo": {
+        "lat": 21.0293399,
+        "lng": 105.8378576
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:6094307685",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Shendo%E2%80%99s%20Penthouse%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0293399%2C105.8378576",
+        "apple": "https://maps.apple.com/?daddr=21.0293399,105.8378576"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:10292189433",
+      "osmId": "osm:node:10292189433",
+      "ten": "Hanoi Aria Central Hotel & Spa",
+      "khuVuc": "Hoàn Kiếm",
+      "diaChi": "45 Đường Lê Duẩn",
+      "toaDo": {
+        "lat": 21.0268455,
+        "lng": 105.8416146
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:10292189433",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Hanoi%20Aria%20Central%20Hotel%20%26%20Spa%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0268455%2C105.8416146",
+        "apple": "https://maps.apple.com/?daddr=21.0268455,105.8416146"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:5485825282",
+      "osmId": "osm:node:5485825282",
+      "ten": "Khách Sạn Hanoi Emotion",
+      "khuVuc": "Đống Đa",
+      "diaChi": "26 Ngõ Hàng Bột",
+      "toaDo": {
+        "lat": 21.0292439,
+        "lng": 105.8343303
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:5485825282",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Kh%C3%A1ch%20S%E1%BA%A1n%20Hanoi%20Emotion%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0292439%2C105.8343303",
+        "apple": "https://maps.apple.com/?daddr=21.0292439,105.8343303"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:11625397938",
+      "osmId": "osm:node:11625397938",
+      "ten": "Ngọc Linh Hotel",
+      "khuVuc": "Hai Bà Trưng",
+      "diaChi": "140 Phố Triệu Việt Vương",
+      "toaDo": {
+        "lat": 21.0141617,
+        "lng": 105.8503075
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:11625397938",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Ng%E1%BB%8Dc%20Linh%20Hotel%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0141617%2C105.8503075",
+        "apple": "https://maps.apple.com/?daddr=21.0141617,105.8503075"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:13379888759",
+      "osmId": "osm:node:13379888759",
+      "ten": "Sảnh Chính - Khách Sạn Kim Liên",
+      "khuVuc": "Đống Đa",
+      "diaChi": "7 Phố Đào Duy Anh",
+      "toaDo": {
+        "lat": 21.0078434,
+        "lng": 105.8387968
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:13379888759",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=S%E1%BA%A3nh%20Ch%C3%ADnh%20-%20Kh%C3%A1ch%20S%E1%BA%A1n%20Kim%20Li%C3%AAn%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0078434%2C105.8387968",
+        "apple": "https://maps.apple.com/?daddr=21.0078434,105.8387968"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:3972522953",
+      "osmId": "osm:node:3972522953",
+      "ten": "Khách Sạn Mercure",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 21.0261665,
+        "lng": 105.8416648
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:3972522953",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Kh%C3%A1ch%20S%E1%BA%A1n%20Mercure%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0261665%2C105.8416648",
+        "apple": "https://maps.apple.com/?daddr=21.0261665,105.8416648"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:13641170901",
+      "osmId": "osm:node:13641170901",
+      "ten": "Minasi HanoiOi Lakeside Hotel",
+      "khuVuc": "Trung tâm",
+      "diaChi": "30C Phố Bà Triệu",
+      "toaDo": {
+        "lat": 21.0242693,
+        "lng": 105.8509827
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:13641170901",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Minasi%20HanoiOi%20Lakeside%20Hotel%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0242693%2C105.8509827",
+        "apple": "https://maps.apple.com/?daddr=21.0242693,105.8509827"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:1000087537",
+      "osmId": "osm:node:1000087537",
+      "ten": "Vanmieu Hotel",
+      "khuVuc": "Trung tâm",
+      "diaChi": "54b Phố Quốc Tử Giám",
+      "toaDo": {
+        "lat": 21.0266394,
+        "lng": 105.8370864
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:1000087537",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Vanmieu%20Hotel%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0266394%2C105.8370864",
+        "apple": "https://maps.apple.com/?daddr=21.0266394,105.8370864"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:4267811489",
+      "osmId": "osm:node:4267811489",
+      "ten": "Khách Sạn Somerset Grand Hà Nội",
+      "khuVuc": "Trung tâm",
+      "diaChi": "49 Phố Hai Bà Trưng",
+      "toaDo": {
+        "lat": 21.0262404,
+        "lng": 105.8458094
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:4267811489",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Kh%C3%A1ch%20S%E1%BA%A1n%20Somerset%20Grand%20H%C3%A0%20N%E1%BB%99i%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0262404%2C105.8458094",
+        "apple": "https://maps.apple.com/?daddr=21.0262404,105.8458094"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:4375610192",
+      "osmId": "osm:node:4375610192",
+      "ten": "Khách Sạn Hà Nội 123",
+      "khuVuc": "Trung tâm",
+      "diaChi": "34 Nam Ngư",
+      "toaDo": {
+        "lat": 21.0265829,
+        "lng": 105.8424048
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:4375610192",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Kh%C3%A1ch%20S%E1%BA%A1n%20H%C3%A0%20N%E1%BB%99i%20123%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0265829%2C105.8424048",
+        "apple": "https://maps.apple.com/?daddr=21.0265829,105.8424048"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:5353997224",
+      "osmId": "osm:node:5353997224",
+      "ten": "Nhà Khách Dreamcatcher",
+      "khuVuc": "Trung tâm",
+      "diaChi": "21b Ha Hoi, Hoan Kiem",
+      "toaDo": {
+        "lat": 21.0212785,
+        "lng": 105.8474164
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:5353997224",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Nh%C3%A0%20Kh%C3%A1ch%20Dreamcatcher%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0212785%2C105.8474164",
+        "apple": "https://maps.apple.com/?daddr=21.0212785,105.8474164"
+      },
+      "nguonGia": []
+    }
+  ],
+  "quanAns": [
+    {
+      "id": "osm:node:8132877478",
+      "osmId": "osm:node:8132877478",
+      "ten": "Bún Ngan Cô Tuyết",
+      "khuVuc": "Đống Đa",
+      "diaChi": "25 Ngõ 167 Tây Sơn",
+      "toaDo": {
+        "lat": 21.0100991,
+        "lng": 105.8263379
+      },
+      "loai": "quan_an",
+      "gioMoCua": "Mo-Su 07:00-23:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:8132877478",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "vietnamese;coffee_shop"
+    },
+    {
+      "id": "osm:node:6690139595",
+      "osmId": "osm:node:6690139595",
+      "ten": "Pizza Hut",
+      "khuVuc": "Đống Đa",
+      "diaChi": "159 Phố Xã Đàn",
+      "toaDo": {
+        "lat": 21.0139665,
+        "lng": 105.8340501
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:6690139595",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "pizza"
+    },
+    {
+      "id": "osm:node:4286225207",
+      "osmId": "osm:node:4286225207",
+      "ten": "OiShi Ngon",
+      "khuVuc": "Đống Đa",
+      "diaChi": "153 Phố Tây Sơn",
+      "toaDo": {
+        "lat": 21.0109329,
+        "lng": 105.8254405
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:4286225207",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "japan_food"
+    },
+    {
+      "id": "osm:node:4090297904",
+      "osmId": "osm:node:4090297904",
+      "ten": "Pizza Hut",
+      "khuVuc": "Hai Bà Trưng",
+      "diaChi": "191 Phố Bà Triệu",
+      "toaDo": {
+        "lat": 21.011391,
+        "lng": 105.8492805
+      },
+      "loai": "quan_an",
+      "gioMoCua": "10:00-22:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:4090297904",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "pizza"
+    },
+    {
+      "id": "osm:node:4205271789",
+      "osmId": "osm:node:4205271789",
+      "ten": "Khách Sạn Haneul",
+      "khuVuc": "Hai Bà trưng",
+      "diaChi": "11a Thể Giao",
+      "toaDo": {
+        "lat": 21.0140828,
+        "lng": 105.8479487
+      },
+      "loai": "quan_an",
+      "gioMoCua": "09:00-23:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:4205271789",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "korean"
+    },
+    {
+      "id": "osm:node:6679712288",
+      "osmId": "osm:node:6679712288",
+      "ten": "Phở Lý Quốc Sư",
+      "khuVuc": "Đống Đa",
+      "diaChi": "119D1 Phố Đặng Văn Ngữ",
+      "toaDo": {
+        "lat": 21.0109743,
+        "lng": 105.831105
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:6679712288",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "vietnamese;noodles"
+    },
+    {
+      "id": "osm:node:6705528525",
+      "osmId": "osm:node:6705528525",
+      "ten": "Chợ Cô Dần - Cơm Sườn & Phá Lấu",
+      "khuVuc": "Đống Đa",
+      "diaChi": "119 Phố Nam Đồng",
+      "toaDo": {
+        "lat": 21.0132031,
+        "lng": 105.8330408
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:6705528525",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "vietnamese"
+    },
+    {
+      "id": "osm:node:10733187892",
+      "osmId": "osm:node:10733187892",
+      "ten": "Lẩu Bò Mai Động 24/7",
+      "khuVuc": "Hai Bà Trưng",
+      "diaChi": "120 Phố Hồng Mai",
+      "toaDo": {
+        "lat": 20.9987706,
+        "lng": 105.8525135
+      },
+      "loai": "quan_an",
+      "gioMoCua": "24/7",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:10733187892",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "regional;hotpot"
+    },
+    {
+      "id": "osm:node:6679645374",
+      "osmId": "osm:node:6679645374",
+      "ten": "SUSHI GARDEN - NHÀ HÀNG NHẬT BẢN",
+      "khuVuc": "Đống Đa",
+      "diaChi": "107 Phố Nam Đồng",
+      "toaDo": {
+        "lat": 21.0129836,
+        "lng": 105.8328594
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:6679645374",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "japanese;sushi"
+    },
+    {
+      "id": "osm:node:7516955871",
+      "osmId": "osm:node:7516955871",
+      "ten": "Bún Chả Sinh Từ",
+      "khuVuc": "Đống Đa",
+      "diaChi": "111D1 Phố Đặng Văn Ngữ",
+      "toaDo": {
+        "lat": 21.0110316,
+        "lng": 105.8311756
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:7516955871",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "vietnamese;noodle"
+    },
+    {
+      "id": "osm:node:11212195530",
+      "osmId": "osm:node:11212195530",
+      "ten": "Cơm niêu Singapore KOMBO",
+      "khuVuc": "Đống Đa",
+      "diaChi": "108A1 Phố Phạm Ngọc Thạch",
+      "toaDo": {
+        "lat": 21.0102427,
+        "lng": 105.8358985
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:11212195530",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "asian"
+    },
+    {
+      "id": "osm:node:11212216796",
+      "osmId": "osm:node:11212216796",
+      "ten": "Kichi-Kichi",
+      "khuVuc": "Đống Đa",
+      "diaChi": "101B B1 Phố Phạm Ngọc Thạch",
+      "toaDo": {
+        "lat": 21.0093544,
+        "lng": 105.8348078
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:11212216796",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "asian"
+    },
+    {
+      "id": "osm:node:11212544453",
+      "osmId": "osm:node:11212544453",
+      "ten": "Cơm niêu Tố Uyên",
+      "khuVuc": "Đống Đa",
+      "diaChi": "101C2 Phố Phạm Ngọc Thạch",
+      "toaDo": {
+        "lat": 21.0081435,
+        "lng": 105.8333252
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:11212544453",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "vietnamese"
+    },
+    {
+      "id": "osm:node:11217641981",
+      "osmId": "osm:node:11217641981",
+      "ten": "Gogi House",
+      "khuVuc": "Đống Đa",
+      "diaChi": "15B4 Phố Phạm Ngọc Thạch",
+      "toaDo": {
+        "lat": 21.0101288,
+        "lng": 105.836301
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:11217641981",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "grill"
+    },
+    {
+      "id": "osm:node:11212544466",
+      "osmId": "osm:node:11212544466",
+      "ten": "Ốc Lan Béo Hải Phòng",
+      "khuVuc": "Đống Đa",
+      "diaChi": "2B Phố Đặng Văn Ngữ",
+      "toaDo": {
+        "lat": 21.0077784,
+        "lng": 105.832703
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:11212544466",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    }
+  ],
+  "cafes": [
+    {
+      "id": "osm:node:7056055201",
+      "osmId": "osm:node:7056055201",
+      "ten": "The Coffee House",
+      "khuVuc": "Đống Đa",
+      "diaChi": "01 Thái Hà",
+      "toaDo": {
+        "lat": 21.0090373,
+        "lng": 105.8237962
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:7056055201",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:8163615939",
+      "osmId": "osm:node:8163615939",
+      "ten": "Cà Phê Tùng",
+      "khuVuc": "Đống Đa",
+      "diaChi": "64 Ngõ 102 Trường Chinh",
+      "toaDo": {
+        "lat": 21.0008391,
+        "lng": 105.8376456
+      },
+      "loai": "cafe",
+      "gioMoCua": "24/7",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:8163615939",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:7056055193",
+      "osmId": "osm:node:7056055193",
+      "ten": "The Coffee House",
+      "khuVuc": "Thanh Xuan",
+      "diaChi": "11 Vương Thừa Vũ",
+      "toaDo": {
+        "lat": 21.0011467,
+        "lng": 105.8225377
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:7056055193",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:6679611341",
+      "osmId": "osm:node:6679611341",
+      "ten": "Cà Phê Chợ - Trung Tự",
+      "khuVuc": "Đống Đa",
+      "diaChi": "120 Phố Đặng Văn Ngữ",
+      "toaDo": {
+        "lat": 21.0108368,
+        "lng": 105.8310086
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:6679611341",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:6679685131",
+      "osmId": "osm:node:6679685131",
+      "ten": "Cà Phê Gemax",
+      "khuVuc": "Đống Đa",
+      "diaChi": "120D1 Phố Đặng Văn Ngữ",
+      "toaDo": {
+        "lat": 21.0109309,
+        "lng": 105.8310692
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:6679685131",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:11212149481",
+      "osmId": "osm:node:11212149481",
+      "ten": "Ding Tea",
+      "khuVuc": "Đống Đa",
+      "diaChi": "S8-B4 Phố Phạm Ngọc Thạch",
+      "toaDo": {
+        "lat": 21.0103138,
+        "lng": 105.8365182
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:11212149481",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:9951113018",
+      "osmId": "osm:node:9951113018",
+      "ten": "Highlands Coffee",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 21.0060413,
+        "lng": 105.8320827
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:9951113018",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:11586914777",
+      "osmId": "osm:node:11586914777",
+      "ten": "Co:coffee",
+      "khuVuc": "Đống Đa",
+      "diaChi": "208 Ngõ Xã Đàn 2",
+      "toaDo": {
+        "lat": 21.012747,
+        "lng": 105.8322087
+      },
+      "loai": "cafe",
+      "gioMoCua": "Mo-Su 07:00-23:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:11586914777",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:9805222035",
+      "osmId": "osm:node:9805222035",
+      "ten": "The Mob Coffee",
+      "khuVuc": "Thanh Xuân",
+      "diaChi": "Số 40 Ngõ 181 Trường Chinh",
+      "toaDo": {
+        "lat": 20.9999578,
+        "lng": 105.8273867
+      },
+      "loai": "cafe",
+      "gioMoCua": "Mo-Su 08:00-23:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:9805222035",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:5485700946",
+      "osmId": "osm:node:5485700946",
+      "ten": "Taste Tea",
+      "khuVuc": "Trung tâm",
+      "diaChi": "204 Phố Xã Đàn",
+      "toaDo": {
+        "lat": 21.0117444,
+        "lng": 105.8368942
+      },
+      "loai": "cafe",
+      "gioMoCua": "Mo-Su 08:00-23:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:5485700946",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:9805222054",
+      "osmId": "osm:node:9805222054",
+      "ten": "The Shelter Tây Sơn",
+      "khuVuc": "Ba Đình",
+      "diaChi": "56 Ngõ 169 Tây Sơn",
+      "toaDo": {
+        "lat": 21.0091721,
+        "lng": 105.825831
+      },
+      "loai": "cafe",
+      "gioMoCua": "Mo-Su 08:30-23:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:9805222054",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:8563466268",
+      "osmId": "osm:node:8563466268",
+      "ten": "Cafe Ông Bầu",
+      "khuVuc": "Đống Đa",
+      "diaChi": "7 Phố Hồ Đắc Di",
+      "toaDo": {
+        "lat": 21.0114587,
+        "lng": 105.8306321
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:8563466268",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:11211915136",
+      "osmId": "osm:node:11211915136",
+      "ten": "Cine Cafe",
+      "khuVuc": "Đống Đa",
+      "diaChi": "166 Ngõ Xã Đàn 2",
+      "toaDo": {
+        "lat": 21.0133633,
+        "lng": 105.8315728
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:11211915136",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:11211935137",
+      "osmId": "osm:node:11211935137",
+      "ten": "Moon Cafe",
+      "khuVuc": "Đống Đa",
+      "diaChi": "176 Ngõ Xã Đàn 2",
+      "toaDo": {
+        "lat": 21.0131788,
+        "lng": 105.8317593
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:11211935137",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:11211935138",
+      "osmId": "osm:node:11211935138",
+      "ten": "Bro's Coffee",
+      "khuVuc": "Đống Đa",
+      "diaChi": "180 Ngõ Xã Đàn 2",
+      "toaDo": {
+        "lat": 21.0131141,
+        "lng": 105.8318129
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:11211935138",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    }
+  ],
+  "hoatDongs": [
+    {
+      "id": "osm:node:9846898217",
+      "osmId": "osm:node:9846898217",
+      "ten": "Trung tâm Tinh hoa làng nghề Việt",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 20.9730809,
+        "lng": 105.916267
+      },
+      "loai": "museum",
+      "gioMoCua": "Mo-Fr 08:00-17:30; Sa,Su,PH 08:00-18:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:9846898217",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 50000,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Trung%20t%C3%A2m%20Tinh%20hoa%20l%C3%A0ng%20ngh%E1%BB%81%20Vi%E1%BB%87t%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=20.9730809%2C105.916267",
+        "apple": "https://maps.apple.com/?daddr=20.9730809,105.916267"
+      }
+    },
+    {
+      "id": "osm:node:11681012714",
+      "osmId": "osm:node:11681012714",
+      "ten": "Bảo tàng Tố Hữu",
+      "khuVuc": "Quận Cầu Giấy",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 21.0398614,
+        "lng": 105.7938659
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:11681012714",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=B%E1%BA%A3o%20t%C3%A0ng%20T%E1%BB%91%20H%E1%BB%AFu%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0398614%2C105.7938659",
+        "apple": "https://maps.apple.com/?daddr=21.0398614,105.7938659"
+      }
+    },
+    {
+      "id": "osm:node:13352713846",
+      "osmId": "osm:node:13352713846",
+      "ten": "Lễ hội Đèn Lồng Quốc Tế Ocean",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 20.9524535,
+        "lng": 105.9802375
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:13352713846",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=L%E1%BB%85%20h%E1%BB%99i%20%C4%90%C3%A8n%20L%E1%BB%93ng%20Qu%E1%BB%91c%20T%E1%BA%BF%20Ocean%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=20.9524535%2C105.9802375",
+        "apple": "https://maps.apple.com/?daddr=20.9524535,105.9802375"
+      }
+    },
+    {
+      "id": "osm:node:13352713811",
+      "osmId": "osm:node:13352713811",
+      "ten": "Lan Quế Phường",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 20.949409,
+        "lng": 105.9807438
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:13352713811",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Lan%20Qu%E1%BA%BF%20Ph%C6%B0%E1%BB%9Dng%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=20.949409%2C105.9807438",
+        "apple": "https://maps.apple.com/?daddr=20.949409,105.9807438"
+      }
+    },
+    {
+      "id": "osm:node:13352713812",
+      "osmId": "osm:node:13352713812",
+      "ten": "Hồng Lâu Các Grand World - Little HongKong",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 20.9489381,
+        "lng": 105.9809878
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:13352713812",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=H%E1%BB%93ng%20L%C3%A2u%20C%C3%A1c%20Grand%20World%20-%20Little%20HongKong%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=20.9489381%2C105.9809878",
+        "apple": "https://maps.apple.com/?daddr=20.9489381,105.9809878"
+      }
+    },
+    {
+      "id": "osm:node:4889087244",
+      "osmId": "osm:node:4889087244",
+      "ten": "Bảo Tàng Hậu Cần",
+      "khuVuc": "Nam Từ Liêm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 21.0189071,
+        "lng": 105.7729992
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:4889087244",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=B%E1%BA%A3o%20T%C3%A0ng%20H%E1%BA%ADu%20C%E1%BA%A7n%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0189071%2C105.7729992",
+        "apple": "https://maps.apple.com/?daddr=21.0189071,105.7729992"
+      }
+    },
+    {
+      "id": "osm:node:4783069521",
+      "osmId": "osm:node:4783069521",
+      "ten": "Trang trại học đường Vạn An",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 20.9337281,
+        "lng": 105.8660709
+      },
+      "loai": "viewpoint",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:4783069521",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "check_in_chup_anh",
+        "bien"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Trang%20tr%E1%BA%A1i%20h%E1%BB%8Dc%20%C4%91%C6%B0%E1%BB%9Dng%20V%E1%BA%A1n%20An%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=20.9337281%2C105.8660709",
+        "apple": "https://maps.apple.com/?daddr=20.9337281,105.8660709"
+      }
+    },
+    {
+      "id": "osm:node:4711541290",
+      "osmId": "osm:node:4711541290",
+      "ten": "Nhà",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 21.0515543,
+        "lng": 105.7387975
+      },
+      "loai": "viewpoint",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:4711541290",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "check_in_chup_anh",
+        "bien"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Nh%C3%A0%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.0515543%2C105.7387975",
+        "apple": "https://maps.apple.com/?daddr=21.0515543,105.7387975"
+      }
+    },
+    {
+      "id": "osm:node:2607827391",
+      "osmId": "osm:node:2607827391",
+      "ten": "Cầu Mậu Lương",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 20.952708,
+        "lng": 105.786903
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:2607827391",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=C%E1%BA%A7u%20M%E1%BA%ADu%20L%C6%B0%C6%A1ng%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=20.952708%2C105.786903",
+        "apple": "https://maps.apple.com/?daddr=20.952708,105.786903"
+      }
+    },
+    {
+      "id": "osm:node:13915583550",
+      "osmId": "osm:node:13915583550",
+      "ten": "置屋街",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 20.9234227,
+        "lng": 105.8512266
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:13915583550",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%E7%BD%AE%E5%B1%8B%E8%A1%97%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=20.9234227%2C105.8512266",
+        "apple": "https://maps.apple.com/?daddr=20.9234227,105.8512266"
+      }
+    },
+    {
+      "id": "osm:node:11634634900",
+      "osmId": "osm:node:11634634900",
+      "ten": "Cối xay nước",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 21.040142,
+        "lng": 105.7989211
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:11634634900",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=C%E1%BB%91i%20xay%20n%C6%B0%E1%BB%9Bc%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=21.040142%2C105.7989211",
+        "apple": "https://maps.apple.com/?daddr=21.040142,105.7989211"
+      }
+    },
+    {
+      "id": "osm:node:10709724410",
+      "osmId": "osm:node:10709724410",
+      "ten": "Làng lụa La Phù",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 20.9783903,
+        "lng": 105.7317022
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:10709724410",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=L%C3%A0ng%20l%E1%BB%A5a%20La%20Ph%C3%B9%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=20.9783903%2C105.7317022",
+        "apple": "https://maps.apple.com/?daddr=20.9783903,105.7317022"
+      }
+    },
+    {
+      "id": "osm:node:10709724411",
+      "osmId": "osm:node:10709724411",
+      "ten": "Làng tiện gỗ Nhị Khê",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 20.89621,
+        "lng": 105.8379955
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:10709724411",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=L%C3%A0ng%20ti%E1%BB%87n%20g%E1%BB%97%20Nh%E1%BB%8B%20Kh%C3%AA%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=20.89621%2C105.8379955",
+        "apple": "https://maps.apple.com/?daddr=20.89621,105.8379955"
+      }
+    },
+    {
+      "id": "osm:node:10709738107",
+      "osmId": "osm:node:10709738107",
+      "ten": "Làng sơn mài Hạ Thái",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 20.9033168,
+        "lng": 105.8666987
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:10709738107",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=L%C3%A0ng%20s%C6%A1n%20m%C3%A0i%20H%E1%BA%A1%20Th%C3%A1i%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=20.9033168%2C105.8666987",
+        "apple": "https://maps.apple.com/?daddr=20.9033168,105.8666987"
+      }
+    },
+    {
+      "id": "osm:node:10709724415",
+      "osmId": "osm:node:10709724415",
+      "ten": "Đền Đại Lộ",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 20.9090748,
+        "lng": 105.8926442
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:10709724415",
+      "ngayLay": "2026-10-20T02:54:31.866Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%C4%90%E1%BB%81n%20%C4%90%E1%BA%A1i%20L%E1%BB%99%2C%20H%C3%A0%20N%E1%BB%99i",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=20.9090748%2C105.8926442",
+        "apple": "https://maps.apple.com/?daddr=20.9090748,105.8926442"
+      }
+    }
+  ],
+  "transports": [
+    {
+      "schemaVersion": 7,
+      "id": "est_di_may_bay_0",
+      "huong": "di",
+      "type": "PLANE",
+      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "origin": "TP.HCM",
+      "destination": "Hà Nội",
+      "departureTime": "08:00",
+      "durationMinutes": 181,
+      "pricePerPerson": 1857850,
+      "seatClass": "Phổ thông",
+      "boardingPoint": "Sân bay TP.HCM",
+      "dropOffPoint": "Sân bay Hà Nội",
+      "notes": "Ước tính theo quãng đường",
+      "nguon": "https://www.vietnamairlines.com",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "uoc_tinh",
+      "giaLaUocTinh": true,
+      "nguonGia": [
+        "https://www.vietnamairlines.com"
+      ]
+    },
+    {
+      "schemaVersion": 7,
+      "id": "est_ve_may_bay_0",
+      "huong": "ve",
+      "type": "PLANE",
+      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "origin": "Hà Nội",
+      "destination": "TP.HCM",
+      "departureTime": "17:30",
+      "durationMinutes": 181,
+      "pricePerPerson": 1857850,
+      "seatClass": "Phổ thông",
+      "boardingPoint": "Sân bay Hà Nội",
+      "dropOffPoint": "Sân bay TP.HCM",
+      "notes": "Ước tính theo quãng đường",
+      "nguon": "https://www.vietnamairlines.com",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "uoc_tinh",
+      "giaLaUocTinh": true,
+      "nguonGia": [
+        "https://www.vietnamairlines.com"
+      ]
+    },
+    {
+      "schemaVersion": 7,
+      "id": "est_di_tau_1",
+      "huong": "di",
+      "type": "TRAIN",
+      "provider": "Ước tính theo quãng đường (Tàu hỏa)",
+      "origin": "TP.HCM",
+      "destination": "Hà Nội",
+      "departureTime": "07:00",
+      "durationMinutes": 1247,
+      "pricePerPerson": 1143500,
+      "seatClass": "Ngồi mềm",
+      "boardingPoint": "Ga TP.HCM",
+      "dropOffPoint": "Ga Hà Nội",
+      "notes": "Ước tính theo quãng đường",
+      "nguon": "https://dsvn.vn",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "uoc_tinh",
+      "giaLaUocTinh": true,
+      "nguonGia": [
+        "https://dsvn.vn"
+      ]
+    },
+    {
+      "schemaVersion": 7,
+      "id": "est_ve_tau_1",
+      "huong": "ve",
+      "type": "TRAIN",
+      "provider": "Ước tính theo quãng đường (Tàu hỏa)",
+      "origin": "Hà Nội",
+      "destination": "TP.HCM",
+      "departureTime": "16:00",
+      "durationMinutes": 1247,
+      "pricePerPerson": 1143500,
+      "seatClass": "Ngồi mềm",
+      "boardingPoint": "Ga Hà Nội",
+      "dropOffPoint": "Ga TP.HCM",
+      "notes": "Ước tính theo quãng đường",
+      "nguon": "https://dsvn.vn",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "uoc_tinh",
+      "giaLaUocTinh": true,
+      "nguonGia": [
+        "https://dsvn.vn"
+      ]
+    },
+    {
+      "schemaVersion": 7,
+      "id": "est_di_xe_khach_2",
+      "huong": "di",
+      "type": "BUS",
+      "provider": "Ước tính theo quãng đường (Xe khách)",
+      "origin": "TP.HCM",
+      "destination": "Hà Nội",
+      "departureTime": "08:30",
+      "durationMinutes": 1372,
+      "pricePerPerson": 1143500,
+      "seatClass": "Giường nằm",
+      "boardingPoint": "Bến xe TP.HCM",
+      "dropOffPoint": "Bến xe Hà Nội",
+      "notes": "Ước tính theo quãng đường",
+      "nguon": "https://vexere.com",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "uoc_tinh",
+      "giaLaUocTinh": true,
+      "nguonGia": [
+        "https://vexere.com"
+      ]
+    },
+    {
+      "schemaVersion": 7,
+      "id": "est_ve_xe_khach_2",
+      "huong": "ve",
+      "type": "BUS",
+      "provider": "Ước tính theo quãng đường (Xe khách)",
+      "origin": "Hà Nội",
+      "destination": "TP.HCM",
+      "departureTime": "16:30",
+      "durationMinutes": 1372,
+      "pricePerPerson": 1143500,
+      "seatClass": "Giường nằm",
+      "boardingPoint": "Bến xe Hà Nội",
+      "dropOffPoint": "Bến xe TP.HCM",
+      "notes": "Ước tính theo quãng đường",
+      "nguon": "https://vexere.com",
+      "ngayLay": "2026-10-20T02:54:31.865Z",
+      "doTinCay": "uoc_tinh",
+      "giaLaUocTinh": true,
+      "nguonGia": [
+        "https://vexere.com"
+      ]
+    }
+  ]
+}

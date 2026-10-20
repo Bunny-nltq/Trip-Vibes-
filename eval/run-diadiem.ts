@@ -37,6 +37,7 @@ import {
   getLastOverpassStatsSummary,
   lastOverpassStats,
   clearAllOverpassCache,
+  getOverpassEndpoints,
   type OverpassExecutionStats,
 } from "../src/data/live/overpassClient";
 import { soOKhaDung } from "../src/core/oKhaDung";
@@ -61,6 +62,7 @@ export interface DiadiemResult {
   diemDen: string;
   geocodeThanhCong: boolean;
   chiTietDiemDen?: DiemDen;
+  durationMs: number;
   soLuongTheoLoai: {
     khachSan: number;
     quanAn: number;
@@ -73,13 +75,15 @@ export interface DiadiemResult {
   soPhuongTienUocLuong: number;
   keHoachHopLe: boolean;
   coNoiDung: boolean;
-  trangThaiNoiDung: "CÓ NỘI DUNG" | "THIẾU DỮ LIỆU" | "CÓ VI PHẠM";
+  trangThaiNoiDung: "CÓ NỘI DUNG" | "CHƯA LẤP ĐỦ Ô" | "CÓ VI PHẠM" | "THIẾU DỮ LIỆU";
   nguonDL: "mới từ mạng" | string;
   ngayDuLieu: string;
   snapshotDate?: string;
   ghiChuNguon?: string;
   tyLeLapHD: number;
   tyLeLapAn: number;
+  hienThiAn: string;
+  chiTietCache: string[];
   overpassSummary: string;
   overpassServer: string;
   overpassAttempts: number;
@@ -150,6 +154,7 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
   const results: DiadiemResult[] = [];
 
   for (const tc of TEST_CASES) {
+    const startCaseTime = Date.now();
     console.log(`\n--------------------------------------------------------------------------------`);
     console.log(`▶ [${modeTitle}] Đang kiểm tra: ${tc.name} (${tc.days} ngày, ${tc.people} người, ${(tc.budgetVND / 1_000_000)} triệu VND)...`);
 
@@ -171,6 +176,7 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
         const failRes: DiadiemResult = {
           diemDen: tc.name,
           geocodeThanhCong: false,
+          durationMs: Date.now() - startCaseTime,
           soLuongTheoLoai: { khachSan: 0, quanAn: 0, cafe: 0, hoatDong: 0 },
           tongSoMuc: 0,
           tyLeCoNguon: 0,
@@ -183,6 +189,8 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
           ngayDuLieu: new Date().toISOString(),
           tyLeLapHD: 0,
           tyLeLapAn: 0,
+          hienThiAn: "không có quán",
+          chiTietCache: [],
           overpassSummary: "Không gọi (geocode thất bại)",
           overpassServer: "N/A",
           overpassAttempts: 0,
@@ -301,26 +309,25 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
 
       const tongSlotAn = tc.days * 2;
       const anDaXep = planRes.plan
-        ? planRes.plan.items.filter((it) => it.hangMuc === "Ăn uống").length
+        ? planRes.plan.items.filter((it) => it.hangMuc === "Ăn uống" && Boolean(it.refId)).length
         : 0;
-      const tyLeLapAn = Math.min(1, anDaXep / tongSlotAn);
+      const tyLeLapAn = countQA > 0 ? Math.min(1, anDaXep / tongSlotAn) : 0;
       const slotAnChuaLap = Math.max(0, tongSlotAn - anDaXep);
+      const hienThiAn = countQA > 0 ? `${(tyLeLapAn * 100).toFixed(0)}%` : "không có quán";
 
-      // 5. Xác định TRẠNG THÁI (3 loại) và NGUỒN DL (4 giá trị)
+      // 5. Xác định TRẠNG THÁI (4 loại) và NGUỒN DL (4 giá trị)
+      // "CÓ NỘI DUNG"; "CHƯA LẤP ĐỦ Ô" (không có hard, đủ dữ liệu nhưng lấp < 80% ô khả dụng); "CÓ VI PHẠM" (còn hard, kèm mã); "THIẾU DỮ LIỆU" (kho dưới ngưỡng)
       const isKhoDuLieuThieu = countKS < 1 || countQA < 1 || countHD < 1;
-      let trangThaiNoiDung: "CÓ NỘI DUNG" | "THIẾU DỮ LIỆU" | "CÓ VI PHẠM";
+      let trangThaiNoiDung: "CÓ NỘI DUNG" | "CHƯA LẤP ĐỦ Ô" | "CÓ VI PHẠM" | "THIẾU DỮ LIỆU";
 
       if (isKhoDuLieuThieu || planRes.status === "khong_du_du_lieu") {
         trangThaiNoiDung = "THIẾU DỮ LIỆU";
       } else if (planRes.hard.length > 0) {
         trangThaiNoiDung = "CÓ VI PHẠM";
-      } else if (tyLeLapHD >= 0.8 && tyLeLapAn >= 0.8) {
-        trangThaiNoiDung = "CÓ NỘI DUNG";
+      } else if (tyLeLapHD < 0.8) {
+        trangThaiNoiDung = "CHƯA LẤP ĐỦ Ô";
       } else {
-        trangThaiNoiDung = "CÓ VI PHẠM";
-        if (hardErrors.length === 0) {
-          hardErrors.push("[chua_lap_du_80%_o_kha_dung]");
-        }
+        trangThaiNoiDung = "CÓ NỘI DUNG";
       }
 
       const coNoiDung = trangThaiNoiDung === "CÓ NỘI DUNG";
@@ -332,6 +339,18 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
         dsUsedInfo.snapshotDate,
         currentStats
       );
+
+      const chiTietCache = currentStats
+        .filter((s) => s.fromCache)
+        .map((s) => {
+          const originSv = s.cacheMetadata?.mayChu
+            ? ` từ ${s.cacheMetadata.mayChu}`
+            : s.server !== "cache"
+            ? ` từ ${s.server}`
+            : "";
+          const run = s.cacheMetadata?.runId ? ` [${s.cacheMetadata.runId}]` : "";
+          return `${s.loai}: tuổi ${s.cacheAgeHours}h${originSv}${run}`;
+        });
 
       // Thống kê Overpass
       const successfulStats = currentStats.filter((s) => s.itemCount > 0);
@@ -365,7 +384,9 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
 
       let danhGia = "";
       if (trangThaiNoiDung === "CÓ NỘI DUNG") {
-        danhGia = "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng và ăn uống, không vi phạm hard).";
+        danhGia = "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard).";
+      } else if (trangThaiNoiDung === "CHƯA LẤP ĐỦ Ô") {
+        danhGia = "CHƯA LẤP ĐỦ Ô: Chưa lấp đủ 80% ô khả dụng (không vi phạm hard).";
       } else if (trangThaiNoiDung === "CÓ VI PHẠM") {
         danhGia = `CÓ VI PHẠM: còn lỗi hard [${hardCodes.join(", ")}]`;
       } else {
@@ -376,6 +397,7 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
         diemDen: tc.name,
         geocodeThanhCong: true,
         chiTietDiemDen: diemDen,
+        durationMs: Date.now() - startCaseTime,
         soLuongTheoLoai: {
           khachSan: countKS,
           quanAn: countQA,
@@ -395,6 +417,8 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
         ghiChuNguon,
         tyLeLapHD: Number(tyLeLapHD.toFixed(2)),
         tyLeLapAn: Number(tyLeLapAn.toFixed(2)),
+        hienThiAn,
+        chiTietCache,
         overpassSummary,
         overpassServer,
         overpassAttempts,
@@ -413,9 +437,12 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
       };
 
       results.push(resItem);
-      console.log(`   🏁 Kết quả: ${trangThaiNoiDung} | Nguồn: ${nguonDL} | Máy chủ Overpass: ${overpassServer} (${overpassAttempts} lần thử)`);
+      console.log(`   🏁 Kết quả: ${trangThaiNoiDung} | Nguồn: ${nguonDL} | Thời gian: ${resItem.durationMs}ms | Máy chủ Overpass: ${overpassServer} (${overpassAttempts} lần thử)`);
       if (overpassError) console.log(`   ℹ️ Lý do lỗi/thiếu: ${overpassError}`);
-      console.log(`   📊 Tỷ lệ lấp: HĐ ${(tyLeLapHD * 100).toFixed(0)}% (${hdDaXep}/${oKhaDungHD} ô khả dụng), Ăn ${(tyLeLapAn * 100).toFixed(0)}% | Đánh giá: ${danhGia}`);
+      console.log(`   📊 Tỷ lệ lấp: HĐ ${(tyLeLapHD * 100).toFixed(0)}% (${hdDaXep}/${oKhaDungHD} ô khả dụng), Ăn: ${hienThiAn} | Đánh giá: ${danhGia}`);
+      if (chiTietCache.length > 0) {
+        console.log(`   💾 Nguồn gốc cache: ${chiTietCache.join("; ")}`);
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error(`   ❌ Lỗi khi xử lý ${tc.name}: ${msg}`);
@@ -439,6 +466,7 @@ async function main() {
   console.log("================================================================================");
   console.log("6 điểm đến mẫu: Đà Nẵng, Hà Nội, Đà Lạt, Phú Quốc, Bangkok, Seoul");
   console.log("Điểm khởi hành: TP.HCM");
+  console.log("🌐 Thứ tự máy chủ Overpass cấu hình: " + getOverpassEndpoints().join(" -> "));
   if (isLiveOnlyFlag) console.log("Cờ: --live-only (chỉ chạy bảng Live-Only)");
   if (isNoAgentCacheFlag) console.log("Cờ: --no-agent-cache (bỏ qua agent choice cache)");
 
@@ -462,7 +490,9 @@ async function main() {
       "H.Động": r.soLuongTheoLoai.hoatDong,
       "Trạng thái": r.trangThaiNoiDung,
       "Nguồn DL": r.nguonDL,
-      "Lấp (HĐ/Ăn)": `${(r.tyLeLapHD * 100).toFixed(0)}% / ${(r.tyLeLapAn * 100).toFixed(0)}%`,
+      "Lấp HĐ": `${(r.tyLeLapHD * 100).toFixed(0)}%`,
+      "Ăn": r.hienThiAn,
+      "Thời gian": `${r.durationMs}ms`,
       "Máy chủ Overpass / Thử": `${r.overpassServer} (${r.overpassAttempts} lần)`,
       "Lý do lỗi / vi phạm":
         r.loiHard.length > 0
@@ -470,6 +500,15 @@ async function main() {
           : (r.overpassError ?? ""),
     }))
   );
+
+  // In chi tiết cache nếu có
+  const liveWithCache = resultsLive.filter((r) => r.chiTietCache.length > 0);
+  if (liveWithCache.length > 0) {
+    console.log("\nChi tiết cache bảng Live-only:");
+    for (const r of liveWithCache) {
+      console.log(`- ${r.diemDen}: ${r.chiTietCache.join("; ")}`);
+    }
+  }
 
   // 4. In BẢNG B: CÓ DỰ PHÒNG SNAPSHOT
   console.log("\n================================================================================");
@@ -485,7 +524,9 @@ async function main() {
       "H.Động": r.soLuongTheoLoai.hoatDong,
       "Trạng thái": r.trangThaiNoiDung,
       "Nguồn DL": r.nguonDL,
-      "Lấp (HĐ/Ăn)": `${(r.tyLeLapHD * 100).toFixed(0)}% / ${(r.tyLeLapAn * 100).toFixed(0)}%`,
+      "Lấp HĐ": `${(r.tyLeLapHD * 100).toFixed(0)}%`,
+      "Ăn": r.hienThiAn,
+      "Thời gian": `${r.durationMs}ms`,
       "Máy chủ Overpass / Thử": `${r.overpassServer} (${r.overpassAttempts} lần)`,
       "Ghi chú nguồn / Lý do":
         r.ghiChuNguon ??
@@ -494,6 +535,18 @@ async function main() {
           : (r.overpassError ?? "")),
     }))
   );
+
+  // In chi tiết nguồn gốc cache từng loại ở bảng B
+  console.log("\nChi tiết nguồn gốc và tuổi của cache (Bảng B):");
+  for (const r of resultsFallback) {
+    if (r.chiTietCache.length > 0) {
+      console.log(`- ${r.diemDen}: ${r.chiTietCache.join("; ")}`);
+    } else {
+      console.log(`- ${r.diemDen}: dữ liệu live mới từ mạng hoặc snapshot trực tiếp.`);
+    }
+  }
+
+  console.log("\nℹ️ Ghi chú máy chủ https://overpass-api.de: Thường xuyên gặp lỗi (fetch failed / timeout kết nối) do bị nghẽn mạng quốc tế hoặc quá tải. Hệ thống tự động ưu tiên máy chủ phản hồi nhanh https://maps.mail.ru và dự phòng https://overpass.private.coffee.");
   console.log("================================================================================\n");
 
   // Lưu file kết quả

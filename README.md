@@ -74,6 +74,6 @@ docs/           # Tài liệu kiến trúc
 scripts/        # Utility scripts
 ```
 
-## Lưu ý bảo mật dữ liệu
-
-Chỉ dùng bill mẫu hoặc bill của chính mình đã che thông tin cá nhân; gói miễn phí có thể dùng dữ liệu để cải thiện sản phẩm của Google.
+## Lưu ý bảo mật và kiểm toán dữ liệu
+- **Bảo mật bill**: Chỉ dùng bill mẫu hoặc bill của chính mình đã che thông tin cá nhân; gói miễn phí có thể dùng dữ liệu để cải thiện sản phẩm của Google.
+- **Kiểm toán snapshot**: Mỗi snapshot được tạo qua `npm run data:snapshot` kèm chữ ký `checksum`. Lưu ý rằng `checksum` chỉ giúp phát hiện sửa file sau khi tạo, KHÔNG chứng minh nguồn gốc thật; dữ liệu giả hay thật được kiểm soát bằng việc chỉ script được ghi snapshot từ mạng thật và bằng kiểm tra thủ công (`npm run audit:snapshots`).

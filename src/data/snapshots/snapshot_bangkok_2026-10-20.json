@@ -1,0 +1,1581 @@
+{
+  "taoBoi": "script data:snapshot",
+  "ngayTao": "2026-10-20T02:54:51.572Z",
+  "diemDen": "Băng Cốc",
+  "checksum": "50cc065e1e923933fc9092303feeb074851b5198b579cb8c497a594fe4fc3cfd",
+  "createdAt": "2026-10-20T02:54:51.572Z",
+  "khachSans": [
+    {
+      "id": "osm:node:6407176806",
+      "osmId": "osm:node:6407176806",
+      "ten": "INN A DAY",
+      "khuVuc": "พระนคร",
+      "diaChi": "57-61 ถนนมหาราช",
+      "toaDo": {
+        "lat": 13.7451147,
+        "lng": 100.4911408
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:6407176806",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=INN%20A%20DAY%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7451147%2C100.4911408",
+        "apple": "https://maps.apple.com/?daddr=13.7451147,100.4911408"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:9599444682",
+      "osmId": "osm:node:9599444682",
+      "ten": "Kasayapi Hotel",
+      "khuVuc": "Trung tâm",
+      "diaChi": "ถนนอิสรภาพ",
+      "toaDo": {
+        "lat": 13.7380611,
+        "lng": 100.4854787
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:9599444682",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Kasayapi%20Hotel%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7380611%2C100.4854787",
+        "apple": "https://maps.apple.com/?daddr=13.7380611,100.4854787"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:11115619749",
+      "osmId": "osm:node:11115619749",
+      "ten": "Mangkon Hostel",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7390452,
+        "lng": 100.5059446
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:11115619749",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Mangkon%20Hostel%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7390452%2C100.5059446",
+        "apple": "https://maps.apple.com/?daddr=13.7390452,100.5059446"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:4739296321",
+      "osmId": "osm:node:4739296321",
+      "ten": "Chaiwat Guesthouse",
+      "khuVuc": "Trung tâm",
+      "diaChi": "394/19 Maha Rat Rd",
+      "toaDo": {
+        "lat": 13.744012,
+        "lng": 100.4923154
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:4739296321",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Chaiwat%20Guesthouse%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.744012%2C100.4923154",
+        "apple": "https://maps.apple.com/?daddr=13.744012,100.4923154"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:13759014801",
+      "osmId": "osm:node:13759014801",
+      "ten": "J No. 14",
+      "khuVuc": "Trung tâm",
+      "diaChi": "ซอยเจริญนคร 14 แยก 16",
+      "toaDo": {
+        "lat": 13.7231805,
+        "lng": 100.5030779
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:13759014801",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=J%20No.%2014%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7231805%2C100.5030779",
+        "apple": "https://maps.apple.com/?daddr=13.7231805,100.5030779"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:12409927201",
+      "osmId": "osm:node:12409927201",
+      "ten": "Pier 808",
+      "khuVuc": "Trung tâm",
+      "diaChi": "808 ถนนทรงวาด",
+      "toaDo": {
+        "lat": 13.7389805,
+        "lng": 100.5041866
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:12409927201",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Pier%20808%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7389805%2C100.5041866",
+        "apple": "https://maps.apple.com/?daddr=13.7389805,100.5041866"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:10925639147",
+      "osmId": "osm:node:10925639147",
+      "ten": "HOUSE MODE",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7263698,
+        "lng": 100.4913385
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:10925639147",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=HOUSE%20MODE%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7263698%2C100.4913385",
+        "apple": "https://maps.apple.com/?daddr=13.7263698,100.4913385"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:11811569598",
+      "osmId": "osm:node:11811569598",
+      "ten": "ARUN Riverside",
+      "khuVuc": "Trung tâm",
+      "diaChi": "87-89 ถนนมหาราช",
+      "toaDo": {
+        "lat": 13.7449793,
+        "lng": 100.4911177
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:11811569598",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=ARUN%20Riverside%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7449793%2C100.4911177",
+        "apple": "https://maps.apple.com/?daddr=13.7449793,100.4911177"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:12352447101",
+      "osmId": "osm:node:12352447101",
+      "ten": "โรงแรม สานน์ สาทร",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7232352,
+        "lng": 100.505416
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:12352447101",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B9%81%E0%B8%A3%E0%B8%A1%20%E0%B8%AA%E0%B8%B2%E0%B8%99%E0%B8%99%E0%B9%8C%20%E0%B8%AA%E0%B8%B2%E0%B8%97%E0%B8%A3%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7232352%2C100.505416",
+        "apple": "https://maps.apple.com/?daddr=13.7232352,100.505416"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:4816850221",
+      "osmId": "osm:node:4816850221",
+      "ten": "Onion Hotel",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7410075,
+        "lng": 100.4958181
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:4816850221",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Onion%20Hotel%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7410075%2C100.4958181",
+        "apple": "https://maps.apple.com/?daddr=13.7410075,100.4958181"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:12428813854",
+      "osmId": "osm:node:12428813854",
+      "ten": "ท็อปเทล ท่าพระ",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7286745,
+        "lng": 100.4706506
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:12428813854",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%E0%B8%97%E0%B9%87%E0%B8%AD%E0%B8%9B%E0%B9%80%E0%B8%97%E0%B8%A5%20%E0%B8%97%E0%B9%88%E0%B8%B2%E0%B8%9E%E0%B8%A3%E0%B8%B0%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7286745%2C100.4706506",
+        "apple": "https://maps.apple.com/?daddr=13.7286745,100.4706506"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:1887121773",
+      "osmId": "osm:node:1887121773",
+      "ten": "Arun Residence",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7448277,
+        "lng": 100.4912739
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:1887121773",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Arun%20Residence%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7448277%2C100.4912739",
+        "apple": "https://maps.apple.com/?daddr=13.7448277,100.4912739"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:6548672685",
+      "osmId": "osm:node:6548672685",
+      "ten": "Sivalai Place",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7431481,
+        "lng": 100.4768143
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:6548672685",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Sivalai%20Place%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7431481%2C100.4768143",
+        "apple": "https://maps.apple.com/?daddr=13.7431481,100.4768143"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:4173566689",
+      "osmId": "osm:node:4173566689",
+      "ten": "Over Stay Hotel",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7294064,
+        "lng": 100.4836616
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:4173566689",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Over%20Stay%20Hotel%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7294064%2C100.4836616",
+        "apple": "https://maps.apple.com/?daddr=13.7294064,100.4836616"
+      },
+      "nguonGia": []
+    },
+    {
+      "id": "osm:node:4161559690",
+      "osmId": "osm:node:4161559690",
+      "ten": "Chaiwat Guesthouse",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.743963,
+        "lng": 100.4924056
+      },
+      "loai": "khach_san",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 375000,
+      "nguon": "osm:node:4161559690",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "khoangGiaDemVND": {
+        "min": 637500,
+        "max": 862500
+      },
+      "includesBreakfast": false,
+      "hasPool": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Chaiwat%20Guesthouse%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.743963%2C100.4924056",
+        "apple": "https://maps.apple.com/?daddr=13.743963,100.4924056"
+      },
+      "nguonGia": []
+    }
+  ],
+  "quanAns": [
+    {
+      "id": "osm:node:12645513299",
+      "osmId": "osm:node:12645513299",
+      "ten": "นวลหมูปิ้ง",
+      "khuVuc": "เขตธนบุรี",
+      "diaChi": "126 ถนนอรุณอมรินทร์",
+      "toaDo": {
+        "lat": 13.7376943,
+        "lng": 100.4948862
+      },
+      "loai": "quan_an",
+      "gioMoCua": "Mo 07:00-12:00; We-Th 07:00-12:00; Sa-Su 07:00-12:00; ",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:12645513299",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "thai"
+    },
+    {
+      "id": "osm:node:11049564606",
+      "osmId": "osm:node:11049564606",
+      "ten": "อาอี้ข้าวผัดปู",
+      "khuVuc": "Trung tâm",
+      "diaChi": "220 คลองสาน",
+      "toaDo": {
+        "lat": 13.7268642,
+        "lng": 100.4960972
+      },
+      "loai": "quan_an",
+      "gioMoCua": "Mo-Su 10:00-21:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:11049564606",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "chinese;asian"
+    },
+    {
+      "id": "osm:node:4928977922",
+      "osmId": "osm:node:4928977922",
+      "ten": "MUG JEE",
+      "khuVuc": "พระนคร",
+      "diaChi": "FL1 INN A DAY Thanon Mahathat",
+      "toaDo": {
+        "lat": 13.7450947,
+        "lng": 100.4911092
+      },
+      "loai": "quan_an",
+      "gioMoCua": "Mo-Su 12:00-24:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:4928977922",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "thai"
+    },
+    {
+      "id": "osm:node:13570073638",
+      "osmId": "osm:node:13570073638",
+      "ten": "บ้านเพลินจิตต์ ณ คลองบางหลวง",
+      "khuVuc": "Phasi Charoen",
+      "diaChi": "Soi Phet Kasem 20",
+      "toaDo": {
+        "lat": 13.7309711,
+        "lng": 100.4631984
+      },
+      "loai": "quan_an",
+      "gioMoCua": "Mo-Su 11:00-17:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:13570073638",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "thai"
+    },
+    {
+      "id": "osm:node:7132484943",
+      "osmId": "osm:node:7132484943",
+      "ten": "ร้านน้าโนต",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7334869,
+        "lng": 100.4906456
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:7132484943",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:9666206917",
+      "osmId": "osm:node:9666206917",
+      "ten": "35 Dry Aged Beef",
+      "khuVuc": "Trung tâm",
+      "diaChi": "321 ถนนเจริญรัถ",
+      "toaDo": {
+        "lat": 13.7261273,
+        "lng": 100.4982873
+      },
+      "loai": "quan_an",
+      "gioMoCua": "Mo-Fr 12:00-21:00; Sa 12:00-21:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:9666206917",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "fine_dining"
+    },
+    {
+      "id": "osm:node:6946994143",
+      "osmId": "osm:node:6946994143",
+      "ten": "บะหมีไก่กรอบ​ ลาดหญ้า​",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7269222,
+        "lng": 100.4947949
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:6946994143",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "noodles;Thai"
+    },
+    {
+      "id": "osm:node:7072267488",
+      "osmId": "osm:node:7072267488",
+      "ten": "Archie",
+      "khuVuc": "Trung tâm",
+      "diaChi": "256 Prajadhipok Rd",
+      "toaDo": {
+        "lat": 13.7324839,
+        "lng": 100.495018
+      },
+      "loai": "quan_an",
+      "gioMoCua": "Mo-Fr 11:00-14:00,17:00-22:00; Sa,Su 11:00-22:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:7072267488",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:7121019985",
+      "osmId": "osm:node:7121019985",
+      "ten": "Veggie J",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7297291,
+        "lng": 100.4982464
+      },
+      "loai": "quan_an",
+      "gioMoCua": "Mo-Su 08:00-18:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:7121019985",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "thai"
+    },
+    {
+      "id": "osm:node:8120240943",
+      "osmId": "osm:node:8120240943",
+      "ten": "บ้านสกุลทอง",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.739243,
+        "lng": 100.4931062
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:8120240943",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:4366333024",
+      "osmId": "osm:node:4366333024",
+      "ten": "ส้มตำราชวงค์",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7395689,
+        "lng": 100.5046894
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:4366333024",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "regional"
+    },
+    {
+      "id": "osm:node:12253843001",
+      "osmId": "osm:node:12253843001",
+      "ten": "Tense.bkk",
+      "khuVuc": "Trung tâm",
+      "diaChi": "252 ซอยสมเด็จเจ้าพระยา 5",
+      "toaDo": {
+        "lat": 13.733843,
+        "lng": 100.500841
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:12253843001",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "fine_dining;thai"
+    },
+    {
+      "id": "osm:node:5031707522",
+      "osmId": "osm:node:5031707522",
+      "ten": "Somsak Bpuu Ob",
+      "khuVuc": "Trung tâm",
+      "diaChi": "ถนนกรุงธนบุรี",
+      "toaDo": {
+        "lat": 13.7243154,
+        "lng": 100.4976688
+      },
+      "loai": "quan_an",
+      "gioMoCua": "Mo-Su 17:00-21:30",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:5031707522",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": "seafood"
+    },
+    {
+      "id": "osm:node:7178478481",
+      "osmId": "osm:node:7178478481",
+      "ten": "ศูนย์อาหาร",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7249988,
+        "lng": 100.4936153
+      },
+      "loai": "quan_an",
+      "gioMoCua": "Mo-Su 09:00-15:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:7178478481",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    },
+    {
+      "id": "osm:node:4642387813",
+      "osmId": "osm:node:4642387813",
+      "ten": "The GATE",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7451421,
+        "lng": 100.4919287
+      },
+      "loai": "quan_an",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 150000,
+      "nguon": "osm:node:4642387813",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true,
+      "amThuc": null
+    }
+  ],
+  "cafes": [
+    {
+      "id": "osm:node:13513865131",
+      "osmId": "osm:node:13513865131",
+      "ten": "DoughMily",
+      "khuVuc": "บางกอกใหญ่",
+      "diaChi": "277 ถนนวังเดิม",
+      "toaDo": {
+        "lat": 13.7450166,
+        "lng": 100.4865079
+      },
+      "loai": "cafe",
+      "gioMoCua": "Mo-Su 09:00-17:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:13513865131",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:3431325825",
+      "osmId": "osm:node:3431325825",
+      "ten": "Starbucks",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7231369,
+        "lng": 100.4636302
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:3431325825",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:6735095037",
+      "osmId": "osm:node:6735095037",
+      "ten": "Moods Coffee",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7335716,
+        "lng": 100.4909724
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:6735095037",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:6282634785",
+      "osmId": "osm:node:6282634785",
+      "ten": "Carousel Coffee",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7267402,
+        "lng": 100.4938058
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:6282634785",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:12432520802",
+      "osmId": "osm:node:12432520802",
+      "ten": "คาเฟ่ อเมซอน",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7234672,
+        "lng": 100.4632902
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:12432520802",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:12428815001",
+      "osmId": "osm:node:12428815001",
+      "ten": "คาเฟ่ อเมซอน",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7516663,
+        "lng": 100.4789888
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:12428815001",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:7233637090",
+      "osmId": "osm:node:7233637090",
+      "ten": "คาเฟ่ อเมซอน",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7347623,
+        "lng": 100.5032329
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:7233637090",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:6965560248",
+      "osmId": "osm:node:6965560248",
+      "ten": "Siam Ratana Bakehouse",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7264418,
+        "lng": 100.4942669
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:6965560248",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:11510249969",
+      "osmId": "osm:node:11510249969",
+      "ten": "Starbucks",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7391345,
+        "lng": 100.4849976
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:11510249969",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:6338208285",
+      "osmId": "osm:node:6338208285",
+      "ten": "Starbucks",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7269775,
+        "lng": 100.4948808
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:6338208285",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:10705709305",
+      "osmId": "osm:node:10705709305",
+      "ten": "Elefin Coffee",
+      "khuVuc": "Trung tâm",
+      "diaChi": "Maha Rat Rd, Phra Borom Maha Ratchawang, Phra Nakhon, Bangkok 10200, Таиланд",
+      "toaDo": {
+        "lat": 13.7441833,
+        "lng": 100.4926755
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:10705709305",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:10538698062",
+      "osmId": "osm:node:10538698062",
+      "ten": "Gu Slow Bar Coffee",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7283558,
+        "lng": 100.4940473
+      },
+      "loai": "cafe",
+      "gioMoCua": "We-Mo 08:00-18:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:10538698062",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:8120513722",
+      "osmId": "osm:node:8120513722",
+      "ten": "Walden Home Cafe",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7312377,
+        "lng": 100.5057782
+      },
+      "loai": "cafe",
+      "gioMoCua": "Mo, We-Fr 08:30-17:30; Sa, Su 09:00-18:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:8120513722",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:10925662013",
+      "osmId": "osm:node:10925662013",
+      "ten": "MODE COFFEEHOUSE",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7264036,
+        "lng": 100.4913359
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:10925662013",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    },
+    {
+      "id": "osm:node:3036731573",
+      "osmId": "osm:node:3036731573",
+      "ten": "กาแฟวัดอรุณ",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7441686,
+        "lng": 100.4888931
+      },
+      "loai": "cafe",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 50000,
+      "nguon": "osm:node:3036731573",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": true
+    }
+  ],
+  "hoatDongs": [
+    {
+      "id": "osm:node:10792898504",
+      "osmId": "osm:node:10792898504",
+      "ten": "จอยแมน แกลลอรี่",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7517945,
+        "lng": 100.5045967
+      },
+      "loai": "gallery",
+      "gioMoCua": "Tu-Su 11:00-18:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:10792898504",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%E0%B8%88%E0%B8%AD%E0%B8%A2%E0%B9%81%E0%B8%A1%E0%B8%99%20%E0%B9%81%E0%B8%81%E0%B8%A5%E0%B8%A5%E0%B8%AD%E0%B8%A3%E0%B8%B5%E0%B9%88%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7517945%2C100.5045967",
+        "apple": "https://maps.apple.com/?daddr=13.7517945,100.5045967"
+      }
+    },
+    {
+      "id": "osm:node:5342565921",
+      "osmId": "osm:node:5342565921",
+      "ten": "1PROJECTS",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7302643,
+        "lng": 100.5150098
+      },
+      "loai": "gallery",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:5342565921",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=1PROJECTS%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7302643%2C100.5150098",
+        "apple": "https://maps.apple.com/?daddr=13.7302643,100.5150098"
+      }
+    },
+    {
+      "id": "osm:node:6259620985",
+      "osmId": "osm:node:6259620985",
+      "ten": "MAHANAKHON SKYWALK",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7231503,
+        "lng": 100.5280809
+      },
+      "loai": "viewpoint",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:6259620985",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "check_in_chup_anh",
+        "bien"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=MAHANAKHON%20SKYWALK%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7231503%2C100.5280809",
+        "apple": "https://maps.apple.com/?daddr=13.7231503,100.5280809"
+      }
+    },
+    {
+      "id": "osm:node:11463141290",
+      "osmId": "osm:node:11463141290",
+      "ten": "Supples",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7315109,
+        "lng": 100.5148196
+      },
+      "loai": "gallery",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:11463141290",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Supples%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7315109%2C100.5148196",
+        "apple": "https://maps.apple.com/?daddr=13.7315109,100.5148196"
+      }
+    },
+    {
+      "id": "osm:node:6069909589",
+      "osmId": "osm:node:6069909589",
+      "ten": "sai tai mai center night market",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7790745,
+        "lng": 100.4200165
+      },
+      "loai": "attraction",
+      "gioMoCua": "Mo-Su 18:00-18:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:6069909589",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=sai%20tai%20mai%20center%20night%20market%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7790745%2C100.4200165",
+        "apple": "https://maps.apple.com/?daddr=13.7790745,100.4200165"
+      }
+    },
+    {
+      "id": "osm:node:5362733473",
+      "osmId": "osm:node:5362733473",
+      "ten": "วัดแพรก",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.8146853,
+        "lng": 100.4067541
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:5362733473",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B9%81%E0%B8%9E%E0%B8%A3%E0%B8%81%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.8146853%2C100.4067541",
+        "apple": "https://maps.apple.com/?daddr=13.8146853,100.4067541"
+      }
+    },
+    {
+      "id": "osm:node:6232721188",
+      "osmId": "osm:node:6232721188",
+      "ten": "จุดชมวิวท่าวัดโพธิ์",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7444953,
+        "lng": 100.4912433
+      },
+      "loai": "viewpoint",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:6232721188",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "check_in_chup_anh",
+        "bien"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%E0%B8%88%E0%B8%B8%E0%B8%94%E0%B8%8A%E0%B8%A1%E0%B8%A7%E0%B8%B4%E0%B8%A7%E0%B8%97%E0%B9%88%E0%B8%B2%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B9%82%E0%B8%9E%E0%B8%98%E0%B8%B4%E0%B9%8C%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7444953%2C100.4912433",
+        "apple": "https://maps.apple.com/?daddr=13.7444953,100.4912433"
+      }
+    },
+    {
+      "id": "osm:node:2397987931",
+      "osmId": "osm:node:2397987931",
+      "ten": "Kathmandu Photo Gallery",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7239301,
+        "lng": 100.5232949
+      },
+      "loai": "gallery",
+      "gioMoCua": "Tu-Su 11:00-18:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:2397987931",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Kathmandu%20Photo%20Gallery%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7239301%2C100.5232949",
+        "apple": "https://maps.apple.com/?daddr=13.7239301,100.5232949"
+      }
+    },
+    {
+      "id": "osm:node:3096836185",
+      "osmId": "osm:node:3096836185",
+      "ten": "พิพิธภัณฑ์ท้องถิ่นกรุงเทพมหานคร เขตสัมพันธวงศ์",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7367162,
+        "lng": 100.5110977
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:3096836185",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%E0%B8%9E%E0%B8%B4%E0%B8%9E%E0%B8%B4%E0%B8%98%E0%B8%A0%E0%B8%B1%E0%B8%93%E0%B8%91%E0%B9%8C%E0%B8%97%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%96%E0%B8%B4%E0%B9%88%E0%B8%99%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3%20%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%AA%E0%B8%B1%E0%B8%A1%E0%B8%9E%E0%B8%B1%E0%B8%99%E0%B8%98%E0%B8%A7%E0%B8%87%E0%B8%A8%E0%B9%8C%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7367162%2C100.5110977",
+        "apple": "https://maps.apple.com/?daddr=13.7367162,100.5110977"
+      }
+    },
+    {
+      "id": "osm:node:4257127190",
+      "osmId": "osm:node:4257127190",
+      "ten": "Thai Bamboo Tattoo",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7274865,
+        "lng": 100.4990793
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:4257127190",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Thai%20Bamboo%20Tattoo%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7274865%2C100.4990793",
+        "apple": "https://maps.apple.com/?daddr=13.7274865,100.4990793"
+      }
+    },
+    {
+      "id": "osm:node:11806216522",
+      "osmId": "osm:node:11806216522",
+      "ten": "จุดชมวิวท่าเตียน",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7457964,
+        "lng": 100.4902958
+      },
+      "loai": "viewpoint",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:11806216522",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "check_in_chup_anh",
+        "bien"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%E0%B8%88%E0%B8%B8%E0%B8%94%E0%B8%8A%E0%B8%A1%E0%B8%A7%E0%B8%B4%E0%B8%A7%E0%B8%97%E0%B9%88%E0%B8%B2%E0%B9%80%E0%B8%95%E0%B8%B5%E0%B8%A2%E0%B8%99%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7457964%2C100.4902958",
+        "apple": "https://maps.apple.com/?daddr=13.7457964,100.4902958"
+      }
+    },
+    {
+      "id": "osm:node:5887764787",
+      "osmId": "osm:node:5887764787",
+      "ten": "Speedy Grandma",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7306867,
+        "lng": 100.5150238
+      },
+      "loai": "gallery",
+      "gioMoCua": "We-Su 13:00-18:00",
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:5887764787",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=Speedy%20Grandma%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7306867%2C100.5150238",
+        "apple": "https://maps.apple.com/?daddr=13.7306867,100.5150238"
+      }
+    },
+    {
+      "id": "osm:node:3568027498",
+      "osmId": "osm:node:3568027498",
+      "ten": "พิพิธภัณฑสถานแห่งชาติศิลป์พีระศรี",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.752666,
+        "lng": 100.4908979
+      },
+      "loai": "museum",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:3568027498",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%E0%B8%9E%E0%B8%B4%E0%B8%9E%E0%B8%B4%E0%B8%98%E0%B8%A0%E0%B8%B1%E0%B8%93%E0%B8%91%E0%B8%AA%E0%B8%96%E0%B8%B2%E0%B8%99%E0%B9%81%E0%B8%AB%E0%B9%88%E0%B8%87%E0%B8%8A%E0%B8%B2%E0%B8%95%E0%B8%B4%E0%B8%A8%E0%B8%B4%E0%B8%A5%E0%B8%9B%E0%B9%8C%E0%B8%9E%E0%B8%B5%E0%B8%A3%E0%B8%B0%E0%B8%A8%E0%B8%A3%E0%B8%B5%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.752666%2C100.4908979",
+        "apple": "https://maps.apple.com/?daddr=13.752666,100.4908979"
+      }
+    },
+    {
+      "id": "osm:node:6285636993",
+      "osmId": "osm:node:6285636993",
+      "ten": "พีที แกลเลอรี่",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7278474,
+        "lng": 100.5145645
+      },
+      "loai": "gallery",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:6285636993",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "van_hoa_lich_su"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": false,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%E0%B8%9E%E0%B8%B5%E0%B8%97%E0%B8%B5%20%E0%B9%81%E0%B8%81%E0%B8%A5%E0%B9%80%E0%B8%A5%E0%B8%AD%E0%B8%A3%E0%B8%B5%E0%B9%88%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7278474%2C100.5145645",
+        "apple": "https://maps.apple.com/?daddr=13.7278474,100.5145645"
+      }
+    },
+    {
+      "id": "osm:node:4605868307",
+      "osmId": "osm:node:4605868307",
+      "ten": "ตึกเก่าบนถนนทรงวาด",
+      "khuVuc": "Trung tâm",
+      "diaChi": null,
+      "toaDo": {
+        "lat": 13.7380887,
+        "lng": 100.507611
+      },
+      "loai": "attraction",
+      "gioMoCua": null,
+      "soSao": null,
+      "giaUocTinhNguoi": 0,
+      "nguon": "osm:node:4605868307",
+      "ngayLay": "2026-10-20T02:54:51.569Z",
+      "doTinCay": "tham_khao",
+      "giaLaUocTinh": false,
+      "giaVeNguoi": 0,
+      "thoiLuongPhut": 90,
+      "nhan": [
+        "giai_tri_vui_choi"
+      ],
+      "dongNguoi": false,
+      "diBoNhieu": true,
+      "mapsUrls": {
+        "xem": "https://www.google.com/maps/search/?api=1&query=%E0%B8%95%E0%B8%B6%E0%B8%81%E0%B9%80%E0%B8%81%E0%B9%88%E0%B8%B2%E0%B8%9A%E0%B8%99%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B8%87%E0%B8%A7%E0%B8%B2%E0%B8%94%2C%20B%C4%83ng%20C%E1%BB%91c",
+        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=13.7380887%2C100.507611",
+        "apple": "https://maps.apple.com/?daddr=13.7380887,100.507611"
+      }
+    }
+  ],
+  "transports": [
+    {
+      "schemaVersion": 7,
+      "id": "est_di_may_bay_0",
+      "huong": "di",
+      "type": "PLANE",
+      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "origin": "TP.HCM",
+      "destination": "Băng Cốc",
+      "departureTime": "08:00",
+      "durationMinutes": 150,
+      "pricePerPerson": 1426320,
+      "seatClass": "Phổ thông",
+      "boardingPoint": "Sân bay TP.HCM",
+      "dropOffPoint": "Sân bay Băng Cốc",
+      "notes": "Ước tính theo quãng đường",
+      "nguon": "https://www.vietnamairlines.com",
+      "ngayLay": "2026-10-20T02:54:46.956Z",
+      "doTinCay": "uoc_tinh",
+      "giaLaUocTinh": true,
+      "nguonGia": [
+        "https://www.vietnamairlines.com"
+      ]
+    },
+    {
+      "schemaVersion": 7,
+      "id": "est_ve_may_bay_0",
+      "huong": "ve",
+      "type": "PLANE",
+      "provider": "Ước tính theo quãng đường (Máy bay)",
+      "origin": "Băng Cốc",
+      "destination": "TP.HCM",
+      "departureTime": "17:30",
+      "durationMinutes": 150,
+      "pricePerPerson": 1426320,
+      "seatClass": "Phổ thông",
+      "boardingPoint": "Sân bay Băng Cốc",
+      "dropOffPoint": "Sân bay TP.HCM",
+      "notes": "Ước tính theo quãng đường",
+      "nguon": "https://www.vietnamairlines.com",
+      "ngayLay": "2026-10-20T02:54:46.956Z",
+      "doTinCay": "uoc_tinh",
+      "giaLaUocTinh": true,
+      "nguonGia": [
+        "https://www.vietnamairlines.com"
+      ]
+    }
+  ]
+}

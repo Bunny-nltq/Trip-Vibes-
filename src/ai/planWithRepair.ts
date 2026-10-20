@@ -4,6 +4,7 @@ import { LiveDataSource } from "@/data/live/LiveDataSource";
 import { buildPlan } from "@/core/buildPlan";
 import { validatePlan, type Violation } from "@/core/validatePlan";
 import { donOKhongKhaDung } from "@/core/donOKhongKhaDung";
+import { lapOTrong } from "@/core/lapOTrong";
 import { tinhNganSachToiThieu } from "@/core/minBudget";
 import { runPlanAgent, type AgentTraceItem } from "./planAgent";
 import { GeminiProvider } from "./provider";
@@ -274,7 +275,15 @@ export async function planWithRepair(
     }
 
     const { selection, trace } = agentResult;
-    const buildRes = buildPlan(request, selection, data, mode);
+    let activeSelection = selection;
+
+    // 1. Dọn các ô không khả dụng do giờ giấc di chuyển trước khi kiểm tra hard / buildPlan
+    const donResBefore = donOKhongKhaDung(activeSelection, undefined, data.transports);
+    if (donResBefore.daDon) {
+      activeSelection = donResBefore.selection;
+    }
+
+    const buildRes = buildPlan(request, activeSelection, data, mode);
 
     let plan: Plan | undefined = undefined;
     let hard: Violation[] = [];
@@ -289,15 +298,29 @@ export async function planWithRepair(
       tongVND = 0;
     } else {
       plan = buildRes.plan;
-      // Dọn các ô không khả dụng do giờ giấc di chuyển trước khi kiểm tra hard
-      const donRes = donOKhongKhaDung(selection, plan, data.transports);
-      if (donRes.daDon) {
-        const rebuild = buildPlan(request, donRes.selection, data, mode);
+      for (const cb of donResBefore.canhBao) {
+        if (!plan.canhBao.includes(cb)) plan.canhBao.push(cb);
+      }
+
+      // 2. Lấp các ô khả dụng còn trống
+      const lapRes = lapOTrong(
+        activeSelection,
+        plan,
+        data.hoatDongs ?? data.activities ?? [],
+        request
+      );
+      if (lapRes.daLap) {
+        activeSelection = lapRes.selection;
+        const rebuild = buildPlan(request, activeSelection, data, mode);
         if (rebuild.ok) {
           plan = rebuild.plan;
-          for (const cb of donRes.canhBao) {
+          for (const cb of lapRes.canhBao) {
             if (!plan.canhBao.includes(cb)) plan.canhBao.push(cb);
           }
+        }
+      } else if (lapRes.canhBao.length > 0) {
+        for (const cb of lapRes.canhBao) {
+          if (!plan.canhBao.includes(cb)) plan.canhBao.push(cb);
         }
       }
 
