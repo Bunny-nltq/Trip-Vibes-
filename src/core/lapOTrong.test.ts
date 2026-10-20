@@ -277,7 +277,7 @@ describe("lapOTrong - Fixture A", () => {
     expect(res.canhBao).toContain("o_trong_do_rang_buoc");
   });
 
-  it("chiều đến 10:19 (619): ô ngày 1 không khả dụng nên KHÔNG lấp ô ngày 1", () => {
+  it("chiều đi đến 10:19 (619): lấp ô ngày 1 lúc 15:30: ngày 1 [A1], ngày 2 [A2, A5], ngày 3 [A3]; Vui chơi 440.000; tongVND 8.360.000; conLaiVND 1.640.000", () => {
     const transportsMuon: Transport[] = [
       {
         ...transports[0],
@@ -303,10 +303,78 @@ describe("lapOTrong - Fixture A", () => {
     if (!build1.ok) return;
 
     const res = lapOTrong(selNgay1Trong, build1.plan, ungVien, req);
-    // Ngày 1 không khả dụng nên phải giữ nguyên là rỗng []
+    expect(res.selection.hoatDongTheoNgay[0]).toEqual(["A1"]);
+    expect(res.selection.hoatDongTheoNgay[1]).toEqual(["A2", "A5"]);
+    expect(res.selection.hoatDongTheoNgay[2]).toEqual(["A3"]);
+
+    const build2 = buildPlan(req, res.selection, {
+      transports: transportsMuon,
+      hotels,
+      activities: [],
+      hoatDongs: ungVien,
+    });
+    expect(build2.ok).toBe(true);
+    if (!build2.ok) return;
+
+    const itemNgay1 = build2.plan.items.find(
+      (it) => it.hangMuc === "Vui chơi" && it.ngay === 1
+    );
+    expect(itemNgay1?.gio).toBe("15:30");
+
+    const tongVuiChoi = build2.plan.items
+      .filter((it) => it.hangMuc === "Vui chơi")
+      .reduce((s, it) => s + it.thanhTien, 0);
+
+    expect(tongVuiChoi).toBe(440_000);
+    expect(build2.plan.tongKet.tongVND).toBe(8_360_000);
+    expect(build2.plan.tongKet.conLaiVND).toBe(1_640_000);
+  });
+
+  it("chiều đi đến 15:00 (900): ngày 1 [] (không có ô); ngày 2 [A2, A1]; ngày 3 [A5]; Vui chơi 200.000; tongVND 8.120.000; conLaiVND 1.880.000", () => {
+    const transportsChieu: Transport[] = [
+      {
+        ...transports[0],
+        departureTime: "13:00",
+        durationMinutes: 120, // đến lúc 15:00 (900p)
+      },
+      transports[1],
+    ];
+
+    const selNgay1Trong: Selection = {
+      ...selectionBanDau,
+      hoatDongTheoNgay: [[], ["A2"], []],
+    };
+
+    const req = taoRequest(10_000_000, []);
+    const build1 = buildPlan(req, selNgay1Trong, {
+      transports: transportsChieu,
+      hotels,
+      activities: [],
+      hoatDongs: ungVien,
+    });
+    expect(build1.ok).toBe(true);
+    if (!build1.ok) return;
+
+    const res = lapOTrong(selNgay1Trong, build1.plan, ungVien, req);
     expect(res.selection.hoatDongTheoNgay[0]).toEqual([]);
-    // Ngày 2 và 3 vẫn được lấp
-    expect(res.selection.hoatDongTheoNgay[1].length).toBe(2);
-    expect(res.selection.hoatDongTheoNgay[2].length).toBe(1);
+    expect(res.selection.hoatDongTheoNgay[1]).toEqual(["A2", "A1"]);
+    expect(res.selection.hoatDongTheoNgay[2]).toEqual(["A5"]);
+
+    const build2 = buildPlan(req, res.selection, {
+      transports: transportsChieu,
+      hotels,
+      activities: [],
+      hoatDongs: ungVien,
+    });
+    expect(build2.ok).toBe(true);
+    if (!build2.ok) return;
+
+    const tongVuiChoi = build2.plan.items
+      .filter((it) => it.hangMuc === "Vui chơi")
+      .reduce((s, it) => s + it.thanhTien, 0);
+
+    expect(tongVuiChoi).toBe(200_000);
+    expect(build2.plan.tongKet.tongVND).toBe(8_120_000);
+    expect(build2.plan.tongKet.conLaiVND).toBe(1_880_000);
   });
 });

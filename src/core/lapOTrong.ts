@@ -23,6 +23,7 @@ import {
   BUFFER_RA_BEN_PHUT,
   THOI_LUONG_TOI_THIEU_HOAT_DONG,
 } from "./assumptions";
+import { gioOHoatDongNgayDau } from "./gioONgayDau";
 
 const GIO_HOAT_DONG_1_PHUT = 570; // 09:30
 
@@ -84,10 +85,15 @@ export function lapOTrong(
     (it) => it.hangMuc === "Di chuyển" && it.ngay === soNgay
   );
 
-  const tDi = transports?.find(
+  const transportList: Transport[] =
+    transports ??
+    (plan as any)?.transports ??
+    [];
+
+  const tDi = transportList.find(
     (t) => t.id === selection.transportDiId || t.id === diItem?.refId
   );
-  const tVe = transports?.find(
+  const tVe = transportList.find(
     (t) => t.id === selection.transportVeId || t.id === veItem?.refId
   );
 
@@ -99,10 +105,19 @@ export function lapOTrong(
     } else {
       gioDenPhutNgay1 = dep + tDi.durationMinutes;
     }
+  } else if ((plan as any)?.gioDenPhutNgay1 != null) {
+    gioDenPhutNgay1 = Number((plan as any).gioDenPhutNgay1);
+  } else if ((plan as any)?.gioDenNgay1Phut != null) {
+    gioDenPhutNgay1 = Number((plan as any).gioDenNgay1Phut);
   } else if (diItem?.gio) {
     const dep = parseTimeToMinutes(diItem.gio);
+    const dur = (diItem as any).thoiLuongPhut ?? (diItem as any).durationMinutes ?? 120;
     if (dep !== null) {
-      gioDenPhutNgay1 = dep + ((diItem as any).thoiLuongPhut ?? 120);
+      if (dep + dur >= 1440) {
+        gioDenPhutNgay1 = 9999;
+      } else {
+        gioDenPhutNgay1 = dep + dur;
+      }
     }
   }
 
@@ -123,7 +138,7 @@ export function lapOTrong(
   for (let d = 1; d <= soNgay; d++) {
     if (d === 1) {
       // Ngày đầu
-      const ok = gioDenPhutNgay1 + BUFFER_SAU_KHI_DEN_PHUT <= GIO_HOAT_DONG_1_PHUT;
+      const ok = gioOHoatDongNgayDau(gioDenPhutNgay1) !== null;
       oKhaDungTheoNgay.push(ok ? 1 : 0);
     } else if (d === soNgay) {
       // Ngày cuối

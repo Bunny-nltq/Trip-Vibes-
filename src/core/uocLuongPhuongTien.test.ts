@@ -6,25 +6,35 @@ import {
 import type { DiemDen } from "@/contracts";
 
 describe("uocLuongPhuongTien", () => {
-  it("khoangCach = 600: xe_khach {720 phút, 600.000}", () => {
+  it("khoangCach = 600: xe_khach {1080 phút, 600.000 đ}", () => {
     const res = uocLuongPhuongTien(600, "xe_khach");
-    expect(res.thoiLuongPhut).toBe(720);
+    expect(res.thoiLuongPhut).toBe(1080);
     expect(res.giaNguoi).toBe(600_000);
     expect(res.doTinCay).toBe("uoc_tinh");
   });
 
-  it("khoangCach = 600: tau {655 phút, 600.000}", () => {
+  it("khoangCach = 600: tau {982 phút, 600.000 đ}", () => {
     const res = uocLuongPhuongTien(600, "tau");
-    expect(res.thoiLuongPhut).toBe(655);
+    expect(res.thoiLuongPhut).toBe(982);
     expect(res.giaNguoi).toBe(600_000);
     expect(res.doTinCay).toBe("uoc_tinh");
   });
 
-  it("khoangCach = 600: may_bay {138 phút, 1.260.000}", () => {
+  it("khoangCach = 600: may_bay {138 phút, 1.260.000 đ}", () => {
     const res = uocLuongPhuongTien(600, "may_bay");
     expect(res.thoiLuongPhut).toBe(138);
     expect(res.giaNguoi).toBe(1_260_000);
     expect(res.doTinCay).toBe("uoc_tinh");
+  });
+
+  it("khoangCach = 1000: xe_khach {1800 phút, 1.000.000 đ}; tau {1636 phút, 1.000.000 đ}", () => {
+    const resXe = uocLuongPhuongTien(1000, "xe_khach");
+    expect(resXe.thoiLuongPhut).toBe(1800);
+    expect(resXe.giaNguoi).toBe(1_000_000);
+
+    const resTau = uocLuongPhuongTien(1000, "tau");
+    expect(resTau.thoiLuongPhut).toBe(1636);
+    expect(resTau.giaNguoi).toBe(1_000_000);
   });
 });
 

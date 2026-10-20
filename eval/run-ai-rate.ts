@@ -14,6 +14,7 @@ import { calculateTransportFlags } from "../src/core/flags";
 import { LiveDataSource } from "../src/data/live/LiveDataSource";
 import { tiLeThoiGianDiChuyen } from "../src/core/tiLeDiChuyen";
 import { AGENT_PROMPT_VERSION } from "../src/ai/planAgent";
+import { QUY_TAC_VERSION } from "../src/core/assumptions";
 import type { TripRequest, DiemDen } from "../src/contracts";
 import { getDiemDenTen } from "../src/contracts";
 
@@ -136,7 +137,8 @@ export function createScenarioHash(
   request: TripRequest,
   candidateIds: string[],
   model = process.env.GEMINI_MODEL ?? "gemini-2.5-flash",
-  promptVersion = AGENT_PROMPT_VERSION
+  promptVersion = AGENT_PROMPT_VERSION,
+  quyTacVersion = QUY_TAC_VERSION
 ): string {
   const payload = {
     diemDi: getDiemDenTen(request.diemDi),
@@ -148,6 +150,7 @@ export function createScenarioHash(
     tranh: request.tranh || [],
     model,
     promptVersion,
+    quyTacVersion,
     candidateIds: [...candidateIds].sort(),
   };
   return crypto.createHash("sha256").update(JSON.stringify(payload)).digest("hex");
@@ -182,9 +185,15 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
   const resultFilePath =
     options.resultsFilePath || path.join(resultsDir, `ai-rate-${dateStr}.json`);
 
-  // Đọc cờ --toi-da=N từ process.argv nếu có
-  const toiDaArg = process.argv.find((a) => a.startsWith("--toi-da="));
-  const maxNewFromArg = toiDaArg ? parseInt(toiDaArg.split("=")[1], 10) : undefined;
+  // Đọc cờ --toi-da=N từ process.argv hoặc process.env nếu có
+  const toiDaArg = process.argv.find((a) => a.includes("toi-da="));
+  const maxNewFromArg = toiDaArg
+    ? parseInt(toiDaArg.split("=")[1], 10)
+    : process.env.npm_config_toi_da !== undefined
+    ? parseInt(process.env.npm_config_toi_da, 10)
+    : process.env.TOI_DA !== undefined
+    ? parseInt(process.env.TOI_DA, 10)
+    : undefined;
   const maxNew = options.maxNew !== undefined ? options.maxNew : maxNewFromArg;
 
   if (maxNew !== undefined) {
@@ -304,7 +313,12 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
     const hashKey = createScenarioHash(request, candidateIds);
 
     // Kiểm tra xem kịch bản đã có trong tiến trình lưu trước chưa
-    const existingRecord = progressRecords.find((p) => p.hashKey === hashKey || p.stt === sc.stt);
+    // Với test chạy options.planFn thì cho phép khớp p.stt, với chạy thực tế thì chỉ khớp đúng hashKey (v2)
+    const isV2Match = (p: ProgressRecord) =>
+      p.hashKey === hashKey || (Boolean(options.planFn) && p.stt === sc.stt);
+    const existingRecord = progressRecords.find(isV2Match);
+    const legacyRecord = !existingRecord ? progressRecords.find((p) => p.stt === sc.stt) : null;
+
     if (existingRecord) {
       console.log(
         ` -> [ĐỌC LẠI]: Kịch bản đã xong từ lần chạy ngày ${existingRecord.ngayChay} (0 lượt Gemini).`
@@ -317,6 +331,21 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
       };
       results.push(cached);
       continue;
+    }
+
+    if (legacyRecord) {
+      console.log(
+        ` -> [CŨ (quy tắc v1)]: Kịch bản ${sc.stt} (${destConfig.ten} ${heSo}) có kết quả cũ từ ngày ${legacyRecord.ngayChay} (quy tắc v1). KHÔNG dùng lại như hợp lệ; để chạy lại khi có lượt Gemini.`
+      );
+      if (maxNew !== undefined && countNew >= maxNew) {
+        results.push({
+          ...legacyRecord.scenarioResult,
+          stt: sc.stt,
+          nguonKetQua: "CŨ (quy tắc v1)",
+          hashKey: legacyRecord.hashKey,
+        });
+        continue;
+      }
     }
 
     // Nếu là kịch bản mới, kiểm tra giới hạn --toi-da=N
@@ -509,7 +538,7 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
       "Lượt AI": r.soLanGoiAI,
       "Tổng VND": r.tongVND.toLocaleString("vi-VN"),
       "% NS": r.phanTramNganSach,
-      "Ô HĐ": r.oHoatDong,
+      Ô: r.oHoatDong,
       "Di chuyển": `${r.tongThoiGianDiChuyen}p`,
       "Tỉ lệ DC": r.tiLeThoiGianDiChuyen,
       "CB nhẹ": r.soCanhBaoNhe,

@@ -11,6 +11,7 @@ import {
   NGUONG_GAN_HET_NGAN_SACH_PHAN_TRAM,
 } from "./assumptions";
 import { coCanhBaoDiChuyen, tiLeThoiGianDiChuyen } from "./tiLeDiChuyen";
+import { gioOHoatDongNgayDau } from "./gioONgayDau";
 
 export interface Violation {
   code: string;
@@ -23,7 +24,8 @@ export interface ValidatePlanResult {
   soft: Violation[];
 }
 
-function timeToMinutes(timeStr: string): number {
+function timeToMinutes(timeStr: string | number): number {
+  if (typeof timeStr === "number") return timeStr;
   const [h, m] = timeStr.split(":").map(Number);
   return h * 60 + m;
 }
@@ -90,6 +92,36 @@ export function validatePlan(
         chiTiet: `Giờ đến (${flagsDi.gioDen}) sớm hơn giờ nhận phòng (${GIO_NHAN_PHONG}).`,
       });
     }
+
+    // soft: den_vao_ngay_sau
+    const depDiPhut = timeToMinutes(tDi.departureTime);
+    if (depDiPhut + tDi.durationMinutes >= 1440) {
+      soft.push({
+        code: "den_vao_ngay_sau",
+        chiTiet: `Chuyến đi đến nơi vào ngày thứ 2 (sau nửa đêm). Đêm đầu nằm trên phương tiện nhưng kế hoạch vẫn tính đủ số đêm khách sạn.`,
+        duLieu: {
+          khoiHanh: tDi.departureTime,
+          thoiLuong: tDi.durationMinutes,
+          tongPhut: depDiPhut + tDi.durationMinutes,
+        },
+      });
+    }
+  }
+
+  if (tVe) {
+    // soft: ve_den_ngay_sau
+    const depVePhut = timeToMinutes(tVe.departureTime);
+    if (depVePhut + tVe.durationMinutes >= 1440) {
+      soft.push({
+        code: "ve_den_ngay_sau",
+        chiTiet: `Chuyến về đến nơi vào ngày hôm sau.`,
+        duLieu: {
+          khoiHanh: tVe.departureTime,
+          thoiLuong: tVe.durationMinutes,
+          tongPhut: depVePhut + tVe.durationMinutes,
+        },
+      });
+    }
   }
 
   const transportsToCheck = [tDi, tVe].filter(Boolean) as typeof data.transports;
@@ -153,11 +185,18 @@ export function validatePlan(
   // 4. Ràng buộc thời gian hoạt động ngày 1
   const hoatDongNgay1 = hoatDongTheoNgay[0] || [];
   if (hoatDongNgay1.length > 0 && tDi) {
-    const gioHoatDong1Phut = timeToMinutes(GIO_HOAT_DONG_1);
-    if (gioDenDiPhut + BUFFER_SAU_KHI_DEN_PHUT > gioHoatDong1Phut) {
+    if (request?.schemaVersion != null && request.schemaVersion < 7) {
+      const gioHoatDong1Phut = timeToMinutes(GIO_HOAT_DONG_1);
+      if (gioDenDiPhut + BUFFER_SAU_KHI_DEN_PHUT > gioHoatDong1Phut) {
+        hard.push({
+          code: "ngay_dau_den_muon",
+          chiTiet: `Đến nơi lúc ${gioDenDiPhut} phút, không kịp tham gia hoạt động thứ nhất.`,
+        });
+      }
+    } else if (gioOHoatDongNgayDau(gioDenDiPhut) === null) {
       hard.push({
         code: "ngay_dau_den_muon",
-        chiTiet: `Đến nơi lúc ${gioDenDiPhut} phút, không kịp tham gia hoạt động thứ nhất.`,
+        chiTiet: `Đến nơi lúc ${gioDenDiPhut} phút, không kịp tham gia hoạt động ngày 1.`,
       });
     }
   }

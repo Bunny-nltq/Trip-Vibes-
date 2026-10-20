@@ -9,10 +9,10 @@
  */
 
 import {
-  BUFFER_SAU_KHI_DEN_PHUT,
   BUFFER_RA_BEN_PHUT,
   THOI_LUONG_TOI_THIEU_HOAT_DONG,
 } from "./assumptions";
+import { gioOHoatDongNgayDau } from "./gioONgayDau";
 
 const GIO_HOAT_DONG_1_PHUT = 9 * 60 + 30; // 570 phút ("09:30")
 
@@ -24,8 +24,7 @@ export function soOKhaDung(
   if (soNgay <= 0) return 0;
 
   // 1. Ngày đầu
-  const oNgayDau =
-    gioDenPhutNgay1 + BUFFER_SAU_KHI_DEN_PHUT <= GIO_HOAT_DONG_1_PHUT ? 1 : 0;
+  const oNgayDau = gioOHoatDongNgayDau(gioDenPhutNgay1) !== null ? 1 : 0;
 
   // Với số ngày = 1 (nếu có)
   if (soNgay === 1) {

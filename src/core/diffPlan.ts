@@ -66,10 +66,10 @@ const HANG_MUCKS: Array<"Di chuyển" | "Chỗ ở" | "Ăn uống" | "Vui chơi"
   "Vui chơi",
 ];
 
-/** Trả tập mã vi phạm (hard + soft) của một plan */
+/** Trả tập mã vi phạm (hard) của một plan */
 function allCodes(plan: Plan, data: PlanData): Set<string> {
-  const { hard, soft } = validatePlan(plan.request, plan, data);
-  return new Set([...hard.map((v) => v.code), ...soft.map((v) => v.code)]);
+  const { hard } = validatePlan(plan.request, plan, data);
+  return new Set(hard.map((v) => v.code));
 }
 
 /**

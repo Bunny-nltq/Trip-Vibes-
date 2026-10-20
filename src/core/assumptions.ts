@@ -79,11 +79,17 @@ export const GIO_DEN_SOM = "06:00";
 
 // ─── Thời gian danh nghĩa ────────────────────────────────────────────────────
 
-/** Giờ danh nghĩa cho hoạt động thứ nhất trong ngày */
-export const GIO_HOAT_DONG_1 = "09:30";
+/** Phiên bản quy tắc lập kế hoạch dự phòng và eval */
+export const QUY_TAC_VERSION = "2";
 
-/** Giờ danh nghĩa cho hoạt động thứ hai trong ngày */
-export const GIO_HOAT_DONG_2 = "15:30";
+/** Hệ số uốn lượn đường bộ cho xe khách và tàu hỏa (giả định đồ án) */
+export const HE_SO_DUONG_BO = 1.5;
+
+/** Giờ danh nghĩa cho hoạt động thứ nhất trong ngày: 570 phút ("09:30") */
+export const GIO_HOAT_DONG_1 = 570;
+
+/** Giờ danh nghĩa cho hoạt động thứ hai trong ngày: 930 phút ("15:30") */
+export const GIO_HOAT_DONG_2 = 930;
 
 /** Giờ nhận phòng khách sạn chuẩn */
 export const GIO_NHAN_PHONG = "14:00";

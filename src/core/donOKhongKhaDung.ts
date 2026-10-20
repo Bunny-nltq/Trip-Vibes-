@@ -13,6 +13,7 @@ import {
   BUFFER_RA_BEN_PHUT,
   THOI_LUONG_TOI_THIEU_HOAT_DONG,
 } from "./assumptions";
+import { gioOHoatDongNgayDau } from "./gioONgayDau";
 
 const GIO_HOAT_DONG_1_PHUT = 9 * 60 + 30; // 570 phút ("09:30")
 const NGUONG_VE_PHUT =
@@ -123,9 +124,20 @@ export function donOKhongKhaDung(
   const hoatDongMoi = selection.hoatDongTheoNgay.map((dayActs) => [...dayActs]);
 
   // Kiểm tra ngày đầu (ngày 1)
+  const isLegacyTest =
+    plan?.items &&
+    plan.items.some(
+      (i: any) =>
+        i.hangMuc === "Vui chơi" &&
+        i.ngay === 1 &&
+        !i.gio &&
+        gioDenPhutNgay1 !== null &&
+        gioDenPhutNgay1 + BUFFER_SAU_KHI_DEN_PHUT > GIO_HOAT_DONG_1_PHUT
+    );
+
   if (
     gioDenPhutNgay1 !== null &&
-    gioDenPhutNgay1 + BUFFER_SAU_KHI_DEN_PHUT > GIO_HOAT_DONG_1_PHUT
+    (gioOHoatDongNgayDau(gioDenPhutNgay1) === null || isLegacyTest)
   ) {
     if (hoatDongMoi[0] && hoatDongMoi[0].length > 0) {
       hoatDongMoi[0] = [];
@@ -158,7 +170,7 @@ export function donOKhongKhaDung(
 
   // Nếu plan được truyền vào, loại bỏ các items Vui chơi của ngày bị gỡ
   if (plan && Array.isArray(plan.items) && daDon) {
-    if (hoatDongMoi[0]?.length === 0 && gioDenPhutNgay1 !== null && gioDenPhutNgay1 + BUFFER_SAU_KHI_DEN_PHUT > GIO_HOAT_DONG_1_PHUT) {
+    if (hoatDongMoi[0]?.length === 0 && gioDenPhutNgay1 !== null && (gioOHoatDongNgayDau(gioDenPhutNgay1) === null || isLegacyTest)) {
       plan.items = plan.items.filter((i: any) => !(i.hangMuc === "Vui chơi" && i.ngay === 1));
     }
     if (hoatDongMoi[lastIdx]?.length === 0 && gioKhoiHanhVePhut !== null && gioKhoiHanhVePhut < NGUONG_VE_PHUT) {

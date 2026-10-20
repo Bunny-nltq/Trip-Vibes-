@@ -7,6 +7,7 @@ import {
   THOI_GIAN_CO_DINH_MAY_BAY_PHUT,
   GIA_CO_DINH_MAY_BAY_VND,
   DON_GIA_MAY_BAY_D_KM,
+  HE_SO_DUONG_BO,
 } from "./assumptions";
 import { khoangCachKm } from "./haversine";
 import type { DiemDen } from "@/contracts";
@@ -38,12 +39,16 @@ export function uocLuongPhuongTien(
 
   switch (loai) {
     case "xe_khach": {
-      thoiLuongPhut = roundHalfUp((khoangCachKmVal / VAN_TOC_XE_KHACH_KMH) * 60);
+      thoiLuongPhut = roundHalfUp(
+        ((khoangCachKmVal * HE_SO_DUONG_BO) / VAN_TOC_XE_KHACH_KMH) * 60
+      );
       giaNguoi = roundHalfUp(khoangCachKmVal * DON_GIA_XE_KHACH_D_KM);
       break;
     }
     case "tau": {
-      thoiLuongPhut = roundHalfUp((khoangCachKmVal / VAN_TOC_TAU_KMH) * 60);
+      thoiLuongPhut = roundHalfUp(
+        ((khoangCachKmVal * HE_SO_DUONG_BO) / VAN_TOC_TAU_KMH) * 60
+      );
       giaNguoi = roundHalfUp(khoangCachKmVal * DON_GIA_TAU_D_KM);
       break;
     }

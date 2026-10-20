@@ -26,6 +26,7 @@ import {
 import {
   AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA,
   NGUOI_MOI_PHONG,
+  QUY_TAC_VERSION,
 } from "@/core/assumptions";
 import { locUngVienTheoNganSach } from "@/core/locUngVienTheoNganSach";
 
@@ -237,6 +238,7 @@ export async function runPlanAgent(
         },
         model: process.env.GEMINI_MODEL ?? "gemini-2.5-flash",
         promptVersion: AGENT_PROMPT_VERSION,
+        quyTacVersion: QUY_TAC_VERSION,
         candidateIds,
       });
 

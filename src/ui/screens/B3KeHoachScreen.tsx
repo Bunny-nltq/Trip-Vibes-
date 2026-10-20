@@ -258,13 +258,22 @@ export function B3KeHoachScreen() {
       `Đã dùng ${plan.tongKet.phanTramDaDung.toFixed(1)}% ngân sách, còn lại ${plan.tongKet.conLaiVND.toLocaleString("vi-VN")} đ.`
     );
   }
+  const tenDiemDiHienThi =
+    typeof plan.request.diemDi === "string"
+      ? plan.request.diemDi
+      : (plan.request.diemDi as any)?.ten || tripConfig.diemDi || "TP.HCM";
+
   plan.request.canhBao.forEach((cb) => {
     if (cb === "diem_den_mac_dinh") warningList.push("Chưa rõ điểm đến.");
     else if (cb === "ngoai_pham_vi_so_ngay") warningList.push("Số ngày nằm ngoài phạm vi 2 đến 5 ngày.");
     else warningList.push(cb);
   });
   softViolations.forEach((sv) => {
-    warningList.push(sv.chiTiet);
+    if (sv.code === "ve_den_ngay_sau") {
+      warningList.push(`Chuyến về đến ${tenDiemDiHienThi} vào ngày hôm sau.`);
+    } else {
+      warningList.push(sv.chiTiet);
+    }
   });
 
   const tongPhutDiChuyen = plan.tongKet.tongThoiGianDiChuyenPhut ?? 0;

@@ -415,4 +415,139 @@ describe("validatePlan", () => {
       expect(v.hard.some(h => h.code === "vi_pham_tranh_di_bo_nhieu")).toBe(true);
     }
   });
+
+  describe("canh_bao_den_ngay_sau", () => {
+    const req: TripRequest = {
+      schemaVersion: 9,
+      diemDi: "TP.HCM",
+      diemDen: {
+        ten: "Đà Nẵng",
+        quocGia: "Việt Nam",
+        maQuocGia: "VN",
+        toaDo: { lat: 16, lng: 108 },
+        tienTe: "VND",
+        nguon: "nominatim",
+        ngayLay: "2026-10-20",
+      },
+      soNguoi: 2,
+      soNgay: 3,
+      ngansachTongVND: 15000000,
+      sothich: [],
+      tranh: [],
+      ghiChu: [],
+      thieu: [],
+      cauHoiLamRo: [],
+      canhBao: [],
+    };
+
+    function minToTime(min: number): string {
+      const h = Math.floor(min / 60) % 24;
+      const m = min % 60;
+      return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    }
+
+    function testDi(dep: number, dur: number): boolean {
+      const tDi: any = {
+        id: "T_DI_TEST",
+        huong: "di",
+        departureTime: minToTime(dep),
+        durationMinutes: dur,
+        pricePerPerson: 100000,
+      };
+      const tVe: any = {
+        id: "T_VE_TEST",
+        huong: "ve",
+        departureTime: "12:00",
+        durationMinutes: 60,
+        pricePerPerson: 100000,
+      };
+      const mockPlan: any = {
+        schemaVersion: 9,
+        request: req,
+        items: [
+          { hangMuc: "Di chuyển", refId: "T_DI_TEST", ngay: 1 },
+          { hangMuc: "Di chuyển", refId: "T_VE_TEST", ngay: 3 },
+        ],
+        tongKet: {
+          tongVND: 1000000,
+          conLaiVND: 14000000,
+          theoHangMuc: {},
+          tongThoiGianDiChuyenPhut: 0,
+          trangThaiNganSach: "trong",
+        },
+        canhBao: [],
+      };
+      const mockData: any = {
+        transports: [tDi, tVe],
+        hotels: [],
+        activities: [],
+      };
+      const res = validatePlan(req, mockPlan, mockData);
+      return res.soft.some((s) => s.code === "den_vao_ngay_sau");
+    }
+
+    function testVe(dep: number, dur: number): boolean {
+      const tDi: any = {
+        id: "T_DI_TEST",
+        huong: "di",
+        departureTime: "08:00",
+        durationMinutes: 60,
+        pricePerPerson: 100000,
+      };
+      const tVe: any = {
+        id: "T_VE_TEST",
+        huong: "ve",
+        departureTime: minToTime(dep),
+        durationMinutes: dur,
+        pricePerPerson: 100000,
+      };
+      const mockPlan: any = {
+        schemaVersion: 9,
+        request: req,
+        items: [
+          { hangMuc: "Di chuyển", refId: "T_DI_TEST", ngay: 1 },
+          { hangMuc: "Di chuyển", refId: "T_VE_TEST", ngay: 3 },
+        ],
+        tongKet: {
+          tongVND: 1000000,
+          conLaiVND: 14000000,
+          theoHangMuc: {},
+          tongThoiGianDiChuyenPhut: 0,
+          trangThaiNganSach: "trong",
+        },
+        canhBao: [],
+      };
+      const mockData: any = {
+        transports: [tDi, tVe],
+        hotels: [],
+        activities: [],
+      };
+      const res = validatePlan(req, mockPlan, mockData);
+      return res.soft.some((s) => s.code === "ve_den_ngay_sau");
+    }
+
+    it("chiều đi (420, 1247) có den_vao_ngay_sau", () => {
+      expect(testDi(420, 1247)).toBe(true);
+    });
+
+    it("chiều đi (390, 85) không có den_vao_ngay_sau", () => {
+      expect(testDi(390, 85)).toBe(false);
+    });
+
+    it("chiều đi (1380, 60) có den_vao_ngay_sau (đúng 1440)", () => {
+      expect(testDi(1380, 60)).toBe(true);
+    });
+
+    it("chiều về (960, 1247) có ve_den_ngay_sau", () => {
+      expect(testVe(960, 1247)).toBe(true);
+    });
+
+    it("chiều về (1080, 85) không có ve_den_ngay_sau", () => {
+      expect(testVe(1080, 85)).toBe(false);
+    });
+
+    it("chiều về (1320, 120) có ve_den_ngay_sau (đúng 1440)", () => {
+      expect(testVe(1320, 120)).toBe(true);
+    });
+  });
 });

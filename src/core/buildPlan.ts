@@ -20,6 +20,7 @@ import {
   SO_HOAT_DONG_TOI_DA_MOI_NGAY,
 } from "./assumptions";
 import { mealTimeOrNull, hhmm2min } from "./mealTimes";
+import { gioOHoatDongNgayDau } from "./gioONgayDau";
 
 export interface PlanData {
   transports: Transport[];
@@ -217,7 +218,8 @@ export function buildPlan(
     nguon: tDi.nguon ?? null,
     doTinCay: tDi.doTinCay,
     giaLaUocTinh: tDi.giaLaUocTinh,
-  });
+    thoiLuongPhut: tDi.durationMinutes,
+  } as any);
 
   // 5.2. Chỗ ở (Ngày 1, danh nghĩa 14:00)
   const tenKhachSan = khachSanLive?.ten ?? hotelMock!.name;
@@ -331,7 +333,17 @@ export function buildPlan(
       const act = activityMap.get(actId)!;
       const donGiaVe = (act as any).giaVeNguoi ?? (act as any).pricePerPerson ?? 0;
       const thanhTienAct = donGiaVe * soNguoi;
-      const gioDanhNghia = actIdx === 0 ? "09:30" : "15:30";
+      let gioDanhNghia: string;
+      if (day === 1) {
+        if (request?.schemaVersion != null && request.schemaVersion < 7) {
+          gioDanhNghia = actIdx === 0 ? "09:30" : "15:30";
+        } else {
+          const slotNgay1 = gioOHoatDongNgayDau(gioDenNgay1Phut);
+          gioDanhNghia = slotNgay1 === 930 ? "15:30" : "09:30";
+        }
+      } else {
+        gioDanhNghia = actIdx === 0 ? "09:30" : "15:30";
+      }
       const tenAct = (act as any).ten || (act as any).name || "Hoạt động";
       const actAny = act as any;
       const mapsUrl =
@@ -373,7 +385,8 @@ export function buildPlan(
     nguon: tVe.nguon ?? null,
     doTinCay: tVe.doTinCay,
     giaLaUocTinh: tVe.giaLaUocTinh,
-  });
+    thoiLuongPhut: tVe.durationMinutes,
+  } as any);
 
   // 6. Tính tổng kết
   const theoHangMuc: Record<PlanItemCategory, number> = {
