@@ -1,20 +1,14 @@
 "use client";
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useApp } from "@/ui/context/AppContext";
-import { SideNav } from "@/ui/components/SideNav";
 import type { ExpenseCategory, BillExtraction } from "@/contracts";
+import { B8ChuyenDiScreen } from "./B8ChuyenDiScreen";
 import {
-  Camera,
   Upload,
-  Edit3,
-  ArrowLeft,
-  AlertCircle,
   AlertTriangle,
-  CheckCircle,
-  FileText,
-  Lock,
+  AlertCircle,
   RefreshCw,
-  Sparkles,
+  Lock,
 } from "lucide-react";
 
 const CANH_BAO_TEXT_MAP: Record<string, string> = {
@@ -52,24 +46,26 @@ export function B10ChonNguonScreen() {
     if (typeof window !== "undefined") {
       const q = new URLSearchParams(window.location.search).get("state");
       if (q === "nhap_tay") return "Bánh xèo Bà Dưỡng";
-      if (q === "ket_qua_doc") return "Nhà hàng Biển Xanh";
+      if (q === "ket_qua_doc") return "Quán Ăn Phố Cổ (mẫu)";
     }
     return "";
   });
-  const [ngay, setNgay] = useState<string>("");
+  const [ngay, setNgay] = useState<string>(() => {
+    return new Date().toLocaleDateString("vi-VN");
+  });
   const [ngayTrongChuyen, setNgayTrongChuyen] = useState<number>(() => {
     if (typeof window !== "undefined") {
       const q = new URLSearchParams(window.location.search).get("state");
       if (q === "nhap_tay") return 2;
     }
-    return 1;
+    return 2;
   });
   const [hangMuc, setHangMuc] = useState<ExpenseCategory>("an_uong");
   const [soTienVND, setSoTienVND] = useState<string>(() => {
     if (typeof window !== "undefined") {
       const q = new URLSearchParams(window.location.search).get("state");
       if (q === "nhap_tay") return "180000";
-      if (q === "ket_qua_doc") return "560000";
+      if (q === "ket_qua_doc") return "308000";
     }
     return "";
   });
@@ -79,7 +75,7 @@ export function B10ChonNguonScreen() {
   const [giaTriAIDoc, setGiaTriAIDoc] = useState<number | null>(() => {
     if (typeof window !== "undefined") {
       const q = new URLSearchParams(window.location.search).get("state");
-      if (q === "ket_qua_doc") return 560000;
+      if (q === "ket_qua_doc") return 308000;
     }
     return null;
   });
@@ -107,7 +103,7 @@ export function B10ChonNguonScreen() {
   const [warnings, setWarnings] = useState<string[]>(() => {
     if (typeof window !== "undefined") {
       const q = new URLSearchParams(window.location.search).get("state");
-      if (q === "ket_qua_doc") return ["dong_thieu_thanh_tien"];
+      if (q === "ket_qua_doc") return [];
     }
     return [];
   });
@@ -125,7 +121,7 @@ export function B10ChonNguonScreen() {
     }
   }, [b10Prefill]);
 
-  // Support URL param for demo & testing states (chỉ trong môi trường development)
+  // Support URL param for demo & testing states
   useEffect(() => {
     if (typeof window === "undefined" || process.env.NODE_ENV !== "development") return;
     const params = new URLSearchParams(window.location.search);
@@ -139,12 +135,12 @@ export function B10ChonNguonScreen() {
     } else if (mockState === "ket_qua_doc") {
       setActiveTab("bill");
       setImagePreviewUrl("/eval/bills/b01_nhahang_haisan.jpg");
-      setTenCuaHang("Nhà hàng Biển Xanh");
-      setSoTienVND("560000");
-      setGiaTriAIDoc(560000);
-      setNgayTrongChuyen(1);
+      setTenCuaHang("Quán Ăn Phố Cổ (mẫu)");
+      setSoTienVND("308000");
+      setGiaTriAIDoc(308000);
+      setNgayTrongChuyen(2);
       setHangMuc("an_uong");
-      setWarnings(["dong_thieu_thanh_tien"]);
+      setWarnings([]);
     } else if (mockState === "khong_doc_duoc") {
       setActiveTab("bill");
       setImagePreviewUrl("/eval/bills/b05_thuc_don_khong_phai_hoa_don.jpg");
@@ -159,7 +155,7 @@ export function B10ChonNguonScreen() {
   // Clean up object URL on unmount or change
   useEffect(() => {
     return () => {
-      if (imagePreviewUrl) {
+      if (imagePreviewUrl && imagePreviewUrl.startsWith("blob:")) {
         URL.revokeObjectURL(imagePreviewUrl);
       }
     };
@@ -172,7 +168,7 @@ export function B10ChonNguonScreen() {
     return !isNaN(currentNum) && currentNum !== giaTriAIDoc;
   }, [activeTab, giaTriAIDoc, soTienVND]);
 
-  // Handle file validation and upload
+  // Handle file validation and upload (strictly in-memory)
   const handleFile = async (file: File) => {
     setUploadError(null);
     setSpecialStatus(null);
@@ -192,7 +188,7 @@ export function B10ChonNguonScreen() {
     }
 
     // In-memory object URL preview
-    if (imagePreviewUrl) {
+    if (imagePreviewUrl && imagePreviewUrl.startsWith("blob:")) {
       URL.revokeObjectURL(imagePreviewUrl);
     }
     const preview = URL.createObjectURL(file);
@@ -201,9 +197,9 @@ export function B10ChonNguonScreen() {
 
     try {
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append("file", file);
 
-      const res = await fetch("/api/extract-bill", {
+      const res = await fetch("/api/bill", {
         method: "POST",
         body: formData,
       });
@@ -221,42 +217,49 @@ export function B10ChonNguonScreen() {
       }
 
       const data = await res.json();
-      if (!data.ok || !data.extraction) {
-        setSpecialStatus("network_error");
-        setIsReading(false);
+      setIsReading(false);
+
+      if (!data.ok) {
+        if (data.status === "khong_phai_chung_tu") {
+          setSpecialStatus("khong_phai_chung_tu");
+        } else if (data.status === "khong_doc_duoc_so_tien") {
+          setSpecialStatus("khong_doc_duoc_so_tien");
+        } else {
+          setSpecialStatus("network_error");
+        }
         return;
       }
 
-      const ext: BillExtraction = data.extraction;
+      const extraction: BillExtraction = data.extraction;
 
-      if (ext.status === "khong_phai_chung_tu") {
+      if (!extraction.laChungTu || extraction.status === "khong_phai_chung_tu") {
         setSpecialStatus("khong_phai_chung_tu");
-        setIsReading(false);
         return;
       }
 
-      if (ext.status === "khong_doc_duoc_so_tien") {
+      if (extraction.tongTienVND === null || extraction.tongTienVND === undefined) {
         setSpecialStatus("khong_doc_duoc_so_tien");
-        if (ext.tenCuaHang) setTenCuaHang(ext.tenCuaHang);
-        if (ext.ngay) setNgay(ext.ngay);
-        if (ext.hangMucGoiY) setHangMuc(ext.hangMucGoiY);
-        setIsReading(false);
         return;
       }
 
-      // Successful extraction
-      if (ext.tenCuaHang) setTenCuaHang(ext.tenCuaHang);
-      if (ext.ngay) setNgay(ext.ngay);
-      if (ext.hangMucGoiY) setHangMuc(ext.hangMucGoiY);
-      if (ext.tongTienVND !== null) {
-        setGiaTriAIDoc(ext.tongTienVND);
-        setSoTienVND(String(ext.tongTienVND));
+      // Success
+      setGiaTriAIDoc(extraction.tongTienVND);
+      setSoTienVND(String(extraction.tongTienVND));
+      if (extraction.tenCuaHang) {
+        setTenCuaHang(extraction.tenCuaHang);
       }
-      setWarnings(ext.canhBao || []);
-      setIsReading(false);
+      if (extraction.ngay) {
+        setNgay(extraction.ngay);
+      }
+      if (extraction.hangMucGoiY) {
+        setHangMuc(extraction.hangMucGoiY);
+      }
+      if (extraction.canhBao && Array.isArray(extraction.canhBao)) {
+        setWarnings(extraction.canhBao);
+      }
     } catch {
-      setSpecialStatus("network_error");
       setIsReading(false);
+      setSpecialStatus("network_error");
     }
   };
 
@@ -274,49 +277,40 @@ export function B10ChonNguonScreen() {
   const switchToManual = () => {
     setActiveTab("manual");
     setSpecialStatus(null);
-    setUploadError(null);
   };
 
-  const handleConfirmAndSave = async (e: React.FormEvent) => {
+  const handleConfirmAndSave = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
 
-    const amountNum = parseInt(soTienVND.replace(/\D/g, ""), 10);
-    if (isNaN(amountNum) || amountNum <= 0) {
+    const amount = parseInt(soTienVND.replace(/\D/g, ""), 10);
+    if (isNaN(amount) || amount <= 0) {
       setSubmitError("Vui lòng nhập số tiền hợp lệ lớn hơn 0.");
+      return;
+    }
+
+    if (!tenCuaHang.trim()) {
+      setSubmitError("Vui lòng nhập tên cửa hàng hoặc nội dung chi tiêu.");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      const payload = {
+      addExpenseToLedger({
+        id: `exp-${Date.now()}`,
+        ngayTrongChuyen,
+        ngay,
+        tenCuaHang: tenCuaHang.trim(),
+        hangMuc,
+        soTienVND: amount,
         nguon: activeTab === "bill" ? "anh_bill" : "nhap_tay",
-        tenCuaHang: tenCuaHang.trim() || null,
-        ngay: ngay || null,
-        ngayTrongChuyen: ngayTrongChuyen,
-        hangMuc: hangMuc,
-        soTienVND: amountNum,
         giaTriAIDoc: activeTab === "bill" ? giaTriAIDoc : null,
+        daSuaTay: activeTab === "bill" ? daSuaSo : false,
         ghiChu: ghiChu.trim() || null,
-      };
-
-      const res = await fetch("/api/expenses/confirm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-      if (!res.ok || !data.ok) {
-        setSubmitError(
-          data.error || (data.loi ? `Lỗi: ${data.loi.join(", ")}` : "Không thể lưu khoản chi.")
-        );
-        setIsSubmitting(false);
-        return;
-      }
-
-      addExpenseToLedger(data.expense);
+      setIsSubmitting(false);
       setB10Prefill(null);
       nav("b11-ngan-sach");
     } catch {
@@ -325,501 +319,388 @@ export function B10ChonNguonScreen() {
     }
   };
 
-  if (!confirmed) {
-    return (
-      <div className="tv-layout">
-        <SideNav />
-        <div className="tv-main animate-in">
-          <div className="card" style={{ padding: 40, textAlign: "center", maxWidth: 520, margin: "40px auto" }}>
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "var(--g400)" }}>
-              <Lock size={44} />
-            </div>
-            <h2 className="page-title" style={{ fontSize: 20 }}>Tính năng chưa mở</h2>
-            <p className="page-sub" style={{ marginBottom: 20 }}>
-              Bạn cần xác nhận kế hoạch trước khi thêm chi tiêu và theo dõi ngân sách thực tế.
-            </p>
-            <button className="btn btn-primary" onClick={() => nav("b3-ke-hoach")}>
-              Về trang Kế hoạch
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleCancel = () => {
+    setB10Prefill(null);
+    nav("b8-chuyen-di");
+  };
+
+  const subTitleText = `Cho: ${tenCuaHang || "Ngũ Hành Sơn"} · Ngày ${ngayTrongChuyen}`;
 
   return (
-    <div className="tv-layout">
-      <SideNav />
-      <div className="tv-main animate-in" style={{ maxWidth: 680 }}>
-        <span
-          className="text-link"
-          style={{ marginBottom: 16, display: "inline-flex", alignItems: "center", gap: 6 }}
-          onClick={() => nav("b11-ngan-sach")}
-        >
-          <ArrowLeft size={16} />
-          Quay lại Ngân sách
-        </span>
+    <div style={{ position: "relative", minHeight: "100%", width: "100%" }}>
+      {/* NỀN DIM: Giao diện chuyến đi bên dưới */}
+      <div className="Dim" aria-hidden="true">
+        <B8ChuyenDiScreen />
+      </div>
 
-        <h1 className="page-title">Thêm chi tiêu</h1>
-        <p className="page-sub">Đọc hóa đơn bằng hình ảnh hoặc nhập thủ công vào sổ chi tiêu.</p>
+      {/* OVERLAY MODAL */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(31, 42, 68, 0.45)",
+          backdropFilter: "blur(3px)",
+          zIndex: 999,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 16,
+        }}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) handleCancel();
+        }}
+        role="dialog"
+        aria-modal="true"
+      >
+        {/* MODAL B10a: Chọn ảnh bill */}
+        {activeTab === "bill" && !imagePreviewUrl && (
+          <div className="Modal" style={{ position: "relative", width: 740, maxWidth: "95vw" }}>
+            <div className="ModalTitle">Thêm chi tiêu</div>
+            <div className="Sub">{subTitleText}</div>
 
-        {/* Tab switchers */}
-        <div className="tabs" style={{ marginBottom: 24 }}>
-          <button
-            type="button"
-            className={`tab-item ${activeTab === "bill" ? "active" : ""}`}
-            onClick={() => setActiveTab("bill")}
-            style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-          >
-            <Camera size={16} />
-            Ảnh bill
-          </button>
-          <button
-            type="button"
-            className={`tab-item ${activeTab === "manual" ? "active" : ""}`}
-            onClick={() => setActiveTab("manual")}
-            style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-          >
-            <Edit3 size={16} />
-            Nhập tay
-          </button>
-        </div>
-
-        {/* TAB 1: ẢNH BILL */}
-        {activeTab === "bill" && (
-          <div>
-            {!imagePreviewUrl && (
-              <div
-                className="drop-zone"
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-                style={{ padding: 40, cursor: "pointer", marginBottom: 20 }}
-              >
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  style={{ display: "none" }}
-                  accept="image/jpeg,image/png,image/webp"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      handleFile(e.target.files[0]);
-                    }
-                  }}
-                />
-                <div style={{ display: "flex", justifyContent: "center", color: "var(--p500)", marginBottom: 8 }}>
-                  <Upload size={40} />
-                </div>
-                <div style={{ fontWeight: 700, fontSize: 16 }}>Kéo thả hoặc bấm để chọn ảnh bill</div>
-                <div className="hint">Hỗ trợ JPG, PNG, WebP (tối đa 5 MB)</div>
-                <div className="hint" style={{ color: "var(--p500)", marginTop: 6 }}>
-                  Ảnh chỉ xử lý trong bộ nhớ, không lưu đĩa
-                </div>
+            {/* Tabs */}
+            <div className="Tabs">
+              <div className="Tab TabOn">Ảnh bill</div>
+              <div className="Tab" onClick={() => setActiveTab("manual")}>
+                Nhập tay
               </div>
-            )}
+            </div>
+
+            {/* Drop Zone */}
+            <div
+              className="Drop"
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                accept="image/jpeg,image/png,image/webp"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    handleFile(e.target.files[0]);
+                  }
+                }}
+              />
+              <div className="InfoTitle">Kéo ảnh bill vào đây</div>
+              <div className="InfoSub" style={{ margin: "4px 0 14px" }}>
+                jpg, png, webp · tối đa 5 MB
+              </div>
+              <div className="Btn">Chọn ảnh</div>
+            </div>
+
+            <div className="Hint" style={{ marginTop: 12 }}>
+              Ảnh chỉ xử lý trong bộ nhớ, không được lưu.
+            </div>
 
             {uploadError && (
-              <div className="banner banner-error" style={{ marginBottom: 20 }}>
-                <div className="banner-mark">!</div>
-                <div>
-                  <div className="banner-title">Lỗi tải ảnh</div>
-                  <div className="banner-text">{uploadError}</div>
-                </div>
+              <div className="Banner BannerErr" style={{ marginTop: 14 }}>
+                <div className="BannerMark">!</div>
+                <div className="BannerText">{uploadError}</div>
               </div>
             )}
 
-            {/* Reading scanning state */}
-            {isReading && (
-              <div className="card" style={{ padding: 24, marginBottom: 20, textAlign: "center" }}>
-                <div style={{ maxWidth: 220, margin: "0 auto 16px" }} className="scanner-container">
-                  {imagePreviewUrl && (
-                    <img
-                      src={imagePreviewUrl}
-                      alt="Hóa đơn"
-                      style={{ width: "100%", maxHeight: 260, objectFit: "contain", borderRadius: "var(--r-md)", display: "block" }}
-                    />
-                  )}
-                  <div className="scanner-laser" />
-                </div>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, color: "var(--p500)", fontWeight: 600 }}>
-                  <RefreshCw size={18} className="spinner" />
-                  Đang đọc hóa đơn...
-                </div>
-                <div className="hint" style={{ marginTop: 6 }}>
-                  AI đang nhận diện tên cửa hàng và tổng tiền
-                </div>
-              </div>
-            )}
-
-            {/* Special states */}
-            {specialStatus === "khong_phai_chung_tu" && (
-              <div className="banner banner-warn" style={{ marginBottom: 20, display: "flex", flexDirection: "column", gap: 10 }}>
-                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                  <AlertTriangle size={20} style={{ color: "var(--warning)" }} />
-                  <span style={{ fontWeight: 600 }}>Ảnh này có vẻ không phải hóa đơn.</span>
-                </div>
-                <div style={{ display: "flex", gap: 10 }}>
-                  <button type="button" className="btn btn-outline btn-sm" onClick={() => setImagePreviewUrl(null)}>
-                    Chọn ảnh khác
-                  </button>
-                  <button type="button" className="btn btn-primary btn-sm" onClick={switchToManual}>
-                    Chuyển sang nhập tay
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {specialStatus === "khong_doc_duoc_so_tien" && (
-              <div className="banner banner-warn" style={{ marginBottom: 20, display: "flex", flexDirection: "column", gap: 10 }}>
-                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                  <AlertCircle size={20} style={{ color: "var(--warning)" }} />
-                  <span style={{ fontWeight: 600 }}>Không đọc được số tiền, hãy nhập tay.</span>
-                </div>
-                <div style={{ display: "flex", gap: 10 }}>
-                  <button type="button" className="btn btn-primary btn-sm" onClick={switchToManual}>
-                    Chuyển sang nhập tay
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {specialStatus === "429" && (
-              <div className="banner banner-warn" style={{ marginBottom: 20, display: "flex", flexDirection: "column", gap: 10 }}>
-                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                  <AlertTriangle size={20} style={{ color: "var(--warning)" }} />
-                  <span style={{ fontWeight: 600 }}>Hết lượt đọc ảnh hôm nay, hãy nhập tay.</span>
-                </div>
-                <div>
-                  <button type="button" className="btn btn-primary btn-sm" onClick={switchToManual}>
-                    Chuyển sang nhập tay
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {specialStatus === "network_error" && (
-              <div className="banner banner-error" style={{ marginBottom: 20, display: "flex", flexDirection: "column", gap: 10 }}>
-                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                  <AlertCircle size={20} style={{ color: "var(--error)" }} />
-                  <span style={{ fontWeight: 600 }}>Lỗi mạng hoặc không thể đọc ảnh lúc này.</span>
-                </div>
-                <div style={{ display: "flex", gap: 10 }}>
-                  <button type="button" className="btn btn-outline btn-sm" onClick={() => setImagePreviewUrl(null)}>
-                    Thử lại ảnh khác
-                  </button>
-                  <button type="button" className="btn btn-primary btn-sm" onClick={switchToManual}>
-                    Chuyển sang nhập tay
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Success Extraction Form */}
-            {imagePreviewUrl && !isReading && !specialStatus && (
-              <div className="card" style={{ padding: 24, marginBottom: 20 }}>
-                <div style={{ display: "flex", gap: 18, marginBottom: 20, alignItems: "flex-start" }}>
-                  {/* Thumbnail */}
-                  <div
-                    style={{
-                      width: 110,
-                      height: 110,
-                      borderRadius: "var(--r-md)",
-                      overflow: "hidden",
-                      border: "1px solid var(--g200)",
-                      background: "var(--g100)",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <img
-                      src={imagePreviewUrl}
-                      alt="Ảnh bill thu nhỏ"
-                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    />
-                  </div>
-
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <div style={{ fontWeight: 700, fontSize: 16 }}>Kết quả đọc bill</div>
-                      <button
-                        type="button"
-                        className="btn btn-ghost btn-sm"
-                        onClick={() => {
-                          setImagePreviewUrl(null);
-                          setGiaTriAIDoc(null);
-                          setSoTienVND("");
-                        }}
-                      >
-                        Đổi ảnh khác
-                      </button>
-                    </div>
-
-                    {giaTriAIDoc !== null && (
-                      <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                        <span className="tag" style={{ background: "var(--p100)", color: "var(--p500)", fontWeight: 600 }}>
-                          AI đọc: {giaTriAIDoc.toLocaleString("vi-VN")} đ
-                        </span>
-                        {daSuaSo && (
-                          <span className="tag" style={{ background: "#FEF3C7", color: "#92400E", fontWeight: 600 }}>
-                            Đã sửa số
-                          </span>
-                        )}
-                      </div>
-                    )}
-
-                    <div className="hint" style={{ color: "var(--g700)", fontWeight: 500, marginTop: 8 }}>
-                      Hãy so lại số tiền với bill của bạn.
-                    </div>
-                  </div>
-                </div>
-
-                {/* Warnings in Vietnamese */}
-                {warnings.length > 0 && (
-                  <div style={{ marginBottom: 18 }}>
-                    {warnings.map((w, idx) => (
-                      <div
-                        key={idx}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          padding: "8px 12px",
-                          background: "#FFF8E6",
-                          border: "1px solid #FDE68A",
-                          borderRadius: "var(--r-md)",
-                          fontSize: 13,
-                          color: "#92400E",
-                          marginBottom: 6,
-                        }}
-                      >
-                        <AlertTriangle size={15} style={{ flexShrink: 0 }} />
-                        <span>{CANH_BAO_TEXT_MAP[w] || w}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Shared Form Fields */}
-                <form onSubmit={handleConfirmAndSave}>
-                  <div className="field">
-                    <label className="field-label">Tên cửa hàng / Nội dung</label>
-                    <input
-                      className="input"
-                      value={tenCuaHang}
-                      onChange={(e) => setTenCuaHang(e.target.value)}
-                      placeholder="Ví dụ: Quán Cơm Gà Bà Buội"
-                      required
-                    />
-                  </div>
-
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                    <div className="field">
-                      <label className="field-label">Số tiền lớn (đ)</label>
-                      <input
-                        className="input"
-                        type="number"
-                        value={soTienVND}
-                        onChange={(e) => setSoTienVND(e.target.value)}
-                        placeholder="0"
-                        style={{ fontSize: 18, fontWeight: 700, color: "var(--navy)" }}
-                        required
-                      />
-                    </div>
-
-                    <div className="field">
-                      <label className="field-label">Thuộc ngày chuyến đi</label>
-                      <select
-                        className="input"
-                        value={ngayTrongChuyen}
-                        onChange={(e) => setNgayTrongChuyen(Number(e.target.value))}
-                      >
-                        {Array.from({ length: soNgay }, (_, i) => i + 1).map((d) => (
-                          <option key={d} value={d}>
-                            Ngày {d}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                    <div className="field">
-                      <label className="field-label">Hạng mục</label>
-                      <select
-                        className="input"
-                        value={hangMuc}
-                        onChange={(e) => setHangMuc(e.target.value as ExpenseCategory)}
-                      >
-                        {HANG_MUC_OPTIONS.map((opt) => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="field">
-                      <label className="field-label">Ngày trên hóa đơn (tùy chọn)</label>
-                      <input
-                        className="input"
-                        type="date"
-                        value={ngay}
-                        onChange={(e) => setNgay(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="field">
-                    <label className="field-label">Ghi chú (tùy chọn)</label>
-                    <input
-                      className="input"
-                      value={ghiChu}
-                      onChange={(e) => setGhiChu(e.target.value)}
-                      placeholder="Ghi chú thêm về món ăn, người chia tiền..."
-                    />
-                  </div>
-
-                  {submitError && (
-                    <div className="banner banner-error" style={{ marginBottom: 16 }}>
-                      <div className="banner-mark">!</div>
-                      <div className="banner-text">{submitError}</div>
-                    </div>
-                  )}
-
-                  <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-                    <button
-                      type="button"
-                      className="btn btn-outline"
-                      onClick={() => nav("b11-ngan-sach")}
-                      disabled={isSubmitting}
-                    >
-                      Hủy
-                    </button>
-                    <button
-                      type="submit"
-                      className="btn btn-primary"
-                      style={{ flex: 1 }}
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Đang ghi vào sổ..." : "Xác nhận và ghi"}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            )}
+            <div className="Row" style={{ justifyContent: "flex-end", marginTop: 18 }}>
+              <button type="button" className="Btn" style={{ width: 120 }} onClick={handleCancel}>
+                Hủy
+              </button>
+            </div>
           </div>
         )}
 
-        {/* TAB 2: NHẬP TAY */}
-        {activeTab === "manual" && (
-          <div className="card" style={{ padding: 24 }}>
-            <form onSubmit={handleConfirmAndSave}>
-              <div className="field">
-                <label className="field-label">Tên cửa hàng / Nội dung</label>
-                <input
-                  className="input"
-                  value={tenCuaHang}
-                  onChange={(e) => setTenCuaHang(e.target.value)}
-                  placeholder="Ví dụ: Bánh xèo Bà Dưỡng"
-                  required
+        {/* MODAL B10 Đang quét hóa đơn */}
+        {activeTab === "bill" && isReading && (
+          <div className="Modal" style={{ position: "relative", width: 740, maxWidth: "95vw", textAlign: "center" }}>
+            <div className="ModalTitle">Thêm chi tiêu</div>
+            <div className="Sub">{subTitleText}</div>
+            <div style={{ padding: "40px 20px" }}>
+              <RefreshCw size={36} className="spinner" style={{ color: "#2B55D6", margin: "0 auto 16px" }} />
+              <div className="InfoTitle" style={{ fontSize: 16 }}>Đang đọc thông tin từ ảnh bill...</div>
+              <div className="Hint" style={{ marginTop: 8 }}>
+                AI đang nhận diện tên cửa hàng, ngày và số tiền thanh toán
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL B10 Trạng thái đặc biệt khi đọc ảnh */}
+        {activeTab === "bill" && !isReading && specialStatus && (
+          <div className="Modal" style={{ position: "relative", width: 740, maxWidth: "95vw" }}>
+            <div className="ModalTitle">Thêm chi tiêu</div>
+            <div className="Sub">{subTitleText}</div>
+
+            <div className="Banner BannerWarn" style={{ marginTop: 16 }}>
+              <div className="BannerMark">!</div>
+              <div>
+                <div className="BannerTitle">
+                  {specialStatus === "khong_phai_chung_tu"
+                    ? "Ảnh không phải hóa đơn hợp lệ"
+                    : specialStatus === "khong_doc_duoc_so_tien"
+                    ? "Không nhận diện được số tiền rõ ràng"
+                    : specialStatus === "429"
+                    ? "Tạm thời hết lượt đọc tự động"
+                    : "Lỗi kết nối khi đọc ảnh"}
+                </div>
+                <div className="BannerText">
+                  {specialStatus === "khong_phai_chung_tu"
+                    ? "Hệ thống phát hiện ảnh tải lên không phải hóa đơn thanh toán. Bạn có thể chọn ảnh khác hoặc nhập tay."
+                    : "Vui lòng nhập số tiền và nội dung bằng tay để tiếp tục ghi vào sổ chi tiêu."}
+                </div>
+              </div>
+            </div>
+
+            <div className="Row" style={{ justifyContent: "flex-end", marginTop: 24, gap: 12 }}>
+              <button
+                type="button"
+                className="Btn"
+                onClick={() => {
+                  setImagePreviewUrl(null);
+                  setSpecialStatus(null);
+                }}
+              >
+                Chọn ảnh khác
+              </button>
+              <button
+                type="button"
+                className="Btn BtnPrimary"
+                onClick={switchToManual}
+              >
+                Chuyển sang nhập tay
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL B10b: Xác nhận kết quả đọc (2 CỘT: ẢNH + FORM) */}
+        {activeTab === "bill" && imagePreviewUrl && !isReading && !specialStatus && (
+          <div className="Modal" style={{ position: "relative", width: 860, maxWidth: "95vw" }}>
+            <div className="ModalTitle">Thêm chi tiêu</div>
+            <div className="Sub">{subTitleText}</div>
+
+            {/* Tabs */}
+            <div className="Tabs">
+              <div className="Tab TabOn">Ảnh bill</div>
+              <div className="Tab" onClick={() => setActiveTab("manual")}>
+                Nhập tay
+              </div>
+            </div>
+
+            {/* Hai cột */}
+            <div className="RowTop">
+              {/* Cột trái: Ảnh bill */}
+              <div
+                className="PhotoBig"
+                style={{
+                  height: 300,
+                  width: 240,
+                  flexShrink: 0,
+                  position: "relative",
+                  background: "#F2F7FD",
+                  border: "1px solid #D5E0F3",
+                }}
+              >
+                <img
+                  src={imagePreviewUrl}
+                  alt="Ảnh bill"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    borderRadius: 14,
+                  }}
                 />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                <div className="field">
-                  <label className="field-label">Số tiền lớn (đ)</label>
+              {/* Cột phải: Form */}
+              <div className="Grow">
+                <div className="Field">
+                  <div className="FieldLabel">Tên cửa hàng hoặc nội dung</div>
                   <input
-                    className="input"
-                    type="number"
-                    value={soTienVND}
-                    onChange={(e) => setSoTienVND(e.target.value)}
-                    placeholder="0"
-                    style={{ fontSize: 18, fontWeight: 700, color: "var(--navy)" }}
-                    required
+                    type="text"
+                    className="Input"
+                    value={tenCuaHang}
+                    onChange={(e) => setTenCuaHang(e.target.value)}
+                    placeholder="Quán Ăn Phố Cổ"
                   />
                 </div>
 
-                <div className="field">
-                  <label className="field-label">Thuộc ngày chuyến đi</label>
-                  <select
-                    className="input"
-                    value={ngayTrongChuyen}
-                    onChange={(e) => setNgayTrongChuyen(Number(e.target.value))}
-                  >
-                    {Array.from({ length: soNgay }, (_, i) => i + 1).map((d) => (
-                      <option key={d} value={d}>
-                        Ngày {d}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                <div className="field">
-                  <label className="field-label">Hạng mục</label>
-                  <select
-                    className="input"
-                    value={hangMuc}
-                    onChange={(e) => setHangMuc(e.target.value as ExpenseCategory)}
-                  >
-                    {HANG_MUC_OPTIONS.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="field">
-                  <label className="field-label">Ngày chi (tùy chọn)</label>
+                <div className="Field">
+                  <div className="FieldLabel">Ngày</div>
                   <input
-                    className="input"
-                    type="date"
+                    type="text"
+                    className="Input"
                     value={ngay}
                     onChange={(e) => setNgay(e.target.value)}
                   />
                 </div>
-              </div>
 
-              <div className="field">
-                <label className="field-label">Ghi chú (tùy chọn)</label>
-                <input
-                  className="input"
-                  value={ghiChu}
-                  onChange={(e) => setGhiChu(e.target.value)}
-                  placeholder="Ví dụ: Ăn chung 2 người..."
-                />
-              </div>
-
-              {submitError && (
-                <div className="banner banner-error" style={{ marginBottom: 16 }}>
-                  <div className="banner-mark">!</div>
-                  <div className="banner-text">{submitError}</div>
+                <div className="Field">
+                  <div className="FieldLabel">Hạng mục</div>
+                  <div className="Chips" style={{ margin: 0 }}>
+                    {HANG_MUC_OPTIONS.map((opt) => (
+                      <div
+                        key={opt.value}
+                        className={`Chip ${hangMuc === opt.value ? "ChipOn" : ""}`}
+                        onClick={() => setHangMuc(opt.value)}
+                      >
+                        {opt.label}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              )}
 
-              <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  onClick={() => nav("b11-ngan-sach")}
-                  disabled={isSubmitting}
-                >
-                  Hủy
-                </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  style={{ flex: 1 }}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Đang ghi vào sổ..." : "Xác nhận và ghi"}
-                </button>
+                <div className="Field">
+                  <div className="FieldLabel">Số tiền</div>
+                  <input
+                    type="text"
+                    className="Input InputBig"
+                    value={soTienVND}
+                    onChange={(e) => setSoTienVND(e.target.value)}
+                  />
+                  <div className="Hint">
+                    {giaTriAIDoc
+                      ? `AI đọc: ${giaTriAIDoc.toLocaleString("vi-VN")} đ. ${
+                          warnings.length > 0
+                            ? warnings.map((w) => CANH_BAO_TEXT_MAP[w] || w).join("; ")
+                            : "Tổng khớp các dòng."
+                        }`
+                      : "Hãy nhập số tiền trên hóa đơn."}
+                  </div>
+                </div>
+
+                <div className="Hint">
+                  Hãy so lại số tiền với bill của bạn. Bạn có thể sửa trước khi ghi.
+                </div>
               </div>
-            </form>
+            </div>
+
+            {submitError && (
+              <div className="Banner BannerErr" style={{ marginTop: 12 }}>
+                <div className="BannerMark">!</div>
+                <div className="BannerText">{submitError}</div>
+              </div>
+            )}
+
+            {/* Footer Buttons */}
+            <div className="Row" style={{ justifyContent: "flex-end", marginTop: 18, gap: 12 }}>
+              <button
+                type="button"
+                className="Btn"
+                style={{ width: 120 }}
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                className="Btn BtnPrimary"
+                style={{ width: 180 }}
+                onClick={handleConfirmAndSave}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Đang ghi..." : "Xác nhận và ghi"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL B10c: Nhập tay */}
+        {activeTab === "manual" && (
+          <div className="Modal" style={{ position: "relative", width: 740, maxWidth: "95vw" }}>
+            <div className="ModalTitle">Thêm chi tiêu</div>
+            <div className="Sub">{subTitleText}</div>
+
+            {/* Tabs */}
+            <div className="Tabs">
+              <div className="Tab" onClick={() => setActiveTab("bill")}>
+                Ảnh bill
+              </div>
+              <div className="Tab TabOn">Nhập tay</div>
+            </div>
+
+            <div className="Field">
+              <div className="FieldLabel">Tên cửa hàng hoặc nội dung</div>
+              <input
+                type="text"
+                className="Input"
+                value={tenCuaHang}
+                onChange={(e) => setTenCuaHang(e.target.value)}
+                placeholder="Ví dụ: Cà phê view biển"
+              />
+            </div>
+
+            <div className="Field">
+              <div className="FieldLabel">Ngày</div>
+              <input
+                type="text"
+                className="Input"
+                value={ngay}
+                onChange={(e) => setNgay(e.target.value)}
+              />
+            </div>
+
+            <div className="Field">
+              <div className="FieldLabel">Hạng mục</div>
+              <div className="Chips" style={{ margin: 0 }}>
+                {HANG_MUC_OPTIONS.map((opt) => (
+                  <div
+                    key={opt.value}
+                    className={`Chip ${hangMuc === opt.value ? "ChipOn" : ""}`}
+                    onClick={() => setHangMuc(opt.value)}
+                  >
+                    {opt.label}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="Field">
+              <div className="FieldLabel">Số tiền</div>
+              <input
+                type="text"
+                className="Input InputBig"
+                value={soTienVND}
+                onChange={(e) => setSoTienVND(e.target.value)}
+                placeholder="0 đ"
+              />
+            </div>
+
+            {submitError && (
+              <div className="Banner BannerErr" style={{ marginTop: 12 }}>
+                <div className="BannerMark">!</div>
+                <div className="BannerText">{submitError}</div>
+              </div>
+            )}
+
+            {/* Footer Buttons */}
+            <div className="Row" style={{ justifyContent: "flex-end", marginTop: 18, gap: 12 }}>
+              <button
+                type="button"
+                className="Btn"
+                style={{ width: 120 }}
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                className="Btn BtnPrimary"
+                style={{ width: 180 }}
+                onClick={handleConfirmAndSave}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Đang ghi..." : "Ghi chi tiêu"}
+              </button>
+            </div>
           </div>
         )}
       </div>
     </div>
   );
 }
+
+export default B10ChonNguonScreen;

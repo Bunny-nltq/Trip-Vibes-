@@ -76,10 +76,10 @@ export function BudgetBox({
       : `${moveRemainingMin} phút`;
 
   return (
-    <div className="budget-box">
-      <div className="budget-label">Tổng kế hoạch</div>
-      <div className="budget-big">{fmt(total)}</div>
-      <div className="budget-sub">trên ngân sách {fmt(currentBudget)}</div>
+    <div className="BudgetSummary">
+      <div className="Label">Tổng kế hoạch</div>
+      <div className="Big">{fmt(total)}</div>
+      <div className="BigSub">trên ngân sách {fmt(currentBudget)}</div>
 
       <div className="bar-track" style={{ marginBottom: 4 }}>
         <div

@@ -349,4 +349,15 @@ describe("soSanhKeHoachThucTe", () => {
 
     expect(res.thucTeTongVND).toBe(1396000);
   });
+
+  it("Fixture A (ngân sách 10.000.000, Di chuyển 3.920.000, Chỗ ở 2.200.000, chưa chi gì) cho conLaiVND = 3.880.000", () => {
+    const plan = createFixtureA();
+    const ledger: Ledger = { schemaVersion: 6, expenses: [] };
+    const res = soSanhKeHoachThucTe(plan, ledger, 1);
+
+    expect(res.datTruocVND).toBe(6120000); // 3.920.000 + 2.200.000
+    expect(res.thucTeTongVND).toBe(0);
+    expect(res.conLaiVND).toBe(3880000); // 10.000.000 - 6.120.000 - 0 = 3.880.000
+  });
 });
+

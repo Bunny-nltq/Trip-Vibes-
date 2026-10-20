@@ -1,36 +1,30 @@
 "use client";
 import React, { useState, useMemo } from "react";
 import { useApp } from "@/ui/context/AppContext";
-import { SideNav } from "@/ui/components/SideNav";
-import { BudgetBox } from "@/ui/components/BudgetBox";
 import {
   gomDiaDiemTheoNgay,
   tinhTienDo,
   type ProgressPlace,
 } from "@/core/tripProgress";
+import { soSanhKeHoachThucTe } from "@/core/soSanhThucTe";
 import { B9ChiDuongPopover } from "@/ui/components/B9ChiDuongPopover";
-import {
-  Check,
-  Navigation,
-  Compass,
-  RotateCcw,
-  ArrowRight,
-  Plus,
-  Clock,
-} from "lucide-react";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
 
 export function B8ChuyenDiScreen() {
   const {
     nav,
+    confirmed,
     plan,
+    tripConfig,
+    ledger,
     activeDay,
     setActiveDay,
     tickedPlaces,
     toggleTickPlace,
     untickPlace,
     openB10,
+    isSampleDataActive,
   } = useApp();
 
   // Toast khi tick địa điểm
@@ -52,10 +46,116 @@ export function B8ChuyenDiScreen() {
 
   const currentDayPlaces = placesByDay[activeDay] || [];
 
-  // Tiến độ tổng
+  // Tiến độ tổng = tổng số địa điểm của mọi ngày
   const progress = useMemo(() => {
     return tinhTienDo(placesByDay, tickedPlaces);
   }, [placesByDay, tickedPlaces]);
+
+  // Ngân sách tính chuẩn theo soSanhKeHoachThucTe (ngân sách - đặt trước - chi tiêu thực tế)
+  const budgetData = useMemo(() => {
+    if (!plan) {
+      const tongNganSach = tripConfig.budget || 10_000_000;
+      const daChi = ledger.expenses.reduce((s, e) => s + e.soTienVND, 0);
+      return {
+        tongNganSach,
+        datTruoc: 0,
+        daChi,
+        conLai: Math.max(0, tongNganSach - daChi),
+        percentSpent: tongNganSach > 0 ? Math.min(100, Math.round((daChi / tongNganSach) * 100)) : 0,
+      };
+    }
+
+    const comp = soSanhKeHoachThucTe(plan, ledger, activeDay);
+    const tongNganSach = comp.datTruocVND + comp.conLaiVND + comp.thucTeTongVND;
+    const datTruoc = comp.datTruocVND;
+    const daChi = comp.thucTeTongVND;
+    const conLai = comp.conLaiVND;
+    const tongDaDung = datTruoc + daChi;
+    const percentSpent =
+      tongNganSach > 0 ? Math.min(100, Math.round((tongDaDung / tongNganSach) * 100)) : 0;
+
+    return {
+      tongNganSach,
+      datTruoc,
+      daChi,
+      conLai,
+      percentSpent,
+    };
+  }, [plan, ledger, activeDay, tripConfig.budget]);
+
+  // Nếu chưa xác nhận kế hoạch: màn hình khóa
+  if (!confirmed) {
+    return (
+      <div className="Row2" style={{ padding: "0 0 40px" }}>
+        <div className="MainWide">
+          <div
+            className="DayCard"
+            style={{
+              padding: "48px 32px",
+              textAlign: "center",
+              maxWidth: 560,
+              margin: "60px auto",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "#8593AE" }}>
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </div>
+            <h1 className="H1" style={{ fontSize: 22, marginBottom: 8 }}>
+              Tính năng chưa mở
+            </h1>
+            <div className="Sub" style={{ marginBottom: 24 }}>
+              Bạn cần xác nhận kế hoạch trước khi bắt đầu theo dõi chuyến đi thực tế.
+            </div>
+            <button
+              type="button"
+              className="Btn BtnPrimary"
+              style={{ margin: "0 auto" }}
+              onClick={() => nav("b1-chon-nhanh")}
+            >
+              Về trang Kế hoạch
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Nếu kế hoạch rỗng hoặc chưa có dữ liệu
+  if (!plan || plan.items.length === 0) {
+    return (
+      <div className="Row2" style={{ padding: "0 0 40px" }}>
+        <div className="MainWide">
+          <div
+            className="DayCard"
+            style={{
+              padding: "48px 32px",
+              textAlign: "center",
+              maxWidth: 560,
+              margin: "60px auto",
+            }}
+          >
+            <h1 className="H1" style={{ fontSize: 22, marginBottom: 8 }}>
+              Chưa có dữ liệu kế hoạch
+            </h1>
+            <div className="Sub" style={{ marginBottom: 24 }}>
+              Kế hoạch chuyến đi của bạn hiện đang rỗng. Hãy quay lại tạo kế hoạch.
+            </div>
+            <button
+              type="button"
+              className="Btn BtnPrimary"
+              style={{ margin: "0 auto" }}
+              onClick={() => nav("b1-chon-nhanh")}
+            >
+              Lên kế hoạch ngay
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleToggle = (place: ProgressPlace) => {
     const isNowTicked = toggleTickPlace(place.id);
@@ -75,152 +175,111 @@ export function B8ChuyenDiScreen() {
     }
   };
 
-  return (
-    <div className="tv-layout">
-      <SideNav />
-      <div className="tv-main animate-in" style={{ maxWidth: 860, overflowY: "auto" }}>
-        <h1 className="page-title">Quản lý chuyến đi</h1>
-        <p className="page-sub">
-          {progress.daDen} trong {progress.tong} địa điểm đã đến ({progress.phanTram}%)
-        </p>
+  const currentDayDone = currentDayPlaces.filter((p) => tickedPlaces[p.id]).length;
 
-        {/* Thanh tiến độ */}
-        <div style={{ marginBottom: 20 }}>
-          <div className="bar-track" style={{ height: 8, borderRadius: "var(--r-full)", background: "var(--g200)" }}>
-            <div
-              className="bar-fill"
-              style={{
-                width: `${progress.phanTram}%`,
-                background: "var(--p500)",
-                borderRadius: "var(--r-full)",
-                transition: "width 0.3s ease",
-              }}
-            />
-          </div>
+  return (
+    <div className="Row2" style={{ padding: "0 0 40px" }}>
+      {/* CỘT CHÍNH (780px) */}
+      <div className="Main">
+        <h1 className="H1">Chuyến đi</h1>
+        <div className="Sub">
+          {progress.tong > 0
+            ? `${progress.daDen} trong ${progress.tong} địa điểm đã đến`
+            : "Chưa có địa điểm tham quan trong kế hoạch"}
         </div>
 
-        {/* Tabs ngày */}
-        <div className="tabs" style={{ marginBottom: 16 }}>
+        {isSampleDataActive && (
+          <div
+            style={{
+              background: "#FFFBEB",
+              border: "1px solid #FDE68A",
+              color: "#92400E",
+              padding: "10px 16px",
+              borderRadius: 14,
+              fontSize: 13,
+              marginBottom: 16,
+              fontWeight: 500,
+            }}
+          >
+            Lưu ý: Kế hoạch đang sử dụng dữ liệu mẫu để thử nghiệm.
+          </div>
+        )}
+
+        {/* TABS NGÀY - có cùng kiểu ở mọi trạng thái */}
+        <div className="Tabs">
           {dayNumbers.map((d) => (
-            <div
+            <button
+              type="button"
               key={d}
-              className={`tab-item ${activeDay === d ? "active" : ""}`}
+              className={`Tab ${activeDay === d ? "TabOn" : ""}`}
               onClick={() => setActiveDay(d)}
             >
               Ngày {d}
-            </div>
+            </button>
           ))}
         </div>
 
-        {/* Danh sách địa điểm ngày hiện tại */}
-        <div className="daycard">
-          <div className="daycard-head">
-            <div className="daycard-name">Lịch trình Ngày {activeDay}</div>
-            <div className="daycard-total">
-              {currentDayPlaces.filter((p) => tickedPlaces[p.id]).length} /{" "}
-              {currentDayPlaces.length} địa điểm đã đến
+        {/* CARD LỊCH TRÌNH NGÀY HIỆN TẠI */}
+        <div className="DayCard">
+          <div className="DayHead">
+            <div className="DayName">Ngày {activeDay}</div>
+            <div className="DayTotal">
+              {currentDayDone}/{currentDayPlaces.length} địa điểm đã đến
             </div>
           </div>
 
           {currentDayPlaces.length === 0 && (
-            <div style={{ padding: 32, textAlign: "center", color: "var(--g500)" }}>
-              Không có hoạt động hoặc địa điểm cụ thể cho ngày này.
+            <div style={{ padding: "32px 20px", textAlign: "center", color: "#5C6B88" }}>
+              Chưa có lịch trình hoạt động nào cho Ngày {activeDay}.
             </div>
           )}
 
-          {currentDayPlaces.map((place) => {
+          {currentDayPlaces.map((place, idx) => {
             const isDone = Boolean(tickedPlaces[place.id]);
+            const isLast = idx === currentDayPlaces.length - 1;
+            const hasRealAddress =
+              Boolean(place.diaChi) &&
+              place.diaChi!.trim().toLowerCase() !== place.ten.trim().toLowerCase();
 
             return (
-              <div
-                key={place.id}
-                className="item"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "14px 16px",
-                  borderBottom: "1px solid var(--g100)",
-                }}
-              >
-                {/* Checkbox */}
+              <div key={place.id} className={`Item ${isLast ? "NoLine" : ""}`}>
+                {/* Checkbox Box */}
                 <div
-                  className={`checkbox ${isDone ? "checked" : ""}`}
+                  className={`Box ${isDone ? "BoxOn" : ""}`}
                   onClick={() => handleToggle(place)}
-                  style={{
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: 22,
-                    height: 22,
-                    borderRadius: "var(--r-sm)",
-                    border: isDone ? "none" : "2px solid var(--g300)",
-                    background: isDone ? "var(--p500)" : "var(--surface)",
-                    color: "white",
-                    flexShrink: 0,
-                  }}
-                  title={isDone ? "Đánh dấu chưa đến" : "Đánh dấu đã đến"}
+                  title={isDone ? "Bỏ tick đã đến" : "Đánh dấu đã đến"}
                 >
-                  {isDone && <Check size={14} strokeWidth={3} />}
+                  {isDone ? "✓" : ""}
                 </div>
 
                 {/* Giờ */}
-                <div
-                  className="item-time"
-                  style={{
-                    width: 55,
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: "var(--g500)",
-                    flexShrink: 0,
-                  }}
-                >
-                  {place.gio || "—"}
+                <div className="Time">{place.gio || "—"}</div>
+
+                {/* Thông tin: nếu thiếu địa chỉ thì chỉ hiện tên, không lặp tên làm địa chỉ */}
+                <div className="Info">
+                  <div className="InfoTitle">{place.ten}</div>
+                  {hasRealAddress && (
+                    <div className="InfoSub">{place.diaChi}</div>
+                  )}
                 </div>
 
-                {/* Tên & chi tiết */}
-                <div className="item-info" style={{ flex: 1 }}>
-                  <div
-                    className="item-title"
-                    style={{
-                      fontWeight: 700,
-                      fontSize: 15,
-                      textDecoration: isDone ? "line-through" : "none",
-                      color: isDone ? "var(--g400)" : "var(--navy)",
-                    }}
-                  >
-                    {place.ten}
-                  </div>
-                  <div style={{ fontSize: 12, color: "var(--g500)", marginTop: 2 }}>
-                    {place.hangMuc}
-                    {place.thoiGianDiChuyenPhut && (
-                      <span style={{ marginLeft: 8, color: "var(--p500)" }}>
-                        · {place.thoiGianDiChuyenPhut} phút tới điểm kế
-                      </span>
-                    )}
-                  </div>
+                {/* Chi phí & thời gian tới điểm kế */}
+                <div className="Amount">
+                  {fmt(place.thanhTien || 0)}
+                  <span className="AmountSub">
+                    {place.thoiGianDiChuyenPhut
+                      ? `${place.thoiGianDiChuyenPhut} phút tới điểm kế`
+                      : "Điểm trong ngày"}
+                  </span>
                 </div>
 
-                {/* Số tiền kế hoạch */}
-                <div className="item-amount" style={{ textAlign: "right", minWidth: 100 }}>
-                  <div style={{ fontWeight: 600, fontSize: 14, color: "var(--navy)" }}>
-                    {place.thanhTien === 0 ? (
-                      <span style={{ color: "var(--success)" }}>Miễn phí</span>
-                    ) : (
-                      fmt(place.thanhTien)
-                    )}
-                  </div>
-                </div>
-
-                {/* Nút chỉ đường (mở popover B9) */}
-                <div className="item-action">
+                {/* Nút chỉ đường */}
+                <div className="Action" style={{ width: 104 }}>
                   <button
-                    className="btn btn-outline btn-sm"
+                    type="button"
+                    className="Btn BtnSmall"
                     onClick={() => setPopoverPlace(place)}
-                    style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12 }}
                   >
-                    <Navigation size={13} />
                     Chỉ đường
                   </button>
                 </div>
@@ -229,51 +288,77 @@ export function B8ChuyenDiScreen() {
           })}
         </div>
 
-        <div className="hint" style={{ marginTop: 12 }}>
+        <div className="Hint">
           Tick khi bạn đã đến một địa điểm. Bạn có thể bỏ tick nếu bấm nhầm.
         </div>
       </div>
 
-      <div className="tv-side">
-        <BudgetBox plan={plan} />
+      {/* CỘT PHẢI: TỔNG QUAN NGÂN SÁCH (324px) */}
+      <div className="Side">
+        <div className="BudgetSummary">
+          <div className="Label">Ngân sách còn lại</div>
+          <div className="Big">{fmt(budgetData.conLai)}</div>
+          <div className="BigSub">
+            Đã đặt trước {fmt(budgetData.datTruoc)} · Đã chi thực tế {fmt(budgetData.daChi)}
+          </div>
+
+          {/* Thanh ngân sách */}
+          <div className="BarTrack">
+            <div
+              className={`BarFill ${budgetData.percentSpent > 90 ? "BarRed" : ""}`}
+              style={{ width: `${budgetData.percentSpent}%` }}
+            />
+          </div>
+
+          <div className="Divider" style={{ marginTop: 16 }} />
+
+          <div
+            className="Link"
+            onClick={() => nav("b11-ngan-sach")}
+            style={{ cursor: "pointer" }}
+          >
+            Xem chi tiết ngân sách
+          </div>
+        </div>
+
+        {/* Nút thêm nhanh chi tiêu */}
+        <div style={{ marginTop: 16 }}>
+          <button
+            type="button"
+            className="Btn BtnPrimary BtnFull"
+            onClick={() => openB10({ ngayTrongChuyen: activeDay })}
+          >
+            + Thêm chi tiêu
+          </button>
+        </div>
       </div>
 
-      {/* Popover B9 */}
-      <B9ChiDuongPopover
-        place={popoverPlace}
-        onClose={() => setPopoverPlace(null)}
-      />
+      {/* Popover B9 Chỉ đường */}
+      {popoverPlace && (
+        <B9ChiDuongPopover
+          place={popoverPlace}
+          onClose={() => setPopoverPlace(null)}
+        />
+      )}
 
-      {/* Toast hỏi thêm chi tiêu */}
+      {/* Toast khi tick */}
       {toast && (
-        <div className="toast" style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-            <Check size={16} style={{ color: "var(--success)" }} />
-            Đã đánh dấu <b>{toast.ten}</b>. Thêm chi tiêu?
+        <div className="Toast">
+          <span>
+            ✓ Đã đến: <strong>{toast.ten}</strong>
           </span>
           <button
-            className="toast-btn"
+            type="button"
+            className="ToastBtn"
             onClick={() => {
-              openB10({
-                tenCuaHang: toast.ten,
-                ngayTrongChuyen: activeDay,
-              });
+              openB10({ tenCuaHang: toast.ten, ngayTrongChuyen: activeDay });
               setToast(null);
             }}
-            style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
+            style={{ background: "#2B55D6", borderColor: "#2B55D6" }}
           >
-            <Plus size={13} />
-            Thêm
+            Ghi chi tiêu
           </button>
-          <button className="toast-btn" onClick={() => setToast(null)}>
-            Bỏ qua
-          </button>
-          <button
-            className="toast-btn"
-            onClick={handleUndoToast}
-            style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
-          >
-            <RotateCcw size={13} />
+          <button type="button" className="ToastBtn" onClick={handleUndoToast}>
             Hoàn tác
           </button>
         </div>
@@ -281,3 +366,5 @@ export function B8ChuyenDiScreen() {
     </div>
   );
 }
+
+export default B8ChuyenDiScreen;

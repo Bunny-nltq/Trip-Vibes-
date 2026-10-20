@@ -161,18 +161,32 @@ export function B11NganSachScreen() {
 
   if (!confirmed) {
     return (
-      <div className="tv-layout">
-        <SideNav />
-        <div className="tv-main animate-in">
-          <div className="card" style={{ padding: 40, textAlign: "center", maxWidth: 520, margin: "40px auto" }}>
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "var(--g400)" }}>
+      <div className="Row2" style={{ padding: "0 0 40px" }}>
+        <div className="MainWide">
+          <div
+            className="DayCard"
+            style={{
+              padding: "48px 32px",
+              textAlign: "center",
+              maxWidth: 560,
+              margin: "60px auto",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "#8593AE" }}>
               <Lock size={44} />
             </div>
-            <h2 className="page-title" style={{ fontSize: 20 }}>Tính năng chưa mở</h2>
-            <p className="page-sub" style={{ marginBottom: 20 }}>
+            <h1 className="H1" style={{ fontSize: 22, marginBottom: 8 }}>
+              Tính năng chưa mở
+            </h1>
+            <div className="Sub" style={{ marginBottom: 24 }}>
               Bạn cần xác nhận kế hoạch trước khi theo dõi ngân sách thực tế.
-            </p>
-            <button className="btn btn-primary" onClick={() => nav("b3-ke-hoach")}>
+            </div>
+            <button
+              type="button"
+              className="Btn BtnPrimary"
+              style={{ margin: "0 auto" }}
+              onClick={() => nav("b1-chon-nhanh")}
+            >
               Về trang Kế hoạch
             </button>
           </div>
@@ -182,26 +196,53 @@ export function B11NganSachScreen() {
   }
 
   if (!comparison || !plan) {
-    return null;
+    return (
+      <div className="Row2" style={{ padding: "0 0 40px" }}>
+        <div className="MainWide">
+          <div
+            className="DayCard"
+            style={{
+              padding: "48px 32px",
+              textAlign: "center",
+              maxWidth: 560,
+              margin: "60px auto",
+            }}
+          >
+            <h1 className="H1" style={{ fontSize: 22, marginBottom: 8 }}>
+              Chưa có dữ liệu kế hoạch
+            </h1>
+            <div className="Sub" style={{ marginBottom: 24 }}>
+              Kế hoạch chuyến đi của bạn hiện đang rỗng. Hãy quay lại tạo kế hoạch.
+            </div>
+            <button
+              type="button"
+              className="Btn BtnPrimary"
+              style={{ margin: "0 auto" }}
+              onClick={() => nav("b1-chon-nhanh")}
+            >
+              Lên kế hoạch ngay
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const nganSachTongVND = comparison.datTruocVND + comparison.conLaiVND + comparison.thucTeTongVND;
 
   return (
-    <div className="tv-layout">
-      <SideNav />
-      <div className="tv-main animate-in" style={{ maxWidth: 1080 }}>
-        {/* Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
-          <div>
-            <h1 className="page-title">Ngân sách thực tế</h1>
-            <p className="page-sub">Kế hoạch so với chi tiêu bạn đã ghi nhận trong chuyến đi.</p>
-          </div>
-          <button className="btn btn-primary" onClick={() => openB10()}>
-            <Plus size={16} />
-            Thêm chi tiêu
-          </button>
+    <div className="MainWide" style={{ width: "100%", padding: "0 0 40px" }}>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+        <div>
+          <h1 className="H1">Ngân sách thực tế</h1>
+          <div className="Sub">Kế hoạch so với chi tiêu bạn đã ghi nhận trong chuyến đi.</div>
         </div>
+        <button type="button" className="Btn BtnPrimary" onClick={() => openB10()}>
+          <Plus size={16} />
+          Thêm chi tiêu
+        </button>
+      </div>
 
         {/* 4 Large stats */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14, marginBottom: 22 }}>
@@ -477,7 +518,6 @@ export function B11NganSachScreen() {
             </table>
           </div>
         )}
-      </div>
 
       {/* Modal Xóa với xác nhận */}
       {deletingExpense && (
