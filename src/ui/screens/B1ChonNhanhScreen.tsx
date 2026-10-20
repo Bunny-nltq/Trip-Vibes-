@@ -1,26 +1,38 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useApp } from "@/ui/context/AppContext";
 import {
-  POPULAR_DESTINATIONS,
-  POPULAR_ORIGINS,
-  toDiemDen,
   getDiemDenTen,
   type DiemDen,
 } from "@/contracts";
 import {
+  FormB1,
+  FormB1ErrorCode,
+  kiemTraFormB1,
+  taoYeuCauTuForm,
+  dinhDangTien,
+  docTien,
+} from "@/core/formB1";
+import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
+import {
   MapPin,
   Search,
   Calendar,
-  Users,
-  Briefcase,
-  AlertCircle,
+  Wallet,
   Check,
   Plane,
-  Sparkles,
-  Info,
-  Globe,
-  ExternalLink,
+  Paperclip,
+  Moon,
+  Sunrise,
+  Timer,
+  Users,
+  Footprints,
+  RefreshCw,
+  AlertCircle,
+  AlertTriangle,
+  Minus,
+  Plus,
+  Loader2,
 } from "lucide-react";
 
 interface UngVienGeo {
@@ -32,28 +44,57 @@ interface UngVienGeo {
 }
 
 const PRESETS = [
-  { id: "couple", name: "Cặp đôi", people: 2, budget: 10_000_000, icon: Users },
-  { id: "group", name: "Nhóm bạn", people: 4, budget: 20_000_000, icon: Users },
-  { id: "solo", name: "Đi một mình", people: 1, budget: 5_000_000, icon: Briefcase },
+  {
+    id: "couple",
+    name: "Cặp đôi",
+    people: 2,
+    sub: "2 người",
+    iconType: "couple",
+  },
+  {
+    id: "group",
+    name: "Nhóm bạn",
+    people: 4,
+    sub: "4 người",
+    iconType: "group",
+  },
+  {
+    id: "family",
+    name: "Gia đình",
+    people: 4,
+    sub: "4 người",
+    iconType: "family",
+  },
+  {
+    id: "solo",
+    name: "Đi một mình",
+    people: 1,
+    sub: "1 người",
+    iconType: "solo",
+  },
 ];
 
-const BUDGETS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000, 25_000_000];
-const AVOIDS = [
-  "Không dậy sớm",
-  "Không đi đêm",
-  "Tránh đi lâu",
-  "Tránh chỗ đông",
-  "Tránh đi bộ nhiều",
+const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000];
+const QUICK_ORIGINS = ["TP.HCM", "Hà Nội", "Đà Nẵng", "Cần Thơ"];
+const QUICK_DESTINATIONS = [
+  "Đà Nẵng",
+  "Hà Nội",
+  "Đà Lạt",
+  "Phú Quốc",
+  "Nha Trang",
+  "Bangkok",
+  "Seoul",
+  "Tokyo",
+];
+
+const AVOID_ITEMS = [
+  { label: "Không dậy sớm", icon: Sunrise },
+  { label: "Không đi đêm", icon: Moon },
+  { label: "Tránh đi lâu", icon: Timer },
+  { label: "Tránh chỗ đông", icon: Users },
+  { label: "Tránh đi bộ nhiều", icon: Footprints },
 ];
 const DURATION_DAYS = [2, 3, 4, 5];
-
-const fmt = (n: number) => {
-  if (n >= 1_000_000) {
-    const tr = n / 1_000_000;
-    return Number.isInteger(tr) ? `${tr} triệu` : `${tr.toFixed(1)} triệu`;
-  }
-  return `${n.toLocaleString("vi-VN")} đ`;
-};
 
 export function B1ChonNhanhScreen() {
   const {
@@ -61,758 +102,1326 @@ export function B1ChonNhanhScreen() {
     tripConfig,
     setTripConfig,
     executePlan,
-    planStatus,
     planResult,
-    toiThieuVND,
-    planRequest,
   } = useApp();
 
-  const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
-  const [customDestInput, setCustomDestInput] = useState("");
-  const [isSearchingDest, setIsSearchingDest] = useState(false);
-  const [searchError, setSearchError] = useState<string | null>(null);
+  // ─── 1. Form state B1 ───
+  const [diemDi, setDiemDi] = useState<DiemDen | null>(
+    tripConfig.diemDi && typeof tripConfig.diemDi === "object"
+      ? (tripConfig.diemDi as DiemDen)
+      : null
+  );
+  const [diemDen, setDiemDen] = useState<DiemDen | null>(
+    tripConfig.diemDen && typeof tripConfig.diemDen === "object"
+      ? (tripConfig.diemDen as DiemDen)
+      : null
+  );
+  const [soNguoi, setSoNguoi] = useState<number>(tripConfig.people || 2);
+  const [nganSachSoTien, setNganSachSoTien] = useState<number>(
+    tripConfig.nganSachSoTien || tripConfig.budget || 0
+  );
+  const [nganSachTheo, setNganSachTheo] = useState<"tong" | "moi_nguoi">(
+    tripConfig.nganSachTheo || "tong"
+  );
+  const [nganSachInputStr, setNganSachInputStr] = useState<string>(
+    tripConfig.nganSachSoTien || tripConfig.budget
+      ? dinhDangTien(tripConfig.nganSachSoTien || tripConfig.budget)
+      : ""
+  );
+  const [soNgay, setSoNgay] = useState<number>(tripConfig.soNgay || 3);
+  const [tranh, setTranh] = useState<string[]>(tripConfig.avoids || []);
+  const [ghiChu, setGhiChu] = useState<string>(tripConfig.note || "");
 
-  // Trạng thái ứng viên mơ hồ
-  const [candidates, setCandidates] = useState<UngVienGeo[]>([]);
+  // ─── Geocoding Search States ───
+  const [diemDiInput, setDiemDiInput] = useState("");
+  const [diemDiLoading, setDiemDiLoading] = useState(false);
+  const [diemDiError, setDiemDiError] = useState<ThongBaoLoi | null>(null);
+  const [diemDiCandidates, setDiemDiCandidates] = useState<UngVienGeo[]>([]);
 
-  // Trạng thái nhập giá vé tay
-  const [chieuDiVND, setChieuDiVND] = useState<string>("1500000");
-  const [chieuVeVND, setChieuVeVND] = useState<string>("1500000");
-  const [forceNhapGiaTay, setForceNhapGiaTay] = useState(false);
+  const [diemDenInput, setDiemDenInput] = useState("");
+  const [diemDenLoading, setDiemDenLoading] = useState(false);
+  const [diemDenError, setDiemDenError] = useState<ThongBaoLoi | null>(null);
+  const [diemDenCandidates, setDiemDenCandidates] = useState<UngVienGeo[]>([]);
 
-  React.useEffect(() => {
+  // Đã từng thử submit hoặc tương tác
+  const [hasInteracted, setHasInteracted] = useState(false);
+
+  // Xem trước môi trường phát triển (preview URL)
+  useEffect(() => {
     const isDev = process.env.NODE_ENV === "development";
     if (isDev && typeof window !== "undefined") {
       const sp = new URLSearchParams(window.location.search);
       if (sp.get("previewMoHo") === "1") {
-        setCandidates([
+        setDiemDenCandidates([
           {
-            ten: "Thành phố Băng Cốc",
-            quocGia: "Thái Lan",
-            maQuocGia: "TH",
-            toaDo: { lat: 13.7525, lng: 100.4935 },
-            tienTe: "THB",
+            ten: "Dalat",
+            quocGia: "Malaysia",
+            maQuocGia: "MY",
+            toaDo: { lat: 2.701, lng: 111.96 },
+            tienTe: "MYR",
           },
           {
-            ten: "Bangkok Noi",
-            quocGia: "Thái Lan",
-            maQuocGia: "TH",
-            toaDo: { lat: 13.76, lng: 100.47 },
-            tienTe: "THB",
+            ten: "Đà Lạt",
+            quocGia: "Việt Nam",
+            maQuocGia: "VN",
+            toaDo: { lat: 11.94, lng: 108.43 },
+            tienTe: "VND",
           },
         ]);
-      }
-      if (sp.get("previewNhapGiaTay") === "1") {
-        setForceNhapGiaTay(true);
       }
     }
   }, []);
 
-  const tenDiemDen = getDiemDenTen(tripConfig.diemDen) || "Điểm đến";
-  const tenDiemDi = tripConfig.diemDi
-    ? typeof tripConfig.diemDi === "string"
-      ? tripConfig.diemDi
-      : tripConfig.diemDi.ten
-    : "TP.HCM";
-  const soNgay = tripConfig.soNgay ?? 3;
-  const soDem = Math.max(1, soNgay - 1);
+  // Đồng bộ sang AppContext
+  useEffect(() => {
+    const tongNganSach =
+      nganSachTheo === "tong" ? nganSachSoTien : nganSachSoTien * soNguoi;
 
-  const isAbroad =
-    typeof tripConfig.diemDen === "object" &&
-    tripConfig.diemDen !== null &&
-    tripConfig.diemDen.maQuocGia &&
-    tripConfig.diemDen.maQuocGia !== "VN";
-
-  const toggleAvoid = (a: string) => {
     setTripConfig({
-      avoids: tripConfig.avoids.includes(a)
-        ? tripConfig.avoids.filter((x) => x !== a)
-        : [...tripConfig.avoids, a],
+      diemDi,
+      diemDen,
+      people: soNguoi,
+      budget: tongNganSach,
+      nganSachSoTien,
+      nganSachTheo,
+      soNgay,
+      avoids: tranh,
+      note: ghiChu,
+    });
+  }, [diemDi, diemDen, soNguoi, nganSachSoTien, nganSachTheo, soNgay, tranh, ghiChu, setTripConfig]);
+
+  // Đối tượng FormB1 thuần để kiểm tra
+  const currentForm: FormB1 = {
+    diemDi,
+    diemDen,
+    soNguoi,
+    nganSach: {
+      soTien: nganSachSoTien,
+      theo: nganSachTheo,
+    },
+    soNgay,
+    tranh,
+    ghiChu,
+  };
+
+  const validationErrors = kiemTraFormB1(currentForm);
+  const isFormValid = validationErrors.length === 0;
+
+  // Tính tổng quy đổi ngân sách
+  const tongNganSachQuyDoiVND =
+    nganSachTheo === "tong" ? nganSachSoTien : nganSachSoTien * soNguoi;
+
+  // Tìm kiếm địa điểm chung
+  const executeSearch = async (
+    query: string
+  ): Promise<{
+    diemDen?: DiemDen;
+    candidates?: UngVienGeo[];
+    error?: ThongBaoLoi;
+  }> => {
+    const q = query.trim();
+    if (!q) {
+      return { error: layThongBaoLoi("geocode_khong_thay", { tenDiaDiem: query }) };
+    }
+    try {
+      const res = await fetch(`/api/destination?q=${encodeURIComponent(q)}`);
+      if (res.status === 429 || res.status === 403) {
+        return { error: layThongBaoLoi("geocode_ban") };
+      }
+      if (!res.ok) {
+        return { error: layThongBaoLoi("mang_loi") };
+      }
+      const data = await res.json();
+      if (data.status === "thanh_cong" && data.diemDen) {
+        return { diemDen: data.diemDen };
+      }
+      if (data.status === "can_lam_ro" && data.ungVien && data.ungVien.length > 0) {
+        return { candidates: data.ungVien.slice(0, 3) };
+      }
+      return { error: layThongBaoLoi("geocode_khong_thay", { tenDiaDiem: q }) };
+    } catch {
+      return { error: layThongBaoLoi("mang_loi") };
+    }
+  };
+
+  // Tìm điểm đi
+  const handleSearchDiemDi = async (overrideQ?: string) => {
+    const q = overrideQ !== undefined ? overrideQ : diemDiInput;
+    if (!q.trim()) return;
+    setDiemDiLoading(true);
+    setDiemDiError(null);
+    setDiemDiCandidates([]);
+
+    const res = await executeSearch(q);
+    setDiemDiLoading(false);
+
+    if (res.error) {
+      setDiemDiError(res.error);
+    } else if (res.candidates && res.candidates.length > 0) {
+      setDiemDiCandidates(res.candidates);
+    } else if (res.diemDen) {
+      setDiemDi(res.diemDen);
+      setDiemDiInput("");
+      setDiemDiCandidates([]);
+      setDiemDiError(null);
+    }
+  };
+
+  // Tìm điểm đến
+  const handleSearchDiemDen = async (overrideQ?: string) => {
+    const q = overrideQ !== undefined ? overrideQ : diemDenInput;
+    if (!q.trim()) return;
+    setDiemDenLoading(true);
+    setDiemDenError(null);
+    setDiemDenCandidates([]);
+
+    const res = await executeSearch(q);
+    setDiemDenLoading(false);
+
+    if (res.error) {
+      setDiemDenError(res.error);
+    } else if (res.candidates && res.candidates.length > 0) {
+      setDiemDenCandidates(res.candidates);
+    } else if (res.diemDen) {
+      setDiemDen(res.diemDen);
+      setDiemDenInput("");
+      setDiemDenCandidates([]);
+      setDiemDenError(null);
+    }
+  };
+
+  // Chọn ứng viên cho điểm đi
+  const handleSelectDiemDiCandidate = (c: UngVienGeo) => {
+    setDiemDi({
+      ten: c.ten,
+      quocGia: c.quocGia,
+      maQuocGia: c.maQuocGia,
+      toaDo: c.toaDo,
+      tienTe: c.tienTe,
+      nguon: "nominatim",
+      ngayLay: new Date().toISOString().slice(0, 10),
+    });
+    setDiemDiCandidates([]);
+    setDiemDiInput("");
+    setDiemDiError(null);
+  };
+
+  // Chọn ứng viên cho điểm đến
+  const handleSelectDiemDenCandidate = (c: UngVienGeo) => {
+    setDiemDen({
+      ten: c.ten,
+      quocGia: c.quocGia,
+      maQuocGia: c.maQuocGia,
+      toaDo: c.toaDo,
+      tienTe: c.tienTe,
+      nguon: "nominatim",
+      ngayLay: new Date().toISOString().slice(0, 10),
+    });
+    setDiemDenCandidates([]);
+    setDiemDenInput("");
+    setDiemDenError(null);
+  };
+
+  // Xử lý gõ ngân sách (dấu chấm phân cách hàng nghìn)
+  const handleNganSachChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    const num = docTien(raw);
+    if (num === null) {
+      // Giữ nguyên ký tự người dùng gõ nếu đang xóa hoặc nhập dở
+      setNganSachInputStr(raw);
+      setNganSachSoTien(0);
+    } else {
+      setNganSachSoTien(num);
+      setNganSachInputStr(dinhDangTien(num));
+    }
+  };
+
+  // Bấm nút gợi ý ngân sách (5, 8, 10, 15, 20 triệu)
+  const handlePickBudget = (val: number) => {
+    setNganSachSoTien(val);
+    setNganSachInputStr(dinhDangTien(val));
+  };
+
+  // Tăng giảm số người
+  const handleStepPeople = (delta: number) => {
+    const next = Math.max(1, Math.min(10, soNguoi + delta));
+    setSoNguoi(next);
+  };
+
+  // Bật/tắt mục tránh
+  const toggleAvoid = (label: string) => {
+    setTranh((prev) =>
+      prev.includes(label) ? prev.filter((x) => x !== label) : [...prev, label]
+    );
+  };
+
+  // Submit form B1
+  const handleSubmit = async () => {
+    setHasInteracted(true);
+    if (!isFormValid) {
+      return;
+    }
+    const yeuCau = taoYeuCauTuForm(currentForm);
+    nav("b2-dang-chay");
+    executePlan({
+      diemDi: yeuCau.diemDi,
+      diemDen: yeuCau.diemDen,
+      soNgay: yeuCau.soNgay,
+      people: yeuCau.soNguoi,
+      budget: yeuCau.ngansachTongVND,
+      avoids: yeuCau.tranh,
+      note: yeuCau.ghiChu,
     });
   };
 
-  const pickPreset = (p: (typeof PRESETS)[0]) => {
-    setSelectedPreset(p.id);
-    setTripConfig({ people: p.people, budget: p.budget });
+  // Chú thích lý do vì sao nút "Lập kế hoạch" đang tắt
+  const getLyDoTat = (): string => {
+    if (validationErrors.includes("diem_di_thieu")) return "Chưa chọn điểm đi";
+    if (validationErrors.includes("diem_den_thieu")) return "Chưa chọn điểm đến";
+    if (validationErrors.includes("diem_di_trung_diem_den"))
+      return "Điểm đi trùng điểm đến";
+    if (validationErrors.includes("so_nguoi_ngoai_pham_vi"))
+      return "Số người ngoài phạm vi (1–10)";
+    if (validationErrors.includes("ngan_sach_khong_hop_le"))
+      return "Chưa nhập ngân sách hợp lệ";
+    if (validationErrors.includes("so_ngay_ngoai_pham_vi"))
+      return "Số ngày ngoài phạm vi (2–5)";
+    if (validationErrors.includes("ghi_chu_qua_dai"))
+      return "Ghi chú vượt quá 500 ký tự";
+    return "";
   };
 
-  const handleSelectPopularDest = (preset: (typeof POPULAR_DESTINATIONS)[0]) => {
-    const diemDenObj = toDiemDen(preset);
-    setTripConfig({ diemDen: diemDenObj });
-    setCandidates([]);
-    setSearchError(null);
-  };
+  const soDem = Math.max(1, soNgay - 1);
+  const tenDiemDen = diemDen ? getDiemDenTen(diemDen) : null;
+  const tenDiemDi = diemDi ? (typeof diemDi === "string" ? diemDi : diemDi.ten) : null;
 
-  const handleSearchCustomDest = async () => {
-    const q = customDestInput.trim();
-    if (!q) return;
-    setIsSearchingDest(true);
-    setSearchError(null);
-    try {
-      const res = await fetch(`/api/destination?q=${encodeURIComponent(q)}`);
-      const data = await res.json();
-      if (!res.ok || !data.ok) {
-        setSearchError(data.error || "Không tìm thấy điểm đến này. Vui lòng thử lại.");
-        return;
-      }
-      if (data.status === "thanh_cong" && data.diemDen) {
-        setTripConfig({ diemDen: data.diemDen });
-        setCandidates([]);
-        setCustomDestInput("");
-      } else if (data.status === "can_lam_ro" && data.ungVien && data.ungVien.length > 0) {
-        setCandidates(data.ungVien);
-      } else {
-        setSearchError("Không tìm thấy điểm đến phù hợp. Vui lòng kiểm tra lại chính tả.");
-      }
-    } catch {
-      setSearchError("Không thể kết nối đến dịch vụ tìm điểm đến.");
-    } finally {
-      setIsSearchingDest(false);
-    }
-  };
-
-  const handleSelectCandidate = (cand: UngVienGeo) => {
-    const diemDen: DiemDen = {
-      ten: cand.ten,
-      quocGia: cand.quocGia,
-      maQuocGia: cand.maQuocGia,
-      toaDo: cand.toaDo,
-      tienTe: cand.tienTe,
-      nguon: "nominatim",
-      ngayLay: new Date().toISOString().slice(0, 10),
-    };
-    setTripConfig({ diemDen });
-    setCandidates([]);
-    setCustomDestInput("");
-  };
-
-  const handleSubmit = async () => {
-    nav("b2-dang-chay");
-    executePlan();
-  };
-
-  const handleRaiseBudget = () => {
-    if (toiThieuVND > 0) {
-      setTripConfig({ budget: toiThieuVND });
-      nav("b2-dang-chay");
-      executePlan({ ...tripConfig, budget: toiThieuVND });
-    }
-  };
-
-  const handleClearAvoids = () => {
-    setTripConfig({ avoids: [] });
-    nav("b2-dang-chay");
-    executePlan({ ...tripConfig, avoids: [] });
-  };
-
-  const handleSubmitManualFare = () => {
-    const di = parseInt(chieuDiVND, 10) || 0;
-    const ve = parseInt(chieuVeVND, 10) || 0;
-    const giaVeTuNhap = { chieuDiVND: di, chieuVeVND: ve };
-    setTripConfig({ giaVeTuNhap });
-    nav("b2-dang-chay");
-    executePlan({ ...tripConfig, giaVeTuNhap });
-  };
-
-  // Ứng viên từ kết quả planResult nếu backend trả can_lam_ro diem_den_mo_ho
-  const activeCandidates =
-    candidates.length > 0
-      ? candidates
-      : planStatus === "can_lam_ro" && planResult?.lyDo === "diem_den_mo_ho" && planResult.ungVien
-      ? planResult.ungVien
-      : [];
+  // Lỗi hiển thị theo vị trí
+  const hasDiemDiError = validationErrors.includes("diem_di_thieu") && hasInteracted;
+  const hasDiemDenMissingError =
+    validationErrors.includes("diem_den_thieu") && hasInteracted;
+  const hasDiemTrungError = validationErrors.includes("diem_di_trung_diem_den");
+  const hasSoNguoiError = validationErrors.includes("so_nguoi_ngoai_pham_vi");
+  const hasNganSachError =
+    validationErrors.includes("ngan_sach_khong_hop_le") &&
+    (hasInteracted || (nganSachInputStr.length > 0 && nganSachSoTien <= 0));
+  const hasSoNgayError = validationErrors.includes("so_ngay_ngoai_pham_vi");
+  const hasGhiChuError = validationErrors.includes("ghi_chu_qua_dai");
 
   return (
-    <div className="center-layout animate-in" style={{ maxWidth: 720, paddingBottom: 60 }}>
-      {/* Badge tóm tắt */}
-      <div
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 6,
-          padding: "6px 14px",
-          background: "var(--p100)",
-          borderRadius: "var(--r-full)",
-          marginBottom: 16,
-          fontSize: 13,
-          color: "var(--p500)",
-          fontWeight: 600,
-        }}
-      >
-        <MapPin size={14} />
-        {tenDiemDen} · {soNgay} ngày {soDem} đêm · khởi hành từ {tenDiemDi}
-      </div>
-
-      <h1 className="page-title" style={{ fontSize: 28, marginBottom: 8 }}>
-        Chuyến {tenDiemDen} của bạn
-      </h1>
-      <p className="page-sub" style={{ marginBottom: 20 }}>
-        {soNgay} ngày {soDem} đêm từ {tenDiemDi}. Chạm để chọn, hoặc bấm Lập kế hoạch ngay.
-      </p>
-
-      {/* Dòng ghi chú nhỏ cho điểm đến ngoài Việt Nam */}
-      {isAbroad && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            gap: 8,
-            padding: "8px 12px",
-            background: "#eff6ff",
-            border: "1px solid #bfdbfe",
-            borderRadius: "var(--r-md)",
-            color: "#1e40af",
-            fontSize: 12,
-            marginBottom: 20,
-          }}
-        >
-          <Info size={15} style={{ flexShrink: 0, marginTop: 2 }} />
-          <span>
-            Dữ liệu ngoài Việt Nam có thể ít hơn và chỉ là ước tính. Trip Vibes không tư vấn visa.
-          </span>
-        </div>
-      )}
-
-      {/* ─── Khung Điểm đến mơ hồ (can_lam_ro) ─── */}
-      {activeCandidates.length > 0 && (
-        <div
-          className="card"
-          style={{
-            background: "#eff6ff",
-            border: "1.5px solid var(--p500)",
-            padding: 20,
-            marginBottom: 24,
-            borderRadius: "var(--r-lg)",
-          }}
-        >
-          <div
+    <div className="HomeRow">
+      {/* CỘT CHÍNH: HomeCard */}
+      <div className="HomeCard">
+        {/* HERO BANNER - ĐỘNG THEO TRẠNG THÁI */}
+        <div className="Hero">
+          {/* Scenic Coastal & Mountain background artwork */}
+          <svg
+            width="820"
+            height="192"
+            viewBox="0 0 820 192"
+            fill="none"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              fontWeight: 700,
-              fontSize: 16,
-              color: "var(--navy)",
-              marginBottom: 10,
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: "100%",
+              height: "100%",
             }}
+            preserveAspectRatio="none"
           >
-            <AlertCircle size={18} color="var(--p500)" />
-            Có nhiều điểm đến trùng tên, bạn muốn đi đâu?
+            <defs>
+              <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#C9E5F8" />
+                <stop offset="50%" stopColor="#E2F0FB" />
+                <stop offset="100%" stopColor="#F5F9FE" />
+              </linearGradient>
+              <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#67B1D8" />
+                <stop offset="100%" stopColor="#3B8CB8" />
+              </linearGradient>
+              <linearGradient id="mountainGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#7EAF9B" />
+                <stop offset="100%" stopColor="#437762" />
+              </linearGradient>
+            </defs>
+            <rect width="820" height="192" fill="url(#skyGrad)" />
+            <path
+              d="M260 130 C 380 70, 520 80, 680 125 L 820 120 L 820 192 L 260 192 Z"
+              fill="#9FC2D8"
+              opacity="0.6"
+            />
+            <path
+              d="M420 120 C 530 85, 660 75, 820 110 L 820 192 L 420 192 Z"
+              fill="#88B49E"
+              opacity="0.5"
+            />
+            <path
+              d="M0 130 Q 350 125, 820 135 L 820 192 L 0 192 Z"
+              fill="url(#seaGrad)"
+              opacity="0.4"
+            />
+            <path
+              d="M480 192 C 550 145, 620 120, 720 115 C 770 112, 800 130, 820 145 L 820 192 Z"
+              fill="url(#mountainGrad)"
+            />
+            <path
+              d="M620 192 C 670 140, 750 135, 820 150 L 820 192 Z"
+              fill="#2E5C46"
+              opacity="0.8"
+            />
+          </svg>
+
+          {/* Sun Doodle SVG */}
+          <div className="HeroSun">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#FFC24D"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <circle cx="12" cy="12" r="5" fill="#FFE58F" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
           </div>
-          <p style={{ fontSize: 13, color: "var(--g700)", marginBottom: 14 }}>
-            Vui lòng chọn chính xác điểm đến bên dưới để hệ thống tìm kiếm dịch vụ phù hợp:
-          </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {activeCandidates.map((cand, idx) => (
-              <button
-                key={idx}
-                type="button"
-                className="btn btn-outline"
-                style={{
-                  justifyContent: "space-between",
-                  textAlign: "left",
-                  padding: "10px 14px",
-                  background: "#fff",
-                }}
-                onClick={() => handleSelectCandidate(cand)}
-              >
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: 14 }}>{cand.ten}</div>
-                  <div style={{ fontSize: 12, color: "var(--g500)" }}>
-                    Quốc gia: {cand.quocGia} ({cand.maQuocGia}) · Tiền tệ: {cand.tienTe}
+
+          {/* TIÊU ĐỀ & PHỤ ĐỀ THEO ĐÚNG YÊU CẦU */}
+          <div className="HeroTitle">
+            {tenDiemDen ? `Chuyến đi ${tenDiemDen} của bạn` : "Bạn muốn đi đâu?"}
+          </div>
+          <div className="HeroSub">
+            {tenDiemDi
+              ? `${soNgay} ngày ${soDem} đêm từ ${tenDiemDi}`
+              : "Chọn điểm đi và điểm đến để bắt đầu"}
+          </div>
+
+          <div className="GoodTrip Script">
+            Good trip<br />Good mood
+          </div>
+        </div>
+
+        {/* BODY NỘI DUNG FORM (Theo đúng 5 mục đánh số) */}
+        <div className="Body">
+          {/* ═════════════════════════════════════════════════════════════════
+              MỤC 1: ĐI TỪ ĐÂU, ĐẾN ĐÂU?
+          ═════════════════════════════════════════════════════════════════ */}
+          <div className="Section" id="sec-diem-di-den">
+            <div className="Sec">
+              <div className="NumC">1</div>
+              <div>
+                <div className="STitle">Đi từ đâu, đến đâu?</div>
+                <div className="SSub">Nhập điểm khởi hành và điểm đến bạn mong muốn</div>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              {/* Ô 1: Điểm đi */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <label style={{ fontSize: 13, fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
+                  Điểm đi
+                </label>
+
+                {diemDi ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "10px 14px",
+                      background: "var(--color-primary-brandSoft)",
+                      border: "1.5px solid var(--color-primary-brand)",
+                      borderRadius: 10,
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <MapPin size={16} color="var(--color-primary-brand)" />
+                      <span style={{ fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
+                        {diemDi.ten} ({diemDi.quocGia})
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className="Btn BtnSmall"
+                      onClick={() => {
+                        setDiemDi(null);
+                        setDiemDiInput("");
+                        setDiemDiError(null);
+                        setDiemDiCandidates([]);
+                      }}
+                      style={{ padding: "4px 10px", fontSize: 12, background: "#FFFFFF" }}
+                    >
+                      <RefreshCw size={12} style={{ marginRight: 4 }} />
+                      Đổi
+                    </button>
                   </div>
-                </div>
-                <Check size={16} color="var(--p500)" />
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+                ) : (
+                  <>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <input
+                        type="text"
+                        className="Input"
+                        placeholder="Nhập nơi xuất phát..."
+                        value={diemDiInput}
+                        onChange={(e) => setDiemDiInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleSearchDiemDi();
+                        }}
+                        style={{ flex: 1 }}
+                      />
+                      <button
+                        type="button"
+                        className="Btn BtnPrimary"
+                        disabled={diemDiLoading || !diemDiInput.trim()}
+                        onClick={() => handleSearchDiemDi()}
+                        style={{ display: "flex", alignItems: "center", gap: 6 }}
+                      >
+                        {diemDiLoading ? (
+                          <Loader2 size={16} className="animate-spin" />
+                        ) : (
+                          <Search size={16} />
+                        )}
+                        <span>Tìm</span>
+                      </button>
+                    </div>
 
-      {/* ─── Khung Nhập giá vé tay (khong_co_phuong_an) ─── */}
-      {(planStatus === "khong_co_phuong_an" || forceNhapGiaTay) && (
-        <div
-          className="card"
-          style={{
-            background: "#fffbeb",
-            border: "1.5px solid #f59e0b",
-            padding: 20,
-            marginBottom: 24,
-            borderRadius: "var(--r-lg)",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              fontWeight: 700,
-              fontSize: 16,
-              color: "#92400e",
-              marginBottom: 8,
-            }}
-          >
-            <AlertCircle size={18} color="#d97706" />
-            Không có phương án di chuyển tự động cho tuyến này
-          </div>
-          <p style={{ fontSize: 13, color: "#78350f", marginBottom: 16, lineHeight: 1.5 }}>
-            Hệ thống chưa tìm thấy vé trực tuyến hoặc quãng đường không có tuyến xe/tàu/máy bay mặc định.
-            Bạn có thể tự nhập giá vé khứ hồi ước tính để tiếp tục lập kế hoạch:
-          </p>
+                    {/* Gợi ý nhanh điểm đi */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
+                      <span style={{ fontSize: 12, color: "var(--color-neutral-mutedText)", alignSelf: "center" }}>
+                        Gợi ý:
+                      </span>
+                      {QUICK_ORIGINS.map((city) => (
+                        <button
+                          key={city}
+                          type="button"
+                          className="Chip"
+                          onClick={() => {
+                            setDiemDiInput(city);
+                            handleSearchDiemDi(city);
+                          }}
+                          style={{ padding: "4px 10px", fontSize: 12 }}
+                        >
+                          {city}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
-            <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#78350f", marginBottom: 6 }}>
-                Vé chiều đi (VND / người)
-              </label>
-              <input
-                type="number"
-                className="input"
-                style={{ width: "100%", background: "#fff" }}
-                value={chieuDiVND}
-                onChange={(e) => setChieuDiVND(e.target.value)}
-                placeholder="Ví dụ: 1500000"
-              />
-            </div>
-            <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#78350f", marginBottom: 6 }}>
-                Vé chiều về (VND / người)
-              </label>
-              <input
-                type="number"
-                className="input"
-                style={{ width: "100%", background: "#fff" }}
-                value={chieuVeVND}
-                onChange={(e) => setChieuVeVND(e.target.value)}
-                placeholder="Ví dụ: 1500000"
-              />
-            </div>
-          </div>
+                {/* Ứng viên điểm đi mơ hồ */}
+                {diemDiCandidates.length > 0 && !diemDi && (
+                  <div
+                    style={{
+                      background: "var(--color-status-warnBg)",
+                      border: "1px solid var(--color-status-warnBorder)",
+                      borderRadius: 8,
+                      padding: 10,
+                      marginTop: 6,
+                    }}
+                  >
+                    <div style={{ fontSize: 12, fontWeight: 600, color: "var(--color-status-warnText)" }}>
+                      Chọn điểm đi chính xác:
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 6 }}>
+                      {diemDiCandidates.map((c, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          className="Btn BtnSmall"
+                          onClick={() => handleSelectDiemDiCandidate(c)}
+                          style={{ background: "#FFFFFF", fontSize: 12 }}
+                        >
+                          <MapPin size={12} style={{ marginRight: 4 }} />
+                          {c.ten} ({c.quocGia})
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button
-              className="btn btn-primary btn-sm"
-              style={{ background: "#d97706", borderColor: "#d97706" }}
-              onClick={handleSubmitManualFare}
-            >
-              Tiếp tục với giá vé tự nhập
-            </button>
-            <button className="btn btn-outline btn-sm" onClick={handleClearAvoids}>
-              Bỏ bớt điều muốn tránh
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ─── Khung Không đủ dữ liệu địa phương (khong_du_du_lieu) ─── */}
-      {planStatus === "khong_du_du_lieu" && (
-        <div
-          className="card"
-          style={{
-            background: "#fef2f2",
-            border: "1.5px solid #ef4444",
-            padding: 20,
-            marginBottom: 24,
-            borderRadius: "var(--r-lg)",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              fontWeight: 700,
-              fontSize: 16,
-              color: "#991b1b",
-              marginBottom: 8,
-            }}
-          >
-            <AlertCircle size={18} color="#ef4444" />
-            Chưa đủ dữ liệu địa phương tại {tenDiemDen}
-          </div>
-          <p style={{ fontSize: 13, color: "#7f1d1d", marginBottom: 16, lineHeight: 1.5 }}>
-            Kho dữ liệu mở từ OpenStreetMap chưa có đủ tối thiểu 3 khách sạn, 3 điểm tham quan hoặc 2 quán ăn được gắn nhãn đầy đủ tại khu vực này để AI có thể lên lịch trình chất lượng cho bạn.
-          </p>
-
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
-            <button
-              className="btn btn-primary btn-sm"
-              style={{ background: "#dc2626", borderColor: "#dc2626" }}
-              onClick={handleSubmit}
-            >
-              Thử lại lần nữa
-            </button>
-            <button
-              type="button"
-              className="btn btn-outline btn-sm"
-              onClick={() => handleSelectPopularDest(POPULAR_DESTINATIONS[0])}
-            >
-              Gợi ý: Đi Đà Nẵng
-            </button>
-            <button
-              type="button"
-              className="btn btn-outline btn-sm"
-              onClick={() => handleSelectPopularDest(POPULAR_DESTINATIONS[1])}
-            >
-              Gợi ý: Đi Hà Nội
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Trạng thái đặc biệt: Ngân sách không đủ */}
-      {planStatus === "khong_the_dat_ngan_sach" && (
-        <div style={{ marginBottom: 24 }}>
-          <div className="banner banner-error" style={{ marginBottom: 12 }}>
-            <AlertCircle size={20} style={{ marginRight: 8, flexShrink: 0 }} />
-            <div>
-              <div className="banner-title">
-                Ngân sách {fmt(tripConfig.budget)} chưa đủ
+                {/* Lỗi ở ô điểm đi */}
+                {(diemDiError || hasDiemDiError) && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 8,
+                      background: "var(--color-status-errBg)",
+                      border: "1px solid var(--color-status-errBorder)",
+                      borderRadius: 8,
+                      padding: "8px 12px",
+                      marginTop: 4,
+                    }}
+                  >
+                    <AlertCircle size={16} color="var(--color-status-errText)" style={{ flexShrink: 0, marginTop: 2 }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "var(--color-status-errText)" }}>
+                        {diemDiError?.tieuDe || "Thiếu điểm khởi hành"}
+                      </div>
+                      <div style={{ fontSize: 12, color: "var(--color-status-errText)" }}>
+                        {diemDiError?.noiDung || "Vui lòng chọn hoặc nhập điểm đi của chuyến đi."}
+                      </div>
+                      {diemDiError?.hanhDong && (
+                        <button
+                          type="button"
+                          className="Btn BtnSmall"
+                          onClick={() => {
+                            if (diemDiError.hanhDong?.loai === "thu_lai") {
+                              handleSearchDiemDi();
+                            }
+                          }}
+                          style={{ marginTop: 6, padding: "2px 8px", fontSize: 11 }}
+                        >
+                          {diemDiError.hanhDong.nhan}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="banner-text">
-                Với {tripConfig.people} người đi {soNgay} ngày {soDem} đêm, cần tối thiểu {fmt(toiThieuVND)}.
+
+              {/* Ô 2: Điểm đến */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <label style={{ fontSize: 13, fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
+                  Điểm đến
+                </label>
+
+                {diemDen ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "10px 14px",
+                      background: "var(--color-primary-brandSoft)",
+                      border: "1.5px solid var(--color-primary-brand)",
+                      borderRadius: 10,
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <MapPin size={16} color="var(--color-primary-brand)" />
+                      <span style={{ fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
+                        {diemDen.ten} ({diemDen.quocGia})
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className="Btn BtnSmall"
+                      onClick={() => {
+                        setDiemDen(null);
+                        setDiemDenInput("");
+                        setDiemDenError(null);
+                        setDiemDenCandidates([]);
+                      }}
+                      style={{ padding: "4px 10px", fontSize: 12, background: "#FFFFFF" }}
+                    >
+                      <RefreshCw size={12} style={{ marginRight: 4 }} />
+                      Đổi
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <input
+                        type="text"
+                        className="Input"
+                        placeholder="Nhập nơi muốn đến..."
+                        value={diemDenInput}
+                        onChange={(e) => setDiemDenInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleSearchDiemDen();
+                        }}
+                        style={{ flex: 1 }}
+                      />
+                      <button
+                        type="button"
+                        className="Btn BtnPrimary"
+                        disabled={diemDenLoading || !diemDenInput.trim()}
+                        onClick={() => handleSearchDiemDen()}
+                        style={{ display: "flex", alignItems: "center", gap: 6 }}
+                      >
+                        {diemDenLoading ? (
+                          <Loader2 size={16} className="animate-spin" />
+                        ) : (
+                          <Search size={16} />
+                        )}
+                        <span>Tìm</span>
+                      </button>
+                    </div>
+
+                    {/* Gợi ý nhanh điểm đến */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
+                      <span style={{ fontSize: 12, color: "var(--color-neutral-mutedText)", alignSelf: "center" }}>
+                        Gợi ý:
+                      </span>
+                      {QUICK_DESTINATIONS.map((city) => (
+                        <button
+                          key={city}
+                          type="button"
+                          className="Chip"
+                          onClick={() => {
+                            setDiemDenInput(city);
+                            handleSearchDiemDen(city);
+                          }}
+                          style={{ padding: "4px 10px", fontSize: 12 }}
+                        >
+                          {city}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {/* Ứng viên điểm đến mơ hồ */}
+                {diemDenCandidates.length > 0 && !diemDen && (
+                  <div
+                    style={{
+                      background: "var(--color-status-warnBg)",
+                      border: "1px solid var(--color-status-warnBorder)",
+                      borderRadius: 8,
+                      padding: 10,
+                      marginTop: 6,
+                    }}
+                  >
+                    <div style={{ fontSize: 12, fontWeight: 600, color: "var(--color-status-warnText)" }}>
+                      Chọn điểm đến chính xác (tối đa 3):
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 6 }}>
+                      {diemDenCandidates.map((c, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          className="Btn BtnSmall"
+                          onClick={() => handleSelectDiemDenCandidate(c)}
+                          style={{ background: "#FFFFFF", fontSize: 12 }}
+                        >
+                          <MapPin size={12} style={{ marginRight: 4 }} />
+                          {c.ten} ({c.quocGia})
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Lỗi ở ô điểm đến */}
+                {(diemDenError || hasDiemDenMissingError || hasDiemTrungError) && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 8,
+                      background: "var(--color-status-errBg)",
+                      border: "1px solid var(--color-status-errBorder)",
+                      borderRadius: 8,
+                      padding: "8px 12px",
+                      marginTop: 4,
+                    }}
+                  >
+                    <AlertCircle size={16} color="var(--color-status-errText)" style={{ flexShrink: 0, marginTop: 2 }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "var(--color-status-errText)" }}>
+                        {hasDiemTrungError
+                          ? "Điểm đi trùng điểm đến"
+                          : diemDenError?.tieuDe || "Thiếu điểm đến"}
+                      </div>
+                      <div style={{ fontSize: 12, color: "var(--color-status-errText)" }}>
+                        {hasDiemTrungError
+                          ? "Điểm khởi hành và điểm đến nằm cùng khu vực (dưới 15 km). Vui lòng chọn điểm đến khác."
+                          : diemDenError?.noiDung || "Vui lòng chọn hoặc nhập điểm đến bạn muốn tới."}
+                      </div>
+                      {diemDenError?.hanhDong && (
+                        <button
+                          type="button"
+                          className="Btn BtnSmall"
+                          onClick={() => {
+                            if (diemDenError.hanhDong?.loai === "thu_lai") {
+                              handleSearchDiemDen();
+                            }
+                          }}
+                          style={{ marginTop: 6, padding: "2px 8px", fontSize: 11 }}
+                        >
+                          {diemDenError.hanhDong.nhan}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button className="btn btn-outline btn-sm" onClick={handleRaiseBudget}>
-              Nâng ngân sách lên {fmt(toiThieuVND)}
-            </button>
-            <button className="btn btn-outline btn-sm" onClick={handleClearAvoids}>
-              Bỏ bớt điều muốn tránh
-            </button>
-          </div>
-        </div>
-      )}
 
-      {/* ─── PHẦN 1: ĐIỂM ĐẾN & ĐIỂM KHỞI HÀNH ─── */}
-      <div className="field" style={{ marginBottom: 24 }}>
-        <div className="field-label" style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <MapPin size={16} />
-          Điểm đến
-        </div>
+          {/* ═════════════════════════════════════════════════════════════════
+              MỤC 2: MẤY NGƯỜI ĐI?
+          ═════════════════════════════════════════════════════════════════ */}
+          <div className="Section" id="sec-so-nguoi">
+            <div className="Sec">
+              <div className="NumC">2</div>
+              <div>
+                <div className="STitle">Mấy người đi?</div>
+                <div className="SSub">Tùy chỉnh số người từ 1 đến 10</div>
+              </div>
+            </div>
 
-        {/* Nút các điểm đến phổ biến */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
-          {POPULAR_DESTINATIONS.map((p) => {
-            const isSelected = getDiemDenTen(tripConfig.diemDen) === p.ten;
-            return (
-              <button
-                key={p.ten}
-                type="button"
-                className={`chip ${isSelected ? "on" : ""}`}
-                onClick={() => handleSelectPopularDest(p)}
-                style={{ fontWeight: isSelected ? 700 : 500 }}
-              >
-                {p.ten}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Ô Điểm đến khác + Nút Tìm */}
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <div style={{ position: "relative", flex: 1 }}>
-            <input
-              type="text"
-              className="input"
-              style={{ width: "100%", paddingLeft: 34 }}
-              placeholder="Điểm đến khác (VD: Cần Thơ, Singapore, Paris...)"
-              value={customDestInput}
-              onChange={(e) => setCustomDestInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleSearchCustomDest();
-                }
-              }}
-            />
-            <Search
-              size={16}
-              style={{
-                position: "absolute",
-                left: 10,
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "var(--g500)",
-              }}
-            />
-          </div>
-          <button
-            type="button"
-            className="btn btn-outline btn-sm"
-            onClick={handleSearchCustomDest}
-            disabled={isSearchingDest || !customDestInput.trim()}
-            style={{ minWidth: 70 }}
-          >
-            {isSearchingDest ? "Đang tìm..." : "Tìm"}
-          </button>
-        </div>
-        {searchError && (
-          <div style={{ color: "#dc2626", fontSize: 12, marginTop: 6 }}>
-            {searchError}
-          </div>
-        )}
-      </div>
-
-      {/* Điểm khởi hành */}
-      <div className="field" style={{ marginBottom: 24 }}>
-        <div className="field-label" style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <Plane size={16} />
-          Điểm khởi hành
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {POPULAR_ORIGINS.map((o) => {
-            const isSelected = tenDiemDi === o.ten;
-            return (
-              <button
-                key={o.ten}
-                type="button"
-                className={`chip ${isSelected ? "on" : ""}`}
-                onClick={() => setTripConfig({ diemDi: o.ten })}
-              >
-                {o.ten}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ─── PHẦN 2: THỜI GIAN CHUYẾN ĐI (2..5 NGÀY BẬT HẾT) ─── */}
-      <div className="field" style={{ marginBottom: 24 }}>
-        <div className="field-label" style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <Calendar size={16} />
-          Thời gian chuyến đi
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {DURATION_DAYS.map((d) => (
-            <button
-              key={d}
-              type="button"
-              className={`chip ${soNgay === d ? "on" : ""}`}
-              onClick={() => setTripConfig({ soNgay: d })}
-              style={{ fontWeight: soNgay === d ? 700 : 500 }}
-            >
-              {d} ngày {d - 1} đêm
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* ─── PHẦN 3: CHỌN NHANH PRESET ─── */}
-      <div
-        style={{
-          fontSize: 13,
-          fontWeight: 600,
-          color: "var(--g500)",
-          marginBottom: 10,
-          textTransform: "uppercase",
-          letterSpacing: "0.5px",
-        }}
-      >
-        Chọn nhanh
-      </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3,1fr)",
-          gap: 12,
-          marginBottom: 24,
-        }}
-      >
-        {PRESETS.map((p) => {
-          const Icon = p.icon;
-          const isSelected = selectedPreset === p.id;
-          return (
+            {/* Stepper tăng giảm số người */}
             <div
-              key={p.id}
-              className={`card card-hover ${isSelected ? "card-selected" : ""}`}
-              style={{ padding: 18, cursor: "pointer", transition: "all 0.2s" }}
-              onClick={() => pickPreset(p)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 12,
+                background: "var(--color-neutral-gray50)",
+                border: "1px solid var(--color-neutral-borderInput)",
+                borderRadius: 10,
+                padding: "6px 12px",
+                marginBottom: 16,
+              }}
             >
-              <div style={{ marginBottom: 8, color: "var(--p500)" }}>
-                <Icon size={24} />
+              <button
+                type="button"
+                className="Btn BtnSmall"
+                disabled={soNguoi <= 1}
+                onClick={() => handleStepPeople(-1)}
+                style={{
+                  width: 32,
+                  height: 32,
+                  padding: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 6,
+                }}
+                aria-label="Giảm 1 người"
+              >
+                <Minus size={14} />
+              </button>
+
+              <span style={{ fontSize: 16, fontWeight: 700, minWidth: 70, textAlign: "center" }}>
+                {soNguoi} người
+              </span>
+
+              <button
+                type="button"
+                className="Btn BtnSmall"
+                disabled={soNguoi >= 10}
+                onClick={() => handleStepPeople(1)}
+                style={{
+                  width: 32,
+                  height: 32,
+                  padding: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 6,
+                }}
+                aria-label="Tăng 1 người"
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+
+            {/* Thẻ nhóm (CHỈ đặt số người, KHÔNG CÓ CHỮ TRIỆU NÀO) */}
+            <div className="Presets">
+              {PRESETS.map((preset) => {
+                const isSelected = soNguoi === preset.people;
+                return (
+                  <div
+                    key={preset.id}
+                    className={`Preset ${isSelected ? "PresetOn" : ""}`}
+                    onClick={() => setSoNguoi(preset.people)}
+                  >
+                    {preset.iconType === "couple" && (
+                      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
+                        <circle cx="17" cy="17" r="16" fill="#E8F4FD" />
+                        <ellipse cx="17" cy="25" rx="10" ry="3.5" fill="#F4D398" />
+                        <path d="M12 25 C13 18, 15 15, 17 11 C19 15, 21 18, 22 25" stroke="#7A5229" strokeWidth="2" strokeLinecap="round" />
+                        <path d="M17 11 C14 8, 10 9, 8 13 C12 13, 15 12, 17 11 Z" fill="#489C57" />
+                        <path d="M17 11 C20 8, 24 9, 26 13 C22 13, 19 12, 17 11 Z" fill="#58AB67" />
+                      </svg>
+                    )}
+                    {preset.iconType === "group" && (
+                      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
+                        <circle cx="17" cy="17" r="16" fill="#EAF3FE" />
+                        <circle cx="12" cy="14" r="3.5" fill="#4B7BD8" />
+                        <circle cx="22" cy="14" r="3.5" fill="#4B7BD8" />
+                        <circle cx="17" cy="11.5" r="4" fill="#3B6DD0" />
+                        <path d="M9 25 C9 20, 15 20, 15 25" fill="#3B6DD0" />
+                        <path d="M19 25 C19 20, 25 20, 25 25" fill="#3B6DD0" />
+                        <path d="M13 25 C13 18.5, 21 18.5, 21 25" fill="#2454B8" />
+                      </svg>
+                    )}
+                    {preset.iconType === "family" && (
+                      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
+                        <circle cx="17" cy="17" r="16" fill="#EFF7ED" />
+                        <circle cx="13" cy="12" r="3.5" fill="#437762" />
+                        <circle cx="21" cy="12" r="3.5" fill="#437762" />
+                        <circle cx="17" cy="17" r="2.8" fill="#FFB74D" />
+                        <path d="M10 25 C10 19, 16 19, 16 25" fill="#437762" />
+                        <path d="M18 25 C18 19, 24 19, 24 25" fill="#437762" />
+                        <path d="M14 25 C14 22, 20 22, 20 25" fill="#FF9800" />
+                      </svg>
+                    )}
+                    {preset.iconType === "solo" && (
+                      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
+                        <circle cx="17" cy="17" r="16" fill="#EEF2FB" />
+                        <circle cx="17" cy="13" r="4.5" fill="#2B55D6" />
+                        <path d="M11 25 C11 19, 23 19, 23 25" fill="#2B55D6" />
+                      </svg>
+                    )}
+
+                    <div style={{ minWidth: 0 }}>
+                      <div className="PName">{preset.name}</div>
+                      <div className="PSub">{preset.sub}</div>
+                    </div>
+
+                    {isSelected && (
+                      <div className="Badge">
+                        <Check size={12} strokeWidth={3} />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {hasSoNguoiError && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  background: "var(--color-status-errBg)",
+                  border: "1px solid var(--color-status-errBorder)",
+                  borderRadius: 8,
+                  padding: "8px 12px",
+                  marginTop: 10,
+                }}
+              >
+                <AlertCircle size={16} color="var(--color-status-errText)" />
+                <span style={{ fontSize: 12, color: "var(--color-status-errText)", fontWeight: 600 }}>
+                  Số người đi phải nằm trong khoảng từ 1 đến 10 người.
+                </span>
               </div>
-              <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>
-                {p.name}
+            )}
+          </div>
+
+          {/* ═════════════════════════════════════════════════════════════════
+              MỤC 3: NGÂN SÁCH
+          ═════════════════════════════════════════════════════════════════ */}
+          <div className="Section" id="sec-ngan-sach">
+            <div className="Sec">
+              <div className="NumC">3</div>
+              <div style={{ flex: 1 }}>
+                <div className="STitle">Ngân sách</div>
+                <div className="SSub">Nhập số tiền VND dự kiến và chọn cách tính</div>
               </div>
-              <div style={{ fontSize: 13, color: "var(--g500)" }}>
-                {p.people} người · {fmt(p.budget)}
-              </div>
-              {isSelected && (
-                <div
+
+              {/* Nút chuyển chế độ: Cho cả nhóm vs Mỗi người */}
+              <div
+                style={{
+                  display: "inline-flex",
+                  background: "var(--color-neutral-gray100)",
+                  borderRadius: 8,
+                  padding: 3,
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setNganSachTheo("tong")}
                   style={{
-                    marginTop: 8,
-                    color: "var(--p500)",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 4,
+                    padding: "6px 14px",
+                    fontSize: 13,
+                    fontWeight: nganSachTheo === "tong" ? 700 : 500,
+                    background: nganSachTheo === "tong" ? "#FFFFFF" : "transparent",
+                    color:
+                      nganSachTheo === "tong"
+                        ? "var(--color-primary-brand)"
+                        : "var(--color-neutral-mutedText)",
+                    border: "none",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                    boxShadow:
+                      nganSachTheo === "tong" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
                   }}
                 >
-                  <Check size={14} /> Đã chọn
+                  Cho cả nhóm
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setNganSachTheo("moi_nguoi")}
+                  style={{
+                    padding: "6px 14px",
+                    fontSize: 13,
+                    fontWeight: nganSachTheo === "moi_nguoi" ? 700 : 500,
+                    background: nganSachTheo === "moi_nguoi" ? "#FFFFFF" : "transparent",
+                    color:
+                      nganSachTheo === "moi_nguoi"
+                        ? "var(--color-primary-brand)"
+                        : "var(--color-neutral-mutedText)",
+                    border: "none",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                    boxShadow:
+                      nganSachTheo === "moi_nguoi" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+                  }}
+                >
+                  Mỗi người
+                </button>
+              </div>
+            </div>
+
+            {/* Ô nhập số tiền có dấu chấm phân cách */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, maxWidth: 360, marginBottom: 12 }}>
+              <div style={{ position: "relative", flex: 1 }}>
+                <input
+                  type="text"
+                  className="Input"
+                  placeholder="Ví dụ: 10.000.000"
+                  value={nganSachInputStr}
+                  onChange={handleNganSachChange}
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 700,
+                    paddingRight: 32,
+                    textAlign: "right",
+                  }}
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    right: 12,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    fontWeight: 700,
+                    color: "var(--color-neutral-mutedText)",
+                  }}
+                >
+                  đ
+                </span>
+              </div>
+            </div>
+
+            {/* Các nút điền số nhanh: 5, 8, 10, 15, 20 triệu */}
+            <div className="ChipsNo" style={{ marginBottom: 10 }}>
+              {BUDGET_BUTTONS.map((amt) => {
+                const isSelected = nganSachSoTien === amt;
+                return (
+                  <div
+                    key={amt}
+                    className={`Chip ${isSelected ? "ChipOn" : ""}`}
+                    onClick={() => handlePickBudget(amt)}
+                  >
+                    {amt / 1_000_000} triệu
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Dòng nhỏ luôn hiện tổng quy đổi */}
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: "var(--color-primary-brand)",
+                background: "var(--color-primary-brandSoft)",
+                padding: "6px 12px",
+                borderRadius: 6,
+                display: "inline-block",
+              }}
+            >
+              Tổng cả nhóm: {tongNganSachQuyDoiVND > 0 ? `${dinhDangTien(tongNganSachQuyDoiVND)} đ` : "0 đ"}
+              {nganSachTheo === "moi_nguoi" && nganSachSoTien > 0 && (
+                <span style={{ fontSize: 12, color: "var(--color-neutral-mutedText)", marginLeft: 6 }}>
+                  ({dinhDangTien(nganSachSoTien)} đ × {soNguoi} người)
+                </span>
+              )}
+            </div>
+
+            {/* Lỗi ở ô ngân sách */}
+            {hasNganSachError && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  background: "var(--color-status-errBg)",
+                  border: "1px solid var(--color-status-errBorder)",
+                  borderRadius: 8,
+                  padding: "8px 12px",
+                  marginTop: 10,
+                }}
+              >
+                <AlertCircle size={16} color="var(--color-status-errText)" />
+                <span style={{ fontSize: 12, color: "var(--color-status-errText)", fontWeight: 600 }}>
+                  Ngân sách dự kiến phải là số nguyên dương hợp lệ (lớn hơn 0 đ).
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* ═════════════════════════════════════════════════════════════════
+              MỤC 4: THỜI GIAN
+          ═════════════════════════════════════════════════════════════════ */}
+          <div className="Section" id="sec-thoi-gian">
+            <div className="Sec">
+              <div className="NumC">4</div>
+              <div>
+                <div className="STitle">Thời gian</div>
+                <div className="SSub">Thời lượng chuyến đi từ 2 đến 5 ngày</div>
+              </div>
+            </div>
+
+            <div className="ChipsNo">
+              {DURATION_DAYS.map((d) => {
+                const isSelected = soNgay === d;
+                return (
+                  <div
+                    key={d}
+                    className={`Chip ${isSelected ? "ChipOn" : ""}`}
+                    onClick={() => setSoNgay(d)}
+                  >
+                    {d} ngày {d - 1} đêm
+                  </div>
+                );
+              })}
+            </div>
+
+            {hasSoNgayError && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  background: "var(--color-status-errBg)",
+                  border: "1px solid var(--color-status-errBorder)",
+                  borderRadius: 8,
+                  padding: "8px 12px",
+                  marginTop: 10,
+                }}
+              >
+                <AlertCircle size={16} color="var(--color-status-errText)" />
+                <span style={{ fontSize: 12, color: "var(--color-status-errText)", fontWeight: 600 }}>
+                  Chuyến đi hỗ trợ từ 2 đến 5 ngày (tương ứng 1 đến 4 đêm).
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* ═════════════════════════════════════════════════════════════════
+              MỤC 5: MUỐN TRÁNH GÌ? VÀ GHI CHÚ
+          ═════════════════════════════════════════════════════════════════ */}
+          <div className="Section" id="sec-muon-tranh">
+            <div className="Sec">
+              <div className="NumC">5</div>
+              <div>
+                <div className="STitle">Muốn tránh gì?</div>
+                <div className="SSub">Trip Vibes sẽ tối ưu lịch trình theo tiêu chí của bạn</div>
+              </div>
+            </div>
+
+            <div className="ChipsWrap" style={{ marginBottom: 16 }}>
+              {AVOID_ITEMS.map((item) => {
+                const IconComponent = item.icon;
+                const isAvoided = tranh.includes(item.label);
+                return (
+                  <div
+                    key={item.label}
+                    className={`Chip ChipIcon ${isAvoided ? "ChipOn" : ""}`}
+                    onClick={() => toggleAvoid(item.label)}
+                  >
+                    <IconComponent size={14} />
+                    <span>{item.label}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Ghi chú tùy chọn với bộ đếm ký tự chuẩn */}
+            <div style={{ marginTop: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
+                  Ghi chú thêm (không bắt buộc)
+                </span>
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: ghiChu.length > 500 ? "var(--color-status-error)" : "var(--color-neutral-mutedText)",
+                  }}
+                >
+                  {ghiChu.length}/500
+                </span>
+              </div>
+
+              <textarea
+                className="Area"
+                placeholder="Ví dụ: đi cùng gia đình, thích trải nghiệm văn hóa địa phương, muốn nghỉ ngơi thong thả..."
+                value={ghiChu}
+                maxLength={600}
+                onChange={(e) => setGhiChu(e.target.value)}
+                style={{ width: "100%", resize: "none", outline: "none", fontFamily: "inherit" }}
+              />
+
+              {hasGhiChuError && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    background: "var(--color-status-errBg)",
+                    border: "1px solid var(--color-status-errBorder)",
+                    borderRadius: 8,
+                    padding: "8px 12px",
+                    marginTop: 6,
+                  }}
+                >
+                  <AlertCircle size={16} color="var(--color-status-errText)" />
+                  <span style={{ fontSize: 12, color: "var(--color-status-errText)", fontWeight: 600 }}>
+                    Nội dung ghi chú tối đa 500 ký tự. Vui lòng rút gọn lại.
+                  </span>
                 </div>
               )}
             </div>
-          );
-        })}
-      </div>
+          </div>
+        </div>
 
-      {/* ─── PHẦN 4: TỰ CHỌN SỐ NGƯỜI & NGÂN SÁCH ─── */}
-      <div
-        style={{
-          fontSize: 13,
-          fontWeight: 600,
-          color: "var(--g500)",
-          marginBottom: 16,
-          textTransform: "uppercase",
-          letterSpacing: "0.5px",
-        }}
-      >
-        Hoặc tự chọn
-      </div>
+        {/* ═════════════════════════════════════════════════════════════════
+            THANH TÓM TẮT DƯỚI CÙNG (DỰNG TỪ GIÁ TRỊ THẬT)
+        ═════════════════════════════════════════════════════════════════ */}
+        <div className="BarWrap">
+          <div className="BarIn">
+            <div className="BarText" style={{ display: "flex", alignItems: "center", gap: 10, flex: 1 }}>
+              <MapPin size={18} color="var(--color-primary-brand)" style={{ flexShrink: 0 }} />
+              <div style={{ lineHeight: "20px", fontSize: 13 }}>
+                {!diemDi && (
+                  <span style={{ color: "var(--color-status-error)", fontWeight: 600, marginRight: 8 }}>
+                    Chưa chọn điểm đi
+                  </span>
+                )}
+                {!diemDen && (
+                  <span style={{ color: "var(--color-status-error)", fontWeight: 600, marginRight: 8 }}>
+                    Chưa chọn điểm đến
+                  </span>
+                )}
+                {tongNganSachQuyDoiVND <= 0 && (
+                  <span style={{ color: "var(--color-status-error)", fontWeight: 600, marginRight: 8 }}>
+                    Chưa nhập ngân sách
+                  </span>
+                )}
 
-      <div className="field" style={{ marginBottom: 20 }}>
-        <div className="field-label">Mấy người đi?</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <button
-            type="button"
-            className="btn btn-outline btn-sm"
-            style={{ width: 36, padding: 0, fontWeight: 800, fontSize: 18 }}
-            onClick={() =>
-              setTripConfig({ people: Math.max(1, tripConfig.people - 1) })
-            }
-          >
-            −
-          </button>
-          <span
-            style={{
-              minWidth: 32,
-              textAlign: "center",
-              fontSize: 20,
-              fontWeight: 700,
-            }}
-          >
-            {tripConfig.people}
-          </span>
-          <button
-            type="button"
-            className="btn btn-outline btn-sm"
-            style={{ width: 36, padding: 0, fontWeight: 800, fontSize: 18 }}
-            onClick={() => setTripConfig({ people: tripConfig.people + 1 })}
-          >
-            +
-          </button>
+                {diemDi && diemDen && tongNganSachQuyDoiVND > 0 && (
+                  <span>
+                    <strong>{soNguoi}</strong> người · <strong>{dinhDangTien(tongNganSachQuyDoiVND)} đ</strong> ·{" "}
+                    <strong>{soNgay} ngày {soDem} đêm</strong> ({diemDi.ten} → {diemDen.ten})
+                    {tranh.length > 0 ? ` · Tránh: ${tranh.join(", ")}` : ""}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Cụm nút submit + Chú thích vì sao tắt */}
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {!isFormValid && (
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: "var(--color-status-errText)",
+                    background: "var(--color-status-errBg)",
+                    padding: "4px 8px",
+                    borderRadius: 6,
+                    fontWeight: 600,
+                    maxWidth: 220,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                  title={getLyDoTat()}
+                >
+                  Đang tắt: {getLyDoTat()}
+                </span>
+              )}
+
+              <button
+                type="button"
+                className="Go"
+                disabled={!isFormValid}
+                onClick={handleSubmit}
+                style={{
+                  opacity: !isFormValid ? 0.6 : 1,
+                  cursor: !isFormValid ? "not-allowed" : "pointer",
+                }}
+              >
+                <Plane size={18} />
+                <span>Lập kế hoạch</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="field" style={{ marginBottom: 20 }}>
-        <div className="field-label">Ngân sách cả chuyến</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {BUDGETS.map((b) => (
-            <button
-              key={b}
-              type="button"
-              className={`chip ${tripConfig.budget === b ? "on" : ""}`}
-              onClick={() => setTripConfig({ budget: b })}
-            >
-              {fmt(b)}
-            </button>
-          ))}
+      {/* CỘT PHẢI: HomeRight */}
+      <div className="HomeRight">
+        <div className="Quote Script">
+          Đi để thấy thế giới rộng lớn và chính mình cũng thật tuyệt!
         </div>
-      </div>
 
-      <div className="field" style={{ marginBottom: 20 }}>
-        <div className="field-label">Muốn tránh gì?</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {AVOIDS.map((a) => (
-            <button
-              key={a}
-              type="button"
-              className={`chip ${tripConfig.avoids.includes(a) ? "on" : ""}`}
-              onClick={() => toggleAvoid(a)}
-            >
-              {a}
-            </button>
-          ))}
+        <div className="RightArt">
+          <svg width="294" height="680" viewBox="0 0 294 680" fill="none">
+            <defs>
+              <linearGradient id="baySky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#CDE6F8" />
+                <stop offset="40%" stopColor="#E5F3FC" />
+                <stop offset="100%" stopColor="#F8FAFE" />
+              </linearGradient>
+              <linearGradient id="baySea" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#76B5DB" />
+                <stop offset="60%" stopColor="#4395C6" />
+                <stop offset="100%" stopColor="#256C98" />
+              </linearGradient>
+              <linearGradient id="woodPost" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#8C6239" />
+                <stop offset="100%" stopColor="#634424" />
+              </linearGradient>
+            </defs>
+
+            <path d="M0 240 C 60 210, 140 215, 294 250 L 294 400 L 0 400 Z" fill="#9CC5DB" opacity="0.6" />
+            <path d="M40 280 C 120 230, 220 240, 294 265 L 294 450 L 40 450 Z" fill="#75A88F" opacity="0.5" />
+            <path d="M0 320 C 100 310, 200 330, 294 340 L 294 560 L 0 560 Z" fill="url(#baySea)" opacity="0.55" />
+            <path d="M80 680 C 140 540, 180 430, 294 410 L 294 680 Z" fill="#588D4A" />
+            <path d="M120 680 C 170 560, 230 490, 294 470 L 294 680 Z" fill="#3D6832" />
+
+            <rect x="236" y="500" width="14" height="180" rx="3" fill="url(#woodPost)" />
+            <path d="M180 540 L 255 540 L 270 552 L 255 564 L 180 564 Z" fill="#9C6B3B" />
+            <text x="220" y="556" fill="#FBF5E8" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="sans-serif">
+              Travel
+            </text>
+            <path d="M170 575 L 260 575 L 275 587 L 260 599 L 170 599 Z" fill="#885A2E" />
+            <text x="218" y="591" fill="#FBF5E8" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="sans-serif">
+              Explore
+            </text>
+            <path d="M190 610 L 255 610 L 268 622 L 255 634 L 190 634 Z" fill="#744A22" />
+            <text x="226" y="626" fill="#FBF5E8" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="sans-serif">
+              Love
+            </text>
+
+            <circle cx="160" cy="650" r="10" fill="#FFFFFF" />
+            <circle cx="160" cy="650" r="4" fill="#FFC24D" />
+            <circle cx="190" cy="665" r="9" fill="#FFFFFF" />
+            <circle cx="190" cy="665" r="3.5" fill="#FFC24D" />
+            <circle cx="130" cy="660" r="8" fill="#FFFFFF" />
+            <circle cx="130" cy="660" r="3" fill="#FFC24D" />
+          </svg>
         </div>
-      </div>
 
-      <div className="field" style={{ marginBottom: 20 }}>
-        <div className="field-label">
-          Muốn nói rõ hơn?{" "}
-          <span style={{ fontWeight: 400, color: "var(--g500)" }}>
-            Không bắt buộc
-          </span>
-        </div>
-        <textarea
-          className="textarea"
-          placeholder="Ví dụ: đi cùng gia đình, thích ăn đặc sản địa phương, không muốn đi bộ nhiều"
-          value={tripConfig.note}
-          onChange={(e) => setTripConfig({ note: e.target.value })}
-        />
-        <div className="hint">Bỏ trống cũng được, AI sẽ tự gợi ý.</div>
-      </div>
-
-      {/* Tóm tắt lựa chọn */}
-      <div
-        className="hint"
-        style={{
-          marginBottom: 16,
-          padding: "10px 14px",
-          background: "var(--p100)",
-          borderRadius: "var(--r-md)",
-          color: "var(--p500)",
-          fontWeight: 500,
-        }}
-      >
-        {tenDiemDen} · {soNgay} ngày {soDem} đêm · {tripConfig.people} người · {fmt(tripConfig.budget)}
-        {tripConfig.avoids.length > 0
-          ? ` · Tránh: ${tripConfig.avoids.join(", ")}`
-          : " · AI tự gợi ý hoạt động"}
-      </div>
-
-      {/* Nút Submit */}
-      <button
-        className="btn btn-primary btn-full btn-lg"
-        onClick={handleSubmit}
-        style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
-      >
-        <Sparkles size={18} />
-        Lập kế hoạch
-      </button>
-
-      {/* Hộp Về Trip Vibes & nguồn tỷ giá */}
-      <div
-        style={{
-          marginTop: 40,
-          padding: 16,
-          background: "var(--g50)",
-          borderRadius: "var(--r-md)",
-          border: "1px solid var(--g200)",
-          fontSize: 12,
-          color: "var(--g600)",
-          lineHeight: 1.6,
-        }}
-      >
-        <div style={{ fontWeight: 700, color: "var(--navy)", marginBottom: 4 }}>
-          Về Trip Vibes
-        </div>
-        <div>
-          Trợ lý AI lập kế hoạch du lịch thông minh, tối ưu ngân sách và thời gian di chuyển.
-          Dữ liệu địa điểm từ OpenStreetMap contributors. Tỷ giá quy đổi ngoại tệ cung cấp bởi{" "}
-          <a
-            href="https://www.exchangerate-api.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "var(--p500)", textDecoration: "underline", display: "inline-flex", alignItems: "center", gap: 2 }}
-          >
-            Rates By Exchange Rate API <ExternalLink size={11} />
-          </a>
-          .
-        </div>
+        <div className="Fade" />
       </div>
     </div>
   );
 }
+
+export default B1ChonNhanhScreen;

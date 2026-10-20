@@ -43,7 +43,7 @@ export interface PlanStructuredInput {
   note?: string;
   preferences?: string[];
   soNgay?: number;
-  diemDi?: string | DiemDen;
+  diemDi?: string | DiemDen | null;
   diemDen?: DiemDen | string | null;
   giaVeTuNhap?: { chieuDiVND: number; chieuVeVND: number };
 }
@@ -176,7 +176,7 @@ export function usePlan() {
           ? typeof sInput.diemDi === "string"
             ? sInput.diemDi
             : sInput.diemDi.ten
-          : "TP.HCM";
+          : "";
 
         const noteTrimmed = sInput.note?.trim();
 
@@ -200,7 +200,7 @@ export function usePlan() {
 
           const tripRequest: TripRequest = {
             schemaVersion: 7,
-            diemDi: sInput.diemDi || "TP.HCM",
+            diemDi: sInput.diemDi || "",
             diemDen: sInput.diemDen || null,
             soNgay: sInput.soNgay ?? 3,
             soNguoi: sInput.people ?? null,

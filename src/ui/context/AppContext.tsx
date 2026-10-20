@@ -37,11 +37,13 @@ import {
 } from "@/contracts";
 
 export interface TripConfig {
-  diemDi: string | DiemDen;
+  diemDi: DiemDen | string | null;
   diemDen: DiemDen | string | null;
   soNgay: number;
   people: number;
   budget: number;
+  nganSachSoTien?: number;
+  nganSachTheo?: "tong" | "moi_nguoi";
   avoids: string[];
   note: string;
   giaVeTuNhap?: { chieuDiVND: number; chieuVeVND: number };
@@ -448,12 +450,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
     }
     return {
-      diemDi: sampleOrigin.ten,
-      diemDen: sampleDest,
+      diemDi: null,
+      diemDen: null,
       soNgay: 3,
       people: 2,
-      budget: 10_000_000,
-      avoids: ["Không dậy sớm"],
+      budget: 0,
+      avoids: [],
       note: "",
     };
   });

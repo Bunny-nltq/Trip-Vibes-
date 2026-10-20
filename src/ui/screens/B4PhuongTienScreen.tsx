@@ -131,7 +131,7 @@ export function B4PhuongTienScreen() {
               setSelectedId("");
             }}
           >
-            Chiều đi ({(plan?.request.diemDi ? (typeof plan.request.diemDi === "string" ? plan.request.diemDi : plan.request.diemDi.ten) : "TP.HCM")} → {getDiemDenTen(plan?.request.diemDen) || "Điểm đến"})
+            Chiều đi ({(plan?.request.diemDi ? (typeof plan.request.diemDi === "string" ? plan.request.diemDi : plan.request.diemDi.ten) : "Điểm đi")} → {getDiemDenTen(plan?.request.diemDen) || "Điểm đến"})
           </div>
           <div
             className={`tab-item ${tab === "ve" ? "active" : ""}`}
@@ -140,7 +140,7 @@ export function B4PhuongTienScreen() {
               setSelectedId("");
             }}
           >
-            Chiều về ({getDiemDenTen(plan?.request.diemDen) || "Điểm đến"} → {(plan?.request.diemDi ? (typeof plan.request.diemDi === "string" ? plan.request.diemDi : plan.request.diemDi.ten) : "TP.HCM")})
+            Chiều về ({getDiemDenTen(plan?.request.diemDen) || "Điểm đến"} → {(plan?.request.diemDi ? (typeof plan.request.diemDi === "string" ? plan.request.diemDi : plan.request.diemDi.ten) : "Điểm đi")})
           </div>
         </div>
 
