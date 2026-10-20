@@ -5,6 +5,7 @@ import {
   type TripRequest,
   type Selection,
   type Preference,
+  type DiemDen,
   SelectionSchema,
   getDiemDenTen,
 } from "@/contracts";
@@ -98,10 +99,25 @@ export async function runPlanAgent(
   options?: PlanAgentOptions
 ): Promise<PlanAgentResult> {
   const provider = options?.provider ?? new GeminiProvider();
-  const dataSource = options?.dataSource ?? new JsonDataSource();
+  const resolvedDiemDen: DiemDen | undefined =
+    request.diemDen && typeof request.diemDen === "object"
+      ? request.diemDen
+      : undefined;
+  const resolvedDiemDi: DiemDen | undefined =
+    request.diemDi && typeof request.diemDi === "object"
+      ? request.diemDi
+      : undefined;
+
+  const dataSource =
+    options?.dataSource ??
+    (process.env.DATA_MODE === "mock"
+      ? new JsonDataSource()
+      : new LiveDataSource(undefined, undefined, resolvedDiemDen, resolvedDiemDi, request.soNgay ?? 3));
   const liveDataSource =
     options?.liveDataSource ??
-    (dataSource instanceof LiveDataSource ? dataSource : new LiveDataSource());
+    (dataSource instanceof LiveDataSource
+      ? dataSource
+      : new LiveDataSource(undefined, undefined, resolvedDiemDen, resolvedDiemDi, request.soNgay ?? 3));
 
   const soNguoi = request.soNguoi ?? 2;
   const soNgay = request.soNgay ?? 3;

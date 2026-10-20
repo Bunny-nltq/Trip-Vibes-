@@ -29,6 +29,7 @@ import {
   fetchQuanAnsOSM,
   fetchCafesOSM,
   fetchHoatDongsOSM,
+  lastOverpassStats,
 } from "./overpassClient";
 import { researchTransports } from "./researchTransport";
 import { researchGiaDiemDen } from "./researchGiaDiemDen";
@@ -41,7 +42,7 @@ const DEFAULT_COORD = { lat: 10.7769, lng: 106.7009 }; // default center if not 
 export class LiveDataSource implements DataSource {
   private readonly mode: DataMode;
   private readonly snapshotName?: string;
-  private readonly mockSource: JsonDataSource;
+  private readonly mockSource?: JsonDataSource;
   private readonly fetchedAt: string;
   private diemDen?: DiemDen;
   private diemDi?: DiemDen;
@@ -54,7 +55,7 @@ export class LiveDataSource implements DataSource {
   private memoHoatDongs?: HoatDong[];
   private memoTransports?: Transport[];
 
-  private dataSourceUsed: "live" | "snapshot" | "mock" = "live";
+  private dataSourceUsed: "live" | "snapshot" | "mock" | "cache" = "live";
   private snapshotDate?: string;
 
   constructor(
@@ -68,7 +69,14 @@ export class LiveDataSource implements DataSource {
     this.mode =
       (process.env.DATA_MODE as DataMode | undefined) ?? mode ?? "live";
     this.snapshotName = snapshotName ?? process.env.DATA_SNAPSHOT_NAME;
-    this.mockSource = new JsonDataSource();
+    if (this.mode === "mock") {
+      this.mockSource = new JsonDataSource();
+      this.dataSourceUsed = "mock";
+    } else if (this.mode === "snapshot") {
+      this.dataSourceUsed = "snapshot";
+    } else {
+      this.dataSourceUsed = "live";
+    }
     this.fetchedAt = new Date().toISOString();
     this.diemDen = diemDen;
     this.diemDi = diemDi ?? DEFAULT_DIEM_DI;
@@ -80,11 +88,41 @@ export class LiveDataSource implements DataSource {
     return process.env.DATA_FALLBACK !== "off";
   }
 
-  getDataSourceUsed(): { source: "live" | "snapshot" | "mock"; ngayDuLieu: string; snapshotDate?: string } {
+  getDataSourceUsed(): {
+    source: "live" | "snapshot" | "mock" | "cache";
+    ngayDuLieu: string;
+    snapshotDate?: string;
+    tuoiGio?: number;
+  } {
+    if (this.mode === "mock") {
+      return {
+        source: "mock",
+        ngayDuLieu: this.fetchedAt,
+      };
+    }
+    if (this.dataSourceUsed === "snapshot" || this.mode === "snapshot") {
+      return {
+        source: "snapshot",
+        ngayDuLieu: this.snapshotDate ?? this.fetchedAt,
+        snapshotDate: this.snapshotDate,
+      };
+    }
+
+    const cachedItems = lastOverpassStats.filter((s) => s.fromCache);
+    if (cachedItems.length > 0 && cachedItems.length >= lastOverpassStats.length / 2) {
+      const avgAge =
+        cachedItems.reduce((acc, c) => acc + (c.cacheAgeHours ?? 0), 0) /
+        cachedItems.length;
+      return {
+        source: "cache",
+        ngayDuLieu: this.fetchedAt,
+        tuoiGio: Number(avgAge.toFixed(1)),
+      };
+    }
+
     return {
-      source: this.dataSourceUsed,
+      source: "live",
       ngayDuLieu: this.fetchedAt,
-      snapshotDate: this.snapshotDate,
     };
   }
 
@@ -117,17 +155,25 @@ export class LiveDataSource implements DataSource {
   // ─── Legacy interface (backward compat) ───────────────────────────────────
 
   async getHotels(): Promise<Hotel[]> {
-    return this.mockSource.getHotels();
+    if (this.mode === "mock") return this.mockSource?.getHotels() ?? [];
+    return [];
   }
 
   async getTransports(): Promise<Transport[]> {
     if (this.memoTransports) return this.memoTransports;
-    if (this.mode === "mock") return this.mockSource.getTransports();
+    if (this.mode === "mock") {
+      this.dataSourceUsed = "mock";
+      return (this.memoTransports = (await this.mockSource?.getTransports()) ?? []);
+    }
 
     if (this.mode === "snapshot") {
       const snap = this.loadSnapshot();
-      if (snap?.transports && snap.transports.length > 0) return snap.transports;
-      return this.mockSource.getTransports();
+      if (snap?.transports && snap.transports.length > 0) {
+        this.dataSourceUsed = "snapshot";
+        this.snapshotDate = snap.createdAt;
+        return (this.memoTransports = snap.transports);
+      }
+      return (this.memoTransports = []);
     }
 
     try {
@@ -138,16 +184,27 @@ export class LiveDataSource implements DataSource {
           this.soNgay,
           this.giaVeTuNhap
         );
-        if (res.transports.length > 0) return res.transports;
+        if (res.transports.length > 0) return (this.memoTransports = res.transports);
       }
-      return this.mockSource.getTransports();
     } catch {
-      return this.mockSource.getTransports();
+      // ignore
     }
+
+    if (this.isFallbackAllowed()) {
+      const snap = this.loadSnapshotForDestination();
+      if (snap?.transports && snap.transports.length > 0) {
+        this.dataSourceUsed = "snapshot";
+        this.snapshotDate = snap.createdAt;
+        return (this.memoTransports = snap.transports);
+      }
+    }
+
+    return (this.memoTransports = []);
   }
 
   async getActivities(): Promise<Activity[]> {
-    return this.mockSource.getActivities();
+    if (this.mode === "mock") return this.mockSource?.getActivities() ?? [];
+    return [];
   }
 
   // ─── Live data ────────────────────────────────────────────────────────────
@@ -208,7 +265,7 @@ export class LiveDataSource implements DataSource {
       if (!this.isFallbackAllowed()) {
         return (this.memoKhachSans = []);
       }
-      const snap = this.loadSnapshotForDestination() ?? this.loadLatestSnapshot();
+      const snap = this.loadSnapshotForDestination();
       if (snap?.khachSans && snap.khachSans.length > 0) {
         this.dataSourceUsed = "snapshot";
         this.snapshotDate = snap.createdAt;
@@ -265,7 +322,7 @@ export class LiveDataSource implements DataSource {
       if (!this.isFallbackAllowed()) {
         return (this.memoQuanAns = []);
       }
-      const snap = this.loadSnapshotForDestination() ?? this.loadLatestSnapshot();
+      const snap = this.loadSnapshotForDestination();
       if (snap?.quanAns && snap.quanAns.length > 0) {
         this.dataSourceUsed = "snapshot";
         this.snapshotDate = snap.createdAt;
@@ -306,7 +363,7 @@ export class LiveDataSource implements DataSource {
       if (!this.isFallbackAllowed()) {
         return (this.memoCafes = []);
       }
-      const snap = this.loadSnapshotForDestination() ?? this.loadLatestSnapshot();
+      const snap = this.loadSnapshotForDestination();
       if (snap?.cafes && snap.cafes.length > 0) {
         this.dataSourceUsed = "snapshot";
         this.snapshotDate = snap.createdAt;
@@ -347,7 +404,7 @@ export class LiveDataSource implements DataSource {
       if (!this.isFallbackAllowed()) {
         return (this.memoHoatDongs = []);
       }
-      const snap = this.loadSnapshotForDestination() ?? this.loadLatestSnapshot();
+      const snap = this.loadSnapshotForDestination();
       if (snap?.hoatDongs && snap.hoatDongs.length > 0) {
         this.dataSourceUsed = "snapshot";
         this.snapshotDate = snap.createdAt;

@@ -56,24 +56,7 @@ function DevTools() {
 
   return (
     <>
-      {/* Dải DỮ LIỆU MẪU - chỉ khi dev=1 và isSampleDataActive */}
-      {isSampleDataActive && (
-        <div
-          style={{
-            background: "#fef3c7",
-            color: "#92400e",
-            borderBottom: "1px solid #fcd34d",
-            padding: "5px 12px",
-            fontSize: 12,
-            fontWeight: 700,
-            textAlign: "center",
-            letterSpacing: "0.5px",
-            width: "100%",
-          }}
-        >
-          DỮ LIỆU MẪU (Chỉ kích hoạt trong môi trường Development với ?dev=1)
-        </div>
-      )}
+
 
       {/* Bảng Chuyển nhanh màn hình - đặt ở góc phải, có nút đóng */}
       {isOpen && (
@@ -153,6 +136,46 @@ function DevTools() {
   );
 }
 
+function MockDataBanner() {
+  const { dataSourceUsed, isSampleDataActive, plan } = useApp();
+  const showBanner =
+    dataSourceUsed === "mock" ||
+    plan?.dataSourceUsed === "mock" ||
+    isSampleDataActive;
+
+  if (!showBanner) return null;
+
+  return (
+    <div
+      role="status"
+      aria-label="Thông báo dữ liệu mẫu"
+      style={{
+        background: "#fef3c7",
+        color: "#92400e",
+        borderBottom: "1.5px solid #fcd34d",
+        padding: "6px 16px",
+        fontSize: 12,
+        fontWeight: 800,
+        textAlign: "center",
+        letterSpacing: "1px",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        zIndex: 9999,
+      }}
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+      <span>DỮ LIỆU MẪU</span>
+    </div>
+  );
+}
+
 function ScreenRouter() {
   const { screen } = useApp();
 
@@ -194,6 +217,7 @@ function ScreenRouter() {
   if (isAuthScreen) {
     return (
       <div className="Frame">
+        <MockDataBanner />
         <DevTools />
         <main>{renderContent()}</main>
       </div>
@@ -202,6 +226,7 @@ function ScreenRouter() {
 
   return (
     <div className="Frame">
+      <MockDataBanner />
       <DevTools />
       <div className="Shell">
         <SideNav />

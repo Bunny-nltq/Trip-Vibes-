@@ -71,6 +71,9 @@ export interface PlanApiResponse {
   ms?: number;
   toiThieuVND?: number;
   dataSourceUsed?: string;
+  ngayDuLieu?: string;
+  snapshotDate?: string;
+  tuoiGioCache?: number;
   lyDo?: string;
   ungVien?: DestinationCandidate[];
   error?: string;
@@ -284,6 +287,8 @@ export function usePlan() {
     hardViolations: result?.hard ?? [],
     softViolations: result?.soft ?? [],
     toiThieuVND: result?.toiThieuVND ?? 0,
-    dataSourceUsed: result?.dataSourceUsed ?? "snapshot",
+    dataSourceUsed: result?.dataSourceUsed ?? "",
+    ngayDuLieu: result?.snapshotDate ?? result?.ngayDuLieu,
+    tuoiGioCache: result?.tuoiGioCache,
   };
 }

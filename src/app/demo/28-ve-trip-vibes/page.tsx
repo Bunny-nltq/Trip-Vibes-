@@ -19,7 +19,7 @@ export default function Page_28vetripvibes() {
 <div className="Card" style={{"width": "220px", "margin": "0"}}><div className="InfoTitle">Theo dõi chi tiêu</div><div className="InfoSub">Chụp bill, AI đọc giúp</div></div></div>
 <div className="Btn BtnPrimary" style={{"width": "320px", "height": "52px", "margin": "0 auto"}}>Bắt đầu lập kế hoạch</div><div style={{"height": "16px"}}></div><div className="Link">Đăng nhập</div>
 <div className="Hint" style={{"marginTop": "28px"}}>Bản mô phỏng, dùng dữ liệu mẫu.</div></div></div><div className="Modal" style={{"left": "460px", "top": "250px", "width": "520px"}}><div className="ModalTitle">Về Trip Vibes</div><div className="Sub">Vài điều cần biết trước khi dùng.</div>
-<div className="InfoSub" style={{"marginBottom": "8px"}}>• Dữ liệu khách sạn, phương tiện, hoạt động là dữ liệu mẫu.</div>
+<div className="InfoSub" style={{"marginBottom": "8px"}}>• Nguồn dữ liệu: OpenStreetMap contributors, tỷ giá &quot;Rates By Exchange Rate API&quot; (khi có giá nước ngoài).</div>
 <div className="InfoSub" style={{"marginBottom": "8px"}}>• Trip Vibes không đặt vé thật, đây là bản mô phỏng.</div>
 <div className="InfoSub" style={{"marginBottom": "20px"}}>• Ảnh bill chỉ xử lý trong bộ nhớ và không được lưu.</div>
 <div className="Row" style={{"justifyContent": "flex-end"}}><div className="Btn BtnPrimary" style={{"width": "120px"}}>Đã hiểu</div></div></div>

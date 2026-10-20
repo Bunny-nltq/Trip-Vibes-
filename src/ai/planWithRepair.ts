@@ -33,6 +33,7 @@ export interface PlanRepairResult {
   hard: Violation[];
   soft: Violation[];
   chiTietThieu?: {
+    phuongTien?: number;
     khachSan: number;
     quanAn: number;
     hoatDong: number;
@@ -52,6 +53,7 @@ export interface PlanRepairResult {
   dataSourceUsed: string;
   ngayDuLieu?: string;
   snapshotDate?: string;
+  tuoiGioCache?: number;
 }
 
 export async function planWithRepair(
@@ -159,6 +161,7 @@ export async function planWithRepair(
   emptyResult.dataSourceUsed = dsUsedInfo.source;
   emptyResult.ngayDuLieu = dsUsedInfo.ngayDuLieu;
   emptyResult.snapshotDate = dsUsedInfo.snapshotDate;
+  emptyResult.tuoiGioCache = dsUsedInfo.tuoiGio;
 
   const data = {
     transports,
@@ -170,21 +173,15 @@ export async function planWithRepair(
     hoatDongs,
   };
 
-  // Nếu không có bất kỳ phương tiện nào
-  if (transports.length === 0) {
-    emptyResult.status = "khong_co_phuong_an";
-    emptyResult.lyDo = "khong_co_phuong_an";
-    emptyResult.ms = Date.now() - startMs;
-    return emptyResult;
-  }
-
-  // Tiền điều kiện dữ liệu: khách sạn dưới 3, điểm tham quan dưới 3 hoặc quán ăn dưới 2
+  // Tiền điều kiện dữ liệu: phương tiện, khách sạn dưới 3, điểm tham quan dưới 3 hoặc quán ăn dưới 2
+  const thieuPT = transports.length === 0;
   const thieuKS = khachSans.length < 3;
   const thieuHD = hoatDongs.length < 3;
   const thieuQA = quanAns.length < 2;
 
-  if (thieuKS || thieuHD || thieuQA) {
+  if (thieuPT || thieuKS || thieuHD || thieuQA) {
     const lyDoThieu: string[] = [];
+    if (thieuPT) lyDoThieu.push("phương tiện di chuyển (0)");
     if (thieuKS) lyDoThieu.push(`khách sạn (${khachSans.length}/3)`);
     if (thieuHD) lyDoThieu.push(`điểm tham quan (${hoatDongs.length}/3)`);
     if (thieuQA) lyDoThieu.push(`quán ăn (${quanAns.length}/2)`);
@@ -199,6 +196,7 @@ export async function planWithRepair(
     emptyResult.soLanGoiAI = 0;
     emptyResult.ms = Date.now() - startMs;
     emptyResult.chiTietThieu = {
+      phuongTien: transports.length,
       khachSan: khachSans.length,
       quanAn: quanAns.length,
       hoatDong: hoatDongs.length,
@@ -364,6 +362,7 @@ export async function planWithRepair(
         dataSourceUsed: dsUsedInfo.source,
         ngayDuLieu: dsUsedInfo.ngayDuLieu,
         snapshotDate: dsUsedInfo.snapshotDate,
+        tuoiGioCache: dsUsedInfo.tuoiGio,
       };
     }
 
@@ -389,5 +388,6 @@ export async function planWithRepair(
     dataSourceUsed: dsUsedInfo.source,
     ngayDuLieu: dsUsedInfo.ngayDuLieu,
     snapshotDate: dsUsedInfo.snapshotDate,
+    tuoiGioCache: dsUsedInfo.tuoiGio,
   };
 }

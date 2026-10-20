@@ -295,7 +295,7 @@ export function SideNav() {
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
-              <div className="H1" style={{ fontSize: 18, margin: 0 }}>Cài đặt ứng dụng</div>
+              <div className="H1" style={{ fontSize: 18, margin: 0 }}>Về Trip Vibes & Cài đặt</div>
               <button
                 type="button"
                 onClick={() => setShowSettingsModal(false)}
@@ -315,16 +315,18 @@ export function SideNav() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <div style={{ padding: "12px 14px", background: "#F4F8FE", borderRadius: 14 }}>
+                <div style={{ fontWeight: 600, fontSize: 13, color: "#1F2A44" }}>Nguồn dữ liệu</div>
+                <div style={{ fontSize: 12, color: "#5C6B88", marginTop: 4, lineHeight: 1.5 }}>
+                  Dữ liệu bản đồ và địa điểm từ OpenStreetMap contributors. Tỷ giá quy đổi ngoại tệ &quot;Rates By Exchange Rate API&quot; (khi có giá nước ngoài).
+                </div>
+              </div>
+              <div style={{ padding: "12px 14px", background: "#F4F8FE", borderRadius: 14 }}>
                 <div style={{ fontWeight: 600, fontSize: 13, color: "#1F2A44" }}>Giao diện</div>
                 <div style={{ fontSize: 12, color: "#5C6B88", marginTop: 2 }}>Mặc định xanh trời hiện có</div>
               </div>
               <div style={{ padding: "12px 14px", background: "#F4F8FE", borderRadius: 14 }}>
                 <div style={{ fontWeight: 600, fontSize: 13, color: "#1F2A44" }}>Đơn vị tiền tệ</div>
                 <div style={{ fontSize: 12, color: "#5C6B88", marginTop: 2 }}>VND (đ)</div>
-              </div>
-              <div style={{ padding: "12px 14px", background: "#F4F8FE", borderRadius: 14 }}>
-                <div style={{ fontWeight: 600, fontSize: 13, color: "#1F2A44" }}>Nguồn dữ liệu</div>
-                <div style={{ fontSize: 12, color: "#5C6B88", marginTop: 2 }}>OpenStreetMap & Gemini AI</div>
               </div>
             </div>
 

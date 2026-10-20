@@ -5,6 +5,7 @@ import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
 import type { PlanItem, Preference, DiemDen } from "@/contracts";
 import { getDiemDenTen } from "@/contracts";
+import { nhanNguonDuLieu } from "@/core/nhanNguon";
 import {
   Map as MapIcon,
   Sparkles,
@@ -63,6 +64,7 @@ export function B3KeHoachScreen() {
   const {
     nav,
     plan,
+    planResult,
     planStatus,
     hardViolations,
     softViolations,
@@ -70,6 +72,9 @@ export function B3KeHoachScreen() {
     confirmed,
     setPreviewData,
     setEditContext,
+    dataSourceUsed,
+    ngayDuLieu,
+    tuoiGioCache,
   } = useApp();
 
   const [selectedVibes, setSelectedVibes] = useState<Preference[]>(() =>
@@ -301,7 +306,29 @@ export function B3KeHoachScreen() {
           </div>
         )}
 
-        <div className="section-title">Kế hoạch theo ngày</div>
+        <div style={{ marginBottom: 20 }}>
+          <h1 className="section-title" style={{ fontSize: 20, fontWeight: 800, margin: 0, color: "var(--navy)" }}>
+            Kế hoạch du lịch {getDiemDenTen(plan.request.diemDen)}
+          </h1>
+          <div
+            style={{
+              fontSize: 12,
+              color: "var(--g500)",
+              marginTop: 4,
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            <span>
+              {nhanNguonDuLieu({
+                dataSourceUsed: planResult?.dataSourceUsed ?? plan?.dataSourceUsed ?? dataSourceUsed,
+                ngay: planResult?.snapshotDate ?? planResult?.ngayDuLieu ?? ngayDuLieu ?? (plan as any)?.ngayDuLieu,
+                tuoiGio: planResult?.tuoiGioCache ?? tuoiGioCache ?? (plan as any)?.tuoiGioCache,
+              })}
+            </span>
+          </div>
+        </div>
 
         {/* Hiển thị các ngày từ kết quả backend thực tế */}
         {Array.from(daysMap.entries()).map(([dayNum, items]) => {

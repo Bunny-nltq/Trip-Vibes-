@@ -172,6 +172,8 @@ export interface AppCtx extends AppState {
   hardViolations: Violation[];
   softViolations: Violation[];
   dataSourceUsed: string;
+  ngayDuLieu?: string;
+  tuoiGioCache?: number;
 
   // Plan History (Undo / Redo)
   canUndo: boolean;
@@ -599,7 +601,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const fallbackPlan = isBangkokParam ? BANGKOK_SAMPLE_PLAN : DEFAULT_SAMPLE_PLAN;
   const isUsingFallbackPlan = !history.current && !planState.plan;
   const isSampleDataActive =
-    isDev && (isBangkokParam || isPreviewParam || isUsingFallbackPlan);
+    (isDev && (isBangkokParam || isPreviewParam || isUsingFallbackPlan)) ||
+    planState.dataSourceUsed === "mock" ||
+    history.current?.dataSourceUsed === "mock";
   const activePlan = history.current ?? planState.plan ?? fallbackPlan;
 
   const applyPreview = useCallback(() => {
@@ -646,6 +650,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         hardViolations: planState.hardViolations,
         softViolations: planState.softViolations,
         dataSourceUsed: planState.dataSourceUsed,
+        ngayDuLieu: planState.ngayDuLieu,
+        tuoiGioCache: planState.tuoiGioCache,
 
         // History
         canUndo: history.canUndo,
