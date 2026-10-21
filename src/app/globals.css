@@ -495,8 +495,8 @@ body {
   }
 
   body, .Frame, .Shell, .Content, .tv-layout, .tv-main {
-    background: #ffffff !important;
-    color: #000000 !important;
+    background: var(--color-surface) !important;
+    color: var(--color-text) !important;
     padding: 0 !important;
     margin: 0 !important;
     width: 100% !important;
