@@ -6,7 +6,7 @@ AI Agent lập kế hoạch du lịch thông minh – Next.js 16 + TypeScript + 
 
 ## 1. Cài đặt
 
-Yêu cầu môi trường: **Node.js 20+** và **npm**.
+Yêu cầu môi trường: **Node.js >= 20.11** và **npm**.
 
 ```bash
 git clone https://github.com/Bunny-nltq/Trip-Vibes-.git
@@ -29,13 +29,16 @@ cp .env.example .env.local
 | Tên biến | Bắt buộc | Mặc định | Mô tả |
 |:---|:---:|:---:|:---|
 | `GEMINI_API_KEY` | Khi bật AI | - | Khóa API Google Gemini từ Google AI Studio (bảo mật, không ghi vào code). |
-| `GEMINI_MODEL` | Không | `gemini-3.5-flash-lite` | Tên mô hình Gemini sử dụng để phân tích và lập kế hoạch. |
+| `GEMINI_MODEL` | Không | `gemini-2.5-flash` | Tên mô hình Gemini sử dụng để phân tích và lập kế hoạch. |
 | `LIVE_AI_ENABLED` | Không | `false` | Bật/tắt gọi AI thật trên môi trường chạy. Khi `false` hoặc gặp lỗi/vượt hạn mức, hệ thống tự động kích hoạt kế hoạch dự phòng bằng thuật toán quy tắc thuần túy (`lapKeHoachTuDong`). |
 | `GEMINI_DAILY_CAP` | Không | `40` | Hạn mức tổng số lượt gọi AI tối đa mỗi ngày trên toàn hệ thống (bộ nhớ tạm). |
 | `PLAN_MAX_AI_CALLS` | Không | `8` | Số lượt gọi AI tối đa cho mỗi phiên lập kế hoạch (bao gồm cả vòng tự sửa lỗi). |
 | `DATA_MODE` | Không | `snapshot` | Chế độ nguồn dữ liệu: `snapshot` (dùng dữ liệu lưu trữ đã kiểm toán), `live` (truy vấn OSM/Nominatim trực tiếp), hoặc `mock` (dữ liệu giả lập test). |
 | `LIVE_DATA_ENABLED` | Không | `false` | Cho phép truy vấn dữ liệu trực tuyến ngoài mạng khi triển khai. |
-| `NEXT_PUBLIC_SHOW_DEMO` | Không | `false` | Cho phép hiển thị thanh điều hướng các màn hình `/demo/*`. Mặc định trả về 404. |
+| `NOMINATIM_USER_AGENT` | Không | `TripVibes/1.0 (contact@tripvibes.vn)` | User-Agent hợp lệ kèm email liên hệ gửi đến dịch vụ OpenStreetMap Nominatim. |
+| `SITE_URL` | Không | `http://localhost:3000` | Địa chỉ URL gốc của website phục vụ SEO metadata, sitemap và chia sẻ xã hội. |
+| `NEXT_PUBLIC_SHOW_DEMO` | Không | `false` | Cho phép hiển thị thanh điều hướng các màn hình `/demo/*`. Mặc định trả về 404 khi deploy. |
+| `UNSPLASH_ACCESS_KEY` | Không | - | Khóa truy cập Unsplash API để tìm kiếm và đề xuất ảnh điểm đến (tùy chọn). |
 | `EXCHANGE_RATE_API_KEY` | Không | - | Khóa API tra cứu tỷ giá ngoại tệ từ ExchangeRate-API (tùy chọn). |
 | `TAVILY_API_KEY` | Không | - | Khóa tìm kiếm web Tavily hỗ trợ tìm kiếm phương tiện (tùy chọn). |
 
@@ -43,22 +46,24 @@ cp .env.example .env.local
 
 ## 3. Danh mục Scripts (Từ `package.json`)
 
-Mọi lệnh phát triển, kiểm tra chất lượng và đánh giá:
+Toàn bộ 26 lệnh phát triển, kiểm tra chất lượng và đánh giá được khai báo trong `package.json`:
 
 ### 3.1. Phát triển & Vận hành
-- `npm run dev`: Chạy máy chủ phát triển cục bộ (`next dev`) tại [http://localhost:3000](http://localhost:3000).
+- `npm run dev`: Khởi chạy máy chủ phát triển cục bộ (`next dev`) tại [http://localhost:3000](http://localhost:3000).
 - `npm run build`: Tạo bản build production tối ưu với Turbopack (`next build`).
 - `npm run start`: Khởi chạy ứng dụng production sau khi build (`next start`).
+- `npm run lint`: Kiểm tra mã nguồn và phát hiện lỗi cú pháp với ESLint (`eslint`).
 - `npm run typecheck`: Kiểm tra kiểu dữ liệu toàn bộ dự án với TypeScript compiler (`tsc --noEmit`).
 
 ### 3.2. Kiểm thử Tự động (Testing)
-- `npm run test`: Chạy toàn bộ 295+ bài kiểm thử tự động với Vitest (`vitest run`).
-- `npm run test:watch`: Chạy Vitest ở chế độ theo dõi thay đổi tập tin (`vitest`).
+- `npm run test`: Chạy toàn bộ bài kiểm thử tự động toàn dự án với Vitest (`vitest run`).
+- `npm run test:core`: Chạy riêng bộ kiểm thử cho tầng logic cốt lõi domain (`vitest run src/core`).
 
-### 3.3. Kiểm tra Chuẩn Thiết kế & Bảo mật
+### 3.3. Kiểm tra Chuẩn Thiết kế & Dữ liệu
 - `npm run check:colors`: Quét sạch mã màu hex và font cứng trong `src/ui` và `src/app` (đảm bảo 100% dùng CSS tokens).
 - `npm run check:contrast`: Kiểm tra độ tương phản màu sắc toàn diện theo chuẩn WCAG 2.1 (15/15 cặp màu đạt chuẩn).
 - `npm run check:emoji`: Quét và ngăn chặn emoji cứng trong giao diện, tuân thủ quy tắc chỉ dùng icon SVG của `AGENTS.md`.
+- `npm run check:data`: Kiểm tra tính toàn vẹn và hợp lệ của dữ liệu điểm đến (`npx tsx scripts/check-data.ts`).
 - `npm run build:tokens`: Biên dịch Design Tokens từ `src/design/tokens.json` thành biến CSS `src/app/tokens.css`.
 - `npm run verify:keys`: Quét chống rò rỉ khóa bí mật (API key leak) ra ngoài client bundle.
 
@@ -66,7 +71,7 @@ Mọi lệnh phát triển, kiểm tra chất lượng và đánh giá:
 - `npm run data:snapshot`: Tạo snapshot dữ liệu chính thức cho điểm đến (`tsx scripts/data-snapshot.ts`).
 - `npm run data:snapshot:all`: Tạo dữ liệu snapshot cho toàn bộ các điểm đến chính thức.
 - `npm run audit:snapshots`: Kiểm toán tính nguyên vẹn, cấu trúc và mã băm SHA-256 của các snapshot.
-- `npm run data:refresh`: Làm mới dữ liệu bộ nhớ đệm cache điểm đến.
+- `npm run data:refresh`: Làm mới dữ liệu bộ nhớ đệm cache điểm đến (`tsx scripts/data-refresh.ts`).
 
 ### 3.5. Bộ Đánh giá Độc lập (Evaluation Suite)
 - `npm run eval:tonghop`: Chạy tổng hợp toàn bộ số liệu các bộ đánh giá vào `eval/results/SO-LIEU-BAO-CAO.md`.
@@ -77,6 +82,7 @@ Mọi lệnh phát triển, kiểm tra chất lượng và đánh giá:
 - `npm run eval:likes`: Đánh giá thuật toán khớp sở thích người dùng (`tsx eval/run-likes.ts`).
 - `npm run eval:diadiem`: Đánh giá chất lượng dữ liệu địa điểm POI (`tsx eval/run-diadiem.ts`).
 - `npm run eval:data`: Đánh giá chất lượng dữ liệu trực tiếp Live (`tsx eval/run-data.ts`).
+- `npm run try:plan`: Chạy thử nghiệm luồng lập kế hoạch với yêu cầu mẫu (`tsx eval/try-plan.ts`).
 
 ---
 
