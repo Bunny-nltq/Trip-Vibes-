@@ -1,119 +1,141 @@
 # Trip Vibes
 
-AI Agent lập kế hoạch du lịch – Next.js 16 + TypeScript + Tailwind CSS + Gemini API.
+AI Agent lập kế hoạch du lịch thông minh – Next.js 16 + TypeScript + Tailwind CSS + Google Gemini API.
 
-## Cài đặt
+---
+
+## 1. Cài đặt
+
+Yêu cầu môi trường: **Node.js 20+** và **npm**.
 
 ```bash
+git clone https://github.com/Bunny-nltq/Trip-Vibes-.git
+cd Trip_Vibes
 npm install
 ```
 
-## Cấu hình biến môi trường
+---
 
-Sao chép file mẫu và điền key của bạn:
+## 2. Cấu hình Biến Môi trường
+
+Sao chép file mẫu `.env.example` thành `.env.local`:
 
 ```bash
 cp .env.example .env.local
 ```
 
-Chỉnh sửa `.env.local`:
+### Danh mục Biến Môi trường Chi tiết:
 
-```
-GEMINI_API_KEY=your_auth_key_here
-GEMINI_MODEL=gemini-2.0-flash
-```
+| Tên biến | Bắt buộc | Mặc định | Mô tả |
+|:---|:---:|:---:|:---|
+| `GEMINI_API_KEY` | Khi bật AI | - | Khóa API Google Gemini từ Google AI Studio (bảo mật, không ghi vào code). |
+| `GEMINI_MODEL` | Không | `gemini-3.5-flash-lite` | Tên mô hình Gemini sử dụng để phân tích và lập kế hoạch. |
+| `LIVE_AI_ENABLED` | Không | `false` | Bật/tắt gọi AI thật trên môi trường chạy. Khi `false` hoặc gặp lỗi/vượt hạn mức, hệ thống tự động kích hoạt kế hoạch dự phòng bằng thuật toán quy tắc thuần túy (`lapKeHoachTuDong`). |
+| `GEMINI_DAILY_CAP` | Không | `40` | Hạn mức tổng số lượt gọi AI tối đa mỗi ngày trên toàn hệ thống (bộ nhớ tạm). |
+| `PLAN_MAX_AI_CALLS` | Không | `8` | Số lượt gọi AI tối đa cho mỗi phiên lập kế hoạch (bao gồm cả vòng tự sửa lỗi). |
+| `DATA_MODE` | Không | `snapshot` | Chế độ nguồn dữ liệu: `snapshot` (dùng dữ liệu lưu trữ đã kiểm toán), `live` (truy vấn OSM/Nominatim trực tiếp), hoặc `mock` (dữ liệu giả lập test). |
+| `LIVE_DATA_ENABLED` | Không | `false` | Cho phép truy vấn dữ liệu trực tuyến ngoài mạng khi triển khai. |
+| `NEXT_PUBLIC_SHOW_DEMO` | Không | `false` | Cho phép hiển thị thanh điều hướng các màn hình `/demo/*`. Mặc định trả về 404. |
+| `EXCHANGE_RATE_API_KEY` | Không | - | Khóa API tra cứu tỷ giá ngoại tệ từ ExchangeRate-API (tùy chọn). |
+| `TAVILY_API_KEY` | Không | - | Khóa tìm kiếm web Tavily hỗ trợ tìm kiếm phương tiện (tùy chọn). |
 
-> **Lưu ý:** Tạo auth key tại [Google AI Studio](https://aistudio.google.com/apikey).  
-> Key tạo từ 28/5/2026 trở đi là **auth key** (loại mới, bảo mật hơn).
+---
 
-## Chạy phát triển
+## 3. Danh mục Scripts (Từ `package.json`)
 
+Mọi lệnh phát triển, kiểm tra chất lượng và đánh giá:
+
+### 3.1. Phát triển & Vận hành
+- `npm run dev`: Chạy máy chủ phát triển cục bộ (`next dev`) tại [http://localhost:3000](http://localhost:3000).
+- `npm run build`: Tạo bản build production tối ưu với Turbopack (`next build`).
+- `npm run start`: Khởi chạy ứng dụng production sau khi build (`next start`).
+- `npm run typecheck`: Kiểm tra kiểu dữ liệu toàn bộ dự án với TypeScript compiler (`tsc --noEmit`).
+
+### 3.2. Kiểm thử Tự động (Testing)
+- `npm run test`: Chạy toàn bộ 295+ bài kiểm thử tự động với Vitest (`vitest run`).
+- `npm run test:watch`: Chạy Vitest ở chế độ theo dõi thay đổi tập tin (`vitest`).
+
+### 3.3. Kiểm tra Chuẩn Thiết kế & Bảo mật
+- `npm run check:colors`: Quét sạch mã màu hex và font cứng trong `src/ui` và `src/app` (đảm bảo 100% dùng CSS tokens).
+- `npm run check:contrast`: Kiểm tra độ tương phản màu sắc toàn diện theo chuẩn WCAG 2.1 (15/15 cặp màu đạt chuẩn).
+- `npm run check:emoji`: Quét và ngăn chặn emoji cứng trong giao diện, tuân thủ quy tắc chỉ dùng icon SVG của `AGENTS.md`.
+- `npm run build:tokens`: Biên dịch Design Tokens từ `src/design/tokens.json` thành biến CSS `src/app/tokens.css`.
+- `npm run verify:keys`: Quét chống rò rỉ khóa bí mật (API key leak) ra ngoài client bundle.
+
+### 3.4. Quản lý Dữ liệu Điểm đến & Snapshot
+- `npm run data:snapshot`: Tạo snapshot dữ liệu chính thức cho điểm đến (`tsx scripts/data-snapshot.ts`).
+- `npm run data:snapshot:all`: Tạo dữ liệu snapshot cho toàn bộ các điểm đến chính thức.
+- `npm run audit:snapshots`: Kiểm toán tính nguyên vẹn, cấu trúc và mã băm SHA-256 của các snapshot.
+- `npm run data:refresh`: Làm mới dữ liệu bộ nhớ đệm cache điểm đến.
+
+### 3.5. Bộ Đánh giá Độc lập (Evaluation Suite)
+- `npm run eval:tonghop`: Chạy tổng hợp toàn bộ số liệu các bộ đánh giá vào `eval/results/SO-LIEU-BAO-CAO.md`.
+- `npm run eval:ai-rate`: Đánh giá tỷ lệ và độ hiệu quả lập kế hoạch của AI Agent (`tsx eval/run-ai-rate.ts`).
+- `npm run eval:bill`: Đánh giá độ chính xác OCR và bóc tách dữ liệu hóa đơn chi tiêu (`tsx eval/run-bill.ts`).
+- `npm run eval:parse`: Đánh giá trích xuất thông số từ yêu cầu ngôn ngữ tự nhiên (`tsx eval/run-parse.ts`).
+- `npm run eval:repair`: Đánh giá cơ chế tự sửa vi phạm kế hoạch của AI (`tsx eval/run-repair.ts`).
+- `npm run eval:likes`: Đánh giá thuật toán khớp sở thích người dùng (`tsx eval/run-likes.ts`).
+- `npm run eval:diadiem`: Đánh giá chất lượng dữ liệu địa điểm POI (`tsx eval/run-diadiem.ts`).
+- `npm run eval:data`: Đánh giá chất lượng dữ liệu trực tiếp Live (`tsx eval/run-data.ts`).
+
+---
+
+## 4. Hướng dẫn Chạy Kiểm thử và Đánh giá
+
+### Chạy Unit Test:
 ```bash
-npm run dev
+npm run test
 ```
 
-Mở [http://localhost:3000](http://localhost:3000).
-
-## Kiểm tra dữ liệu mẫu
-
+### Chạy Kiểm tra Chất lượng Mã nguồn:
 ```bash
-npm run check:data
+npm run typecheck
+npm run check:colors
+npm run check:contrast
+npm run check:emoji
+npm run verify:keys
 ```
 
-## Kiểm tra kết nối Gemini
-
-Sau khi điền key vào `.env.local` và chạy `npm run dev`:
-
-```
-GET http://localhost:3000/api/ai-ping
-```
-
-## Build production
-
+### Chạy Bộ Đánh giá Tổng hợp:
 ```bash
-npm run build
-npm run start
+npm run eval:tonghop
 ```
+Báo cáo chi tiết sẽ được tự động cập nhật tại [eval/results/SO-LIEU-BAO-CAO.md](file:///e:/Trip_Vibes/eval/results/SO-LIEU-BAO-CAO.md).
 
-## Cấu trúc thư mục
+---
 
-```
-src/
-  app/          # Next.js App Router (pages, layouts, API routes)
-  contracts/    # Zod schemas + TypeScript types
-  core/         # Logic thuần (không import ai/ hoặc ui/)
-  ai/           # LLM Provider (chỉ server)
-  data/         # DataSource interface + JsonDataSource + mock/
-  design/       # Design tokens (tokens.json từ Figma)
-  ui/
-    components/ # Components thuần props
-    screens/    # Màn hình lớn
-    hooks/      # Custom hooks (giao tiếp qua API)
-eval/           # Evaluation scripts
-docs/           # Tài liệu kiến trúc
-scripts/        # Utility scripts
-```
+## 5. Triển khai lên Vercel (Deployment)
 
-## Triển khai (Deployment lên Vercel)
+Trip Vibes được thiết kế tối ưu hóa cho mô hình serverless trên nền tảng **Vercel**:
 
-Trip Vibes được thiết kế tối ưu để triển khai tĩnh và serverless trên nền tảng **Vercel**:
-
-### Các bước thực hiện:
-1. Đẩy mã nguồn lên kho chứa GitHub / GitLab.
-2. Đăng nhập Vercel, chọn **Add New Project** và nhập kho chứa `Trip_Vibes`.
-3. Cấu hình cài đặt dự án:
+1. Đẩy mã nguồn lên kho chứa GitHub.
+2. Trên Vercel, chọn **Add New Project** và nhập kho chứa `Trip_Vibes`.
+3. Cấu hình cài đặt:
    - **Framework Preset**: Next.js
    - **Build Command**: `npm run build`
    - **Output Directory**: `.next`
    - **Install Command**: `npm install`
-4. Cấu hình các biến môi trường trong mục **Environment Variables** (xem bảng bên dưới).
+4. Khai báo các biến môi trường:
+   - `DATA_MODE`: `snapshot` (bảo đảm tốc độ phản hồi và độ ổn định cao nhất).
+   - `LIVE_AI_ENABLED`: `false` (ngoài buổi demo, hệ thống chạy cơ chế quy tắc dự phòng an toàn không tốn chi phí).
+   - `NEXT_PUBLIC_SHOW_DEMO`: `false`
 5. Nhấn **Deploy** và kiểm tra trạng thái tại `/api/health`.
-
-### Danh sách biến môi trường (Environment Variables)
-
-> ⚠️ **LƯU Ý QUAN TRỌNG:** Tuyệt đối KHÔNG cam kết (commit) khóa thật hay token bảo mật vào mã nguồn.
-
-| Tên biến | Bắt buộc | Mặc định | Mô tả |
-|:---|:---:|:---:|:---|
-| `GEMINI_API_KEY` | Khi bật AI | - | Khóa API Google Gemini AI từ Google AI Studio (bảo mật, không ghi vào code). |
-| `GEMINI_MODEL` | Không | `gemini-2.0-flash` | Tên mô hình Gemini sử dụng để phân tích và lập kế hoạch. |
-| `LIVE_AI_ENABLED` | Không | `false` | Bật/tắt AI trên production. Khi `false` hoặc vượt hạn mức, hệ thống tự động dự phòng bằng quy tắc (`lapKeHoachTuDong`) mà không làm gián đoạn người dùng. |
-| `GEMINI_DAILY_CAP` | Không | `40` | Hạn mức tổng số lượt gọi AI tối đa mỗi ngày trên toàn hệ thống (bộ nhớ tạm). |
-| `LIVE_DATA_ENABLED` | Không | `false` | Bật/tắt chế độ lấy dữ liệu trực tuyến trên Vercel. Mặc định dùng snapshot có sẵn để bảo đảm tốc độ và độ tin cậy. |
-| `DATA_MODE` | Không | `snapshot` (trên Vercel) | Chế độ dữ liệu (`snapshot` / `live` / `mock`). Trên Vercel mặc định `snapshot`. |
-| `NEXT_PUBLIC_SHOW_DEMO` | Không | `false` | Cho phép hiển thị các trang `/demo/*`. Mặc định ẩn (trả về trang 404). |
-| `EXCHANGE_RATE_API_KEY` | Không | - | Khóa API tra cứu tỷ giá ngoại tệ từ ExchangeRate-API (tùy chọn). |
-| `TAVILY_API_KEY` | Không | - | Khóa tìm kiếm web Tavily hỗ trợ tra cứu phương tiện (tùy chọn). |
 
 ---
 
-## Giới hạn đã biết
+## 6. Cấu trúc Thư mục Dự án
 
-- **Kích thước dữ liệu mẫu**: Bộ dữ liệu OpenStreetMap (OSM) cộng đồng có thể thiếu giờ mở cửa hoặc thông tin chi tiết ở một số khu vực.
-- **Giá ước tính tham khảo**: Mọi giá vé phương tiện và giá phòng khách sạn hiển thị trên Trip Vibes là ước tính tham khảo phục vụ bài toán ngân sách; Trip Vibes không thực hiện giao dịch, giữ chỗ hay đặt vé thật.
-- **Không tư vấn visa**: Trip Vibes không cung cấp dịch vụ hoặc tư vấn pháp lý về thị thực (visa), hộ chiếu hay thủ tục xuất nhập cảnh.
-- **Bảo mật ảnh hóa đơn**: Ảnh hóa đơn (bill) chỉ được xử lý tạm thời trong bộ nhớ của phiên làm việc, không bao giờ lưu trữ trên đĩa hay ghi vào nhật ký hệ thống.
-- **Hạn mức dịch vụ bên thứ ba**: Hạn mức gọi API của Gemini và Tavily có thể chạm ngưỡng vào giờ cao điểm; khi đó ứng dụng tự động kích hoạt kế hoạch dự phòng bằng thuật toán quy tắc tối ưu chi phí.
-- **Điểm đến chưa có snapshot**: Hiện tại điểm đến Phú Quốc chưa có snapshot lưu sẵn đạt chuẩn kiểm toán (sẽ thông báo yêu cầu chạy cục bộ để tải dữ liệu).
-- **Bộ đếm giới hạn lượt AI trên Vercel**: Bộ đếm nằm trong bộ nhớ nên trên Vercel chỉ là giới hạn tương đối vì nhiều tiến trình serverless hoạt động độc lập; khuyến nghị tắt `LIVE_AI_ENABLED` ngoài buổi demo.
-
+```
+Trip_Vibes/
+├── src/
+│   ├── app/           # Next.js App Router (pages, layouts, API routes)
+│   ├── contracts/     # Zod schemas và định nghĩa kiểu dữ liệu (schemaVersion = 9)
+│   ├── core/          # Domain logic thuần túy (tính tiền, thời gian, cờ cảnh báo, quy tắc)
+│   ├── ai/            # Gemini client, PlanAgent và vòng lặp tự sửa kế hoạch
+│   ├── data/          # DataSource, Nominatim, Overpass client và Snapshots chính thức
+│   ├── design/        # Design Tokens (src/design/tokens.json)
+│   └── ui/            # React UI components (chỉ nhận props) và screens (B1 -> B11)
+├── eval/              # Bộ runners và tệp đánh giá tự động độc lập
+├── scripts/           # Scripts kiểm tra tương phản, màu, emoji, snapshot và tokens
+└── docs/              # Tài liệu kiến trúc, ánh xạ thiết kế, roadmap và giới hạn đã biết
+```
