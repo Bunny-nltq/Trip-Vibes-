@@ -223,3 +223,46 @@ export function xuLyBangDiadiemFallback(
   const summary = dinhDangTrangThaiDiaDiem(statuses);
   return { statuses, summary, rows };
 }
+
+/**
+ * Hàm thuần định dạng lý do / ghi chú cho bảng diadiem live-only:
+ * - Nếu điểm đến đạt CÓ NỘI DUNG: KHÔNG hiện lỗi timeout từ lần thử đầu;
+ *   ghi "đã thử lại thành công" kèm các loại phải thử lại (nếu có).
+ * - Nếu điểm đến THIẾU DỮ LIỆU: ghi nguyên nhân cuối cùng (loại nào thiếu, máy chủ nào, mã lỗi).
+ */
+export function dinhDangLyDo(params: {
+  trangThai: string;
+  daThuLai?: string[];
+  loaiThieu?: string[];
+  loiCuoi?: string | null;
+  danhGia?: string;
+  mayChu?: string;
+}): string {
+  const isCoNoiDung =
+    params.trangThai === "CÓ NỘI DUNG" ||
+    params.trangThai?.includes("CÓ NỘI DUNG");
+
+  if (isCoNoiDung) {
+    if (params.daThuLai && params.daThuLai.length > 0) {
+      return `đã thử lại thành công: ${params.daThuLai.join(", ")}`;
+    }
+    return (
+      params.danhGia ||
+      "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard)."
+    );
+  }
+
+  // Trường hợp THIẾU DỮ LIỆU
+  const parts: string[] = [];
+  if (params.loaiThieu && params.loaiThieu.length > 0) {
+    parts.push(`thiếu ${params.loaiThieu.join(", ")}`);
+  }
+  if (params.mayChu) {
+    parts.push(`máy chủ ${params.mayChu}`);
+  }
+  if (params.loiCuoi) {
+    parts.push(params.loiCuoi.includes(":") ? params.loiCuoi : `lỗi ${params.loiCuoi}`);
+  }
+  return parts.length > 0 ? parts.join(" - ") : (params.danhGia || "THIẾU DỮ LIỆU");
+}
+

@@ -11,7 +11,7 @@
   min-height: 1024px;
   background: var(--color-background);
   color: var(--color-neutral-navy);
-  font-family: var(--font-sans), Inter, Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
   font-size: 14px;
   line-height: 20px;
   position: relative;
@@ -31,7 +31,7 @@
 .wireframe-container .Btn:hover { background: var(--color-neutral-50); }
 .wireframe-container .BtnGhost { color: var(--color-neutral-500); border-color: transparent; }
 .wireframe-container .BtnGhost:hover { background: var(--color-neutral-100); }
-.wireframe-container .BtnPrimary { background: var(--color-primary-500); border-color: var(--color-primary-500); color: #FFFFFF; font-weight: 600; }
+.wireframe-container .BtnPrimary { background: var(--color-primary-500); border-color: var(--color-primary-500); color: var(--color-primary-text); font-weight: 600; }
 .wireframe-container .BtnPrimary:hover { background: var(--color-primary-400); }
 .wireframe-container .BtnSmall { height: 32px; padding: 0 12px; font-size: 13px; }
 .wireframe-container .BtnFull { width: 100%; height: 44px; }
@@ -62,8 +62,8 @@
 
 /* Banners */
 .wireframe-container .Banner { display: flex; gap: 12px; padding: 14px 16px; margin-bottom: 20px; background: var(--color-surface); border: 1px solid var(--color-neutral-300); border-left: 4px solid var(--color-neutral-500); border-radius: var(--radius-md); }
-.wireframe-container .BannerWarn { border-left-color: var(--color-warning); background: #FFF8E6; border-color: #E0C27A; }
-.wireframe-container .BannerErr { border-left-color: var(--color-error); background: #FDECEE; border-color: #E2A3AB; }
+.wireframe-container .BannerWarn { border-left-color: var(--color-warning); background: var(--color-warning-bg); border-color: var(--color-warning); }
+.wireframe-container .BannerErr { border-left-color: var(--color-error); background: var(--color-error-bg); border-color: var(--color-error); }
 .wireframe-container .BannerMark { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex: none; border: 1px solid var(--color-neutral-400); border-radius: 12px; font-size: 13px; font-weight: 700; color: inherit; }
 .wireframe-container .BannerWarn .BannerMark { border-color: var(--color-warning); color: var(--color-warning); }
 .wireframe-container .BannerErr .BannerMark { border-color: var(--color-error); color: var(--color-error); }
@@ -99,17 +99,17 @@
 .wireframe-container .Chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
 .wireframe-container .Chip { padding: 6px 14px; border: 1px solid var(--color-neutral-300); border-radius: 16px; font-size: 14px; background: var(--color-surface); cursor: pointer; transition: all 0.2s; }
 .wireframe-container .Chip:hover { background: var(--color-neutral-50); }
-.wireframe-container .ChipOn { background: var(--color-primary-500); border-color: var(--color-primary-500); color: #FFFFFF; }
+.wireframe-container .ChipOn { background: var(--color-primary-500); border-color: var(--color-primary-500); color: var(--color-primary-text); }
 .wireframe-container .ChipOn:hover { background: var(--color-primary-400); }
-.wireframe-container .ChipFlag { padding: 2px 10px; border: 1px solid var(--color-warning); border-radius: 12px; font-size: 12px; line-height: 16px; background: #FFF8E6; color: #7A4E00; }
-.wireframe-container .ChipRed { border-color: var(--color-error); background: #FDECEE; color: #8A0019; }
+.wireframe-container .ChipFlag { padding: 2px 10px; border: 1px solid var(--color-warning); border-radius: 12px; font-size: 12px; line-height: 16px; background: var(--color-warning-bg); color: var(--color-warning-text); }
+.wireframe-container .ChipRed { border-color: var(--color-error); background: var(--color-error-bg); color: var(--color-error-text); }
 
 /* Forms & Inputs */
 .wireframe-container .Textarea { height: 72px; padding: 10px 12px; margin-bottom: 6px; border: 1px solid var(--color-neutral-300); border-radius: var(--radius-md); background: var(--color-surface); font-size: 14px; color: var(--color-neutral-700); width: 100%; font-family: inherit; resize: none; outline: none; transition: border-color 0.2s; }
 .wireframe-container .Textarea:focus { border-color: var(--color-primary-500); }
 .wireframe-container .Input { height: 44px; padding: 0 12px; display: flex; align-items: center; border: 1px solid var(--color-neutral-300); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-neutral-navy); font-size: 14px; width: 100%; outline: none; transition: border-color 0.2s; }
 .wireframe-container .Input:focus { border-color: var(--color-primary-500); }
-.wireframe-container .InputErr { border-color: var(--color-error); background: #FFF5F6; }
+.wireframe-container .InputErr { border-color: var(--color-error); background: var(--color-error-bg); }
 .wireframe-container .InputBig { height: 56px; font-size: 24px; font-weight: 700; color: var(--color-neutral-navy); text-align: center; }
 
 /* Budget Summary */
@@ -138,7 +138,7 @@
 .wireframe-container .Tabs { display: flex; gap: 8px; margin-bottom: 16px; }
 .wireframe-container .Tab { padding: 8px 18px; border: 1px solid var(--color-neutral-300); border-radius: 20px; background: var(--color-surface); font-size: 14px; cursor: pointer; transition: all 0.2s; }
 .wireframe-container .Tab:hover { background: var(--color-neutral-50); }
-.wireframe-container .TabOn { background: var(--color-primary-500); border-color: var(--color-primary-500); color: #FFFFFF; font-weight: 600; }
+.wireframe-container .TabOn { background: var(--color-primary-500); border-color: var(--color-primary-500); color: var(--color-primary-text); font-weight: 600; }
 .wireframe-container .Card { background: var(--color-surface); border: 1px solid var(--color-neutral-300); border-radius: var(--radius-xl); padding: 20px; margin-bottom: 16px; transition: border-color 0.2s; }
 .wireframe-container .CardSel { border: 2px solid var(--color-primary-500); }
 .wireframe-container .Row { display: flex; gap: 16px; align-items: center; }
@@ -166,13 +166,13 @@
 .wireframe-container .Num { text-align: right !important; font-family: var(--font-mono, monospace); }
 
 /* Chat & Feedback */
-.wireframe-container .Toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; padding: 14px 20px; background: var(--color-neutral-navy); color: #FFFFFF; border-radius: var(--radius-lg); font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 200; }
+.wireframe-container .Toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; padding: 14px 20px; background: var(--color-neutral-navy); color: var(--color-primary-text); border-radius: var(--radius-lg); font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 200; }
 .wireframe-container .ToastBtn { padding: 6px 14px; border: 1px solid rgba(255,255,255,0.3); border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
 .wireframe-container .ToastBtn:hover { background: rgba(255,255,255,0.1); }
 .wireframe-container .Drop { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 220px; border: 2px dashed var(--color-neutral-400); border-radius: var(--radius-xl); background: var(--color-neutral-50); text-align: center; cursor: pointer; transition: all 0.2s; }
 .wireframe-container .Drop:hover { border-color: var(--color-primary-500); background: var(--color-primary-100); }
 .wireframe-container .Bubble { max-width: 560px; padding: 12px 16px; border-radius: var(--radius-lg); margin-bottom: 12px; font-size: 14px; line-height: 22px; }
-.wireframe-container .BubbleUser { margin-left: auto; background: var(--color-primary-500); color: #FFFFFF; border-bottom-right-radius: 4px; }
+.wireframe-container .BubbleUser { margin-left: auto; background: var(--color-primary-500); color: var(--color-primary-text); border-bottom-right-radius: 4px; }
 .wireframe-container .BubbleAi { background: var(--color-surface); border: 1px solid var(--color-neutral-300); border-bottom-left-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
 .wireframe-container .ChatBar { position: absolute; left: 340px; bottom: 32px; width: 760px; display: flex; gap: 12px; }
 .wireframe-container .ChatInput { flex: 1; height: 48px; padding: 0 16px; display: flex; align-items: center; border: 1px solid var(--color-neutral-300); border-radius: 24px; background: var(--color-surface); color: var(--color-neutral-700); outline: none; transition: border-color 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
@@ -181,7 +181,7 @@
 /* Misc */
 .wireframe-container .Check { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; margin-bottom: 16px; cursor: pointer; }
 .wireframe-container .Box { width: 18px; height: 18px; flex: none; border: 1px solid var(--color-neutral-400); border-radius: 4px; background: var(--color-surface); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: transparent; transition: all 0.2s; }
-.wireframe-container .BoxOn { background: var(--color-primary-500); border-color: var(--color-primary-500); color: #FFFFFF; }
+.wireframe-container .BoxOn { background: var(--color-primary-500); border-color: var(--color-primary-500); color: var(--color-primary-text); }
 .wireframe-container .Link { font-size: 13px; color: var(--color-primary-500); text-decoration: underline; cursor: pointer; font-weight: 500; }
 .wireframe-container .Link:hover { color: var(--color-primary-400); }
 .wireframe-container .Center1 { text-align: center; }

@@ -1,7 +1,7 @@
 {
   "correctRealBills": 4,
   "numRealBills": 4,
-  "correctNotBills": 1,
+  "correctNotBills": 0,
   "numNotBills": 1,
   "dangerousErrors": 0,
   "avgTime": 2594,
@@ -226,12 +226,12 @@
         "chenhLechVND": null,
         "canhBao": []
       },
-      "errors": [],
+      "errors": [
+        "loaiChungTu: mong đợi null, thực tế khac"
+      ],
       "dangerous": false,
       "ms": 2714,
-      "isCorrect": true
+      "isCorrect": false
     }
-  ],
-  "daChamLaiNgay": "2026-10-21",
-  "boChamDaSuaNgay": "2026-10-21"
+  ]
 }

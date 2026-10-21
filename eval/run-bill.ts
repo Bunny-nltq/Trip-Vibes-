@@ -97,7 +97,7 @@ export function chamKetQuaBillItem(
 /**
  * Xử lý cờ --cham-lai: đọc kết quả ĐÃ LƯU, không gọi AI, in bảng TRƯỚC và SAU.
  */
-export function thucHienChamLai(savedFile?: string) {
+export function thucHienChamLai(savedFile?: string, ngayChamLaiISO: string = "2026-10-21") {
   const filePath =
     savedFile || path.resolve(process.cwd(), "eval/results/bill-2026-10-19.json");
   if (!fs.existsSync(filePath)) {
@@ -182,20 +182,44 @@ export function thucHienChamLai(savedFile?: string) {
     }))
   );
 
+  const ngayGoc = rawSaved.meta?.ngayChay
+    ? rawSaved.meta.ngayChay.slice(0, 10)
+    : rawSaved.timestamp
+    ? rawSaved.timestamp.slice(0, 10)
+    : "2026-10-19";
+
+  const ngayChamLaiDate = ngayChamLaiISO.slice(0, 10);
+  const outFileName = `bill-cham-lai-${ngayChamLaiDate}.json`;
+  const outFilePath = path.resolve(process.cwd(), "eval/results", outFileName);
+
   const updatedPayload = {
-    ...rawSaved,
+    meta: {
+      ngayChay: ngayGoc,
+      chamLaiNgay: ngayChamLaiDate,
+      quyTacVersion: QUY_TAC_VERSION,
+      ghiChu: "chấm lại từ kết quả đã lưu, không gọi AI",
+      agentPromptVersion: AGENT_PROMPT_VERSION,
+      model: rawSaved.modelName || "gemini-3.5-flash-lite",
+      tenBo: "bill",
+    },
     correctRealBills,
     numRealBills,
     correctNotBills,
     numNotBills,
     dangerousErrors,
-    daChamLaiNgay: "2026-10-21",
-    boChamDaSuaNgay: "2026-10-21",
+    avgTime: rawSaved.avgTime,
+    modelName: rawSaved.modelName,
+    promptVersion: rawSaved.promptVersion,
+    timestamp: rawSaved.timestamp,
+    daChamLaiNgay: ngayChamLaiDate,
+    boChamDaSuaNgay: ngayChamLaiDate,
     details: newDetails,
   };
 
-  fs.writeFileSync(filePath, JSON.stringify(updatedPayload, null, 2), "utf-8");
-  console.log(`\n💾 Đã lưu kết quả chấm lại vào: ${filePath}\n`);
+  fs.writeFileSync(outFilePath, JSON.stringify(updatedPayload, null, 2), "utf-8");
+  console.log(`\n💾 Đã lưu kết quả chấm lại vào: ${outFilePath}`);
+  console.log(`(Lưu ý: KHÔNG ghi đè tệp gốc ${path.basename(filePath)})\n`);
+  return { outFilePath, payload: updatedPayload };
 }
 
 async function main() {

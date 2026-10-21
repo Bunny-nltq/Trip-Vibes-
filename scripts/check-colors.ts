@@ -48,7 +48,10 @@ export function runCheckColors(): boolean {
       name.endsWith(".css")
   );
 
-  const appFiles = scanDirectory(APP_DIR, (name) => name.endsWith(".tsx"));
+  const appFiles = scanDirectory(
+    APP_DIR,
+    (name) => name.endsWith(".tsx") || name.endsWith(".ts") || name.endsWith(".css")
+  );
 
   const allFiles = [...uiFiles, ...appFiles];
   const violations: ViPhamMau[] = [];

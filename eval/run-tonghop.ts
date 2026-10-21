@@ -16,6 +16,7 @@ import {
   dinhDangTrangThaiDiaDiem,
   dinhDangKetQuaLikes,
   xuLyBangDiadiemFallback,
+  dinhDangLyDo,
   type DoMoiKetQua,
 } from "./tonghopRules";
 import { auditAllSnapshots } from "../src/data/snapshots/snapshotAudit";
@@ -179,28 +180,46 @@ export function parseSuiteRepair(): SuiteSummary {
 }
 
 // ─── 3. Suite: bill ───────────────────────────────────────────────────────────
-export function parseSuiteBill(): SuiteSummary {
+export function parseSuiteBill(customFilePathOrData?: string | any): SuiteSummary {
   const dinhNghiaDat =
     "Số hóa đơn thật đúng trên số hóa đơn thật; số 'không phải hóa đơn' xử lý đúng trên số ca.";
-  const filePath = findNewestFile("bill-");
-  if (!filePath) {
-    return {
-      name: "bill",
-      title: "Nhận diện hóa đơn (Bill Extraction)",
-      status: "CHƯA CHẠY",
-      dinhNghiaDat,
-      ketQuaTongQuat: "CHƯA CHẠY",
-    };
-  }
 
-  const raw = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-  const dateStr = raw.timestamp
+  let raw: any;
+  let filePath = "bill-cham-lai-2026-10-21.json";
+
+  if (typeof customFilePathOrData === "object" && customFilePathOrData !== null) {
+    raw = customFilePathOrData;
+    filePath = customFilePathOrData.file || "bill-cham-lai-2026-10-21.json";
+  } else {
+    const fPath =
+      customFilePathOrData || findNewestFile("bill-cham-lai-") || findNewestFile("bill-");
+    if (!fPath) {
+      return {
+        name: "bill",
+        title: "Nhận diện hóa đơn (Bill Extraction)",
+        status: "CHƯA CHẠY",
+        dinhNghiaDat,
+        ketQuaTongQuat: "CHƯA CHẠY",
+      };
+    }
+    filePath = fPath;
+    raw = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  }
+  const ngayGoc = raw.meta?.ngayChay
+    ? raw.meta.ngayChay.slice(0, 10)
+    : raw.timestamp
     ? raw.timestamp.slice(0, 10)
     : filePath.match(/\d{4}-\d{2}-\d{2}/)?.[0] || "2026-10-19";
 
+  const chamLaiNgay = raw.meta?.chamLaiNgay ? raw.meta.chamLaiNgay.slice(0, 10) : undefined;
+
+  const dateStr = chamLaiNgay
+    ? `${ngayGoc} (chấm lại ngày ${chamLaiNgay})`
+    : ngayGoc;
+
   const rawQuyTacVersion = raw.meta?.quyTacVersion; // Đọc từ meta.quyTacVersion, không gán mặc định
   const doMoi = danhGiaDoMoi({
-    ngayChay: dateStr,
+    ngayChay: chamLaiNgay || ngayGoc,
     quyTacVersion: rawQuyTacVersion,
     ngayHienTai: NGAY_HIEN_TAI,
     quyTacHienTai: QUY_TAC_HIEN_TAI,
@@ -226,13 +245,18 @@ export function parseSuiteBill(): SuiteSummary {
 
   const ketQuaTongQuat = `Hóa đơn thật: ${correctRealBills}/${numRealBills}; Không phải hóa đơn: ${correctNotBills}/${numNotBills}`;
 
-  let chiTiet = `| Hạng mục | Đạt / Tổng | Tỷ lệ |\n|:---|:---:|:---:|\n`;
+  let chiTiet = "";
+  if (chamLaiNgay) {
+    chiTiet += `> **Lưu ý chấm lại**: Ngày gọi AI gốc: **${ngayGoc}**; Ngày chấm lại: **${chamLaiNgay}** (quy tắc ${rawQuyTacVersion ?? "3"}).\n\n`;
+  }
+
+  chiTiet += `| Hạng mục | Đạt / Tổng | Tỷ lệ |\n|:---|:---:|:---:|\n`;
   chiTiet += `| Hóa đơn thật hợp lệ | **${correctRealBills}/${numRealBills}** | ${numRealBills > 0 ? Math.round((correctRealBills / numRealBills) * 100) : 0}% |\n`;
   chiTiet += `| Không phải hóa đơn | **${correctNotBills}/${numNotBills}** | ${numNotBills > 0 ? Math.round((correctNotBills / numNotBills) * 100) : 0}% |\n\n`;
 
-  const daChamLai = raw.daChamLaiNgay || raw.boChamDaSuaNgay || (b05IsCorrect && !b05ErrorsText);
+  const daChamLai = chamLaiNgay || raw.daChamLaiNgay || raw.boChamDaSuaNgay || (b05IsCorrect && !b05ErrorsText);
   if (daChamLai) {
-    const ngaySua = raw.daChamLaiNgay || raw.boChamDaSuaNgay || "2026-10-21";
+    const ngaySua = chamLaiNgay || raw.daChamLaiNgay || raw.boChamDaSuaNgay || "2026-10-21";
     chiTiet += `#### ✅ Chi tiết ca b05 (ảnh thực đơn):\n`;
     chiTiet += `- Tập tin: \`b05_thuc_don_khong_phai_hoa_don.jpg\`\n`;
     chiTiet += `- Trạng thái: **ĐẠT** (xử lý đúng không phải hóa đơn)\n`;
@@ -433,15 +457,53 @@ export function parseSuiteDiadiem(): SuiteSummary {
     const sl = it.soLuongTheoLoai
       ? `${it.soLuongTheoLoai.khachSan}/${it.soLuongTheoLoai.quanAn}/${it.soLuongTheoLoai.cafe}/${it.soLuongTheoLoai.hoatDong}`
       : "-";
-    const chuaLap = it.soSlotChuaLap
+
+    const isThieu =
+      it.trangThaiNoiDung === "THIẾU DỮ LIỆU" ||
+      it.trangThaiNoiDung?.includes("THIẾU DỮ LIỆU") ||
+      !it.coNoiDung;
+
+    // Hàng THIẾU DỮ LIỆU: cột "Ô chưa lấp" ghi "—", không ghi số 0
+    const chuaLap = isThieu
+      ? "—"
+      : it.soSlotChuaLap
       ? `HĐ:${it.soSlotChuaLap.hoatDong}, Ăn:${it.soSlotChuaLap.buaAn}`
-      : "0";
-    const loi = it.overpassError
-      ? `Overpass: ${it.overpassError}`
-      : it.loiHard?.length > 0
-      ? it.loiHard.join("; ")
-      : it.danhGia || "-";
-    chiTiet += `| ${idx + 1} | **${it.diemDen}** | ${it.geocodeThanhCong ? "Thành công" : "Thất bại"} | **${it.trangThaiNoiDung}** | ${sl} | ${chuaLap} | ${loi} |\n`;
+      : "—";
+
+    const loaiThieu: string[] = [];
+    if (it.soLuongTheoLoai) {
+      if ((it.soLuongTheoLoai.khachSan ?? 0) < 3) loaiThieu.push("khach_san");
+      if ((it.soLuongTheoLoai.quanAn ?? 0) < 2) loaiThieu.push("quan_an");
+      if ((it.soLuongTheoLoai.hoatDong ?? 0) < 3) loaiThieu.push("hoat_dong");
+    }
+
+    const daThuLai: string[] = [];
+    if (it.overpassSummary && typeof it.overpassSummary === "string") {
+      const summary = it.overpassSummary;
+      if (summary.includes("[khach_san]") && summary.includes("status: ERR") && (it.soLuongTheoLoai?.khachSan ?? 0) >= 3) {
+        daThuLai.push("khach_san");
+      }
+      if (summary.includes("[quan_an]") && summary.includes("status: ERR") && (it.soLuongTheoLoai?.quanAn ?? 0) >= 2) {
+        daThuLai.push("quan_an");
+      }
+      if (summary.includes("[cafe]") && summary.includes("status: ERR") && (it.soLuongTheoLoai?.cafe ?? 0) >= 2) {
+        daThuLai.push("cafe");
+      }
+      if (summary.includes("[hoat_dong]") && summary.includes("status: ERR") && (it.soLuongTheoLoai?.hoatDong ?? 0) >= 3) {
+        daThuLai.push("hoat_dong");
+      }
+    }
+
+    const ghiChuLyDo = dinhDangLyDo({
+      trangThai: it.trangThaiNoiDung || (it.coNoiDung ? "CÓ NỘI DUNG" : "THIẾU DỮ LIỆU"),
+      daThuLai,
+      loaiThieu,
+      loiCuoi: it.overpassError || (it.loiHard?.length > 0 ? it.loiHard.join("; ") : null),
+      danhGia: it.danhGia,
+      mayChu: it.overpassServer,
+    });
+
+    chiTiet += `| ${idx + 1} | **${it.diemDen}** | ${it.geocodeThanhCong ? "Thành công" : "Thất bại"} | **${it.trangThaiNoiDung}** | ${sl} | ${chuaLap} | ${ghiChuLyDo} |\n`;
   });
 
   chiTiet += `\n> *Ghi chú cảnh báo*: Ở chế độ live-only, máy chủ Overpass thường xuyên bị timeout hoặc trả về 0 mục đối với khách sạn (Đà Nẵng, Hà Nội, Seoul), dẫn đến trạng thái THIẾU DỮ LIỆU.\n\n`;
@@ -539,6 +601,29 @@ export function parseSuiteAiRate(): SuiteSummary {
   };
 }
 
+export function renderSuiteSection(s: SuiteSummary, stt: number = 1): string {
+  let md = `### 2.${stt}. ${s.title} (\`${s.name}\`)\n\n`;
+  md += `> **Định nghĩa đạt**: ${s.dinhNghiaDat}\n\n`;
+
+  if (s.status === "CHƯA CHẠY") {
+    md += "**Trạng thái**: **CHƯA CHẠY**\n\n";
+    md += "- Chưa có kết quả kiểm thử trong `eval/results/`.\n\n";
+    return md;
+  }
+
+  md += `- **Tập tin kết quả**: \`${s.latestFile}\`\n`;
+  md += `- **Ngày chạy**: ${s.date}\n`;
+  md += `- **Trường quy tắc ghi nhận từ file**: \`${s.quyTacVersionGhiNhan}\` *(hiện tại: \`${QUY_TAC_HIEN_TAI}\`)*\n`;
+  md += `- **Trường prompt ghi nhận từ file**: \`${s.promptVersionGhiNhan}\` *(hiện tại: \`${AGENT_PROMPT_VERSION}\`)*\n`;
+  md += `- **Đánh giá độ mới**: \`${s.doMoi}\` — ${s.giaiThichDoMoi}\n`;
+  md += `- **Kết quả**: **${s.ketQuaTongQuat}**\n\n`;
+
+  if (s.chiTietNoiDung) {
+    md += s.chiTietNoiDung + "\n";
+  }
+  return md;
+}
+
 export function generateReportMarkdown(): string {
   const suites: SuiteSummary[] = [
     parseSuiteParse(),
@@ -571,26 +656,7 @@ export function generateReportMarkdown(): string {
   md += "## 2. Chi tiết từng bộ đánh giá\n\n";
 
   suites.forEach((s, idx) => {
-    const stt = idx + 1;
-    md += `### 2.${stt}. ${s.title} (\`${s.name}\`)\n\n`;
-    md += `> **Định nghĩa đạt**: ${s.dinhNghiaDat}\n\n`;
-
-    if (s.status === "CHƯA CHẠY") {
-      md += "**Trạng thái**: **CHƯA CHẠY**\n\n";
-      md += "- Chưa có kết quả kiểm thử trong `eval/results/`.\n\n";
-      return;
-    }
-
-    md += `- **Tập tin kết quả**: \`${s.latestFile}\`\n`;
-    md += `- **Ngày chạy**: ${s.date}\n`;
-    md += `- **Trường quy tắc ghi nhận từ file**: \`${s.quyTacVersionGhiNhan}\` *(hiện tại: \`${QUY_TAC_HIEN_TAI}\`)*\n`;
-    md += `- **Trường prompt ghi nhận từ file**: \`${s.promptVersionGhiNhan}\` *(hiện tại: \`${AGENT_PROMPT_VERSION}\`)*\n`;
-    md += `- **Đánh giá độ mới**: \`${s.doMoi}\` — ${s.giaiThichDoMoi}\n`;
-    md += `- **Kết quả**: **${s.ketQuaTongQuat}**\n\n`;
-
-    if (s.chiTietNoiDung) {
-      md += s.chiTietNoiDung + "\n";
-    }
+    md += renderSuiteSection(s, idx + 1);
   });
 
   md += "---\n\n";

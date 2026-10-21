@@ -4,7 +4,9 @@ import {
   dinhDangTrangThaiDiaDiem,
   dinhDangKetQuaLikes,
   xuLyBangDiadiemFallback,
+  dinhDangLyDo,
 } from "./tonghopRules";
+import { parseSuiteBill, renderSuiteSection } from "./run-tonghop";
 
 describe("eval/tonghopRules", () => {
   const ngayHienTai = "2026-10-21";
@@ -107,5 +109,55 @@ describe("eval/tonghopRules", () => {
     expect(phuQuocRow).toBeDefined();
     expect(phuQuocRow?.trangThaiHienThi).toContain("THIẾU DỮ LIỆU (không có snapshot)");
     expect(phuQuocRow?.oChuaLapHienThi).toBe("—");
+  });
+
+  describe("Hàm thuần dinhDangLyDo", () => {
+    it("dinhDangLyDo({trangThai:'CÓ NỘI DUNG', daThuLai:['quan_an'], loiCuoi:null}) chứa 'đã thử lại thành công' và 'quan_an' và KHÔNG chứa 'timeout'", () => {
+      const res = dinhDangLyDo({
+        trangThai: "CÓ NỘI DUNG",
+        daThuLai: ["quan_an"],
+        loiCuoi: null,
+      });
+      expect(res).toContain("đã thử lại thành công");
+      expect(res).toContain("quan_an");
+      expect(res).not.toContain("timeout");
+    });
+
+    it("dinhDangLyDo({trangThai:'THIẾU DỮ LIỆU', loaiThieu:['khach_san'], loiCuoi:'timeout'}) chứa 'khach_san' và 'timeout'", () => {
+      const res = dinhDangLyDo({
+        trangThai: "THIẾU DỮ LIỆU",
+        loaiThieu: ["khach_san"],
+        loiCuoi: "timeout",
+      });
+      expect(res).toContain("khach_san");
+      expect(res).toContain("timeout");
+    });
+  });
+
+  describe("Mục bill của tonghop khi có kết quả chấm lại", () => {
+    it("với meta { ngayChay '2026-10-19', chamLaiNgay '2026-10-21' } mục bill của tonghop chứa cả hai chuỗi ngày", () => {
+      const mockBillChamLai = {
+        meta: {
+          ngayChay: "2026-10-19",
+          chamLaiNgay: "2026-10-21",
+          quyTacVersion: "3",
+          ghiChu: "chấm lại từ kết quả đã lưu, không gọi AI",
+        },
+        correctRealBills: 4,
+        numRealBills: 4,
+        correctNotBills: 1,
+        numNotBills: 1,
+        dangerousErrors: 0,
+        details: [],
+      };
+
+      const suite = parseSuiteBill(mockBillChamLai);
+      const mucBill = renderSuiteSection(suite, 3);
+
+      expect(mucBill).toContain("2026-10-19");
+      expect(mucBill).toContain("2026-10-21");
+      expect(suite.date).toContain("2026-10-19");
+      expect(suite.date).toContain("2026-10-21");
+    });
   });
 });
