@@ -310,16 +310,19 @@ export async function planWithRepair(
       };
     }
 
+    const planWithMeta: Plan = {
+      ...autoRes.plan,
+      phuongThucLap: "quy_tac",
+      lyDoDuPhong: lyDo,
+    };
+    const validation = validatePlan(request, planWithMeta, data);
+
     return {
       status: "ok",
       request,
-      plan: {
-        ...autoRes.plan,
-        phuongThucLap: "quy_tac",
-        lyDoDuPhong: lyDo,
-      },
-      hard: [],
-      soft: [],
+      plan: planWithMeta,
+      hard: validation.hard,
+      soft: validation.soft,
       lichSu,
       soVongSua: vong,
       soLanGoiAI: curSoLanGoiAI,

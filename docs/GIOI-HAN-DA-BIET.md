@@ -45,3 +45,8 @@ Tài liệu này ghi nhận trung thực và minh bạch toàn bộ các giới 
 - Khi người dùng nhập một điểm đến hoàn toàn mới chưa từng có trong bộ nhớ đệm (cache) hoặc snapshot:
   - Hệ thống phải thực hiện chuỗi tuần tự: Định vị Nominatim (giãn cách tối thiểu 1.000 ms) + Truy vấn Overpass đa bán kính (3 - 5 giây) + Lấy tỷ giá ngoại tệ + Tìm kiếm phương tiện web.
   - Tổng thời gian phản hồi ở lần khởi tạo đầu tiên có thể mất từ **5 đến 15 giây** trước khi dữ liệu sẵn sàng cho AI lập kế hoạch.
+
+---
+
+### 8. Chi phí ăn uống tính theo ngày, không phụ thuộc giờ đến
+- Chi phí ăn uống tính theo ngày, không phụ thuộc giờ đến: khi đến sau nửa đêm, bữa trưa ngày đến vẫn xếp lúc 12:00 dù khách chưa đến.

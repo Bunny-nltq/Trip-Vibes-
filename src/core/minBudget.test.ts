@@ -133,10 +133,10 @@ describe("minBudget", () => {
     canhBao: [],
   };
 
-  it("Không điều cần tránh: toiThieuVND = 5180000", () => {
+  it("Không điều cần tránh: toiThieuVND = 4530000", () => {
     const data = createFixtureM();
     const res = tinhNganSachToiThieu({ ...baseRequest, tranh: [] }, data);
-    expect(res.toiThieuVND).toBe(5180000);
+    expect(res.toiThieuVND).toBe(4530000);
     expect(res.khaThi).toBe(true);
   });
 
@@ -146,10 +146,10 @@ describe("minBudget", () => {
     expect(res.toiThieuVND).toBe(7020000); // D1 + V1 + H2 + ăn
   });
 
-  it("tranh [khong_day_som]: 5180000", () => {
+  it("tranh [khong_day_som]: 4530000", () => {
     const data = createFixtureM();
     const res = tinhNganSachToiThieu({ ...baseRequest, tranh: ["khong_day_som"] }, data);
-    expect(res.toiThieuVND).toBe(5180000); // D3 + V2 + H2 + ăn (D3 chạy 17:00, không sớm)
+    expect(res.toiThieuVND).toBe(4530000); // D3 + V2 + H2 + ăn (D3 chạy 17:00, không sớm)
   });
 
   it("tranh [khong_day_som, tranh_di_chuyen_lau]: 7760000", () => {
@@ -169,11 +169,18 @@ describe("minBudget", () => {
     expect(res.lyDo).toBe("khong_co_phuong_tien_phu_hop");
   });
 
-  it("Với ngansachTongVND 5000000 và không điều cần tránh", () => {
+  it("Với ngansachTongVND 4500000 và không điều cần tránh", () => {
     const data = createFixtureM();
-    const res = tinhNganSachToiThieu({ ...baseRequest, ngansachTongVND: 5000000, tranh: [] }, data);
+    const res = tinhNganSachToiThieu({ ...baseRequest, ngansachTongVND: 4500000, tranh: [] }, data);
     expect(res.khaThi).toBe(false);
     expect(res.lyDo).toBe("ngan_sach_khong_du");
-    expect(res.toiThieuVND).toBe(5180000);
+    expect(res.toiThieuVND).toBe(4530000);
+  });
+
+  it("Với ngansachTongVND 5000000 và không điều cần tránh: khaThi true", () => {
+    const data = createFixtureM();
+    const res = tinhNganSachToiThieu({ ...baseRequest, ngansachTongVND: 5000000, tranh: [] }, data);
+    expect(res.khaThi).toBe(true);
+    expect(res.toiThieuVND).toBe(4530000);
   });
 });

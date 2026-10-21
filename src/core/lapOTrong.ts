@@ -24,6 +24,7 @@ import {
   THOI_LUONG_TOI_THIEU_HOAT_DONG,
 } from "./assumptions";
 import { gioOHoatDongNgayDau } from "./gioONgayDau";
+import { tinhOKhaDungTheoNgay } from "./oKhaDung";
 
 const GIO_HOAT_DONG_1_PHUT = 570; // 09:30
 
@@ -99,12 +100,7 @@ export function lapOTrong(
 
   if (tDi) {
     const dep = parseTimeToMinutes(tDi.departureTime) ?? 420;
-    if (dep + tDi.durationMinutes >= 1440) {
-      // Chuyến đi kéo dài sang ngày hôm sau -> Ngày 1 đang trên phương tiện, không thể tham gia hoạt động
-      gioDenPhutNgay1 = 9999;
-    } else {
-      gioDenPhutNgay1 = dep + tDi.durationMinutes;
-    }
+    gioDenPhutNgay1 = dep + tDi.durationMinutes;
   } else if ((plan as any)?.gioDenPhutNgay1 != null) {
     gioDenPhutNgay1 = Number((plan as any).gioDenPhutNgay1);
   } else if ((plan as any)?.gioDenNgay1Phut != null) {
@@ -113,11 +109,7 @@ export function lapOTrong(
     const dep = parseTimeToMinutes(diItem.gio);
     const dur = (diItem as any).thoiLuongPhut ?? (diItem as any).durationMinutes ?? 120;
     if (dep !== null) {
-      if (dep + dur >= 1440) {
-        gioDenPhutNgay1 = 9999;
-      } else {
-        gioDenPhutNgay1 = dep + dur;
-      }
+      gioDenPhutNgay1 = dep + dur;
     }
   }
 
@@ -134,25 +126,11 @@ export function lapOTrong(
   }
 
   // 2. Xác định số ô khả dụng từng ngày
-  const oKhaDungTheoNgay: number[] = [];
-  for (let d = 1; d <= soNgay; d++) {
-    if (d === 1) {
-      // Ngày đầu
-      const ok = gioOHoatDongNgayDau(gioDenPhutNgay1) !== null;
-      oKhaDungTheoNgay.push(ok ? 1 : 0);
-    } else if (d === soNgay) {
-      // Ngày cuối
-      const nguongVe =
-        GIO_HOAT_DONG_1_PHUT +
-        THOI_LUONG_TOI_THIEU_HOAT_DONG +
-        BUFFER_RA_BEN_PHUT; // 750
-      const ok = gioKhoiHanhVePhut >= nguongVe;
-      oKhaDungTheoNgay.push(ok ? 1 : 0);
-    } else {
-      // Ngày giữa
-      oKhaDungTheoNgay.push(2);
-    }
-  }
+  const oKhaDungTheoNgay = tinhOKhaDungTheoNgay(
+    soNgay,
+    gioDenPhutNgay1,
+    gioKhoiHanhVePhut
+  );
 
   // 3. Khởi tạo mảng hoạt động
   const hoatDongTheoNgay: string[][] = [];

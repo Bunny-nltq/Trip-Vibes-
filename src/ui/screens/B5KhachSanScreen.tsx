@@ -50,8 +50,12 @@ export function B5KhachSanScreen() {
 
   const soNguoi = plan?.request.soNguoi || 2;
   const soNgay = plan?.request.soNgay || 3;
-  const soDem = Math.max(1, soNgay - 1);
   const soPhong = Math.ceil(soNguoi / 2);
+  const choOItem = plan?.items?.find((i) => i.hangMuc === "Chỗ ở");
+  const soDem =
+    choOItem?.soLuong && soPhong > 0
+      ? Math.round(choOItem.soLuong / soPhong)
+      : Math.max(1, soNgay - 1);
 
   // Fetch hotels
   const {

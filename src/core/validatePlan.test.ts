@@ -597,6 +597,122 @@ describe("validatePlan", () => {
     it("chiều về (1320, 120) có ve_den_ngay_sau (đúng 1440)", () => {
       expect(testVe(1320, 120)).toBe(true);
     });
+
+    it("thông điệp den_vao_ngay_sau: (soNgay 3, 420, 1871) chứa 'ngày thứ 2' và 'chỉ tính 1 đêm khách sạn'", () => {
+      const tDi: any = {
+        id: "T_DI_TEST",
+        huong: "di",
+        departureTime: minToTime(420),
+        durationMinutes: 1871,
+        pricePerPerson: 100000,
+      };
+      const tVe: any = {
+        id: "T_VE_TEST",
+        huong: "ve",
+        departureTime: "18:00",
+        durationMinutes: 60,
+        pricePerPerson: 100000,
+      };
+      const req3 = { ...req, soNgay: 3 };
+      const plan: any = {
+        schemaVersion: 9,
+        request: req3,
+        items: [
+          { hangMuc: "Di chuyển", refId: "T_DI_TEST", ngay: 1 },
+          { hangMuc: "Di chuyển", refId: "T_VE_TEST", ngay: 3 },
+        ],
+        tongKet: {
+          tongVND: 1000000,
+          conLaiVND: 14000000,
+          theoHangMuc: {},
+          tongThoiGianDiChuyenPhut: 0,
+          trangThaiNganSach: "trong",
+        },
+        canhBao: [],
+      };
+      const res = validatePlan(req3, plan, { transports: [tDi, tVe], hotels: [], activities: [] } as any);
+      const v = res.soft.find((s) => s.code === "den_vao_ngay_sau");
+      expect(v).toBeDefined();
+      expect(v?.chiTiet).toContain("ngày thứ 2");
+      expect(v?.chiTiet).toContain("chỉ tính 1 đêm khách sạn");
+    });
+
+    it("thông điệp den_vao_ngay_sau: (soNgay 4, 420, 1871) chứa 'chỉ tính 2 đêm khách sạn'", () => {
+      const tDi: any = {
+        id: "T_DI_TEST",
+        huong: "di",
+        departureTime: minToTime(420),
+        durationMinutes: 1871,
+        pricePerPerson: 100000,
+      };
+      const tVe: any = {
+        id: "T_VE_TEST",
+        huong: "ve",
+        departureTime: "18:00",
+        durationMinutes: 60,
+        pricePerPerson: 100000,
+      };
+      const req4 = { ...req, soNgay: 4 };
+      const plan: any = {
+        schemaVersion: 9,
+        request: req4,
+        items: [
+          { hangMuc: "Di chuyển", refId: "T_DI_TEST", ngay: 1 },
+          { hangMuc: "Di chuyển", refId: "T_VE_TEST", ngay: 4 },
+        ],
+        tongKet: {
+          tongVND: 1000000,
+          conLaiVND: 14000000,
+          theoHangMuc: {},
+          tongThoiGianDiChuyenPhut: 0,
+          trangThaiNganSach: "trong",
+        },
+        canhBao: [],
+      };
+      const res = validatePlan(req4, plan, { transports: [tDi, tVe], hotels: [], activities: [] } as any);
+      const v = res.soft.find((s) => s.code === "den_vao_ngay_sau");
+      expect(v).toBeDefined();
+      expect(v?.chiTiet).toContain("chỉ tính 2 đêm khách sạn");
+    });
+
+    it("thông điệp den_vao_ngay_sau: (soNgay 4, 1380, 1500) (tuyệt đối 2880) chứa 'ngày thứ 3' và 'chỉ tính 1 đêm khách sạn'", () => {
+      const tDi: any = {
+        id: "T_DI_TEST",
+        huong: "di",
+        departureTime: minToTime(1380),
+        durationMinutes: 1500,
+        pricePerPerson: 100000,
+      };
+      const tVe: any = {
+        id: "T_VE_TEST",
+        huong: "ve",
+        departureTime: "18:00",
+        durationMinutes: 60,
+        pricePerPerson: 100000,
+      };
+      const req4 = { ...req, soNgay: 4 };
+      const plan: any = {
+        schemaVersion: 9,
+        request: req4,
+        items: [
+          { hangMuc: "Di chuyển", refId: "T_DI_TEST", ngay: 1 },
+          { hangMuc: "Di chuyển", refId: "T_VE_TEST", ngay: 4 },
+        ],
+        tongKet: {
+          tongVND: 1000000,
+          conLaiVND: 14000000,
+          theoHangMuc: {},
+          tongThoiGianDiChuyenPhut: 0,
+          trangThaiNganSach: "trong",
+        },
+        canhBao: [],
+      };
+      const res = validatePlan(req4, plan, { transports: [tDi, tVe], hotels: [], activities: [] } as any);
+      const v = res.soft.find((s) => s.code === "den_vao_ngay_sau");
+      expect(v).toBeDefined();
+      expect(v?.chiTiet).toContain("ngày thứ 3");
+      expect(v?.chiTiet).toContain("chỉ tính 1 đêm khách sạn");
+    });
   });
 
   describe("Giờ dạng HH:MM trong cảnh báo (Bước 17)", () => {

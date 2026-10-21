@@ -18,6 +18,7 @@ import {
   AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA,
   NGUOI_MOI_PHONG,
 } from "./assumptions";
+import { soDemOKhachSan } from "./soDem";
 
 export interface LocUngVienResult<
   TTransport = Transport,
@@ -44,7 +45,6 @@ export function locUngVienTheoNganSach<
 ): LocUngVienResult<TTransport, THotel> {
   const soNguoi = request.soNguoi ?? 2;
   const soNgay = request.soNgay ?? 3;
-  const soDem = Math.max(1, soNgay - 1);
   const soPhong = Math.ceil(soNguoi / NGUOI_MOI_PHONG);
   const ngansachTongVND = request.ngansachTongVND ?? 0;
   const tranhList = request.tranh ?? [];
@@ -73,7 +73,18 @@ export function locUngVienTheoNganSach<
   const validVeIds = new Set<string>();
   const validHotelIds = new Set<string>();
 
+  function parseTimeToMinutes(timeStr?: string): number {
+    if (!timeStr) return 0;
+    const [h, m] = timeStr.split(":").map(Number);
+    return (h || 0) * 60 + (m || 0);
+  }
+
   for (const di of validDi) {
+    const depDiPhut = parseTimeToMinutes(di.departureTime);
+    const gioDenTuyetDoi = depDiPhut + (di.durationMinutes || 0);
+    const soDem = soDemOKhachSan(soNgay, gioDenTuyetDoi);
+    if (soDem < 1) continue; // Tổ hợp có 0 đêm: không khả thi, bỏ qua
+
     const costDi = di.pricePerPerson * soNguoi;
     for (const ve of validVe) {
       const costVe = ve.pricePerPerson * soNguoi;

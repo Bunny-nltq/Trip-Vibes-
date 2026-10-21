@@ -80,7 +80,7 @@ export const GIO_DEN_SOM = "06:00";
 // ─── Thời gian danh nghĩa ────────────────────────────────────────────────────
 
 /** Phiên bản quy tắc lập kế hoạch dự phòng và eval */
-export const QUY_TAC_VERSION = "3";
+export const QUY_TAC_VERSION = "4";
 
 /** Hệ số uốn lượn đường bộ cho xe khách và tàu hỏa (giả định đồ án) */
 export const HE_SO_DUONG_BO = 1.5;

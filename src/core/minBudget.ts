@@ -7,6 +7,7 @@ import {
   HOTEL_GIA_MAC_DINH,
   HOTEL_GIA_THEO_SAO,
 } from "./assumptions";
+import { soDemOKhachSan } from "./soDem";
 
 export interface MinBudgetResult {
   khaThi: boolean;
@@ -86,13 +87,18 @@ export function findCheapestHotel(data: {
   return null;
 }
 
+function parseTimeToMinutes(timeStr?: string): number {
+  if (!timeStr) return 0;
+  const [h, m] = timeStr.split(":").map(Number);
+  return (h || 0) * 60 + (m || 0);
+}
+
 export function tinhNganSachToiThieu(
   request: TripRequest,
   data: PlanData
 ): MinBudgetResult {
   const soNguoi = request.soNguoi ?? 2;
   const soNgay = request.soNgay ?? 3;
-  const soDem = soNgay - 1;
   const soPhong = Math.ceil(soNguoi / NGUOI_MOI_PHONG);
   const ngansach = request.ngansachTongVND ?? 0;
 
@@ -113,16 +119,6 @@ export function tinhNganSachToiThieu(
     };
   }
 
-  // Lấy phương tiện rẻ nhất
-  const minDi = validDi.reduce(
-    (min, curr) => (curr.pricePerPerson < min.pricePerPerson ? curr : min),
-    validDi[0]
-  );
-  const minVe = validVe.reduce(
-    (min, curr) => (curr.pricePerPerson < min.pricePerPerson ? curr : min),
-    validVe[0]
-  );
-
   // Khách sạn rẻ nhất
   const cheapestHotel = findCheapestHotel(data);
   if (!cheapestHotel) {
@@ -133,15 +129,46 @@ export function tinhNganSachToiThieu(
     minGiaDem: cheapestHotel.minGiaDem,
   };
 
-  const chiPhiDi = minDi.pricePerPerson * soNguoi;
+  const minVe = validVe.reduce(
+    (min, curr) => (curr.pricePerPerson < min.pricePerPerson ? curr : min),
+    validVe[0]
+  );
   const chiPhiVe = minVe.pricePerPerson * soNguoi;
-  const chiPhiKhachSan = minGiaDem * soDem * soPhong;
-  // Ăn uống: 2 bữa/ngày/người
   const chiPhiAnUong = AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA * 2 * soNguoi * soNgay;
 
-  const toiThieuVND = chiPhiDi + chiPhiVe + chiPhiKhachSan + chiPhiAnUong;
+  // Lọc các chiều đi có soDem >= 1 (tổ hợp 0 đêm không khả thi, bỏ qua)
+  const feasibleDi = validDi.filter((di) => {
+    const gioDenTuyetDoi = parseTimeToMinutes(di.departureTime) + di.durationMinutes;
+    return soDemOKhachSan(soNgay, gioDenTuyetDoi) >= 1;
+  });
+
+  if (feasibleDi.length === 0) {
+    return {
+      khaThi: false,
+      toiThieuVND: 0,
+      lyDo: "khong_co_phuong_tien_phu_hop",
+    };
+  }
+
+  // Tìm di cho tổng chi phí cố định rẻ nhất
+  let bestDi = feasibleDi[0];
+  let bestCost = Infinity;
+
+  for (const di of feasibleDi) {
+    const gioDenTuyetDoi = parseTimeToMinutes(di.departureTime) + di.durationMinutes;
+    const soDem = soDemOKhachSan(soNgay, gioDenTuyetDoi);
+    const chiPhiDi = di.pricePerPerson * soNguoi;
+    const chiPhiKhachSan = minGiaDem * soDem * soPhong;
+    const totalCost = chiPhiDi + chiPhiVe + chiPhiKhachSan + chiPhiAnUong;
+    if (totalCost < bestCost) {
+      bestCost = totalCost;
+      bestDi = di;
+    }
+  }
+
+  const toiThieuVND = bestCost;
   const combo = {
-    transportDiId: minDi.id,
+    transportDiId: bestDi.id,
     transportVeId: minVe.id,
     hotelId: minHotelId,
   };

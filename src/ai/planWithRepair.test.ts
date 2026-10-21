@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { planWithRepair } from "./planWithRepair";
 import { executeTimKhachSan } from "./tools";
 import { locUngVienTheoNganSach } from "@/core/locUngVienTheoNganSach";
+import { validatePlan } from "@/core/validatePlan";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
 import type { TripRequest, Transport, Hotel, Activity, KhachSan, QuanAn, Cafe, HoatDong } from "@/contracts";
 
@@ -291,6 +292,15 @@ describe("planWithRepair - Tích hợp giới hạn thời gian & dự phòng qu
     expect(result.lyDoDuPhong).toBe("het_luot_ai");
     expect(result.soLanGoiAI).toBeLessThanOrEqual(2);
     expect(callCount).toBeLessThanOrEqual(2);
+    expect(result.plan).toBeDefined();
+    const expectedVal = validatePlan(baseRequest, result.plan!, {
+      transports,
+      hotels,
+      activities: hoatDongs as any,
+      quanAns,
+      cafes: [],
+    });
+    expect(result.soft).toEqual(expectedVal.soft);
   });
 
   it("b) provider treo vô hạn: sau PLAN_TIME_BUDGET_MS (giả lập 50.000 ms) trả 'quy_tac', lyDoDuPhong 'qua_thoi_gian'", async () => {

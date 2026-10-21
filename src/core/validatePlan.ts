@@ -13,6 +13,8 @@ import {
 } from "./assumptions";
 import { coCanhBaoDiChuyen, tiLeThoiGianDiChuyen } from "./tiLeDiChuyen";
 import { gioOHoatDongNgayDau } from "./gioONgayDau";
+import { tinhOKhaDungTheoNgay } from "./oKhaDung";
+import { soDemOKhachSan } from "./soDem";
 import { min2hhmm } from "./mealTimes";
 
 export { DANH_SACH_MA_CANH_BAO };
@@ -100,13 +102,17 @@ export function validatePlan(
     // soft: den_vao_ngay_sau
     const depDiPhut = timeToMinutes(tDi.departureTime);
     if (depDiPhut + tDi.durationMinutes >= 1440) {
+      const gioDenTuyetDoi = depDiPhut + tDi.durationMinutes;
+      const soNgay = request.soNgay ?? 3;
+      const d = Math.floor(gioDenTuyetDoi / 1440) + 1;
+      const n = soDemOKhachSan(soNgay, gioDenTuyetDoi);
       soft.push({
         code: "den_vao_ngay_sau",
-        chiTiet: `Chuyến đi đến nơi vào ngày thứ 2 (sau nửa đêm). Đêm đầu nằm trên phương tiện nhưng kế hoạch vẫn tính đủ số đêm khách sạn.`,
+        chiTiet: `Chuyến đi đến nơi vào ngày thứ ${d} (sau nửa đêm). Kế hoạch chỉ tính ${n} đêm khách sạn vì ${d - 1} đêm đầu nằm trên phương tiện.`,
         duLieu: {
           khoiHanh: tDi.departureTime,
           thoiLuong: tDi.durationMinutes,
-          tongPhut: depDiPhut + tDi.durationMinutes,
+          tongPhut: gioDenTuyetDoi,
         },
       });
     }
@@ -186,13 +192,30 @@ export function validatePlan(
     }
   }
 
-  // 4. Ràng buộc thời gian hoạt động ngày 1
-  const hoatDongNgay1 = hoatDongTheoNgay[0] || [];
-  if (hoatDongNgay1.length > 0 && tDi) {
-    if (gioOHoatDongNgayDau(gioDenDiPhut) === null) {
+  // 4. Ràng buộc thời gian hoạt động theo số ô khả dụng từng ngày
+  const gioVePhut = tVe ? timeToMinutes(tVe.departureTime) : 750;
+  const oKhaDungTheoNgay = tinhOKhaDungTheoNgay(
+    request.soNgay ?? 0,
+    gioDenDiPhut,
+    gioVePhut
+  );
+  const ngayDen = Math.floor(gioDenDiPhut / 1440) + 1;
+  const gioDenHHMM = min2hhmm(gioDenDiPhut % 1440);
+
+  for (let d = 0; d < (request.soNgay ?? 0); d++) {
+    const acts = hoatDongTheoNgay[d] || [];
+    const maxSlots = oKhaDungTheoNgay[d] ?? 0;
+    if (acts.length > maxSlots) {
       hard.push({
         code: "ngay_dau_den_muon",
-        chiTiet: `Đến nơi lúc ${min2hhmm(gioDenDiPhut)}, không còn ô hoạt động nào trong ngày đầu.`,
+        chiTiet: `Đến nơi lúc ${gioDenHHMM} (ngày ${ngayDen}), ngày ${d + 1} có ${acts.length} hoạt động vượt quá ${maxSlots} ô khả dụng.`,
+        duLieu: {
+          ngay: d + 1,
+          soHoatDong: acts.length,
+          soOKhaDung: maxSlots,
+          gioDen: gioDenHHMM,
+          ngayDen,
+        },
       });
     }
   }

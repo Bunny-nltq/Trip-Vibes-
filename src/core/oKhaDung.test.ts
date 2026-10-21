@@ -39,4 +39,17 @@ describe("soOKhaDung", () => {
   it("3 ngày, đến 1667 (03:47 ngày hôm sau), về 960 (16:00) => 3 ô", () => {
     expect(soOKhaDung(3, 1667, 960)).toBe(3);
   });
+
+  // Ca test mới theo B1a
+  it("9 ca test theo đáp án B1a của người dùng", () => {
+    expect(soOKhaDung(3, 2291, 960)).toBe(2);
+    expect(soOKhaDung(3, 1667, 960)).toBe(3);
+    expect(soOKhaDung(3, 1500, 960)).toBe(3);
+    expect(soOKhaDung(3, 1980, 960)).toBe(2);
+    expect(soOKhaDung(3, 2310, 960)).toBe(2);
+    expect(soOKhaDung(3, 2311, 960)).toBe(1);
+    expect(soOKhaDung(3, 2880, 960)).toBe(0);
+    expect(soOKhaDung(4, 2291, 960)).toBe(4);
+    expect(soOKhaDung(4, 1087, 1080)).toBe(5);
+  });
 });

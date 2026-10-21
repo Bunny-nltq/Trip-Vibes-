@@ -123,12 +123,12 @@ export function lapKeHoachTuDong(
     };
   }
 
-  // 4. Khởi tạo Selection cơ bản
+  // 4. Khởi tạo Selection cơ bản từ combo rẻ nhất đã lọc
   const hoatDongTheoNgay: string[][] = Array.from({ length: soNgay }, () => []);
   const baseSelection: Selection = {
-    transportDiId: minDi.id,
-    transportVeId: minVe.id,
-    hotelId: cheapestHotel.hotelId,
+    transportDiId: minBudgetRes.combo!.transportDiId,
+    transportVeId: minBudgetRes.combo!.transportVeId,
+    hotelId: minBudgetRes.combo!.hotelId,
     hoatDongTheoNgay,
   };
 

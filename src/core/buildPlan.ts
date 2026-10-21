@@ -23,6 +23,8 @@ import {
 } from "./assumptions";
 import { mealTimeOrNull, hhmm2min, min2hhmm } from "./mealTimes";
 import { gioOHoatDongNgayDau } from "./gioONgayDau";
+import { soDemOKhachSan } from "./soDem";
+import { tinhOKhaDungTheoNgay } from "./oKhaDung";
 
 export interface PlanData {
   transports: Transport[];
@@ -164,7 +166,8 @@ export function buildPlan(
   const tVe = transportVe!;
 
   // 5. Tính toán các thông số phòng và đêm
-  const soDem = soNgay - 1;
+  const gioDenNgay1Phut = hhmm2min(tDi.departureTime) + tDi.durationMinutes;
+  const soDem = soDemOKhachSan(soNgay, gioDenNgay1Phut);
   const soPhong = Math.ceil(soNguoi / NGUOI_MOI_PHONG);
   const tenDiemDen = getDiemDenTen(request.diemDen);
 
@@ -240,8 +243,6 @@ export function buildPlan(
   });
 
   // 5.3. Ăn uống theo ngày (tính theo từng bữa hoặc dùng mặc định)
-  // Tính giờ đến ngày 1 cho mealTimeOrNull
-  const gioDenNgay1Phut = hhmm2min(tDi.departureTime) + tDi.durationMinutes;
   let tongAnUong = 0;
 
   for (let day = 1; day <= soNgay; day++) {
@@ -329,19 +330,30 @@ export function buildPlan(
   }
 
   // 5.4. Vui chơi theo ngày
+  const gioKhoiHanhVePhut = hhmm2min(tVe.departureTime);
+  const oKhaDungTheoNgay = tinhOKhaDungTheoNgay(soNgay, gioDenNgay1Phut, gioKhoiHanhVePhut);
+  const ngayDen = Math.floor(gioDenNgay1Phut / 1440) + 1;
+
   selection.hoatDongTheoNgay.forEach((dayActs, dayIdx) => {
     const day = dayIdx + 1;
+    const soOKhaDungCuaNgay = oKhaDungTheoNgay[dayIdx] ?? 0;
     dayActs.forEach((actId, actIdx) => {
       const act = activityMap.get(actId)!;
       const donGiaVe = (act as any).giaVeNguoi ?? (act as any).pricePerPerson ?? 0;
       const thanhTienAct = donGiaVe * soNguoi;
       let gioDanhNghia: string;
-      if (day === 1) {
+      if (day === 1 && ngayDen === 1) {
         const slotNgay1 = gioOHoatDongNgayDau(gioDenNgay1Phut);
         if (actIdx === 0) {
           gioDanhNghia = slotNgay1 ? min2hhmm(slotNgay1) : min2hhmm(GIO_HOAT_DONG_1);
         } else {
           gioDanhNghia = min2hhmm(GIO_HOAT_DONG_2);
+        }
+      } else if (day === ngayDen) {
+        if (soOKhaDungCuaNgay === 1) {
+          gioDanhNghia = min2hhmm(GIO_HOAT_DONG_2);
+        } else {
+          gioDanhNghia = actIdx === 0 ? min2hhmm(GIO_HOAT_DONG_1) : min2hhmm(GIO_HOAT_DONG_2);
         }
       } else {
         gioDanhNghia = actIdx === 0 ? min2hhmm(GIO_HOAT_DONG_1) : min2hhmm(GIO_HOAT_DONG_2);

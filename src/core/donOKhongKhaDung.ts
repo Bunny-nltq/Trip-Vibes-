@@ -14,6 +14,7 @@ import {
   THOI_LUONG_TOI_THIEU_HOAT_DONG,
 } from "./assumptions";
 import { gioOHoatDongNgayDau } from "./gioONgayDau";
+import { tinhOKhaDungTheoNgay } from "./oKhaDung";
 import { min2hhmm } from "./mealTimes";
 
 const GIO_HOAT_DONG_1_PHUT = 9 * 60 + 30; // 570 phút ("09:30")
@@ -136,34 +137,26 @@ export function donOKhongKhaDung(
     }
   }
 
-  // Kiểm tra ngày đầu (ngày 1)
-  if (
-    gioDenPhutNgay1 !== null &&
-    gioOHoatDongNgayDau(gioDenPhutNgay1) === null
-  ) {
-    if (hoatDongMoi[0] && hoatDongMoi[0].length > 0) {
-      hoatDongMoi[0] = [];
-      daDon = true;
-      const msg = "bo_hoat_dong_do_gio_giac: Ngày 1 đến muộn nên bỏ hoạt động";
-      canhBao.push("bo_hoat_dong_do_gio_giac");
-      canhBao.push("bo_hoat_dong_do_gio_giac_ngay_1");
-      canhBao.push(msg);
-    }
-  }
+  const gioDenTuyetDoi = gioDenPhutNgay1 ?? 0;
+  const gioVePhut = gioKhoiHanhVePhut ?? 750;
+  const oKhaDungTheoNgay = tinhOKhaDungTheoNgay(soNgay, gioDenTuyetDoi, gioVePhut);
 
-  // Kiểm tra ngày cuối
-  const lastIdx = soNgay - 1;
-  if (
-    gioKhoiHanhVePhut !== null &&
-    gioKhoiHanhVePhut < NGUONG_VE_PHUT
-  ) {
-    if (hoatDongMoi[lastIdx] && hoatDongMoi[lastIdx].length > 0) {
-      hoatDongMoi[lastIdx] = [];
+  for (let d = 0; d < soNgay; d++) {
+    const maxSlots = oKhaDungTheoNgay[d] ?? 0;
+    if (hoatDongMoi[d] && hoatDongMoi[d].length > maxSlots) {
+      hoatDongMoi[d] = hoatDongMoi[d].slice(0, maxSlots);
       daDon = true;
-      const msg = `bo_hoat_dong_do_gio_giac: Ngày ${soNgay} về sớm nên bỏ hoạt động`;
-      canhBao.push("bo_hoat_dong_do_gio_giac");
-      canhBao.push(`bo_hoat_dong_do_gio_giac_ngay_${soNgay}`);
-      canhBao.push(msg);
+      if (!canhBao.includes("bo_hoat_dong_do_gio_giac")) {
+        canhBao.push("bo_hoat_dong_do_gio_giac");
+      }
+      canhBao.push(`bo_hoat_dong_do_gio_giac_ngay_${d + 1}`);
+      if (d === 0) {
+        canhBao.push("bo_hoat_dong_do_gio_giac: Ngày 1 đến muộn nên bỏ hoạt động");
+      } else if (d === soNgay - 1) {
+        canhBao.push(`bo_hoat_dong_do_gio_giac: Ngày ${soNgay} về sớm nên bỏ hoạt động`);
+      } else {
+        canhBao.push(`bo_hoat_dong_do_gio_giac: Ngày ${d + 1} bớt hoạt động do giờ giấc`);
+      }
     }
   }
 
@@ -172,11 +165,14 @@ export function donOKhongKhaDung(
 
   // Nếu plan được truyền vào, loại bỏ các items Vui chơi của ngày bị gỡ
   if (plan && Array.isArray(plan.items) && daDon) {
-    if (hoatDongMoi[0]?.length === 0 && gioDenPhutNgay1 !== null && gioOHoatDongNgayDau(gioDenPhutNgay1) === null) {
-      plan.items = plan.items.filter((i: any) => !(i.hangMuc === "Vui chơi" && i.ngay === 1));
-    }
-    if (hoatDongMoi[lastIdx]?.length === 0 && gioKhoiHanhVePhut !== null && gioKhoiHanhVePhut < NGUONG_VE_PHUT) {
-      plan.items = plan.items.filter((i: any) => !(i.hangMuc === "Vui chơi" && i.ngay === soNgay));
+    for (let d = 0; d < soNgay; d++) {
+      const allowedIds = new Set(hoatDongMoi[d] || []);
+      plan.items = plan.items.filter((i: any) => {
+        if (i.hangMuc === "Vui chơi" && i.ngay === d + 1) {
+          return allowedIds.has(i.refId);
+        }
+        return true;
+      });
     }
     if (Array.isArray(plan.canhBao)) {
       for (const cb of canhBao) {
