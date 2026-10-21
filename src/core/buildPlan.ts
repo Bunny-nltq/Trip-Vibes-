@@ -226,11 +226,13 @@ export function buildPlan(
     thoiLuongPhut: tDi.durationMinutes,
   } as any);
 
-  // 5.2. Chỗ ở (Ngày 1, danh nghĩa 14:00)
+  // 5.2. Chỗ ở (thuộc ngày đến, giờ nhận phòng là max(14:00, giờ đến mod 1440))
+  const ngayChoO = Math.floor(gioDenNgay1Phut / 1440) + 1;
+  const gioChoO = min2hhmm(Math.max(14 * 60, gioDenNgay1Phut % 1440));
   const tenKhachSan = khachSanLive?.ten ?? hotelMock!.name;
   items.push({
-    ngay: 1,
-    gio: "14:00",
+    ngay: ngayChoO,
+    gio: gioChoO,
     hangMuc: "Chỗ ở",
     noiDung: `Lưu trú: ${tenKhachSan} (${soDem} đêm, ${soPhong} phòng)`,
     soLuong: soLuongPhongDem,

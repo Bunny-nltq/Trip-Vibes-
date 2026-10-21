@@ -680,5 +680,158 @@ describe("buildPlan – N ngày, Fixture A", () => {
       }
     });
   });
+
+  describe("B3a: Mục Chỗ ở thuộc ngày đến theo giờ đến thực tế", () => {
+    function createB3aFixture(soNgay: number, depTime: string, durMins: number) {
+      const data: any = {
+        transports: [
+          {
+            schemaVersion: 6,
+            id: "T_DI",
+            huong: "di",
+            type: "PLANE",
+            provider: "Hãng Di",
+            origin: "TP.HCM",
+            destination: "Đà Nẵng",
+            departureTime: depTime,
+            durationMinutes: durMins,
+            pricePerPerson: 1000000,
+            seatClass: "Phổ thông",
+            boardingPoint: "Sân bay",
+            dropOffPoint: "Sân bay",
+          },
+          {
+            schemaVersion: 6,
+            id: "T_VE",
+            huong: "ve",
+            type: "PLANE",
+            provider: "Hãng Ve",
+            origin: "Đà Nẵng",
+            destination: "TP.HCM",
+            departureTime: "18:00",
+            durationMinutes: 85,
+            pricePerPerson: 1000000,
+            seatClass: "Phổ thông",
+            boardingPoint: "Sân bay",
+            dropOffPoint: "Sân bay",
+          },
+        ],
+        hotels: [
+          {
+            schemaVersion: 6,
+            id: "H2",
+            name: "Khách sạn H2",
+            stars: 3,
+            pricePerNight: 780000,
+            area: "Mỹ Khê",
+            includesBreakfast: false,
+            hasPool: false,
+            rating: 8.0,
+            reviewCount: 100,
+            praised: [],
+            watchOut: [],
+          },
+        ],
+        activities: [],
+      };
+
+      const req: TripRequest = {
+        schemaVersion: 6,
+        diemDi: "TP.HCM",
+        diemDen: "Đà Nẵng",
+        soNguoi: 2,
+        soNgay,
+        ngansachTongVND: 15000000,
+        sothich: [],
+        tranh: [],
+        ghiChu: [],
+        thieu: [],
+        cauHoiLamRo: [],
+        canhBao: [],
+      };
+
+      const sel: Selection = {
+        transportDiId: "T_DI",
+        transportVeId: "T_VE",
+        hotelId: "H2",
+        hoatDongTheoNgay: Array.from({ length: soNgay }, () => []),
+      };
+
+      return { req, sel, data };
+    }
+
+    it("đi 06:30, 85 phút (đến 07:55 ngày 1): Chỗ ở ngay 1, gio 14:00, 2 đêm", () => {
+      const { req, sel, data } = createB3aFixture(3, "06:30", 85);
+      const res = buildPlan(req, sel, data);
+      expect(res.ok).toBe(true);
+      if (res.ok) {
+        const choO = res.plan.items.find((i) => i.hangMuc === "Chỗ ở");
+        expect(choO).toBeDefined();
+        expect(choO!.ngay).toBe(1);
+        expect(choO!.gio).toBe("14:00");
+        expect(choO!.noiDung).toContain("2 đêm");
+        // Di chuyển (2x1tr + 2x1tr = 4tr) + Chỗ ở (2x780k = 1.560k) + Ăn uống (3x600k = 1.800k) = 7.360.000
+        expect(res.plan.tongKet.tongVND).toBe(7360000);
+      }
+    });
+
+    it("đi 07:00, 1871 phút (tuyệt đối 2291): ngay 2, gio 14:11, 1 đêm", () => {
+      const { req, sel, data } = createB3aFixture(3, "07:00", 1871);
+      const res = buildPlan(req, sel, data);
+      expect(res.ok).toBe(true);
+      if (res.ok) {
+        const choO = res.plan.items.find((i) => i.hangMuc === "Chỗ ở");
+        expect(choO).toBeDefined();
+        expect(choO!.ngay).toBe(2);
+        expect(choO!.gio).toBe("14:11");
+        expect(choO!.noiDung).toContain("1 đêm");
+        // Di chuyển 4tr + Chỗ ở (1x780k) + Ăn uống (3x600k = 1.800k) = 6.580.000
+        expect(res.plan.tongKet.tongVND).toBe(6580000);
+      }
+    });
+
+    it("đi 19:00, 600 phút (tuyệt đối 1740, 05:00 ngày 2): ngay 2, gio 14:00, 1 đêm", () => {
+      const { req, sel, data } = createB3aFixture(3, "19:00", 600);
+      const res = buildPlan(req, sel, data);
+      expect(res.ok).toBe(true);
+      if (res.ok) {
+        const choO = res.plan.items.find((i) => i.hangMuc === "Chỗ ở");
+        expect(choO).toBeDefined();
+        expect(choO!.ngay).toBe(2);
+        expect(choO!.gio).toBe("14:00");
+        expect(choO!.noiDung).toContain("1 đêm");
+        expect(res.plan.tongKet.tongVND).toBe(6580000);
+      }
+    });
+
+    it("đi 13:00, 120 phút (tuyệt đối 900, 15:00 ngày 1): ngay 1, gio 15:00, 2 đêm", () => {
+      const { req, sel, data } = createB3aFixture(3, "13:00", 120);
+      const res = buildPlan(req, sel, data);
+      expect(res.ok).toBe(true);
+      if (res.ok) {
+        const choO = res.plan.items.find((i) => i.hangMuc === "Chỗ ở");
+        expect(choO).toBeDefined();
+        expect(choO!.ngay).toBe(1);
+        expect(choO!.gio).toBe("15:00");
+        expect(choO!.noiDung).toContain("2 đêm");
+        expect(res.plan.tongKet.tongVND).toBe(7360000);
+      }
+    });
+
+    it("4 ngày, đi 19:00, 2000 phút (tuyệt đối 3140): ngay 3, gio 14:00, 1 đêm", () => {
+      const { req, sel, data } = createB3aFixture(4, "19:00", 2000);
+      const res = buildPlan(req, sel, data);
+      expect(res.ok).toBe(true);
+      if (res.ok) {
+        const choO = res.plan.items.find((i) => i.hangMuc === "Chỗ ở");
+        expect(choO).toBeDefined();
+        expect(choO!.ngay).toBe(3);
+        expect(choO!.gio).toBe("14:00");
+        expect(choO!.noiDung).toContain("1 đêm");
+        // Di chuyển 4tr + Chỗ ở (1x780k) + Ăn uống (4x600k = 2.400k) = 7.180.000
+        expect(res.plan.tongKet.tongVND).toBe(7180000);
+      }
+    });
+  });
 });
 
