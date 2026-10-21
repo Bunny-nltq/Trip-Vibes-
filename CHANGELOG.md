@@ -4,6 +4,15 @@ Tất cả các thay đổi của dự án Trip Vibes được ghi nhận trung 
 
 ---
 
+- `B2` - Đóng băng lõi quy tắc và đánh giá phiên bản 4 (tag core-frozen-4)
+- `0eb91a8` - B1b: Kế hoạch dự phòng nhanh nhất trong ngân sách với dự trữ hoạt động 10%
+- `6b07c54` - B1a: Sửa 3 lỗi số đêm, ô hoạt động khi đến sau nửa đêm, và cảnh báo quy tắc
+- `237dd35` - A4b: Kiểm chứng lại biến môi trường, đóng gói và bổ sung luật 5b
+- `816ae9c` - A4: Đóng gói snapshot và dữ liệu cho Vercel trong next.config.ts
+- `e3cb8fc` - A3b: Đồng bộ biến môi trường với mã nguồn và cập nhật luật lint trong kế hoạch
+- `e4e15c8` - A3: Cập nhật AGENTS.md, .env.example, README
+- `1cfc5d8` - docs: bổ sung nhiệm vụ A4 và C4a vào docs/KE-HOACH-LAM.md
+- `497ef65` - A2: Sửa xung đột phụ thuộc, npm ci sạch
 - `3d133aa` - Chạy eval:ai-rate ngày 2026-10-21: 4 kịch bản
 - `8619350` - Bước 24: bằng chứng chấm lại b05, làm sạch bảng diadiem, bỏ miễn trừ
 - `a6881c5` - Bước 23: ghi phiên bản eval, sửa bộ chấm, bằng chứng khóa, emoji
