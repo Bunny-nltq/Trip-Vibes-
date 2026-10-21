@@ -17,7 +17,7 @@ Mục tiêu cuối: một **website** Trip Vibes hoàn chỉnh (Home, trang đi�
 3. Đọc mã liên quan trước khi sửa. Nếu một giả định trong nhiệm vụ không khớp mã thật thì **dừng và báo**, không tự suy diễn.
 4. Đáp án test do người dùng đặt: **không sửa cho khớp code**. Mọi thay đổi test phải khai báo: tệp, tên test, trước, sau, lý do, loại (A: đổi có chủ đích theo chỉ định; B: đổi chưa được chỉ định; C: test mới; D: test bị xóa).
 5. Không viết tay hay sửa tay snapshot, dữ liệu địa điểm, ảnh, số liệu eval. Mọi bảng số liệu trong báo cáo phải là **đầu ra nguyên văn của lệnh**, không gõ lại.
-6. **Sau mốc đóng băng lõi (nhiệm vụ B2)** không sửa `src/core`, `src/ai`, prompt, `QUY_TAC_VERSION`, `AGENT_PROMPT_VERSION`, `PLAN_MAX_AI_CALLS`. Muốn sửa phải xin người dùng và nêu lý do.
+6. **Sau mốc đóng băng lõi (nhiệm vụ B2)** không sửa `src/core`, `src/ai`, prompt, `QUY_TAC_VERSION`, `AGENT_PROMPT_VERSION`, `PLAN_MAX_AI_CALLS`. Muốn sửa phải xin người dùng và nêu lý do. Sửa kiểu lint không đổi logic không tính là sửa lõi, nhưng phải khai báo và mọi test phải đạt.
 7. Giao diện: chỉ icon SVG (lucide-react), **không emoji**; màu, chữ, bo góc, bóng đổ chỉ từ `src/design/tokens.json`. `check:colors`, `check:contrast`, `check:emoji` phải đạt.
 8. `src/ui` không import `src/ai` hay `src/data`. Trang trong `src/app` được đọc dữ liệu rồi truyền xuống `ui` qua props.
 9. Không thêm thư viện mới nếu nhiệm vụ không ghi cho phép.

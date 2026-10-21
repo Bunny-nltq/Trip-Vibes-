@@ -33,14 +33,18 @@ cp .env.example .env.local
 | `LIVE_AI_ENABLED` | Không | `false` | Bật/tắt gọi AI thật trên môi trường chạy. Khi `false` hoặc gặp lỗi/vượt hạn mức, hệ thống tự động kích hoạt kế hoạch dự phòng bằng thuật toán quy tắc thuần túy (`lapKeHoachTuDong`). |
 | `GEMINI_DAILY_CAP` | Không | `40` | Hạn mức tổng số lượt gọi AI tối đa mỗi ngày trên toàn hệ thống (bộ nhớ tạm). |
 | `PLAN_MAX_AI_CALLS` | Không | `8` | Số lượt gọi AI tối đa cho mỗi phiên lập kế hoạch (bao gồm cả vòng tự sửa lỗi). |
+| `PLAN_TIME_BUDGET_MS` | Không | `50000` | Ngân sách thời gian tối đa (ms) cho một phiên lập kế hoạch trước khi chuyển sang kế hoạch dự phòng. |
 | `DATA_MODE` | Không | `snapshot` | Chế độ nguồn dữ liệu: `snapshot` (dùng dữ liệu lưu trữ đã kiểm toán), `live` (truy vấn OSM/Nominatim trực tiếp), hoặc `mock` (dữ liệu giả lập test). |
 | `LIVE_DATA_ENABLED` | Không | `false` | Cho phép truy vấn dữ liệu trực tuyến ngoài mạng khi triển khai. |
+| `DATA_FALLBACK` | Không | `on` | Bật/tắt cơ chế tự động rơi về snapshot khi dữ liệu live gặp lỗi (`on` hoặc `off`). |
+| `DATA_TTL_HOURS` | Không | `24` | Thời gian sống (giờ) của dữ liệu cache Overpass/khách sạn/phương tiện. |
+| `DATA_MAX_SEARCH_PER_DAY` | Không | `30` | Số lượt tìm kiếm web tối đa mỗi ngày cho dữ liệu địa điểm. |
 | `NOMINATIM_USER_AGENT` | Không | `TripVibes/1.0 (contact@tripvibes.vn)` | User-Agent hợp lệ kèm email liên hệ gửi đến dịch vụ OpenStreetMap Nominatim. |
-| `SITE_URL` | Không | `http://localhost:3000` | Địa chỉ URL gốc của website phục vụ SEO metadata, sitemap và chia sẻ xã hội. |
+| `OVERPASS_ENDPOINTS` | Không | - | Danh sách URL máy chủ Overpass tùy chỉnh, ngăn cách bởi dấu phẩy. |
 | `NEXT_PUBLIC_SHOW_DEMO` | Không | `false` | Cho phép hiển thị thanh điều hướng các màn hình `/demo/*`. Mặc định trả về 404 khi deploy. |
-| `UNSPLASH_ACCESS_KEY` | Không | - | Khóa truy cập Unsplash API để tìm kiếm và đề xuất ảnh điểm đến (tùy chọn). |
-| `EXCHANGE_RATE_API_KEY` | Không | - | Khóa API tra cứu tỷ giá ngoại tệ từ ExchangeRate-API (tùy chọn). |
+| `SITE_URL` | Không | `http://localhost:3000` | Địa chỉ URL gốc của website phục vụ SEO metadata, sitemap và chia sẻ (dùng từ nhiệm vụ E8). |
 | `TAVILY_API_KEY` | Không | - | Khóa tìm kiếm web Tavily hỗ trợ tìm kiếm phương tiện (tùy chọn). |
+| `UNSPLASH_ACCESS_KEY` | Không | - | Khóa truy cập Unsplash API để tìm kiếm và đề xuất ảnh điểm đến (dùng từ nhiệm vụ D5). |
 
 ---
 
