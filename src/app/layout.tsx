@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import tokens from "@/design/tokens.json";
 
 export const viewport: Viewport = {
-  themeColor: "#2B55D6",
+  themeColor: tokens.colors.primary.main,
   width: "device-width",
   initialScale: 1,
 };

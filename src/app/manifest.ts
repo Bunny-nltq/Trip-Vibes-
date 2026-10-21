@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import tokens from "@/design/tokens.json";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -7,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Lập kế hoạch du lịch thông minh, tối ưu ngân sách cùng AI Agent",
     start_url: "/",
     display: "standalone",
-    background_color: "#EEF4FB",
-    theme_color: "#2B55D6",
+    background_color: tokens.colors.background,
+    theme_color: tokens.colors.primary.main,
     icons: [
       {
         src: "/favicon.ico",
