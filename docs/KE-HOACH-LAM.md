@@ -291,7 +291,7 @@ Mỗi ngày tối đa 3 nhiệm vụ cần viết mã cho AI. "Gemini" chỉ có
 **F1 (BẠN). Deploy Vercel.** Kết nối repo, Node 22, biến môi trường theo D7 (không đặt `NEXT_PUBLIC_SHOW_DEMO`), `NOMINATIM_USER_AGENT` có email thật, khóa Gemini mới. Gửi lại địa chỉ.
 
 **F2. Smoke test bản triển khai**
-- Làm: `scripts/smoke.ts <URL>` kiểm tra: `/`, `/kham-pha`, `/kham-pha/da-nang`, `/lich-trinh`, `/gioi-han`, `/sitemap.xml`, `/robots.txt` trả 200; `/api/health` không chứa khóa; `/demo` trả 404; `POST /api/plan` cho Hà Nội trả kế hoạch bằng quy tắc dưới 5 giây; ảnh mẫu (Wikimedia, Unsplash) trả 200; không lỗi console. In bảng nguyên văn.
+- Làm: `scripts/smoke.ts <URL>` kiểm tra: `/`, `/kham-pha`, `/kham-pha/da-nang`, `/lich-trinh`, `/gioi-han`, `/sitemap.xml`, `/robots.txt` trả 200; `/api/health` không chứa khóa và trên Vercel phải liệt kê đủ 5 snapshot; `/demo` trả 404; `POST /api/plan` cho Hà Nội trả kế hoạch bằng quy tắc dưới 5 giây; ảnh mẫu (Wikimedia, Unsplash) trả 200; không lỗi console. In bảng nguyên văn.
 - Không gọi Gemini.
 
 **F3 (BẠN rồi AI). Lighthouse.** Bạn chạy Lighthouse (desktop và mobile) cho `/` và `/lap-ke-hoach`, gửi điểm 4 mục. AI sửa các lỗi nhanh (kích thước ảnh, `font-display`, nhãn thiếu). Mục tiêu mềm: Accessibility và SEO từ 90, Best Practices từ 90, Performance mobile từ 70; điểm thấp hơn thì ghi trung thực vào báo cáo.
