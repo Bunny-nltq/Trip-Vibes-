@@ -11,7 +11,7 @@ import type { Expense } from "@/contracts";
 
 describe("ledger", () => {
   it("L1: thêm các expense và tính tổng", () => {
-    let ledger = createLedger();
+    const ledger = createLedger();
     const e1: Expense = {
       id: "1",
       nguon: "nhap_tay",

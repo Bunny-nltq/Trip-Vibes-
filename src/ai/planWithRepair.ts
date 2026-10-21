@@ -79,7 +79,7 @@ export async function planWithRepair(
   }
 ): Promise<PlanRepairResult> {
   const startMs = Date.now();
-  let request = { ...incomingRequest };
+  const request = { ...incomingRequest };
 
   // a) Kiểm tra điều kiện "cần làm rõ" (thiếu trường, ngoài phạm vi)
   const emptyResult: PlanRepairResult = {

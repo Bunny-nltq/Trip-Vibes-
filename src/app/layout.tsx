@@ -1,4 +1,46 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+
+export const viewport: Viewport = {
+  themeColor: "#2B55D6",
+  width: "device-width",
+  initialScale: 1,
+};
+
+export const metadata: Metadata = {
+  title: {
+    default: "Trip Vibes – AI Agent Lập Kế Hoạch Du Lịch Thông Minh",
+    template: "%s | Trip Vibes",
+  },
+  description:
+    "Ứng dụng AI Agent lập kế hoạch du lịch tự động, tối ưu chi phí và bám sát ngân sách thực tế. Tra cứu giá vé, khách sạn, lịch trình chi tiết và quét hóa đơn thông minh.",
+  keywords: [
+    "du lịch",
+    "kế hoạch du lịch",
+    "trip planner",
+    "AI travel agent",
+    "quản lý chi tiêu du lịch",
+    "Trip Vibes",
+  ],
+  authors: [{ name: "Trip Vibes Team" }],
+  openGraph: {
+    title: "Trip Vibes – AI Agent Lập Kế Hoạch Du Lịch Thông Minh",
+    description:
+      "Lập kế hoạch du lịch tự động, tối ưu chi phí, bám sát ngân sách và minh bạch nguồn gốc dữ liệu.",
+    url: "https://tripvibes.vn",
+    siteName: "Trip Vibes",
+    locale: "vi_VN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Trip Vibes – AI Agent Lập Kế Hoạch Du Lịch",
+    description: "Lập kế hoạch du lịch tự động và tối ưu ngân sách cùng AI.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 import { Be_Vietnam_Pro, Dancing_Script } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/ui/components/ThemeProvider";
@@ -17,10 +59,6 @@ const dancingScript = Dancing_Script({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Trip Vibes",
-  description: "AI Agent lập kế hoạch du lịch",
-};
 
 export default function RootLayout({
   children,

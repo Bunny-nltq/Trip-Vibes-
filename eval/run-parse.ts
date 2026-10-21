@@ -263,7 +263,7 @@ async function main() {
 
   let correctSoNguoi = 0;
   let correctSoNgay = 0;
-  let correctNganSach = 0;
+  const correctNganSach = 0;
   let correctDiemDen = 0;
   let correctSothich = 0;
   let correctTranh = 0;

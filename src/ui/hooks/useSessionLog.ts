@@ -204,11 +204,12 @@ export function useSessionLog(options?: SessionLogOptions) {
   const [events, setEvents] = useState<SessionEvent[]>([]);
   const startTimeRef = useRef<number>(0);
 
+  const customStorage = options?.storage;
   const getStorage = useCallback((): Storage | null => {
-    if (options?.storage !== undefined) return options.storage;
+    if (customStorage !== undefined) return customStorage;
     if (typeof window !== "undefined") return window.sessionStorage;
     return null;
-  }, [options?.storage]);
+  }, [customStorage]);
 
   // Khởi tạo kiểm tra cờ ?test=1
   useEffect(() => {

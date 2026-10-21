@@ -2,9 +2,7 @@ import { NextResponse } from "next/server";
 import type { TripRequest, Selection } from "@/contracts";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
 import { GeminiProvider } from "@/ai/provider";
-import { planRegenerate, REGEN_PROMPT_VERSION } from "@/ai/planRegenerate";
-
-export { REGEN_PROMPT_VERSION };
+import { planRegenerate } from "@/ai/planRegenerate";
 
 export async function POST(req: Request) {
   try {

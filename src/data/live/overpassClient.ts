@@ -318,7 +318,7 @@ async function queryOverpass(
 
     const body = `[out:json][timeout:20];\n${ql}\nout center qt 30;`;
     const endpoints = getOverpassEndpoints();
-    let bestElements: OsmElement[] = [];
+    const bestElements: OsmElement[] = [];
 
     for (const endpoint of endpoints) {
       let serverAttempts = 0;

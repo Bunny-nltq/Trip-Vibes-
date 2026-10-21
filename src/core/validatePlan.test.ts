@@ -284,7 +284,7 @@ describe("validatePlan", () => {
     };
     let plan = buildPlan(req, sel, data);
     if (plan.ok) {
-      let v = validatePlan(req, plan.plan, data);
+      const v = validatePlan(req, plan.plan, data);
       expect(v.hard.some((h) => h.code === "ngay_dau_den_muon")).toBe(false);
     }
 
@@ -297,7 +297,7 @@ describe("validatePlan", () => {
     };
     plan = buildPlan(req, sel, data);
     if (plan.ok) {
-      let v = validatePlan(req, plan.plan, data);
+      const v = validatePlan(req, plan.plan, data);
       expect(v.hard.some((h) => h.code === "ngay_dau_den_muon")).toBe(false);
     }
   });
@@ -375,7 +375,7 @@ describe("validatePlan", () => {
     };
     let plan = buildPlan(req, sel, data);
     if (plan.ok) {
-      let v = validatePlan(req, plan.plan, data);
+      const v = validatePlan(req, plan.plan, data);
       expect(v.hard.some((h) => h.code === "hoat_dong_chong_len")).toBe(true);
     }
 
@@ -388,7 +388,7 @@ describe("validatePlan", () => {
     };
     plan = buildPlan(req, sel, data);
     if (plan.ok) {
-      let v = validatePlan(req, plan.plan, data);
+      const v = validatePlan(req, plan.plan, data);
       expect(v.hard.some((h) => h.code === "hoat_dong_chong_len")).toBe(false);
     }
   });

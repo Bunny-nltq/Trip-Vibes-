@@ -18,11 +18,16 @@ function isValidDate(dateString: string): boolean {
 export function checkBill(raw: BillExtractionRaw): BillExtraction {
   const canhBao: string[] = [];
 
-  // Copy raw properties
-  let {
+  const {
     laChungTu,
     loaiChungTu,
     tenCuaHang,
+    hangMucGoiY,
+    doTinCay,
+    ghiChu,
+  } = raw;
+
+  let {
     ngay,
     tongTienVND,
     tamTinhVND,
@@ -30,9 +35,6 @@ export function checkBill(raw: BillExtractionRaw): BillExtraction {
     phuThuVND,
     thueVND,
     dongChiTiet,
-    hangMucGoiY,
-    doTinCay,
-    ghiChu,
   } = raw;
 
   // Validate number fields (must be integers >= 0)

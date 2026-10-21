@@ -168,7 +168,7 @@ async function runSingleEval(allowFallback: boolean): Promise<DiadiemResult[]> {
 
     lastOverpassStats.length = 0;
     let nominatimCalls = 0;
-    let tavilyCalls = 0;
+    const tavilyCalls = 0;
     let geminiCalls = 0;
 
     try {

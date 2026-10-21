@@ -4,18 +4,7 @@ import { calculateTransportFlags } from "@/core/flags";
 import { geocodeDestination } from "@/data/live/geocodeClient";
 import type { DiemDen } from "@/contracts";
 
-// In-memory cache cho /api/options (TTL 1 giờ)
-interface CacheEntry {
-  timestamp: number;
-  data: unknown;
-}
-
-const memoryCache = new Map<string, CacheEntry>();
-const CACHE_TTL_MS = 60 * 60 * 1000;
-
-export function clearOptionsCache() {
-  memoryCache.clear();
-}
+import { memoryCache, CACHE_TTL_MS } from "./cache";
 
 /**
  * GET /api/options?loai=phuong_tien&huong=di|ve | khach_san | hoat_dong | quan_an | cafe

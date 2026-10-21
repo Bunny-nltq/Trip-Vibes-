@@ -168,18 +168,18 @@ export function auditAllSnapshots(snapshotsDir?: string): {
   allPassed: boolean;
 } {
   const dir = snapshotsDir ?? path.join(process.cwd(), "src", "data", "snapshots");
-  if (!fs.existsSync(dir)) {
+  if (!fs.existsSync(/*turbopackIgnore: true*/ dir)) {
     return { results: [], allPassed: true };
   }
 
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json"));
+  const files = fs.readdirSync(/*turbopackIgnore: true*/ dir).filter((f) => f.endsWith(".json"));
   const results: AuditItemResult[] = [];
   let allPassed = true;
 
   for (const f of files) {
-    const fullPath = path.join(dir, f);
+    const fullPath = path.join(/*turbopackIgnore: true*/ dir, f);
     try {
-      const raw = fs.readFileSync(fullPath, "utf-8");
+      const raw = fs.readFileSync(/*turbopackIgnore: true*/ fullPath, "utf-8");
       const data = JSON.parse(raw);
       const res = auditSnapshotData(data, f);
       results.push(res);

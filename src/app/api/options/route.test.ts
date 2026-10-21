@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { GET, clearOptionsCache } from "./route";
+import { GET } from "./route";
+import { clearOptionsCache } from "./cache";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
 
 describe("GET /api/options cache verification", () => {

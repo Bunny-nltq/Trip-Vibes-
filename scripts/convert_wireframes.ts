@@ -19,9 +19,9 @@ function convertHtmlToReact(html: string): string {
     // Basic inline style to object converter
     const styles = styleStr.split(";").filter((s: string) => s.trim());
     const styleObj = styles.reduce((acc: string[], s: string) => {
-      let [key, value] = s.split(":");
-      if (!key || !value) return acc;
-      key = key.trim().replace(/-([a-z])/g, (g: string) => g[1].toUpperCase());
+      const [rawKey, value] = s.split(":");
+      if (!rawKey || !value) return acc;
+      const key = rawKey.trim().replace(/-([a-z])/g, (g: string) => g[1].toUpperCase());
       acc.push(`"${key}": "${value.trim()}"`);
       return acc;
     }, []);
@@ -50,7 +50,7 @@ if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
 
-let routes = [];
+const routes = [];
 
 for (const file of files) {
   const html = fs.readFileSync(path.join(wireframesDir, file), "utf8");
