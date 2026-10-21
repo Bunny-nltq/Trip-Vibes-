@@ -63,11 +63,11 @@ Mỗi ngày tối đa 3 nhiệm vụ cần viết mã cho AI. "Gemini" chỉ có
 | Ngày | AI làm | BẠN làm | Gemini |
 |---|---|---|---|
 | 21/10 | A1, A2, A3 | U1 (khóa mới) | Không |
-| 22/10 | B1, B2 | U2 (khóa Unsplash), U3 (Figma, mỗi ngày 1 đến 2 giờ đến 31/10) | Không |
+| 22/10 | A4, B1, B2 | U2 (khóa Unsplash), U3 (Figma, mỗi ngày 1 đến 2 giờ đến 31/10) | Không |
 | 23/10 | C1, D1, D2, E1 | Kiểm tra Usage trước khi chạy C1 | Có (C1) |
 | 24/10 | C2, D3, E2 | | Có |
 | 25/10 | C3, D4, D5 | | Có |
-| 26/10 | C4, D6, E3 | U4 (chọn ảnh, 30 phút) | Có |
+| 26/10 | C4a, C4, D6, E3 | U4 (chọn ảnh, 30 phút) | Có (C4) |
 | 27/10 | C5, D7, E4 | | Có |
 | 28/10 | C6, E5 | Bắt đầu viết báo cáo (khung) | Có |
 | 29/10 | C7, E6, E7 | | Có |
@@ -91,6 +91,7 @@ Mỗi ngày tối đa 3 nhiệm vụ cần viết mã cho AI. "Gemini" chỉ có
 | A1 | Sửa `.gitignore`, kiểm tra lộ dữ liệu | AI | 21/10 | | Không |
 | A2 | Sửa xung đột phụ thuộc, `npm ci` sạch | AI | 21/10 | | Không |
 | A3 | Cập nhật `AGENTS.md`, `.env.example`, README | AI | 21/10 | A1 | Không |
+| A4 | Đóng gói snapshot và dữ liệu cho Vercel | AI | 22/10 | A3 | Không |
 | U1 | Tạo khóa Gemini mới, thu hồi khóa cũ | BẠN | 21/10 | | Không |
 | U2 | Đăng ký Unsplash, lấy Access Key | BẠN | 22/10 | | Không |
 | U3 | Figma: nhập wireframe, token, prototype | BẠN | 31/10 | | Không |
@@ -99,7 +100,8 @@ Mỗi ngày tối đa 3 nhiệm vụ cần viết mã cho AI. "Gemini" chỉ có
 | C1 | `eval:ai-rate` 4 ca | AI chạy | 23/10 | B2, U1 | CÓ |
 | C2 | `eval:ai-rate` 4 ca tiếp | AI chạy | 24/10 | C1 | CÓ |
 | C3 | `eval:ai-rate` 2 ca cuối (đủ 10) | AI chạy | 25/10 | C2 | CÓ |
-| C4 | `eval:parse` | AI chạy | 26/10 | B2 | CÓ |
+| C4a | Kiểm tra cách chấm của `eval:parse` | AI | 26/10 | B2 | Không |
+| C4 | `eval:parse` | AI chạy | 26/10 | C4a | CÓ |
 | C5 | `eval:bill` (chạy AI thật, có meta) | AI chạy | 27/10 | B2 | CÓ |
 | C6 | `eval:likes` | AI chạy | 28/10 | B2 | CÓ |
 | C7 | `eval:repair` | AI chạy | 29/10 | B2 | CÓ |
@@ -155,6 +157,11 @@ Mỗi ngày tối đa 3 nhiệm vụ cần viết mã cho AI. "Gemini" chỉ có
 - Làm: hợp nhất các mục "Phạm vi sản phẩm", "Dữ liệu và nguồn", "Cách làm việc" vào `AGENTS.md` (giữ nguyên khối Next.js tự sinh). `.env.example` đủ biến, thêm `UNSPLASH_ACCESS_KEY` (tùy chọn) và `SITE_URL`. README: bảng biến môi trường và scripts đọc từ `package.json`.
 - Xong khi: không biến nào trong README thiếu trong `.env.example` và ngược lại; không có giá trị khóa thật.
 
+**A4. Đóng gói snapshot và dữ liệu cho Vercel (22/10, sau A3, trước B1)**
+- Làm: đọc `next.config.ts` và tài liệu trong `node_modules/next/dist/docs/` về việc đưa tệp đọc lúc chạy vào gói triển khai (tùy chọn tên `outputFileTracingIncludes`, kiểm tra tên đúng cho phiên bản 16.3.8). Các route đọc snapshot: `/api/plan`, `/api/plan/preview`, `/api/plan/regenerate`, `/api/options`, `/api/destination`, `/api/destination/prepare`, `/api/data/status`, `/api/health`. Nếu chưa khai báo thì thêm `src/data/snapshots/**`, `src/data/reference/**` (sau này thêm `src/data/images/**`, `src/data/mau/**`).
+- Kiểm chứng cục bộ: sau `next build`, liệt kê các tệp `.next/server/**/*.nft.json` của từng route trên và nêu route nào chứa `snapshot_*.json`. Chạy `VERCEL=1 next start`, gọi `GET /api/health` (phải liệt kê 5 snapshot) và `POST /api/plan` cho Hà Nội (phải `dataSourceUsed: "snapshot"`).
+- Bằng chứng cuối cùng phải lấy từ bản triển khai thật (F2): `/api/health` trên địa chỉ Vercel phải liệt kê đủ 5 snapshot. Thêm kiểm tra này vào F2.
+
 ### Nhóm B: lõi (22/10)
 
 **B1. Kế hoạch dự phòng "nhanh nhất trong ngân sách còn đủ"**
@@ -180,6 +187,11 @@ Mỗi ngày tối đa 3 nhiệm vụ cần viết mã cho AI. "Gemini" chỉ có
 **C1.** `npm run eval:ai-rate -- --toi-da=4`
 **C2.** `npm run eval:ai-rate -- --toi-da=4`
 **C3.** `npm run eval:ai-rate -- --toi-da=2` (đủ 10 kịch bản; tổng hợp phải không còn dòng "CHƯA ĐỦ MẪU")
+**C4a. Kiểm tra cách chấm của `eval:parse` (trước C4, không gọi Gemini)**
+- Làm: đọc `eval/run-parse.ts`. Biến `correctNganSach` được đổi thành `const ... = 0` ở commit `7020b5e` vì không bao giờ gán lại. Xác định bộ chấm ngân sách thật sự nằm ở đâu và có tăng đúng khi trích đúng không. Nếu sai thì sửa bộ chấm (**không sửa** `eval/parse-cases` hay đáp án), tách thành hàm thuần nếu chưa có.
+- Test (đáp án do người dùng đặt): (trích 20.000.000, kỳ vọng 20.000.000) khớp; (19.000.000 so với 20.000.000) không khớp; (null so với 20.000.000) không khớp; (null so với null) khớp.
+- Báo cáo: nêu rõ lỗi có thật hay không; nếu có thì ảnh hưởng đến kết quả nào. Tìm các biến đếm tương tự ở các runner khác: `git diff 0ef9c3c..7020b5e -- eval` cho thấy chỉ hai chỗ đổi `let` thành `const ... = 0` (`tavilyCalls`, `correctNganSach`).
+
 **C4.** `npm run eval:parse`
 **C5.** `npm run eval:bill` (chỉ dùng ảnh trong `eval/bills/`; tệp kết quả phải có `meta`)
 **C6.** `npm run eval:likes`
@@ -368,3 +380,4 @@ Sáu ca của Bước 13 (không dùng PT_E, PT_F) giữ nguyên đáp án cũ: 
 | Ngày | Thay đổi | Lý do |
 |---|---|---|
 | 21/10 | Tạo kế hoạch | |
+| 21/10 | Bổ sung nhiệm vụ A4 (đóng gói snapshot cho Vercel) và C4a (kiểm tra bộ chấm eval:parse) | Người dùng bổ sung |
