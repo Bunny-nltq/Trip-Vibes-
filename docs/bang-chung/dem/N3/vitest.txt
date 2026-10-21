@@ -1,0 +1,491 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90mD:/Trip_Vibes[39m
+
+ [32m✓[39m src/core/formB1.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/data/live/geocodeClient.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/core/tripProgress.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/core/normalizeRequest.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/core/buildPlan.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m src/core/lapKeHoachTuDong.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m src/core/lapOTrong.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m src/core/b1a.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m src/core/validatePlan.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m src/core/diffPlan.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m src/core/mealTimes.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/data/snapshots/snapshotAudit.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+node.exe : [90mstderr[2m | src/data/live/LiveDataSource.test.ts[2m > [22m[2mLiveDataSource & Data Pipeline Tests 
+(Bước 19)[2m > [22m[2mYêu cầu 4: Kiểm thử LiveDataSource và chính sách dữ liệu[2m > [22m[2mthứ tự dự phòng: live 
+(hoặc cache), rồi snapshot ĐÚNG điểm đến; KHÔNG có mock và KHÔNG dùng snapshot của điểm đến khác; hết cả hai trả 
+khong_du_du_lieu nêu loại thiếu
+At C:\Program Files\nodejs\npx.ps1:29 char:3
++   & $NODE_EXE $NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([90mstderr[2m... nêu loại thiếu:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[22m[39m[LiveDataSource] getKhachSans lỗi: Network Error
+
+ [32m✓[39m src/core/locUngVienTheoNganSach.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+[90mstderr[2m | src/data/live/LiveDataSource.test.ts[2m > [22m[2mLiveDataSource & Data Pipeline Tests (Bước 
+19)[2m > [22m[2mYêu cầu 4: Kiểm thử LiveDataSource và chính sách dữ liệu[2m > [22m[2mthứ tự dự phòng: live (hoặc 
+cache), rồi snapshot ĐÚNG điểm đến; KHÔNG có mock và KHÔNG dùng snapshot của điểm đến khác; hết cả hai trả 
+khong_du_du_lieu nêu loại thiếu
+[22m[39m[LiveDataSource] getQuanAns lỗi: Network Error
+
+[90mstderr[2m | src/data/live/LiveDataSource.test.ts[2m > [22m[2mLiveDataSource & Data Pipeline Tests (Bước 
+19)[2m > [22m[2mYêu cầu 4: Kiểm thử LiveDataSource và chính sách dữ liệu[2m > [22m[2mthứ tự dự phòng: live (hoặc 
+cache), rồi snapshot ĐÚNG điểm đến; KHÔNG có mock và KHÔNG dùng snapshot của điểm đến khác; hết cả hai trả 
+khong_du_du_lieu nêu loại thiếu
+[22m[39m[LiveDataSource] getHoatDongs lỗi: Network Error
+
+ [32m✓[39m src/app/api/options/route.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/core/gioiHanAI.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/app/api/plan/route.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m src/app/api/noKeyLeak.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 74[2mms[22m[39m
+ [32m✓[39m src/data/live/LiveDataSource.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 85[2mms[22m[39m
+ [32m✓[39m src/core/uocLuongPhuongTien.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/core/oKhaDung.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/core/minBudget.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/core/confirmExpense.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/core/soSanhThucTe.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2ma) provider trả 429 mọi lần: phuongThucLap 'quy_tac', lyDoDuPhong 'het_luot_ai', soLanGoiAI nhỏ hơn hoặc bằng 2, tổng thời gian giả lập dưới 10 giây
+[22m[39m[planWithRepair] Initializing LiveDataSource for: Đà Lạt
+[planWithRepair] Fetching all data via Promise.all...
+
+ [32m✓[39m eval/tonghopRules.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(a) resume bỏ qua kịch bản đã xong và không gọi provider/planFn
+[22m[39m================================================================================
+EVAL: RUN-AI-RATE (Bước 15: Chạy tiếp được, lưu tiến trình từng kịch bản)
+================================================================================
+
+[Cờ --toi-da=1]: Tối đa 1 kịch bản MỚI mỗi lần chạy.
+
+[Tiến trình]: Đã nạp 1 kịch bản đã xong từ D:\Trip_Vibes\eval\results\test-temp\progress-resume.json.
+
+[1/10] Chuẩn bị kịch bản: Đà Nẵng (1.3x)...
+
+ [32m✓[39m eval/lib/meta.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/data/reference/tuyenTau.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(a) resume bỏ qua kịch bản đã xong và không gọi provider/planFn
+[22m[39m -> [ĐỌC LẠI]: Kịch bản đã xong từ lần chạy ngày 2026-10-20 (0 lượt Gemini).
+[2/10] Chuẩn bị kịch bản: Đà Nẵng (2.0x)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2ma) provider trả 429 mọi lần: phuongThucLap 'quy_tac', lyDoDuPhong 'het_luot_ai', soLanGoiAI nhỏ hơn hoặc bằng 2, tổng thời gian giả lập dưới 10 giây
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mb) provider treo vô hạn: sau PLAN_TIME_BUDGET_MS (giả lập 50.000 ms) trả 'quy_tac', lyDoDuPhong 'qua_thoi_gian'
+[22m[39m[planWithRepair] Initializing LiveDataSource for: Đà Lạt
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mb) provider treo vô hạn: sau PLAN_TIME_BUDGET_MS (giả lập 50.000 ms) trả 'quy_tac', lyDoDuPhong 'qua_thoi_gian'
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[planWithRepair] Initializing LiveDataSource for: Đà Lạt
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[PlanAgent] Step 1: Received 3 function calls: [ [32m'timPhuongTien'[39m, [32m'timPhuongTien'[39m, [32m'timKhachSan'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[PlanAgent] Step 2: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[PlanAgent] Step 2: Received 1 function calls: [ [32m'chotKeHoach'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[PlanAgent] Step 1: Received 3 function calls: [ [32m'timPhuongTien'[39m, [32m'timPhuongTien'[39m, [32m'timKhachSan'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[PlanAgent] Step 2: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[PlanAgent] Step 2: Received 1 function calls: [ [32m'chotKeHoach'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[PlanAgent] Step 1: Received 3 function calls: [ [32m'timPhuongTien'[39m, [32m'timPhuongTien'[39m, [32m'timKhachSan'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[PlanAgent] Step 2: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mc) provider trả kế hoạch vượt ngân sách 3 lần liên tiếp và toiThieuVND <= ngân sách: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ngân sách
+[22m[39m[PlanAgent] Step 2: Received 1 function calls: [ [32m'chotKeHoach'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2md) provider trả kế hoạch hợp lệ: phuongThucLap 'ai', không gọi dự phòng
+[22m[39m[planWithRepair] Initializing LiveDataSource for: Đà Lạt
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2md) provider trả kế hoạch hợp lệ: phuongThucLap 'ai', không gọi dự phòng
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2md) provider trả kế hoạch hợp lệ: phuongThucLap 'ai', không gọi dự phòng
+[22m[39m[PlanAgent] Step 1: Received 3 function calls: [ [32m'timPhuongTien'[39m, [32m'timPhuongTien'[39m, [32m'timKhachSan'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2md) provider trả kế hoạch hợp lệ: phuongThucLap 'ai', không gọi dự phòng
+[22m[39m[PlanAgent] Step 2: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2md) provider trả kế hoạch hợp lệ: phuongThucLap 'ai', không gọi dự phòng
+[22m[39m[PlanAgent] Step 2: Received 1 function calls: [ [32m'chotKeHoach'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2me) ngân sách nhỏ hơn mức tối thiểu: khong_the_dat_ngan_sach, soLanGoiAI = 0
+[22m[39m[planWithRepair] Initializing LiveDataSource for: Đà Lạt
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(a) resume bỏ qua kịch bản đã xong và không gọi provider/planFn
+[22m[39m -> Ngân sách: 10.000.000 đ (tối thiểu: 4.985.600 đ). Đang chạy planWithRepair (kịch bản mới #1)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2me) ngân sách nhỏ hơn mức tối thiểu: khong_the_dat_ngan_sach, soLanGoiAI = 0
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[planWithRepair] Initializing LiveDataSource for: Đà Lạt
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 1: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 2: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 2: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 3: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 3: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 4: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 4: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 5: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 5: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 6: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 6: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 7: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 7: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 8: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (a) provider luôn trả lệnh công cụ và không bao giờ chốt: dừng sau đúng 8 lượt, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 8: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (c) khaThi false thì KHÔNG gọi provider (soLanGoiAI = 0) và trả khong_the_dat_ngan_sach
+[22m[39m[planWithRepair] Initializing LiveDataSource for: Đà Lạt
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)[2m > [22m[2mBước 14 (c) khaThi false thì KHÔNG gọi provider (soLanGoiAI = 0) và trả khong_the_dat_ngan_sach
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+
+ [32m✓[39m src/ai/planWithRepair.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 89[2mms[22m[39m
+ [32m✓[39m src/ui/hooks/useSessionLog.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(a) resume bỏ qua kịch bản đã xong và không gọi provider/planFn
+[22m[39m -> Kết quả: ai  | 5.000.000 đ (50.0%) | Ô: 1/4 (tối đa 4) | Di chuyển: 4.6% | Lượt AI: 1 | 1ms
+[3/10] Chuẩn bị kịch bản: Hà Nội (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(a) resume bỏ qua kịch bản đã xong và không gọi provider/planFn
+[22m[39m -> Đã đạt giới hạn tối đa 1 kịch bản MỚI. Dừng tại kịch bản này.
+
+================================================================================
+BẢNG KẾT QUẢ KỊCH BẢN (2/10 kịch bản đã chạy với quy tắc hiện tại):
+================================================================================
+┌─────────┬─────┬───────────┬────────┬──────────────┬─────────────┬───────┬─────────┬─────────────┬─────────┬──────────────────┬───────────┬──────────┬────────┬───────────────────────────────┬──────┐
+│ (index) │ STT │ Điểm đến  │ Hệ     │ Ngân sách    │ Phương thức │ Lý do │ Lượt AI │ Tổng VND    │ % NS    │ Ô                │ Di chuyển │ Tỉ lệ DC │ CB nhẹ │ Nguồn                         │ ms   │
+├─────────┼─────┼───────────┼────────┼──────────────┼─────────────┼───────┼─────────┼─────────────┼─────────┼──────────────────┼───────────┼──────────┼────────┼───────────────────────────────┼──────┤
+│ 0       │ [33m1[39m   │ [32m'Đà Nẵng'[39m │ [32m'1.3x'[39m │ [32m'7.500.000'[39m  │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m8[39m       │ [32m'6.044.000'[39m │ [32m'80.6%'[39m │ [32m'3/3 (tối đa 4)'[39m │ [32m'1334p'[39m   │ [32m'30.9%'[39m  │ [33m0[39m      │ [32m'từ lần chạy ngày 2026-10-20'[39m │ [33m5000[39m │
+│ 1       │ [33m2[39m   │ [32m'Đà Nẵng'[39m │ [32m'2.0x'[39m │ [32m'10.000.000'[39m │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m1[39m       │ [32m'5.000.000'[39m │ [32m'50.0%'[39m │ [32m'1/4 (tối đa 4)'[39m │ [32m'200p'[39m    │ [32m'4.6%'[39m   │ [33m0[39m      │ [32m'mới'[39m                         │ [33m1[39m    │
+└─────────┴─────┴───────────┴────────┴──────────────┴─────────────┴───────┴─────────┴─────────────┴─────────┴──────────────────┴───────────┴──────────┴────────┴───────────────────────────────┴──────┘
+
+================================================================================
+TỔNG HỢP (2/10 kịch bản đã chạy với quy tắc hiện tại):
+⚠️ CHƯA ĐỦ MẪU, không dùng làm kết luận
+- Số ca AI lập hợp lệ ngay lần đầu: 1/2
+- Số ca AI lập hợp lệ sau sửa: 1/2
+- Số ca phải dự phòng: 0/2 (không có)
+- Trung bình số lượt Gemini: 4.5
+- Tổng số lượt Gemini đã dùng: 9
+- ms trung bình: 2501 ms
+- Tiến trình đã lưu tại: D:\Trip_Vibes\eval\results\test-temp\progress-resume.json
+- Báo cáo kết quả tại: D:\Trip_Vibes\eval\results\test-temp\result-resume.json
+================================================================================
+
+
+ [32m✓[39m src/core/donOKhongKhaDung.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/data/live/tyGiaClient.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 10[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(b) gặp 429 ở kịch bản thứ 3 thì lưu 2 kịch bản đầu và dừng
+[22m[39m================================================================================
+EVAL: RUN-AI-RATE (Bước 15: Chạy tiếp được, lưu tiến trình từng kịch bản)
+================================================================================
+
+[1/10] Chuẩn bị kịch bản: Đà Nẵng (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(b) gặp 429 ở kịch bản thứ 3 thì lưu 2 kịch bản đầu và dừng
+[22m[39m -> Ngân sách: 6.500.000 đ (tối thiểu: 4.985.600 đ). Đang chạy planWithRepair (kịch bản mới #1)...
+
+ [32m✓[39m src/data/prepareDestination.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+ [32m✓[39m src/core/gioONgayDau.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/core/soThich.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/ui/messages/canhBao.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(b) gặp 429 ở kịch bản thứ 3 thì lưu 2 kịch bản đầu và dừng
+[22m[39m -> Kết quả: ai  | 5.000.000 đ (76.9%) | Ô: 1/4 (tối đa 4) | Di chuyển: 4.6% | Lượt AI: 1 | 1ms
+[2/10] Chuẩn bị kịch bản: Đà Nẵng (2.0x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(b) gặp 429 ở kịch bản thứ 3 thì lưu 2 kịch bản đầu và dừng
+[22m[39m -> Ngân sách: 10.000.000 đ (tối thiểu: 4.985.600 đ). Đang chạy planWithRepair (kịch bản mới #2)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(b) gặp 429 ở kịch bản thứ 3 thì lưu 2 kịch bản đầu và dừng
+[22m[39m -> Kết quả: ai  | 5.000.000 đ (50.0%) | Ô: 1/4 (tối đa 4) | Di chuyển: 4.6% | Lượt AI: 1 | 0ms
+[3/10] Chuẩn bị kịch bản: Hà Nội (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(b) gặp 429 ở kịch bản thứ 3 thì lưu 2 kịch bản đầu và dừng
+[22m[39m -> Ngân sách: 9.300.000 đ (tối thiểu: 7.124.000 đ). Đang chạy planWithRepair (kịch bản mới #3)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(b) gặp 429 ở kịch bản thứ 3 thì lưu 2 kịch bản đầu và dừng
+[22m[39m
+================================================================================
+⚠️ GẶP 429: Dừng ngay. Đã xong 2/10, còn lại: 8.
+================================================================================
+
+================================================================================
+BẢNG KẾT QUẢ KỊCH BẢN (2/10 kịch bản đã chạy với quy tắc hiện tại):
+================================================================================
+┌─────────┬─────┬───────────┬────────┬──────────────┬─────────────┬───────┬─────────┬─────────────┬─────────┬──────────────────┬───────────┬──────────┬────────┬───────┬────┐
+│ (index) │ STT │ Điểm đến  │ Hệ     │ Ngân sách    │ Phương thức │ Lý do │ Lượt AI │ Tổng VND    │ % NS    │ Ô                │ Di chuyển │ Tỉ lệ DC │ CB nhẹ │ Nguồn │ ms │
+├─────────┼─────┼───────────┼────────┼──────────────┼─────────────┼───────┼─────────┼─────────────┼─────────┼──────────────────┼───────────┼──────────┼────────┼───────┼────┤
+│ 0       │ [33m1[39m   │ [32m'Đà Nẵng'[39m │ [32m'1.3x'[39m │ [32m'6.500.000'[39m  │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m1[39m       │ [32m'5.000.000'[39m │ [32m'76.9%'[39m │ [32m'1/4 (tối đa 4)'[39m │ [32m'200p'[39m    │ [32m'4.6%'[39m   │ [33m0[39m      │ [32m'mới'[39m │ [33m1[39m  │
+│ 1       │ [33m2[39m   │ [32m'Đà Nẵng'[39m │ [32m'2.0x'[39m │ [32m'10.000.000'[39m │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m1[39m       │ [32m'5.000.000'[39m │ [32m'50.0%'[39m │ [32m'1/4 (tối đa 4)'[39m │ [32m'200p'[39m    │ [32m'4.6%'[39m   │ [33m0[39m      │ [32m'mới'[39m │ [33m0[39m  │
+└─────────┴─────┴───────────┴────────┴──────────────┴─────────────┴───────┴─────────┴─────────────┴─────────┴──────────────────┴───────────┴──────────┴────────┴───────┴────┘
+
+================================================================================
+TỔNG HỢP (2/10 kịch bản đã chạy với quy tắc hiện tại):
+⚠️ CHƯA ĐỦ MẪU, không dùng làm kết luận
+- Số ca AI lập hợp lệ ngay lần đầu: 2/2
+- Số ca AI lập hợp lệ sau sửa: 0/2
+- Số ca phải dự phòng: 0/2 (không có)
+- Trung bình số lượt Gemini: 1
+- Tổng số lượt Gemini đã dùng: 2
+- ms trung bình: 1 ms
+- Tiến trình đã lưu tại: D:\Trip_Vibes\eval\results\test-temp\progress-429.json
+- Báo cáo kết quả tại: D:\Trip_Vibes\eval\results\test-temp\result-429.json
+================================================================================
+
+
+[90mstderr[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(b) gặp 429 
+ở kịch bản thứ 3 thì lưu 2 kịch bản đầu và dừng
+[22m[39m -> Lỗi khi chạy kịch bản: 429 RESOURCE_EXHAUSTED: Quota exceeded for model
+ -> Phát hiện lỗi 429 Quota Exceeded. Dừng chạy kịch bản tiếp theo.
+
+ [32m✓[39m src/core/chiSoTest.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chỉ chạy đúng 2 kịch bản mới
+[22m[39m================================================================================
+EVAL: RUN-AI-RATE (Bước 15: Chạy tiếp được, lưu tiến trình từng kịch bản)
+================================================================================
+
+[Cờ --toi-da=2]: Tối đa 2 kịch bản MỚI mỗi lần chạy.
+
+[1/10] Chuẩn bị kịch bản: Đà Nẵng (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chỉ chạy đúng 2 kịch bản mới
+[22m[39m -> Ngân sách: 6.500.000 đ (tối thiểu: 4.985.600 đ). Đang chạy planWithRepair (kịch bản mới #1)...
+
+ [32m✓[39m src/core/bill/checkBill.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m scripts/lib/quetMau.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/core/flags.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/core/tiLeDiChuyen.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chỉ chạy đúng 2 kịch bản mới
+[22m[39m -> Kết quả: ai  | 5.000.000 đ (76.9%) | Ô: 1/4 (tối đa 4) | Di chuyển: 4.6% | Lượt AI: 1 | 0ms
+[2/10] Chuẩn bị kịch bản: Đà Nẵng (2.0x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chỉ chạy đúng 2 kịch bản mới
+[22m[39m -> Ngân sách: 10.000.000 đ (tối thiểu: 4.985.600 đ). Đang chạy planWithRepair (kịch bản mới #2)...
+
+ [32m✓[39m src/core/nhanNguon.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m scripts/lib/envScan.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chỉ chạy đúng 2 kịch bản mới
+[22m[39m -> Kết quả: ai  | 5.000.000 đ (50.0%) | Ô: 1/4 (tối đa 4) | Di chuyển: 4.6% | Lượt AI: 1 | 1ms
+[3/10] Chuẩn bị kịch bản: Hà Nội (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chỉ chạy đúng 2 kịch bản mới
+[22m[39m -> Đã đạt giới hạn tối đa 2 kịch bản MỚI. Dừng tại kịch bản này.
+
+================================================================================
+BẢNG KẾT QUẢ KỊCH BẢN (2/10 kịch bản đã chạy với quy tắc hiện tại):
+================================================================================
+┌─────────┬─────┬───────────┬────────┬──────────────┬─────────────┬───────┬─────────┬─────────────┬─────────┬──────────────────┬───────────┬──────────┬────────┬───────┬────┐
+│ (index) │ STT │ Điểm đến  │ Hệ     │ Ngân sách    │ Phương thức │ Lý do │ Lượt AI │ Tổng VND    │ % NS    │ Ô                │ Di chuyển │ Tỉ lệ DC │ CB nhẹ │ Nguồn │ ms │
+├─────────┼─────┼───────────┼────────┼──────────────┼─────────────┼───────┼─────────┼─────────────┼─────────┼──────────────────┼───────────┼──────────┼────────┼───────┼────┤
+│ 0       │ [33m1[39m   │ [32m'Đà Nẵng'[39m │ [32m'1.3x'[39m │ [32m'6.500.000'[39m  │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m1[39m       │ [32m'5.000.000'[39m │ [32m'76.9%'[39m │ [32m'1/4 (tối đa 4)'[39m │ [32m'200p'[39m    │ [32m'4.6%'[39m   │ [33m0[39m      │ [32m'mới'[39m │ [33m0[39m  │
+│ 1       │ [33m2[39m   │ [32m'Đà Nẵng'[39m │ [32m'2.0x'[39m │ [32m'10.000.000'[39m │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m1[39m       │ [32m'5.000.000'[39m │ [32m'50.0%'[39m │ [32m'1/4 (tối đa 4)'[39m │ [32m'200p'[39m    │ [32m'4.6%'[39m   │ [33m0[39m      │ [32m'mới'[39m │ [33m1[39m  │
+└─────────┴─────┴───────────┴────────┴──────────────┴─────────────┴───────┴─────────┴─────────────┴─────────┴──────────────────┴───────────┴──────────┴────────┴───────┴────┘
+
+================================================================================
+TỔNG HỢP (2/10 kịch bản đã chạy với quy tắc hiện tại):
+⚠️ CHƯA ĐỦ MẪU, không dùng làm kết luận
+- Số ca AI lập hợp lệ ngay lần đầu: 2/2
+- Số ca AI lập hợp lệ sau sửa: 0/2
+- Số ca phải dự phòng: 0/2 (không có)
+- Trung bình số lượt Gemini: 1
+- Tổng số lượt Gemini đã dùng: 2
+- ms trung bình: 1 ms
+- Tiến trình đã lưu tại: D:\Trip_Vibes\eval\results\test-temp\progress-max2.json
+- Báo cáo kết quả tại: D:\Trip_Vibes\eval\results\test-temp\result-max2.json
+================================================================================
+
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(d) có đủ 0 kịch bản phiên bản '3': in '0/10 kịch bản đã chạy với quy tắc hiện tại. CHƯA CÓ KẾT QUẢ'
+[22m[39m================================================================================
+EVAL: RUN-AI-RATE (Bước 15: Chạy tiếp được, lưu tiến trình từng kịch bản)
+================================================================================
+
+[Cờ --toi-da=0]: Tối đa 0 kịch bản MỚI mỗi lần chạy.
+
+[Tiến trình]: Đã nạp 1 kịch bản đã xong từ D:\Trip_Vibes\eval\results\test-temp\progress-only-legacy.json.
+
+[1/10] Chuẩn bị kịch bản: Đà Nẵng (1.3x)...
+
+ [32m✓[39m src/core/productionMode.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(d) có đủ 0 kịch bản phiên bản '3': in '0/10 kịch bản đã chạy với quy tắc hiện tại. CHƯA CÓ KẾT QUẢ'
+[22m[39m -> [CŨ (quy tắc v2)]: Kịch bản 1 (Đà Nẵng 1.3x) có kết quả cũ từ ngày 2026-10-20 (quy tắc v2). KHÔNG dùng lại như hợp lệ; để chạy lại khi có lượt Gemini.
+[2/10] Chuẩn bị kịch bản: Đà Nẵng (2.0x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(d) có đủ 0 kịch bản phiên bản '3': in '0/10 kịch bản đã chạy với quy tắc hiện tại. CHƯA CÓ KẾT QUẢ'
+[22m[39m -> Đã đạt giới hạn tối đa 0 kịch bản MỚI. Dừng tại kịch bản này.
+
+================================================================================
+Kết quả cũ, không dùng:
+================================================================================
+┌─────────┬─────┬───────────┬────────┬─────────────┬─────────────┬───────┬─────────┬─────────────┬─────────┬─────────────┬───────────┬──────────┬────────┬───────────────────┬──────┐
+│ (index) │ STT │ Điểm đến  │ Hệ     │ Ngân sách   │ Phương thức │ Lý do │ Lượt AI │ Tổng VND    │ % NS    │ Ô           │ Di chuyển │ Tỉ lệ DC │ CB nhẹ │ Nguồn             │ ms   │
+├─────────┼─────┼───────────┼────────┼─────────────┼─────────────┼───────┼─────────┼─────────────┼─────────┼─────────────┼───────────┼──────────┼────────┼───────────────────┼──────┤
+│ 0       │ [33m1[39m   │ [32m'Đà Nẵng'[39m │ [32m'1.3x'[39m │ [32m'7.500.000'[39m │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m8[39m       │ [32m'6.044.000'[39m │ [32m'80.6%'[39m │ [32m'(luật cũ)'[39m │ [32m'1334p'[39m   │ [32m'30.9%'[39m  │ [33m0[39m      │ [32m'CŨ (quy tắc v2)'[39m │ [33m5000[39m │
+└─────────┴─────┴───────────┴────────┴─────────────┴─────────────┴───────┴─────────┴─────────────┴─────────┴─────────────┴───────────┴──────────┴────────┴───────────────────┴──────┘
+
+================================================================================
+0/10 kịch bản đã chạy với quy tắc hiện tại. CHƯA CÓ KẾT QUẢ
+- Tiến trình đã lưu tại: D:\Trip_Vibes\eval\results\test-temp\progress-only-legacy.json
+- Báo cáo kết quả tại: D:\Trip_Vibes\eval\results\test-temp\result-only-legacy.json
+================================================================================
+
+
+ [32m✓[39m src/data/live/overpassClient.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(e) tiến trình có 2 kịch bản phiên bản '3' và 3 kịch bản phiên bản '2': tổng hợp tính trên 2 kịch bản
+[22m[39m================================================================================
+EVAL: RUN-AI-RATE (Bước 15: Chạy tiếp được, lưu tiến trình từng kịch bản)
+================================================================================
+
+[Cờ --toi-da=0]: Tối đa 0 kịch bản MỚI mỗi lần chạy.
+
+[Tiến trình]: Đã nạp 5 kịch bản đã xong từ D:\Trip_Vibes\eval\results\test-temp\progress-v3-and-v2.json.
+
+[1/10] Chuẩn bị kịch bản: Đà Nẵng (1.3x)...
+
+ [32m✓[39m src/core/haversine.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(e) tiến trình có 2 kịch bản phiên bản '3' và 3 kịch bản phiên bản '2': tổng hợp tính trên 2 kịch bản
+[22m[39m -> [ĐỌC LẠI]: Kịch bản đã xong từ lần chạy ngày 2026-10-20 (0 lượt Gemini).
+[2/10] Chuẩn bị kịch bản: Đà Nẵng (2.0x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(e) tiến trình có 2 kịch bản phiên bản '3' và 3 kịch bản phiên bản '2': tổng hợp tính trên 2 kịch bản
+[22m[39m -> [ĐỌC LẠI]: Kịch bản đã xong từ lần chạy ngày 2026-10-20 (0 lượt Gemini).
+[3/10] Chuẩn bị kịch bản: Hà Nội (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(e) tiến trình có 2 kịch bản phiên bản '3' và 3 kịch bản phiên bản '2': tổng hợp tính trên 2 kịch bản
+[22m[39m -> [CŨ (quy tắc v2)]: Kịch bản 3 (Hà Nội 1.3x) có kết quả cũ từ ngày 2026-10-20 (quy tắc v2). KHÔNG dùng lại như hợp lệ; để chạy lại khi có lượt Gemini.
+[4/10] Chuẩn bị kịch bản: Hà Nội (2.0x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(e) tiến trình có 2 kịch bản phiên bản '3' và 3 kịch bản phiên bản '2': tổng hợp tính trên 2 kịch bản
+[22m[39m -> [CŨ (quy tắc v2)]: Kịch bản 4 (Hà Nội 2.0x) có kết quả cũ từ ngày 2026-10-20 (quy tắc v2). KHÔNG dùng lại như hợp lệ; để chạy lại khi có lượt Gemini.
+[5/10] Chuẩn bị kịch bản: Đà Lạt (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(e) tiến trình có 2 kịch bản phiên bản '3' và 3 kịch bản phiên bản '2': tổng hợp tính trên 2 kịch bản
+[22m[39m -> [CŨ (quy tắc v2)]: Kịch bản 5 (Đà Lạt 1.3x) có kết quả cũ từ ngày 2026-10-20 (quy tắc v2). KHÔNG dùng lại như hợp lệ; để chạy lại khi có lượt Gemini.
+[6/10] Chuẩn bị kịch bản: Đà Lạt (2.0x)...
+
+ [32m✓[39m src/ui/lib/chuyenB1.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chạy tiếp được (run-ai-rate)[2m > [22m[2m(e) tiến trình có 2 kịch bản phiên bản '3' và 3 kịch bản phiên bản '2': tổng hợp tính trên 2 kịch bản
+[22m[39m -> Đã đạt giới hạn tối đa 0 kịch bản MỚI. Dừng tại kịch bản này.
+
+================================================================================
+Kết quả cũ, không dùng:
+================================================================================
+┌─────────┬─────┬──────────┬────────┬─────────────┬─────────────┬───────┬─────────┬─────────────┬─────────┬─────────────┬───────────┬──────────┬────────┬───────────────────┬──────┐
+│ (index) │ STT │ Điểm đến │ Hệ     │ Ngân sách   │ Phương thức │ Lý do │ Lượt AI │ Tổng VND    │ % NS    │ Ô           │ Di chuyển │ Tỉ lệ DC │ CB nhẹ │ Nguồn             │ ms   │
+├─────────┼─────┼──────────┼────────┼─────────────┼─────────────┼───────┼─────────┼─────────────┼─────────┼─────────────┼───────────┼──────────┼────────┼───────────────────┼──────┤
+│ 0       │ [33m3[39m   │ [32m'Hà Nội'[39m │ [32m'1.3x'[39m │ [32m'7.500.000'[39m │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m3[39m       │ [32m'6.044.000'[39m │ [32m'80.6%'[39m │ [32m'(luật cũ)'[39m │ [32m'1334p'[39m   │ [32m'30.9%'[39m  │ [33m0[39m      │ [32m'CŨ (quy tắc v2)'[39m │ [33m5000[39m │
+│ 1       │ [33m4[39m   │ [32m'Đà Lạt'[39m │ [32m'1.3x'[39m │ [32m'7.500.000'[39m │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m3[39m       │ [32m'6.044.000'[39m │ [32m'80.6%'[39m │ [32m'(luật cũ)'[39m │ [32m'1334p'[39m   │ [32m'30.9%'[39m  │ [33m0[39m      │ [32m'CŨ (quy tắc v2)'[39m │ [33m5000[39m │
+│ 2       │ [33m5[39m   │ [32m'Đà Lạt'[39m │ [32m'1.3x'[39m │ [32m'7.500.000'[39m │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m3[39m       │ [32m'6.044.000'[39m │ [32m'80.6%'[39m │ [32m'(luật cũ)'[39m │ [32m'1334p'[39m   │ [32m'30.9%'[39m  │ [33m0[39m      │ [32m'CŨ (quy tắc v2)'[39m │ [33m5000[39m │
+└─────────┴─────┴──────────┴────────┴─────────────┴─────────────┴───────┴─────────┴─────────────┴─────────┴─────────────┴───────────┴──────────┴────────┴───────────────────┴──────┘
+
+================================================================================
+BẢNG KẾT QUẢ KỊCH BẢN (2/10 kịch bản đã chạy với quy tắc hiện tại):
+================================================================================
+┌─────────┬─────┬───────────┬────────┬─────────────┬─────────────┬───────┬─────────┬─────────────┬─────────┬──────────────────┬───────────┬──────────┬────────┬───────────────────────────────┬─────┐
+│ (index) │ STT │ Điểm đến  │ Hệ     │ Ngân sách   │ Phương thức │ Lý do │ Lượt AI │ Tổng VND    │ % NS    │ Ô                │ Di chuyển │ Tỉ lệ DC │ CB nhẹ │ Nguồn                         │ ms  │
+├─────────┼─────┼───────────┼────────┼─────────────┼─────────────┼───────┼─────────┼─────────────┼─────────┼──────────────────┼───────────┼──────────┼────────┼───────────────────────────────┼─────┤
+│ 0       │ [33m1[39m   │ [32m'Đà Nẵng'[39m │ [32m'1.3x'[39m │ [32m'7.500.000'[39m │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m1[39m       │ [32m'5.000.000'[39m │ [32m'66.7%'[39m │ [32m'1/4 (tối đa 4)'[39m │ [32m'200p'[39m    │ [32m'4.6%'[39m   │ [33m0[39m      │ [32m'từ lần chạy ngày 2026-10-20'[39m │ [33m100[39m │
+│ 1       │ [33m2[39m   │ [32m'Đà Nẵng'[39m │ [32m'2.0x'[39m │ [32m'7.500.000'[39m │ [32m'ai'[39m        │ [32m'-'[39m   │ [33m1[39m       │ [32m'5.000.000'[39m │ [32m'66.7%'[39m │ [32m'1/4 (tối đa 4)'[39m │ [32m'200p'[39m    │ [32m'4.6%'[39m   │ [33m0[39m      │ [32m'từ lần chạy ngày 2026-10-20'[39m │ [33m100[39m │
+└─────────┴─────┴───────────┴────────┴─────────────┴─────────────┴───────┴─────────┴─────────────┴─────────┴──────────────────┴───────────┴──────────┴────────┴───────────────────────────────┴─────┘
+
+================================================================================
+TỔNG HỢP (2/10 kịch bản đã chạy với quy tắc hiện tại):
+⚠️ CHƯA ĐỦ MẪU, không dùng làm kết luận
+- Số ca AI lập hợp lệ ngay lần đầu: 2/2
+- Số ca AI lập hợp lệ sau sửa: 0/2
+- Số ca phải dự phòng: 0/2 (không có)
+- Trung bình số lượt Gemini: 1
+- Tổng số lượt Gemini đã dùng: 2
+- ms trung bình: 100 ms
+- Tiến trình đã lưu tại: D:\Trip_Vibes\eval\results\test-temp\progress-v3-and-v2.json
+- Báo cáo kết quả tại: D:\Trip_Vibes\eval\results\test-temp\result-v3-and-v2.json
+================================================================================
+
+
+ [32m✓[39m eval/run-ai-rate.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 397[2mms[22m[39m
+ [32m✓[39m scripts/build-tokens.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/core/quyDoiTien.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/core/soDem.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/core/ledger.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m scripts/lib/quetEmoji.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m eval/cham-bill.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m52 passed[39m[22m[90m (52)[39m
+[2m      Tests [22m [1m[32m340 passed[39m[22m[90m (340)[39m
+[2m   Start at [22m 23:07:35
+[2m   Duration [22m 1.73s[2m (transform 58%, import 29%, tests 10%, worker 4%)[22m
+
+[2m  Transform [22m [33mtransforming modules took 8.14s[39m[2m · 58% of tracked time, re-done on every run[22m
+[2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+
