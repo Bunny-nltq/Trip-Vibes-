@@ -49,3 +49,6 @@ eval/.cache
 
 # private bills
 eval/bills-real/
+
+# overnight flags
+.dem-*

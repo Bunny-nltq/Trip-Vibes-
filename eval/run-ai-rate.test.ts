@@ -13,7 +13,11 @@ describe("Eval chạy tiếp được (run-ai-rate)", () => {
 
   afterEach(() => {
     if (fs.existsSync(testTempDir)) {
-      fs.rmSync(testTempDir, { recursive: true, force: true });
+      try {
+        fs.rmSync(testTempDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+      } catch {
+        // ignore Windows file locking race
+      }
     }
     vi.restoreAllMocks();
   });
