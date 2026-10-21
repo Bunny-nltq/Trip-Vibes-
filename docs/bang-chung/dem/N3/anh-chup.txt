@@ -1,0 +1,2 @@
+chưa chụp
+Lý do: Môi trường Windows headless browser không hỗ trợ tạo tệp chụp trực tiếp từ dòng lệnh mà không có DISPLAY/cửa sổ. Tuân thủ đúng luật cứng: ghi nhận chưa chụp, không giả tạo.

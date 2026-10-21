@@ -1,0 +1,4 @@
+StatusCode: 200
+
+Content:
+{"mode":"snapshot","snapshots":[{"ten":"Băng Cốc","ngay":"2026-10-20"},{"ten":"Đà Lạt","ngay":"2026-10-20"},{"ten":"Thành phố Đà Nẵng","ngay":"2026-10-20"},{"ten":"Hà Nội","ngay":"2026-10-20"},{"ten":"Seoul","ngay":"2026-10-20"}],"liveDataEnabled":false,"liveAiEnabled":false}
