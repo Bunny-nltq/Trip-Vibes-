@@ -45,6 +45,14 @@ cp .env.example .env.local
 | `SITE_URL` | Không | `http://localhost:3000` | Địa chỉ URL gốc của website phục vụ SEO metadata, sitemap và chia sẻ (dùng từ nhiệm vụ E8). |
 | `TAVILY_API_KEY` | Không | - | Khóa tìm kiếm web Tavily hỗ trợ tìm kiếm phương tiện (tùy chọn). |
 | `UNSPLASH_ACCESS_KEY` | Không | - | Khóa truy cập Unsplash API để tìm kiếm và đề xuất ảnh điểm đến (dùng từ nhiệm vụ D5). |
+| `DATA_SNAPSHOT_NAME` | Không | - | Tên tệp snapshot chỉ định trực tiếp thay vì tự động phát hiện theo điểm đến. |
+| `GOOGLE_API_KEY` | Không | - | Khóa Google API thay thế hoặc dự phòng cho `GEMINI_API_KEY`. |
+| `NEXT_PUBLIC_VERCEL_ENV` | Không | - | Môi trường triển khai Vercel (`production`, `preview`, `development`). |
+| `NO_AGENT_CACHE` | Không | - | Đặt bằng `"1"` để tắt bộ nhớ đệm kết quả trung gian của AI agent khi đánh giá. |
+| `OVERPASS_RUN_ID` | Không | - | Định danh lần chạy truy vấn Overpass để phân tách dữ liệu lưu tạm. |
+| `RUN_ID` | Không | - | Định danh phiên chạy tổng thể của các kịch bản kiểm tra/đánh giá dữ liệu. |
+| `TOI_DA` | Không | - | Số lượng kịch bản đánh giá tối đa mỗi lần chạy (`eval:ai-rate`). |
+| `npm_config_toi_da` | Không | - | Biến nội bộ npm nhận cờ `--toi-da=N` khi chạy script eval. |
 
 ---
 
@@ -67,6 +75,7 @@ Toàn bộ 26 lệnh phát triển, kiểm tra chất lượng và đánh giá �
 - `npm run check:colors`: Quét sạch mã màu hex và font cứng trong `src/ui` và `src/app` (đảm bảo 100% dùng CSS tokens).
 - `npm run check:contrast`: Kiểm tra độ tương phản màu sắc toàn diện theo chuẩn WCAG 2.1 (15/15 cặp màu đạt chuẩn).
 - `npm run check:emoji`: Quét và ngăn chặn emoji cứng trong giao diện, tuân thủ quy tắc chỉ dùng icon SVG của `AGENTS.md`.
+- `npm run check:env`: Quét và đối chiếu sự đồng bộ giữa các biến môi trường đọc trong mã nguồn với `.env.example`.
 - `npm run check:data`: Kiểm tra tính toàn vẹn và hợp lệ của dữ liệu điểm đến (`npx tsx scripts/check-data.ts`).
 - `npm run build:tokens`: Biên dịch Design Tokens từ `src/design/tokens.json` thành biến CSS `src/app/tokens.css`.
 - `npm run verify:keys`: Quét chống rò rỉ khóa bí mật (API key leak) ra ngoài client bundle.
