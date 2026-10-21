@@ -1,0 +1,29 @@
+ok             : True
+status         : ok
+phuongThucLap  : quy_tac
+lyDoDuPhong    : live_ai_tat
+soLanGoiAI     : 0
+dataSourceUsed : snapshot
+tongKet.tongVND: 8552700
+--- tongKet.theoHangMuc ---
+  Di chuyá»n: 6002700
+  Chá» á»: 750000
+  Än uá»ng: 1800000
+  Vui chÆ¡i: 0
+--- soft (code kÃ¨m chiTiet nguyÃªn vÄƒn) ---
+  [den_vao_ngay_sau] Chuyáº¿n Äi Äáº¿n nÆ¡i vÃ o ngÃ y thá»© 2 (sau ná»­a ÄÃªm). Káº¿ hoáº¡ch chá» tÃ­nh 1 ÄÃªm khÃ¡ch sáº¡n vÃ¬ 1 ÄÃªm Äáº§u náº±m trÃªn phÆ°Æ¡ng tiá»n.
+  [di_chuyen_chiem_nhieu_thoi_gian] Di chuyá»n chiáº¿m khoáº£ng 47,5% thá»i gian chuyáº¿n Äi (34.2 giá»). Báº¡n cÃ³ thá» tÄng ngÃ¢n sÃ¡ch Äá» Äi nhanh hÆ¡n hoáº·c giáº£m sá» ngÃ y.
+--- Báº¢NG plan.items ---
+NgÃ y | Giá»   | Háº¡ng má»¥c   | Thá»i lÆ°á»£ng | Ná»™i dung
+-----+-------+------------+------------+-----------------------------------------
+   1 | 07:00 | Di chuyá»n |      1871p | Di chuyá»n chiá»u Äi: Æ¯á»c tÃ­nh th
+   1 | 14:00 | Chá» á»  |       -    | LÆ°u trÃº: KhÃ¡ch Sáº¡n Green Park (1 Ä
+   1 |  --   | Än uá»ng |       -    | TrÆ°a ngÃ y 1 â Æ°á»c tÃ­nh (2 ngÆ°á»
+   1 |  --   | Än uá»ng |       -    | Tá»i ngÃ y 1 â Æ°á»c tÃ­nh (2 ngÆ°á»
+   2 | 12:00 | Än uá»ng |       -    | TrÆ°a ngÃ y 2 â Æ°á»c tÃ­nh (2 ngÆ°á»
+   2 | 15:30 | Vui chÆ¡i  |       -    | Báº£o tÃ ng Tá» Há»¯u
+   2 | 18:30 | Än uá»ng |       -    | Tá»i ngÃ y 2 â Æ°á»c tÃ­nh (2 ngÆ°á»
+   3 | 09:30 | Vui chÆ¡i  |       -    | VÄ©nh Long Gallery
+   3 | 12:00 | Än uá»ng |       -    | TrÆ°a ngÃ y 3 â Æ°á»c tÃ­nh (2 ngÆ°á»
+   3 | 17:30 | Di chuyá»n |       181p | Di chuyá»n chiá»u vá»: Æ¯á»c tÃ­nh t
+   3 |  --   | Än uá»ng |       -    | Tá»i ngÃ y 3 â Æ°á»c tÃ­nh (2 ngÆ°á»

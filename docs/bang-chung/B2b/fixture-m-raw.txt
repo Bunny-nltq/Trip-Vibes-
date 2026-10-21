@@ -1,0 +1,180 @@
+﻿   7: function createFixtureM() {
+   8:   return {
+   9:     transports: [
+  10:       {
+  11:         schemaVersion: 4,
+  12:         id: "D1",
+  13:         huong: "di" as const,
+  14:         type: "PLANE" as const,
+  15:         provider: "Hãng A",
+  16:         origin: "SG",
+  17:         destination: "ĐN",
+  18:         departureTime: "06:30",
+  19:         durationMinutes: 85,
+  20:         pricePerPerson: 980000,
+  21:         seatClass: "PT",
+  22:         boardingPoint: "SG",
+  23:         dropOffPoint: "ĐN",
+  24:       },
+  25:       {
+  26:         schemaVersion: 4,
+  27:         id: "D2",
+  28:         huong: "di" as const,
+  29:         type: "PLANE" as const,
+  30:         provider: "Hãng B",
+  31:         origin: "SG",
+  32:         destination: "ĐN",
+  33:         departureTime: "09:15",
+  34:         durationMinutes: 85,
+  35:         pricePerPerson: 1350000,
+  36:         seatClass: "PT",
+  37:         boardingPoint: "SG",
+  38:         dropOffPoint: "ĐN",
+  39:       },
+  40:       {
+  41:         schemaVersion: 4,
+  42:         id: "D3",
+  43:         huong: "di" as const,
+  44:         type: "BUS" as const,
+  45:         provider: "Xe C",
+  46:         origin: "SG",
+  47:         destination: "ĐN",
+  48:         departureTime: "17:00",
+  49:         durationMinutes: 1050,
+  50:         pricePerPerson: 520000,
+  51:         seatClass: "GN",
+  52:         boardingPoint: "SG",
+  53:         dropOffPoint: "ĐN",
+  54:       },
+  55:       {
+  56:         schemaVersion: 4,
+  57:         id: "V1",
+  58:         huong: "ve" as const,
+  59:         type: "PLANE" as const,
+  60:         provider: "Hãng A",
+  61:         origin: "ĐN",
+  62:         destination: "SG",
+  63:         departureTime: "18:00",
+  64:         durationMinutes: 85,
+  65:         pricePerPerson: 980000,
+  66:         seatClass: "PT",
+  67:         boardingPoint: "ĐN",
+  68:         dropOffPoint: "SG",
+  69:       },
+  70:       {
+  71:         schemaVersion: 4,
+  72:         id: "V2",
+  73:         huong: "ve" as const,
+  74:         type: "BUS" as const,
+  75:         provider: "Xe C",
+  76:         origin: "ĐN",
+  77:         destination: "SG",
+  78:         departureTime: "16:30",
+  79:         durationMinutes: 1050,
+  80:         pricePerPerson: 520000,
+  81:         seatClass: "GN",
+  82:         boardingPoint: "ĐN",
+  83:         dropOffPoint: "SG",
+  84:       },
+  85:     ],
+  86:     hotels: [
+  87:       {
+  88:         schemaVersion: 4,
+  89:         id: "H1",
+  90:         name: "Khách sạn H1",
+  91:         stars: 4,
+  92:         pricePerNight: 1100000,
+  93:         area: "MK",
+  94:         includesBreakfast: true,
+  95:         hasPool: true,
+  96:         rating: 9,
+  97:         reviewCount: 500,
+  98:         praised: [],
+  99:         watchOut: [],
+ 100:       },
+ 101:       {
+ 102:         schemaVersion: 4,
+ 103:         id: "H2",
+ 104:         name: "Khách sạn H2",
+ 105:         stars: 3,
+ 106:         pricePerNight: 650000,
+ 107:         area: "MK",
+ 108:         includesBreakfast: false,
+ 109:         hasPool: false,
+ 110:         rating: 8,
+ 111:         reviewCount: 100,
+ 112:         praised: [],
+ 113:         watchOut: [],
+ 114:       },
+ 115:     ],
+ 116:     activities: [],
+ 117:   };
+ 118: }
+ 119: 
+ 120: describe("minBudget", () => {
+ 121:   const baseRequest: TripRequest = {
+ 122:     schemaVersion: 4,
+ 123:     diemDi: "TP.HCM",
+ 124:     diemDen: "Đà Nẵng",
+ 125:     soNguoi: 2,
+ 126:     soNgay: 3,
+ 127:     ngansachTongVND: 10000000,
+ 128:     sothich: [],
+ 129:     tranh: [],
+ 130:     ghiChu: [],
+ 131:     thieu: [],
+ 132:     cauHoiLamRo: [],
+ 133:     canhBao: [],
+ 134:   };
+ 135: 
+ 136:   it("Không điều cần tránh: toiThieuVND = 4530000", () => {
+ 137:     const data = createFixtureM();
+ 138:     const res = tinhNganSachToiThieu({ ...baseRequest, tranh: [] }, data);
+ 139:     expect(res.toiThieuVND).toBe(4530000);
+ 140:     expect(res.khaThi).toBe(true);
+ 141:   });
+ 142: 
+ 143:   it("tranh [tranh_di_chuyen_lau]: 7020000", () => {
+ 144:     const data = createFixtureM();
+ 145:     const res = tinhNganSachToiThieu({ ...baseRequest, tranh: ["tranh_di_chuyen_lau"] }, data);
+ 146:     expect(res.toiThieuVND).toBe(7020000); // D1 + V1 + H2 + ăn
+ 147:   });
+ 148: 
+ 149:   it("tranh [khong_day_som]: 4530000", () => {
+ 150:     const data = createFixtureM();
+ 151:     const res = tinhNganSachToiThieu({ ...baseRequest, tranh: ["khong_day_som"] }, data);
+ 152:     expect(res.toiThieuVND).toBe(4530000); // D3 + V2 + H2 + ăn (D3 chạy 17:00, không sớm)
+ 153:   });
+ 154: 
+ 155:   it("tranh [khong_day_som, tranh_di_chuyen_lau]: 7760000", () => {
+ 156:     const data = createFixtureM();
+ 157:     const res = tinhNganSachToiThieu(
+ 158:       { ...baseRequest, tranh: ["khong_day_som", "tranh_di_chuyen_lau"] },
+ 159:       data
+ 160:     );
+ 161:     expect(res.toiThieuVND).toBe(7760000); // D2 + V1 + H2 + ăn
+ 162:   });
+ 163: 
+ 164:   it("Chỉ còn D1 ở chiều đi và tranh [khong_day_som]: khaThi=false", () => {
+ 165:     const data = createFixtureM();
+ 166:     data.transports = data.transports.filter((t) => t.id === "D1" || t.huong === "ve");
+ 167:     const res = tinhNganSachToiThieu({ ...baseRequest, tranh: ["khong_day_som"] }, data);
+ 168:     expect(res.khaThi).toBe(false);
+ 169:     expect(res.lyDo).toBe("khong_co_phuong_tien_phu_hop");
+ 170:   });
+ 171: 
+ 172:   it("Với ngansachTongVND 4500000 và không điều cần tránh", () => {
+ 173:     const data = createFixtureM();
+ 174:     const res = tinhNganSachToiThieu({ ...baseRequest, ngansachTongVND: 4500000, tranh: [] }, data);
+ 175:     expect(res.khaThi).toBe(false);
+ 176:     expect(res.lyDo).toBe("ngan_sach_khong_du");
+ 177:     expect(res.toiThieuVND).toBe(4530000);
+ 178:   });
+ 179: 
+ 180:   it("Với ngansachTongVND 5000000 và không điều cần tránh: khaThi true", () => {
+ 181:     const data = createFixtureM();
+ 182:     const res = tinhNganSachToiThieu({ ...baseRequest, ngansachTongVND: 5000000, tranh: [] }, data);
+ 183:     expect(res.khaThi).toBe(true);
+ 184:     expect(res.toiThieuVND).toBe(4530000);
+ 185:   });
+ 186: });

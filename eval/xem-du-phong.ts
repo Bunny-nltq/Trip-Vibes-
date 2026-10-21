@@ -40,7 +40,9 @@ async function main() {
     stt: number;
     diemDen: string;
     heSo: string;
+    toiThieu: string;
     ngansach: string;
+    kiemNganSach: string;
     phuongTien: string;
     thoiLuong: string;
     tiLeDiChuyen: string;
@@ -60,7 +62,9 @@ async function main() {
         stt: sc.stt,
         diemDen: destConfig.ten,
         heSo,
+        toiThieu: "—",
         ngansach: "—",
+        kiemNganSach: "—",
         phuongTien: "Bỏ qua (không có snapshot)",
         thoiLuong: "—",
         tiLeDiChuyen: "—",
@@ -121,11 +125,15 @@ async function main() {
       const travelRatio = tiLeThoiGianDiChuyen(totalTravelMinutes, 3);
       const vuot35 = travelRatio > 35;
 
+      const kiemNganSach = ngansach === Math.ceil((toiThieu * mul) / 100_000) * 100_000 ? "khớp" : "LỆCH";
+
       tableRows.push({
         stt: sc.stt,
         diemDen: destConfig.ten,
         heSo,
+        toiThieu: toiThieu.toLocaleString("vi-VN") + " đ",
         ngansach: ngansach.toLocaleString("vi-VN") + " đ",
+        kiemNganSach,
         phuongTien: `${result.selection.transportDiId} / ${result.selection.transportVeId}`,
         thoiLuong: `${totalTravelMinutes}p`,
         tiLeDiChuyen: `${travelRatio}%`,
@@ -138,7 +146,9 @@ async function main() {
         stt: sc.stt,
         diemDen: destConfig.ten,
         heSo,
-        ngansach: ngansach.toLocaleString("vi-VN") + " đ",
+        toiThieu: "—",
+        ngansach: "—",
+        kiemNganSach: "—",
         phuongTien: `Không khả thi: ${result.lyDo ?? "ngan_sach"}`,
         thoiLuong: "—",
         tiLeDiChuyen: "—",
@@ -149,10 +159,10 @@ async function main() {
     }
   }
 
-  console.log("| STT | Điểm đến | Hệ số | Ngân sách | Phương tiện đi / về | Thời lượng | Tỉ lệ di chuyển | Tổng tiền | Mã soft |");
-  console.log("|---|---|---|---|---|---|---|---|---|");
+  console.log("| STT | Điểm đến | Hệ số | Tối thiểu (toiThieuVND) | Ngân sách | Kiểm NS | Phương tiện đi / về | Thời lượng | Tỉ lệ di chuyển | Tổng tiền | Mã soft |");
+  console.log("|---|---|---|---|---|---|---|---|---|---|---|");
   for (const r of tableRows) {
-    console.log(`| ${r.stt} | ${r.diemDen} | ${r.heSo} | ${r.ngansach} | ${r.phuongTien} | ${r.thoiLuong} | ${r.tiLeDiChuyen} | ${r.tongTien} | ${r.softCodes} |`);
+    console.log(`| ${r.stt} | ${r.diemDen} | ${r.heSo} | ${r.toiThieu} | ${r.ngansach} | ${r.kiemNganSach} | ${r.phuongTien} | ${r.thoiLuong} | ${r.tiLeDiChuyen} | ${r.tongTien} | ${r.softCodes} |`);
   }
 
   console.log("\n--- PHÂN TÍCH TỈ LỆ DI CHUYỂN > 35% ---");
