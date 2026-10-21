@@ -87,7 +87,7 @@ export function findCheapestHotel(data: {
   return null;
 }
 
-function parseTimeToMinutes(timeStr?: string): number {
+export function parseTimeToMinutes(timeStr?: string): number {
   if (!timeStr) return 0;
   const [h, m] = timeStr.split(":").map(Number);
   return (h || 0) * 60 + (m || 0);

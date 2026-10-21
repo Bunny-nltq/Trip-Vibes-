@@ -53,7 +53,7 @@ Mục tiêu cuối: một **website** Trip Vibes hoàn chỉnh (Home, trang đi�
 | D5 | Không làm: Phú Quốc, Tavily, Google Places, bản chat đối chứng, đăng nhập thật, cộng tác, offline, đa ngôn ngữ, đặt chỗ thật, bản đồ nhúng (chỉ khi người dùng đồng ý, nhiệm vụ E11) |
 | D6 | Bản nộp dùng chế độ khách (không tài khoản). Nút Đăng nhập, Đăng ký hiện nhưng ghi "Sắp có" |
 | D7 | Khi deploy: `DATA_MODE=snapshot`, `LIVE_DATA_ENABLED=false`, `LIVE_AI_ENABLED=false` (chỉ bật AI khi demo) |
-| D8 | Đóng băng lõi (`src/core`, `src/ai`): hết ngày **22/10**. Đóng băng tính năng giao diện: hết ngày **3/11**. Sau đó chỉ sửa lỗi |
+| D8 | Đóng băng lõi (`src/core`, `src/ai`): hết ngày **23/10**. Đóng băng tính năng giao diện: hết ngày **3/11**. Sau đó chỉ sửa lỗi |
 
 ---
 
@@ -64,8 +64,8 @@ Mỗi ngày tối đa 3 nhiệm vụ cần viết mã cho AI. "Gemini" chỉ có
 | Ngày | AI làm | BẠN làm | Gemini |
 |---|---|---|---|
 | 21/10 | A1, A2, A3 | U1 (khóa mới) | Không |
-| 22/10 | A4, B1, B2 | U2 (khóa Unsplash), U3 (Figma, mỗi ngày 1 đến 2 giờ đến 31/10) | Không |
-| 23/10 | C1, D1, D2, E1 | Kiểm tra Usage trước khi chạy C1 | Có (C1) |
+| 22/10 | A4, B1a | U2 (khóa Unsplash), U3 (Figma, mỗi ngày 1 đến 2 giờ đến 31/10) | Không |
+| 23/10 | B1b, B2, C1, D1, D2, E1 | Kiểm tra Usage trước khi chạy C1 | Có (C1) |
 | 24/10 | C2, D3, E2 | | Có |
 | 25/10 | C3, D4, D5 | | Có |
 | 26/10 | C4a, C4, D6, E3 | U4 (chọn ảnh, 30 phút) | Có (C4) |
@@ -96,8 +96,9 @@ Mỗi ngày tối đa 3 nhiệm vụ cần viết mã cho AI. "Gemini" chỉ có
 | U1 | Tạo khóa Gemini mới, thu hồi khóa cũ | BẠN | 21/10 | | Không |
 | U2 | Đăng ký Unsplash, lấy Access Key | BẠN | 22/10 | | Không |
 | U3 | Figma: nhập wireframe, token, prototype | BẠN | 31/10 | | Không |
-| B1 | Kế hoạch dự phòng "nhanh nhất trong ngân sách" | AI | 22/10 | A2 | Không |
-| B2 | Đóng băng lõi, tag `core-frozen-4` | AI | 22/10 | B1 | Không |
+| B1a | Sửa 3 lỗi: số đêm, ô hoạt động đến sau nửa đêm, cảnh báo quy tắc | AI | 22/10 | A2 | Không |
+| B1b | Kế hoạch dự phòng "nhanh nhất trong ngân sách" | AI | 23/10 | B1a | Không |
+| B2 | Đóng băng lõi, tag `core-frozen-4` | AI | 23/10 | B1b | Không |
 | C1 | `eval:ai-rate` 4 ca | AI chạy | 23/10 | B2, U1 | CÓ |
 | C2 | `eval:ai-rate` 4 ca tiếp | AI chạy | 24/10 | C1 | CÓ |
 | C3 | `eval:ai-rate` 2 ca cuối (đủ 10) | AI chạy | 25/10 | C2 | CÓ |
@@ -163,13 +164,20 @@ Mỗi ngày tối đa 3 nhiệm vụ cần viết mã cho AI. "Gemini" chỉ có
 - Kiểm chứng cục bộ: sau `next build`, liệt kê các tệp `.next/server/**/*.nft.json` của từng route trên và nêu route nào chứa `snapshot_*.json`. Chạy `VERCEL=1 next start`, gọi `GET /api/health` (phải liệt kê 5 snapshot) và `POST /api/plan` cho Hà Nội (phải `dataSourceUsed: "snapshot"`).
 - Bằng chứng cuối cùng phải lấy từ bản triển khai thật (F2): `/api/health` trên địa chỉ Vercel phải liệt kê đủ 5 snapshot. Thêm kiểm tra này vào F2.
 
-### Nhóm B: lõi (22/10)
+### Nhóm B: lõi (22/10 đến 23/10)
 
-**B1. Kế hoạch dự phòng "nhanh nhất trong ngân sách còn đủ"**
+**B1a. Sửa 3 lỗi: số đêm, ô hoạt động khi đến sau nửa đêm, và cảnh báo quy tắc**
+- Sửa hàm `soDemOKhachSan` tính số đêm theo giờ đến nơi (`src/core/soDem.ts`).
+- Lọc ô hoạt động khả dụng theo ngày thực tế khi đến sau nửa đêm (`tinhOKhaDungTheoNgay` trong `src/core/oKhaDung.ts`).
+- `fallbackToRules` trả về danh sách cảnh báo `hard` và `soft` thật từ `validatePlan` thay vì mảng rỗng (`src/ai/planWithRepair.ts`).
+- Đổi câu cảnh báo `den_vao_ngay_sau`: "Chuyến đi đến nơi vào ngày thứ {d} (sau nửa đêm). Kế hoạch chỉ tính {n} đêm khách sạn vì {d-1} đêm đầu nằm trên phương tiện."
+- Sửa 3 test minBudget (loại A đã được duyệt).
+
+**B1b. Kế hoạch dự phòng "nhanh nhất trong ngân sách còn đủ"**
 - Tệp: `src/core/lapKeHoachTuDong.ts`, `src/core/assumptions.ts`, test mới. `minBudget` **không đổi**.
 - Luật: trong các tổ hợp (chiều đi, chiều về, khách sạn) thỏa điều cần tránh và có chi phí cố định (Di chuyển + Chỗ ở + Ăn uống mặc định) nhỏ hơn hoặc bằng `ngân sách x (1 - DU_TRU_HOAT_DONG_TI_LE)`, chọn tổ hợp có **tổng thời lượng hai chiều ngắn nhất**; bằng nhau thì **rẻ hơn**; bằng nhau nữa thì theo thứ tự đầu vào. Khách sạn: rẻ nhất thỏa điều cần tránh. Không có tổ hợp nào dưới ngưỡng dự trữ thì dùng tổ hợp **rẻ nhất** còn nằm trong ngân sách (như cũ). Ngân sách nhỏ hơn mức tối thiểu thì trả `khong_the_dat_ngan_sach` kèm `toiThieuVND`.
 - Hằng số: `DU_TRU_HOAT_DONG_TI_LE = 0.10` (giả định, ghi chú "chưa hiệu chỉnh"); `QUY_TAC_VERSION = "4"`.
-- Test: đáp án ở Phụ lục A (do người dùng đặt, không sửa). Sáu ca của Bước 13 vẫn phải đạt nguyên đáp án.
+- Test: đáp án ở Phụ lục A (do người dùng đặt, không sửa). Sáu ca của Bước 13 vẫn phải đạt nguyên đáp án. Bổ sung Fixture M (đến sau nửa đêm).
 - Báo cáo thêm: với 10 kịch bản của `eval:ai-rate` (dùng snapshot, chế độ quy tắc, **không gọi AI**), in bảng: điểm đến, hệ số, ngân sách, phương tiện đi và về đã chọn, tổng phút di chuyển, tỉ lệ di chuyển, tổng tiền. Nêu rõ ca nào vẫn chọn tàu hoặc xe vì ngân sách chỉ đủ phương án đó (ví dụ Hà Nội 1,3 lần mức tối thiểu); đó là giới hạn có thật, không phải lỗi, và cảnh báo "di chuyển chiếm nhiều thời gian" đã có sẵn.
 
 **B2. Đóng băng lõi**
@@ -370,6 +378,19 @@ Chi phí cố định tham khảo: A đi 1.960.000; B đi 2.700.000; E đi 900.0
 
 Sáu ca của Bước 13 (không dùng PT_E, PT_F) giữ nguyên đáp án cũ: 6.900.000; 7.280.000 (tránh "dem"); 8.020.000 (tránh "sang"); 8.020.000 (tránh cả hai); `khong_the_dat_ngan_sach` với 6.800.000 và `toiThieuVND` 6.900.000; ca có A1 và A2 cho 6.980.000.
 
+### Fixture M (Đến sau nửa đêm)
+- PT_A: 06:30, 85m, 980k (đến ngày 1, soDem=2)
+- PT_G: 19:00, 600m, 450k (đến ngày 2 lúc 05:00, soDem=1)
+- PT_C: 18:00, 85m, 980k
+- PT_F: 18:00, 600m, 450k
+- H2: 780.000 đ/đêm
+- Ăn uống: 1.800.000 đ (600.000 đ/ngày)
+Các ca:
+a. Ngân sách 10.000.000 đ: chọn PT_A + PT_C, H2 (170m), tongVND 7.280.000
+b. Ngân sách 6.500.000 đ: chọn PT_G + PT_C, H2 (685m), tongVND 5.440.000
+c. Ngân sách 6.000.000 đ: chọn PT_G + PT_F, H2 (1200m), tongVND 4.380.000
+d. Ngân sách 4.000.000 đ: khong_the_dat_ngan_sach, toiThieuVND 4.380.000
+
 ## Phụ lục B: nguyên tắc Gemini
 
 - Mỗi ngày chạy **một** bộ có dùng Gemini. Không chạy thử AI bằng tay trong cùng ngày.
@@ -382,3 +403,4 @@ Sáu ca của Bước 13 (không dùng PT_E, PT_F) giữ nguyên đáp án cũ: 
 |---|---|---|
 | 21/10 | Tạo kế hoạch | |
 | 21/10 | Bổ sung nhiệm vụ A4 (đóng gói snapshot cho Vercel) và C4a (kiểm tra bộ chấm eval:parse) | Người dùng bổ sung |
+| 22/10 | Tách B1 thành B1a và B1b; bổ sung Fixture M vào Phụ lục A; hạn đóng băng lõi 23/10 | Tách nhiệm vụ chẩn đoán & sửa lỗi số đêm/ô trống và hoàn thiện dự phòng nhanh nhất |

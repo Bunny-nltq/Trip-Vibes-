@@ -13,14 +13,23 @@ import type {
   TripRequest,
   Selection,
   Plan,
+  Transport,
 } from "@/contracts";
 import type { PlanData } from "./buildPlan";
 import { buildPlan } from "./buildPlan";
 import { lapOTrong } from "./lapOTrong";
 import {
+  DU_TRU_HOAT_DONG_TI_LE,
+  AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA,
+  NGUOI_MOI_PHONG,
+} from "./assumptions";
+import { soDemOKhachSan } from "./soDem";
+import {
   tinhNganSachToiThieu,
   isTransportValidForAvoidance,
   findCheapestHotel,
+  getHotelPricePerNight,
+  parseTimeToMinutes,
 } from "./minBudget";
 
 export type LapKeHoachTuDongSuccess = Selection & {
@@ -85,7 +94,7 @@ export function lapKeHoachTuDong(
     };
   }
 
-  // 2. Lọc phương tiện rẻ nhất thỏa mãn điều cần tránh
+  // 2. Lọc phương tiện thỏa mãn điều cần tránh
   const tranhList = currentRequest.tranh ?? [];
   const validDi = planData.transports.filter(
     (t) => t.huong === "di" && isTransportValidForAvoidance(t, tranhList)
@@ -103,18 +112,15 @@ export function lapKeHoachTuDong(
     };
   }
 
-  const minDi = validDi.reduce(
-    (min, curr) => (curr.pricePerPerson < min.pricePerPerson ? curr : min),
-    validDi[0]
-  );
-  const minVe = validVe.reduce(
-    (min, curr) => (curr.pricePerPerson < min.pricePerPerson ? curr : min),
-    validVe[0]
-  );
+  // 3. Khách sạn
+  const hotelList =
+    planData.khachSans && planData.khachSans.length > 0
+      ? planData.khachSans
+      : planData.hotels && planData.hotels.length > 0
+      ? planData.hotels
+      : [];
 
-  // 3. Khách sạn rẻ nhất
-  const cheapestHotel = findCheapestHotel(planData);
-  if (!cheapestHotel) {
+  if (hotelList.length === 0) {
     return {
       status: "khong_the_dat_ngan_sach",
       khaThi: false,
@@ -123,12 +129,110 @@ export function lapKeHoachTuDong(
     };
   }
 
-  // 4. Khởi tạo Selection cơ bản từ combo rẻ nhất đã lọc
+  const soNguoi = currentRequest.soNguoi ?? 2;
+  const soPhong = Math.ceil(soNguoi / NGUOI_MOI_PHONG);
+  const ngansachTongVND = currentRequest.ngansachTongVND ?? 0;
+  const nguongDuTru =
+    ngansachTongVND > 0
+      ? ngansachTongVND * (1 - DU_TRU_HOAT_DONG_TI_LE)
+      : Infinity;
+
+  // Thu thập mọi tổ hợp (tDi, tVe, ks) thỏa mãn ràng buộc (1 <= soDem)
+  const combos: Array<{
+    tDi: Transport;
+    tVe: Transport;
+    hotel: any;
+    chiPhiCoDinh: number;
+    thoiLuong: number;
+    index: number;
+  }> = [];
+
+  let idx = 0;
+  for (const tDi of validDi) {
+    const depDi = parseTimeToMinutes(tDi.departureTime);
+    const gioDenTuyetDoi = depDi + tDi.durationMinutes;
+    const soDem = soDemOKhachSan(soNgay, gioDenTuyetDoi);
+    if (soDem < 1) continue;
+
+    for (const tVe of validVe) {
+      for (const hotel of hotelList) {
+        const giaDem = getHotelPricePerNight(hotel);
+        const chiPhiCoDinh =
+          (tDi.pricePerPerson + tVe.pricePerPerson) * soNguoi +
+          giaDem * soDem * soPhong +
+          AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA * 2 * soNguoi * soNgay;
+        const thoiLuong = tDi.durationMinutes + tVe.durationMinutes;
+
+        combos.push({
+          tDi,
+          tVe,
+          hotel,
+          chiPhiCoDinh,
+          thoiLuong,
+          index: idx++,
+        });
+      }
+    }
+  }
+
+  if (combos.length === 0) {
+    return {
+      status: "khong_the_dat_ngan_sach",
+      khaThi: false,
+      toiThieuVND: minBudgetRes.toiThieuVND,
+      lyDo: "khong_co_phuong_tien_phu_hop",
+    };
+  }
+
+  // Nhóm 1: các tổ hợp có chiPhiCoDinh <= nguongDuTru
+  const nhom1 = combos.filter((c) => c.chiPhiCoDinh <= nguongDuTru);
+
+  let selectedCombo: (typeof combos)[0] | undefined;
+
+  if (nhom1.length > 0) {
+    // Sắp xếp nhóm 1: thoiLuong nhỏ nhất -> chiPhiCoDinh nhỏ nhất -> thứ tự ban đầu
+    nhom1.sort((a, b) => {
+      if (a.thoiLuong !== b.thoiLuong) {
+        return a.thoiLuong - b.thoiLuong;
+      }
+      if (a.chiPhiCoDinh !== b.chiPhiCoDinh) {
+        return a.chiPhiCoDinh - b.chiPhiCoDinh;
+      }
+      return a.index - b.index;
+    });
+    selectedCombo = nhom1[0];
+  } else {
+    // Nhóm 2 (khi nhóm 1 rỗng): các tổ hợp có chiPhiCoDinh <= ngansachTongVND
+    const nhom2 = combos.filter((c) =>
+      ngansachTongVND > 0 ? c.chiPhiCoDinh <= ngansachTongVND : true
+    );
+    if (nhom2.length > 0) {
+      // Sắp xếp nhóm 2: chiPhiCoDinh nhỏ nhất -> thứ tự ban đầu
+      nhom2.sort((a, b) => {
+        if (a.chiPhiCoDinh !== b.chiPhiCoDinh) {
+          return a.chiPhiCoDinh - b.chiPhiCoDinh;
+        }
+        return a.index - b.index;
+      });
+      selectedCombo = nhom2[0];
+    }
+  }
+
+  if (!selectedCombo) {
+    return {
+      status: "khong_the_dat_ngan_sach",
+      khaThi: false,
+      toiThieuVND: minBudgetRes.toiThieuVND,
+      lyDo: minBudgetRes.lyDo ?? "ngan_sach_khong_du",
+    };
+  }
+
+  // 4. Khởi tạo Selection cơ bản từ combo được chọn
   const hoatDongTheoNgay: string[][] = Array.from({ length: soNgay }, () => []);
   const baseSelection: Selection = {
-    transportDiId: minBudgetRes.combo!.transportDiId,
-    transportVeId: minBudgetRes.combo!.transportVeId,
-    hotelId: minBudgetRes.combo!.hotelId,
+    transportDiId: selectedCombo.tDi.id,
+    transportVeId: selectedCombo.tVe.id,
+    hotelId: selectedCombo.hotel.id,
     hoatDongTheoNgay,
   };
 

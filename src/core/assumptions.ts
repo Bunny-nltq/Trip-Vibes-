@@ -113,6 +113,12 @@ export const MAX_REPAIR_ROUNDS = 2;
 
 // ─── Ngân sách ───────────────────────────────────────────────────────────────
 
+/**
+ * Tỉ lệ ngân sách dự phòng giữ lại cho hoạt động vui chơi (10%).
+ * Giả định đồ án (chưa hiệu chỉnh).
+ */
+export const DU_TRU_HOAT_DONG_TI_LE = 0.10;
+
 /** Ngưỡng phần trăm ngân sách bị coi là gần hết (để cảnh báo soft) */
 export const NGUONG_GAN_HET_NGAN_SACH_PHAN_TRAM = 95;
 
