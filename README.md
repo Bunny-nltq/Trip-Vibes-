@@ -115,4 +115,5 @@ Trip Vibes được thiết kế tối ưu để triển khai tĩnh và serverle
 - **Bảo mật ảnh hóa đơn**: Ảnh hóa đơn (bill) chỉ được xử lý tạm thời trong bộ nhớ của phiên làm việc, không bao giờ lưu trữ trên đĩa hay ghi vào nhật ký hệ thống.
 - **Hạn mức dịch vụ bên thứ ba**: Hạn mức gọi API của Gemini và Tavily có thể chạm ngưỡng vào giờ cao điểm; khi đó ứng dụng tự động kích hoạt kế hoạch dự phòng bằng thuật toán quy tắc tối ưu chi phí.
 - **Điểm đến chưa có snapshot**: Hiện tại điểm đến Phú Quốc chưa có snapshot lưu sẵn đạt chuẩn kiểm toán (sẽ thông báo yêu cầu chạy cục bộ để tải dữ liệu).
+- **Bộ đếm giới hạn lượt AI trên Vercel**: Bộ đếm nằm trong bộ nhớ nên trên Vercel chỉ là giới hạn tương đối vì nhiều tiến trình serverless hoạt động độc lập; khuyến nghị tắt `LIVE_AI_ENABLED` ngoài buổi demo.
 

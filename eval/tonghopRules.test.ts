@@ -3,6 +3,7 @@ import {
   danhGiaDoMoi,
   dinhDangTrangThaiDiaDiem,
   dinhDangKetQuaLikes,
+  xuLyBangDiadiemFallback,
 } from "./tonghopRules";
 
 describe("eval/tonghopRules", () => {
@@ -76,5 +77,35 @@ describe("eval/tonghopRules", () => {
     const input = ["TĂNG", "GIỮ NGUYÊN", "TỆ ĐI", "TĂNG", "GIỮ NGUYÊN"];
     const ketQua = dinhDangKetQuaLikes(input);
     expect(ketQua).toBe("2 tăng, 2 giữ nguyên, 1 tệ đi");
+  });
+
+  it("6 điểm đến trong đó chỉ 5 có snapshot hợp lệ và đều 'CÓ NỘI DUNG' -> '5/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 1 THIẾU DỮ LIỆU'; trạng thái THIẾU thì ô Ô chưa lấp = '—'", () => {
+    const items = [
+      { diemDen: "Đà Nẵng", trangThaiNoiDung: "CÓ NỘI DUNG", soSlotChuaLap: { hoatDong: 0, buaAn: 0 } },
+      { diemDen: "Hà Nội", trangThaiNoiDung: "CÓ NỘI DUNG", soSlotChuaLap: { hoatDong: 0, buaAn: 0 } },
+      { diemDen: "Đà Lạt", trangThaiNoiDung: "CÓ NỘI DUNG", soSlotChuaLap: { hoatDong: 0, buaAn: 0 } },
+      { diemDen: "Phú Quốc", trangThaiNoiDung: "CÓ NỘI DUNG", soSlotChuaLap: { hoatDong: 0, buaAn: 0 } },
+      { diemDen: "Bangkok", trangThaiNoiDung: "CÓ NỘI DUNG", soSlotChuaLap: { hoatDong: 0, buaAn: 0 } },
+      { diemDen: "Seoul", trangThaiNoiDung: "CÓ NỘI DUNG", soSlotChuaLap: { hoatDong: 0, buaAn: 0 } },
+    ];
+
+    const validSnapshots = [
+      { file: "snapshot_da_nang_2026-10-20.json", diemDen: "Thành phố Đà Nẵng" },
+      { file: "snapshot_ha_noi_2026-10-20.json", diemDen: "Hà Nội" },
+      { file: "snapshot_da_lat_2026-10-20.json", diemDen: "Đà Lạt" },
+      { file: "snapshot_bangkok_2026-10-20.json", diemDen: "Bangkok" },
+      { file: "snapshot_seoul_2026-10-20.json", diemDen: "Seoul" },
+    ];
+
+    const result = xuLyBangDiadiemFallback(items, validSnapshots, "2026-10-20");
+    expect(result.summary).toBe(
+      "5/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 1 THIẾU DỮ LIỆU"
+    );
+
+    // Kiểm tra hàng THIẾU DỮ LIỆU hiển thị "—" ở cột Ô chưa lấp, không hiển thị số 0
+    const phuQuocRow = result.rows.find((r) => r.diemDen === "Phú Quốc");
+    expect(phuQuocRow).toBeDefined();
+    expect(phuQuocRow?.trangThaiHienThi).toContain("THIẾU DỮ LIỆU (không có snapshot)");
+    expect(phuQuocRow?.oChuaLapHienThi).toBe("—");
   });
 });

@@ -6,6 +6,9 @@ import type { TripRequest, Selection } from "../src/contracts";
 import { LiveDataSource } from "../src/data/live/LiveDataSource";
 import { GeminiProvider } from "../src/ai/provider";
 import { planRegenerate, REGEN_PROMPT_VERSION } from "../src/ai/planRegenerate";
+import { taoMetaEval } from "./lib/meta";
+import { QUY_TAC_VERSION } from "../src/core/assumptions";
+import { AGENT_PROMPT_VERSION } from "../src/ai/planAgent";
 
 loadEnvConfig(process.cwd());
 
@@ -232,7 +235,16 @@ async function main() {
   const dateStr = now.toISOString().slice(0, 10);
   const outputFile = path.join(resultsDir, `likes-${dateStr}.json`);
 
+  const meta = taoMetaEval({
+    quyTacVersion: QUY_TAC_VERSION,
+    agentPromptVersion: AGENT_PROMPT_VERSION,
+    model: provider.modelName,
+    ngayChayISO: now.toISOString(),
+    tenBo: "likes",
+  });
+
   const outputData = {
+    meta,
     date: dateStr,
     timestamp: now.toISOString(),
     promptVersion: REGEN_PROMPT_VERSION,

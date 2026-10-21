@@ -20,7 +20,7 @@ export default function Page_01b1chonnhanh() {
 <div className="Field"><div className="FieldLabel">Mấy người đi?</div><div className="Stepper"><div className="Step">−</div><div className="StepNum">2</div><div className="Step">+</div></div></div>
 <div className="Field"><div className="FieldLabel">Ngân sách cả chuyến</div><div className="Chips"><div className="Chip">5 triệu</div><div className="Chip">8 triệu</div><div className="Chip ChipOn">10 triệu</div><div className="Chip">15 triệu</div><div className="Chip">20 triệu</div></div></div>
 <div className="Field"><div className="FieldLabel">Muốn tránh gì?</div><div className="Chips"><div className="Chip ChipOn">Không dậy sớm</div><div className="Chip">Không đi đêm</div><div className="Chip">Tránh đi lâu</div><div className="Chip">Tránh chỗ đông</div><div className="Chip">Tránh đi bộ nhiều</div></div></div>
-<div className="Field"><div className="FieldLabel">Muốn nói rõ hơn? <span style={{"fontWeight": "400", "color": "#777777"}}>Không bắt buộc</span></div>
+<div className="Field"><div className="FieldLabel">Muốn nói rõ hơn? <span style={{"fontWeight": "400", "color": "var(--color-text-sub)"}}>Không bắt buộc</span></div>
 <div className="Textarea">Ví dụ: đi cùng ba mẹ, thích ăn hải sản, không muốn đi bộ nhiều</div><div className="Hint">Bỏ trống cũng được, AI sẽ tự gợi ý.</div></div>
 <div className="Hint" style={{"marginBottom": "10px"}}>2 người · 10 triệu · không dậy sớm · AI tự gợi ý hoạt động</div>
 <div className="Btn BtnPrimary BtnFull">Lập kế hoạch</div></div>

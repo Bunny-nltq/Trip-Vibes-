@@ -7,6 +7,9 @@ import { normalizeRequest, removeVietnameseDiacritics } from "../src/core/normal
 import { GeminiProvider } from "../src/ai/provider";
 import type { TripRequest, RawTripRequest, MissingField, Preference, Avoidance } from "../src/contracts";
 import { getDiemDenTen } from "../src/contracts";
+import { taoMetaEval } from "./lib/meta";
+import { QUY_TAC_VERSION } from "../src/core/assumptions";
+import { AGENT_PROMPT_VERSION } from "../src/ai/planAgent";
 
 // Nạp biến môi trường từ .env.local mà không in hay đọc thô nội dung
 loadEnvConfig(process.cwd());
@@ -312,7 +315,15 @@ async function main() {
 
   // Lưu file kết quả
   const outputFilePath = path.join(resultsDir, `parse-${runDate}.json`);
+  const meta = taoMetaEval({
+    quyTacVersion: QUY_TAC_VERSION,
+    agentPromptVersion: AGENT_PROMPT_VERSION,
+    model: modelName,
+    ngayChayISO: new Date().toISOString(),
+    tenBo: "parse",
+  });
   const fullOutput = {
+    meta,
     date: runDate,
     model: modelName,
     promptVersion: PARSE_PROMPT_VERSION,

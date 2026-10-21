@@ -15,6 +15,7 @@ import { LiveDataSource } from "../src/data/live/LiveDataSource";
 import { tiLeThoiGianDiChuyen } from "../src/core/tiLeDiChuyen";
 import { AGENT_PROMPT_VERSION } from "../src/ai/planAgent";
 import { QUY_TAC_VERSION } from "../src/core/assumptions";
+import { taoMetaEval } from "./lib/meta";
 import type { TripRequest, DiemDen } from "../src/contracts";
 import { getDiemDenTen } from "../src/contracts";
 
@@ -557,7 +558,16 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
     summary.msTrungBinh = avgMs;
   }
 
+  const meta = taoMetaEval({
+    quyTacVersion: QUY_TAC_VERSION,
+    agentPromptVersion: AGENT_PROMPT_VERSION,
+    model: "gemini-3.5-flash-lite",
+    ngayChayISO: new Date().toISOString(),
+    tenBo: "ai-rate",
+  });
+
   const payload = {
+    meta,
     summary,
     scenarios: results,
   };

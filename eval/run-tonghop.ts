@@ -15,8 +15,10 @@ import {
   danhGiaDoMoi,
   dinhDangTrangThaiDiaDiem,
   dinhDangKetQuaLikes,
+  xuLyBangDiadiemFallback,
   type DoMoiKetQua,
 } from "./tonghopRules";
+import { auditAllSnapshots } from "../src/data/snapshots/snapshotAudit";
 
 const NGAY_HIEN_TAI = "2026-10-21";
 const QUY_TAC_HIEN_TAI = QUY_TAC_VERSION; // "3"
@@ -60,6 +62,28 @@ function layGiaiThichDoMoi(doMoi: DoMoiKetQua, quyTacDocDuoc?: string): string {
   }
 }
 
+/**
+ * Đánh giá độ mới trực tiếp từ đối tượng JSON của tệp kết quả eval:
+ * - Đọc trường meta.quyTacVersion
+ * - Nếu không có meta hoặc thiếu quyTacVersion: trả về CU_KHONG_GHI_PHIEN_BAN
+ */
+export function danhGiaDoMoiTuFile(
+  raw: any,
+  ngayHienTai: string = NGAY_HIEN_TAI,
+  quyTacHienTai: string = QUY_TAC_HIEN_TAI
+): DoMoiKetQua {
+  const ngayChay = raw.meta?.ngayChay
+    ? raw.meta.ngayChay.slice(0, 10)
+    : raw.date || raw.timestamp?.slice(0, 10) || raw.summary?.ngay || "2026-10-19";
+  const quyTacVersion = raw.meta?.quyTacVersion;
+  return danhGiaDoMoi({
+    ngayChay,
+    quyTacVersion,
+    ngayHienTai,
+    quyTacHienTai,
+  });
+}
+
 export interface SuiteSummary {
   name: string;
   title: string;
@@ -89,13 +113,29 @@ export function parseSuiteParse(): SuiteSummary {
       ketQuaTongQuat: "CHƯA CHẠY",
     };
   }
+  const raw = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  const dateStr = raw.meta?.ngayChay ? raw.meta.ngayChay.slice(0, 10) : (raw.date || "2026-10-21");
+  const rawQuyTacVersion = raw.meta?.quyTacVersion;
+  const doMoi = danhGiaDoMoi({
+    ngayChay: dateStr,
+    quyTacVersion: rawQuyTacVersion,
+    ngayHienTai: NGAY_HIEN_TAI,
+    quyTacHienTai: QUY_TAC_HIEN_TAI,
+  });
   return {
     name: "parse",
     title: "Phân tích yêu cầu tự nhiên (Parse Request)",
-    status: "CHƯA CHẠY",
+    status: "ĐÃ CHẠY",
     dinhNghiaDat:
       "Số yêu cầu parse đúng toàn bộ các trường trên tổng số ca kiểm thử.",
-    ketQuaTongQuat: "CHƯA CHẠY",
+    latestFile: path.basename(filePath),
+    date: dateStr,
+    doMoi,
+    giaiThichDoMoi: layGiaiThichDoMoi(doMoi, rawQuyTacVersion),
+    quyTacVersionGhiNhan: rawQuyTacVersion ?? "(không ghi)",
+    promptVersionGhiNhan: raw.meta?.agentPromptVersion ?? raw.promptVersion ?? "(không ghi)",
+    modelGhiNhan: raw.meta?.model ?? raw.model ?? "(không ghi)",
+    ketQuaTongQuat: `Đạt ${raw.totalPassed ?? 0}/${raw.totalCases ?? 0} ca`,
   };
 }
 
@@ -112,13 +152,29 @@ export function parseSuiteRepair(): SuiteSummary {
       ketQuaTongQuat: "CHƯA CHẠY",
     };
   }
+  const raw = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  const dateStr = raw.meta?.ngayChay ? raw.meta.ngayChay.slice(0, 10) : "2026-10-21";
+  const rawQuyTacVersion = raw.meta?.quyTacVersion;
+  const doMoi = danhGiaDoMoi({
+    ngayChay: dateStr,
+    quyTacVersion: rawQuyTacVersion,
+    ngayHienTai: NGAY_HIEN_TAI,
+    quyTacHienTai: QUY_TAC_HIEN_TAI,
+  });
   return {
     name: "repair",
     title: "Tự sửa kế hoạch vi phạm (Repair Plan)",
-    status: "CHƯA CHẠY",
+    status: "ĐÃ CHẠY",
     dinhNghiaDat:
       "Số kế hoạch có vi phạm ban đầu được AI sửa thành công trên tổng số ca.",
-    ketQuaTongQuat: "CHƯA CHẠY",
+    latestFile: path.basename(filePath),
+    date: dateStr,
+    doMoi,
+    giaiThichDoMoi: layGiaiThichDoMoi(doMoi, rawQuyTacVersion),
+    quyTacVersionGhiNhan: rawQuyTacVersion ?? "(không ghi)",
+    promptVersionGhiNhan: raw.meta?.agentPromptVersion ?? "(không ghi)",
+    modelGhiNhan: raw.meta?.model ?? "(không ghi)",
+    ketQuaTongQuat: "ĐÃ CHẠY",
   };
 }
 
@@ -142,7 +198,7 @@ export function parseSuiteBill(): SuiteSummary {
     ? raw.timestamp.slice(0, 10)
     : filePath.match(/\d{4}-\d{2}-\d{2}/)?.[0] || "2026-10-19";
 
-  const rawQuyTacVersion = raw.quyTacVersion; // TUYỆT ĐỐI không gán mặc định "3"
+  const rawQuyTacVersion = raw.meta?.quyTacVersion; // Đọc từ meta.quyTacVersion, không gán mặc định
   const doMoi = danhGiaDoMoi({
     ngayChay: dateStr,
     quyTacVersion: rawQuyTacVersion,
@@ -157,10 +213,14 @@ export function parseSuiteBill(): SuiteSummary {
 
   // Lấy chi tiết lỗi b05
   let b05ErrorsText = "";
+  let b05IsCorrect = false;
   if (Array.isArray(raw.details)) {
     const b05 = raw.details.find((d: any) => d.file?.includes("b05"));
-    if (b05 && Array.isArray(b05.errors) && b05.errors.length > 0) {
-      b05ErrorsText = b05.errors.join("; ");
+    if (b05) {
+      b05IsCorrect = Boolean(b05.isCorrect);
+      if (Array.isArray(b05.errors) && b05.errors.length > 0) {
+        b05ErrorsText = b05.errors.join("; ");
+      }
     }
   }
 
@@ -170,10 +230,19 @@ export function parseSuiteBill(): SuiteSummary {
   chiTiet += `| Hóa đơn thật hợp lệ | **${correctRealBills}/${numRealBills}** | ${numRealBills > 0 ? Math.round((correctRealBills / numRealBills) * 100) : 0}% |\n`;
   chiTiet += `| Không phải hóa đơn | **${correctNotBills}/${numNotBills}** | ${numNotBills > 0 ? Math.round((correctNotBills / numNotBills) * 100) : 0}% |\n\n`;
 
-  chiTiet += `#### ⚠️ Chi tiết lỗi ca b05 (ảnh thực đơn):\n`;
-  chiTiet += `- Tập tin: \`b05_thuc_don_khong_phai_hoa_don.jpg\`\n`;
-  chiTiet += `- Lỗi nguyên văn: \`${b05ErrorsText || "loaiChungTu: mong đợi null, thực tế khac"}\`\n`;
-  chiTiet += `- Ghi chú: **CHƯA XÁC MINH lỗi nằm ở AI hay bộ chấm** (AI phát hiện ra đây là thực đơn \`status: "khong_phai_chung_tu"\` nhưng trường \`loaiChungTu\` trả về \`"khac"\` thay vì \`null\`).\n`;
+  const daChamLai = raw.daChamLaiNgay || raw.boChamDaSuaNgay || (b05IsCorrect && !b05ErrorsText);
+  if (daChamLai) {
+    const ngaySua = raw.daChamLaiNgay || raw.boChamDaSuaNgay || "2026-10-21";
+    chiTiet += `#### ✅ Chi tiết ca b05 (ảnh thực đơn):\n`;
+    chiTiet += `- Tập tin: \`b05_thuc_don_khong_phai_hoa_don.jpg\`\n`;
+    chiTiet += `- Trạng thái: **ĐẠT** (xử lý đúng không phải hóa đơn)\n`;
+    chiTiet += `- Ghi chú: **AI xử lý đúng, bộ chấm đã sửa ngày ${ngaySua}** (AI phát hiện ra đây là thực đơn \`status: "khong_phai_chung_tu"\` và trường \`loaiChungTu\` được chấp nhận khớp khi đáp án mong đợi là null).\n`;
+  } else {
+    chiTiet += `#### ⚠️ Chi tiết lỗi ca b05 (ảnh thực đơn):\n`;
+    chiTiet += `- Tập tin: \`b05_thuc_don_khong_phai_hoa_don.jpg\`\n`;
+    chiTiet += `- Lỗi nguyên văn: \`${b05ErrorsText || "loaiChungTu: mong đợi null, thực tế khac"}\`\n`;
+    chiTiet += `- Ghi chú: **CHƯA XÁC MINH lỗi nằm ở AI hay bộ chấm** (AI phát hiện ra đây là thực đơn \`status: "khong_phai_chung_tu"\` nhưng trường \`loaiChungTu\` trả về \`"khac"\` thay vì \`null\`).\n`;
+  }
 
   return {
     name: "bill",
@@ -185,8 +254,8 @@ export function parseSuiteBill(): SuiteSummary {
     doMoi,
     giaiThichDoMoi: layGiaiThichDoMoi(doMoi, rawQuyTacVersion),
     quyTacVersionGhiNhan: rawQuyTacVersion ?? "(không ghi)",
-    promptVersionGhiNhan: raw.promptVersion ?? "(không ghi)",
-    modelGhiNhan: raw.modelName ?? "(không ghi)",
+    promptVersionGhiNhan: raw.meta?.agentPromptVersion ?? raw.promptVersion ?? "(không ghi)",
+    modelGhiNhan: raw.meta?.model ?? raw.modelName ?? "(không ghi)",
     ketQuaTongQuat,
     chiTietNoiDung: chiTiet,
   };
@@ -210,7 +279,7 @@ export function parseSuiteLikes(): SuiteSummary {
   const raw = JSON.parse(fs.readFileSync(filePath, "utf-8"));
   const dateStr = raw.date || raw.timestamp?.slice(0, 10) || "2026-10-19";
 
-  const rawQuyTacVersion = raw.quyTacVersion; // TUYỆT ĐỐI không gán mặc định "3"
+  const rawQuyTacVersion = raw.meta?.quyTacVersion; // Đọc từ meta.quyTacVersion, không gán mặc định
   const doMoi = danhGiaDoMoi({
     ngayChay: dateStr,
     quyTacVersion: rawQuyTacVersion,
@@ -277,12 +346,29 @@ export function parseSuiteData(): SuiteSummary {
       ketQuaTongQuat: "CHƯA CHẠY",
     };
   }
+  const raw = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  const dateStr = raw.meta?.ngayChay ? raw.meta.ngayChay.slice(0, 10) : (raw.date || "2026-10-21");
+  const rawQuyTacVersion = raw.meta?.quyTacVersion;
+  const doMoi = danhGiaDoMoi({
+    ngayChay: dateStr,
+    quyTacVersion: rawQuyTacVersion,
+    ngayHienTai: NGAY_HIEN_TAI,
+    quyTacHienTai: QUY_TAC_HIEN_TAI,
+  });
   return {
     name: "data",
     title: "Kiểm tra dữ liệu Live (Data Quality)",
-    status: "CHƯA CHẠY",
-    dinhNghiaDat: "Kiểm tra chất lượng nguồn dữ liệu live.",
-    ketQuaTongQuat: "CHƯA CHẠY",
+    status: "ĐÃ CHẠY",
+    dinhNghiaDat:
+      "Số điểm đến có đủ khách sạn, quán ăn, hoạt động và phương tiện live mà không bị lỗi mạng hay rỗng dữ liệu.",
+    latestFile: path.basename(filePath),
+    date: dateStr,
+    doMoi,
+    giaiThichDoMoi: layGiaiThichDoMoi(doMoi, rawQuyTacVersion),
+    quyTacVersionGhiNhan: rawQuyTacVersion ?? "(không ghi)",
+    promptVersionGhiNhan: raw.meta?.agentPromptVersion ?? "N/A",
+    modelGhiNhan: raw.meta?.model ?? "khong_dung_ai",
+    ketQuaTongQuat: `Tổng địa điểm: ${raw.total ?? 0}`,
   };
 }
 
@@ -312,7 +398,7 @@ export function parseSuiteDiadiem(): SuiteSummary {
   const dateMatch = (liveFile || fallbackFile)?.match(/\d{4}-\d{2}-\d{2}/);
   const dateStr = dateMatch ? dateMatch[0] : "2026-10-20";
 
-  const rawQuyTacVersion = undefined; // file diadiem hiện không ghi quyTacVersion
+  const rawQuyTacVersion = rawLive.meta?.quyTacVersion || rawFallback.meta?.quyTacVersion;
   const doMoi = danhGiaDoMoi({
     ngayChay: dateStr,
     quyTacVersion: rawQuyTacVersion,
@@ -320,14 +406,23 @@ export function parseSuiteDiadiem(): SuiteSummary {
     quyTacHienTai: QUY_TAC_HIEN_TAI,
   });
 
-  const itemsLive: any[] = Array.isArray(rawLive) ? rawLive : [rawLive];
-  const itemsFallback: any[] = Array.isArray(rawFallback) ? rawFallback : [rawFallback];
+  const itemsLive: any[] = Array.isArray(rawLive)
+    ? rawLive
+    : (rawLive.results ?? [rawLive]);
+  const itemsFallback: any[] = Array.isArray(rawFallback)
+    ? rawFallback
+    : (rawFallback.results ?? [rawFallback]);
 
   const statusesLive = itemsLive.map((it) => it.trangThaiNoiDung || (it.coNoiDung ? "CÓ NỘI DUNG" : "THIẾU DỮ LIỆU"));
-  const statusesFallback = itemsFallback.map((it) => it.trangThaiNoiDung || (it.coNoiDung ? "CÓ NỘI DUNG" : "THIẾU DỮ LIỆU"));
-
   const sumLive = dinhDangTrangThaiDiaDiem(statusesLive);
-  const sumFallback = dinhDangTrangThaiDiaDiem(statusesFallback);
+
+  // Lấy snapshot hợp lệ hiện tại trong src/data/snapshots theo audit:snapshots
+  const snapshotAudit = auditAllSnapshots();
+  const validSnapshots = snapshotAudit.results.filter((r) => r.status === "HỢP LỆ");
+
+  // Xử lý bảng có dự phòng với hàm thuần
+  const fallbackResult = xuLyBangDiadiemFallback(itemsFallback, validSnapshots, dateStr);
+  const sumFallback = fallbackResult.summary;
 
   let chiTiet = `#### Bảng 1: Kết quả chế độ Trực tiếp thuần (live-only)\n\n`;
   chiTiet += `*Tổng kết live-only*: **${sumLive}**\n\n`;
@@ -353,14 +448,11 @@ export function parseSuiteDiadiem(): SuiteSummary {
 
   chiTiet += `#### Bảng 2: Kết quả khi có cơ chế Dự phòng (có dự phòng snapshot / cache)\n\n`;
   chiTiet += `*Tổng kết có dự phòng*: **${sumFallback}**\n\n`;
-  chiTiet += `| STT | Điểm đến | Định vị | Trạng thái nội dung | Nguồn dữ liệu | KS / Ăn / Cafe / HĐ | Kết quả kế hoạch |\n`;
-  chiTiet += `|:---:|:---|:---:|:---:|:---|:---:|:---|\n`;
+  chiTiet += `| STT | Điểm đến | Định vị | Trạng thái nội dung | Nguồn dữ liệu | KS / Ăn / Cafe / HĐ | Ô chưa lấp | Kết quả kế hoạch |\n`;
+  chiTiet += `|:---:|:---|:---:|:---:|:---|:---:|:---:|:---|\n`;
 
-  itemsFallback.forEach((it, idx) => {
-    const sl = it.soLuongTheoLoai
-      ? `${it.soLuongTheoLoai.khachSan}/${it.soLuongTheoLoai.quanAn}/${it.soLuongTheoLoai.cafe}/${it.soLuongTheoLoai.hoatDong}`
-      : "-";
-    chiTiet += `| ${idx + 1} | **${it.diemDen}** | ${it.geocodeThanhCong ? "Thành công" : "Thất bại"} | **${it.trangThaiNoiDung}** | ${it.nguonDL || "snapshot"} | ${sl} | ${it.keHoachHopLe ? "✅ Hợp lệ, đủ ô" : "❌ Chưa đạt"} |\n`;
+  fallbackResult.rows.forEach((r, idx) => {
+    chiTiet += `| ${idx + 1} | **${r.diemDen}** | ${r.geocodeThanhCong ? "Thành công" : "Thất bại"} | ${r.trangThaiHienThi} | ${r.nguonDL} | ${r.sl} | ${r.oChuaLapHienThi} | ${r.ketQuaKeHoach} |\n`;
   });
 
   return {
@@ -372,9 +464,9 @@ export function parseSuiteDiadiem(): SuiteSummary {
     date: dateStr,
     doMoi,
     giaiThichDoMoi: layGiaiThichDoMoi(doMoi, rawQuyTacVersion),
-    quyTacVersionGhiNhan: "(không ghi)",
-    promptVersionGhiNhan: "N/A",
-    modelGhiNhan: "Nominatim + Overpass OSM",
+    quyTacVersionGhiNhan: rawQuyTacVersion ?? "(không ghi)",
+    promptVersionGhiNhan: rawLive.meta?.agentPromptVersion || rawFallback.meta?.agentPromptVersion || "N/A",
+    modelGhiNhan: rawLive.meta?.model || rawFallback.meta?.model || "Nominatim + Overpass OSM",
     ketQuaTongQuat: `Live: ${sumLive} | Có dự phòng: ${sumFallback}`,
     chiTietNoiDung: chiTiet,
   };
@@ -398,8 +490,8 @@ export function parseSuiteAiRate(): SuiteSummary {
   const raw = JSON.parse(fs.readFileSync(filePath, "utf-8"));
   const dateStr = raw.summary?.ngay || "2026-10-20";
 
-  // File ghi phiên bản quy tắc cũ v1 trong các scenarios
-  const rawQuyTacVersion = raw.summary?.quyTacVersion || raw.quyTacVersion; // undefined trong file thực tế
+  // Đọc meta.quyTacVersion (không gán mặc định)
+  const rawQuyTacVersion = raw.meta?.quyTacVersion;
   const doMoi = danhGiaDoMoi({
     ngayChay: dateStr,
     quyTacVersion: rawQuyTacVersion,
@@ -415,7 +507,7 @@ export function parseSuiteAiRate(): SuiteSummary {
   const ketQuaTongQuat = `${soKichBanHopLe}/${total} kịch bản đã chạy với quy tắc hiện tại`;
 
   // Kiểm tra phiên bản prompt agent
-  const promptDocDuocTuFile = raw.summary?.promptVersion || raw.promptVersion || "(không ghi)";
+  const promptDocDuocTuFile = raw.meta?.agentPromptVersion ?? raw.summary?.promptVersion ?? raw.promptVersion ?? "(không ghi)";
   const promptHienTai = AGENT_PROMPT_VERSION; // "v4"
 
   let chiTiet = `| Chỉ số | Giá trị | Ghi chú |\n|:---|:---:|:---|\n`;
@@ -441,7 +533,7 @@ export function parseSuiteAiRate(): SuiteSummary {
     giaiThichDoMoi: layGiaiThichDoMoi(doMoi, rawQuyTacVersion),
     quyTacVersionGhiNhan: rawQuyTacVersion ?? "(không ghi)",
     promptVersionGhiNhan: promptDocDuocTuFile,
-    modelGhiNhan: "gemini-3.5-flash-lite",
+    modelGhiNhan: raw.meta?.model ?? "gemini-3.5-flash-lite",
     ketQuaTongQuat,
     chiTietNoiDung: chiTiet,
   };

@@ -23,6 +23,9 @@
     "audit:snapshots": "tsx scripts/audit-snapshots.ts",
     "check:colors": "tsx scripts/check-colors.ts",
     "check:contrast": "tsx scripts/check-contrast.ts",
+    "check:emoji": "tsx scripts/check-emoji.ts",
+    "build:tokens": "tsx scripts/build-tokens.ts",
+    "verify:keys": "tsx scripts/verify-no-key-leak.ts",
     "eval:tonghop": "tsx eval/run-tonghop.ts",
     "typecheck": "tsc --noEmit"
   },

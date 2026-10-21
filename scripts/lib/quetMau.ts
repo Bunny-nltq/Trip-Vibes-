@@ -20,8 +20,14 @@ export const HARDCODED_FONTS = [
 ];
 
 // Cấu hình danh sách tệp hoặc thư mục được miễn trừ:
-// TUYỆT ĐỐI KHÔNG CÓ THƯ MỤC NÀO ĐƯỢC MIỄN TRỪ TRONG SRC/UI!
-export const DANH_SACH_MIEN_TRU: string[] = [];
+// - Trong src/ui: TUYỆT ĐỐI KHÔNG CÓ TỆP NÀO ĐƯỢC MIỄN TRỪ!
+// - Trong src/app: Miễn trừ tệp cấu hình CSS toàn cục (globals.css, wireframes.css)
+//   và tệp CSS tự động sinh từ tokens.json (tokens.css).
+export const DANH_SACH_MIEN_TRU: string[] = [
+  "src/app/globals.css",
+  "src/app/tokens.css",
+  "src/app/wireframes.css",
+];
 
 // Từ khóa cấm
 export const TU_KHOA_CAM = {

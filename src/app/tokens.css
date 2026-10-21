@@ -1,0 +1,159 @@
+/* ========================================================================== */
+/* File này được sinh tự động từ src/design/tokens.json qua npm run build:tokens. */
+/* TUYỆT ĐỐI không chỉnh sửa thủ công tệp này.                              */
+/* ========================================================================== */
+
+:root {
+  /* Thiết kế Xanh Trời Bước 21 */
+  --color-bg: #EEF4FB;
+  --color-background: #EEF4FB;
+  --color-surface: #FFFFFF;
+  --color-surface-sub: #F6F9FE;
+  --color-card: #FFFFFF;
+  --color-card-sub: #F6F9FE;
+  --color-text: #1F2A44;
+  --color-text-sub: #5C6B88;
+  --color-navy-text: #1F2A44;
+  --color-sub-text: #5C6B88;
+  --color-body-text: #1F2A44;
+  --color-muted-text: #5C6B88;
+  --color-light-muted: #7C93C6;
+
+  --color-primary: #2B55D6;
+  --color-primary-main: #2B55D6;
+  --color-primary-brand: #2B55D6;
+  --color-primary-hover: #2244B0;
+  --color-primary-text: #FFFFFF;
+  --color-primary-tint: #EAF1FE;
+  --color-primary-light: #EAF1FE;
+  --color-primary-soft: #EEF4FB;
+  --color-primary-active: #EAF1FE;
+
+  --color-border: #DCE6F5;
+  --color-border-light: #DCE6F5;
+  --color-border-blue: #DCE6F5;
+  --color-border-card: #DCE6F5;
+  --color-border-preset: #7C93C6;
+  --color-border-input: #7C93C6;
+
+  --color-success: #0B7A5C;
+  --color-success-text: #0B7A5C;
+  --color-success-bg: #DDF7EE;
+
+  --color-warning: #8A5300;
+  --color-warning-text: #8A5300;
+  --color-warning-bg: #FFF6E0;
+
+  --color-error: #C0213D;
+  --color-error-text: #C0213D;
+  --color-error-bg: #FFEBEE;
+  --color-badge-red: #C0213D;
+
+  --color-info: #2B55D6;
+  --color-track-bg: #EAF1FE;
+
+  /* Hạng mục chi tiêu */
+  --color-category-move: #2B55D6;
+  --color-category-stay: #0E8FB5;
+  --color-category-food: #C77700;
+  --color-category-fun: #1E8E6E;
+
+  /* Minh họa & SVG */
+  --color-art-sun: #FFC24D;
+  --color-art-mountain1: #2FA7B5;
+  --color-art-mountain2: #3B82C4;
+  --color-art-line: #1F2A44;
+  --color-art-plant1: #58A266;
+  --color-art-plant2: #6DB878;
+  --color-art-plant3: #7CC285;
+  --color-art-plant4: #8CCB92;
+  --color-art-suit1: #F4A340;
+  --color-art-suit2: #E8892A;
+  --color-art-suit3: #C86F1A;
+  --color-art-suit-light: #FFD9A0;
+  --color-art-avatar1: #FFD6A5;
+  --color-art-avatar2: #F4A0A0;
+  --color-art-avatar-text: #6B3A2A;
+  --color-art-google-blue: #4285F4;
+  --color-art-google-green: #34A853;
+  --color-art-google-yellow: #FBBC05;
+  --color-art-google-red: #EA4335;
+  --color-art-sky-1: #C9E5F8;
+  --color-art-sky-2: #E2F0FB;
+  --color-art-sky-3: #F5F9FE;
+  --color-art-sky-4: #CDE6F8;
+  --color-art-sky-5: #E5F3FC;
+  --color-art-sky-6: #F8FAFE;
+  --color-art-sea-deep-1: #67B1D8;
+  --color-art-sea-deep-2: #3B8CB8;
+  --color-art-sea-1: #76B5DB;
+  --color-art-sea-2: #4395C6;
+  --color-art-sea-3: #256C98;
+  --color-art-sea-light: #9FC2D8;
+  --color-art-bay-sea: #9CC5DB;
+  --color-art-hill-1: #7EAF9B;
+  --color-art-hill-2: #437762;
+  --color-art-hill-3: #88B49E;
+  --color-art-hill-4: #2E5C46;
+  --color-art-hill-5: #75A88F;
+  --color-art-hill-6: #588D4A;
+  --color-art-hill-7: #3D6832;
+  --color-art-wood-1: #8C6239;
+  --color-art-wood-2: #634424;
+  --color-art-wood-sign-1: #9C6B3B;
+  --color-art-wood-sign-2: #885A2E;
+  --color-art-wood-sign-3: #744A22;
+  --color-art-wood-trunk: #7A5229;
+  --color-art-cream: #FBF5E8;
+  --color-art-sun-light: #FFE58F;
+  --color-art-icon-bg-blue: #E8F4FD;
+  --color-art-icon-bg-primary: #EAF3FE;
+  --color-art-icon-bg-green: #EFF7ED;
+  --color-art-icon-bg-tint: #EEF2FB;
+  --color-art-sand: #F4D398;
+  --color-art-palm-1: #489C57;
+  --color-art-palm-2: #58AB67;
+  --color-art-blue-mid: #4B7BD8;
+  --color-art-blue-dark: #3B6DD0;
+  --color-art-blue-deep: #2454B8;
+  --color-art-warm-amber: #FFB74D;
+  --color-art-orange: #FF9800;
+  --color-avatar-bg1: #FFD6A5;
+  --color-avatar-bg2: #F4A0A0;
+  --color-avatar-text: #6B3A2A;
+  --color-google-blue: #4285F4;
+  --color-google-green: #34A853;
+  --color-google-yellow: #FBBC05;
+  --color-google-red: #EA4335;
+
+  /* Fonts */
+  --font-sans: var(--font-sans), 'Be Vietnam Pro', -apple-system, sans-serif;
+  --font-script: var(--font-script), 'Dancing Script', cursive;
+
+  /* Aliases cho các class cũ */
+  --p500: var(--color-primary);
+  --p400: #4A72E8;
+  --p300: #7C93C6;
+  --p100: var(--color-primary-tint);
+  --s500: var(--color-category-stay);
+  --s400: #2FA7B5;
+  --s100: var(--color-primary-tint);
+  --navy: var(--color-text);
+  --g700: var(--color-text);
+  --g500: var(--color-text-sub);
+  --g400: #7C93C6;
+  --g300: #DCE6F5;
+  --g100: #F6F9FE;
+  --g50: #EEF4FB;
+  --border: #DCE6F5;
+  --bg: #EEF4FB;
+  --surface: #FFFFFF;
+  --white: #FFFFFF;
+
+  /* Radius */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 18px;
+  --r-full: 9999px;
+}

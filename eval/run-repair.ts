@@ -4,10 +4,11 @@ import crypto from "node:crypto";
 import { loadEnvConfig } from "@next/env";
 import { planWithRepair } from "../src/ai/planWithRepair";
 import { validatePlan } from "../src/core/validatePlan";
-import { MAX_REPAIR_ROUNDS } from "../src/core/assumptions";
+import { MAX_REPAIR_ROUNDS, QUY_TAC_VERSION } from "../src/core/assumptions";
 import { GeminiProvider } from "../src/ai/provider";
 import { JsonDataSource } from "../src/data/JsonDataSource";
 import { AGENT_PROMPT_VERSION } from "../src/ai/planAgent";
+import { taoMetaEval } from "./lib/meta";
 import type { TripRequest } from "../src/contracts";
 
 loadEnvConfig(process.cwd());
@@ -201,7 +202,18 @@ async function main() {
 
   const dateStr = new Date().toISOString().slice(0, 10);
   const outPath = path.join(resultsDir, `repair-${dateStr}.json`);
-  fs.writeFileSync(outPath, JSON.stringify(results, null, 2), "utf-8");
+  const meta = taoMetaEval({
+    quyTacVersion: QUY_TAC_VERSION,
+    agentPromptVersion: AGENT_PROMPT_VERSION,
+    model: modelName,
+    ngayChayISO: new Date().toISOString(),
+    tenBo: "repair",
+  });
+  const payload = {
+    meta,
+    results,
+  };
+  fs.writeFileSync(outPath, JSON.stringify(payload, null, 2), "utf-8");
   console.log(`Đã lưu kết quả tại ${outPath}`);
 }
 

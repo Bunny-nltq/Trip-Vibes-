@@ -73,10 +73,10 @@ export function dinhDangTrangThaiDiaDiem(danhSach: string[]): string {
 
   for (const item of danhSach) {
     const norm = item.trim().toUpperCase();
-    if (norm === "CÓ NỘI DUNG") coNoiDung++;
-    else if (norm === "CÓ VI PHẠM") coViPham++;
-    else if (norm === "CHƯA LẤP ĐỦ Ô") chuaLapDuO++;
-    else if (norm === "THIẾU DỮ LIỆU") thieuDuLieu++;
+    if (norm === "CÓ NỘI DUNG" || norm.startsWith("CÓ NỘI DUNG")) coNoiDung++;
+    else if (norm === "CÓ VI PHẠM" || norm.startsWith("CÓ VI PHẠM")) coViPham++;
+    else if (norm === "CHƯA LẤP ĐỦ Ô" || norm.startsWith("CHƯA LẤP ĐỦ Ô")) chuaLapDuO++;
+    else if (norm === "THIẾU DỮ LIỆU" || norm.startsWith("THIẾU DỮ LIỆU")) thieuDuLieu++;
   }
 
   return `${coNoiDung}/${tong} CÓ NỘI DUNG; ${coViPham} CÓ VI PHẠM; ${chuaLapDuO} CHƯA LẤP ĐỦ Ô; ${thieuDuLieu} THIẾU DỮ LIỆU`;
@@ -99,4 +99,127 @@ export function dinhDangKetQuaLikes(danhSach: string[]): string {
   }
 
   return `${tang} tăng, ${giuNguyen} giữ nguyên, ${teDi} tệ đi`;
+}
+
+export interface DiadiemFallbackItem {
+  diemDen: string;
+  geocodeThanhCong?: boolean;
+  trangThaiNoiDung?: string;
+  coNoiDung?: boolean;
+  nguonDL?: string;
+  soLuongTheoLoai?: {
+    khachSan: number;
+    quanAn: number;
+    cafe: number;
+    hoatDong: number;
+  };
+  soSlotChuaLap?: {
+    hoatDong: number;
+    buaAn: number;
+  };
+  keHoachHopLe?: boolean;
+}
+
+export interface ValidSnapshotRef {
+  file: string;
+  diemDen?: string;
+}
+
+/**
+ * Kiểm tra điểm đến có snapshot hợp lệ hay không dựa trên danh sách snapshot hợp lệ.
+ */
+export function coSnapshotHopLeChoDiemDen(
+  diemDen: string,
+  danhSachHopLe: ValidSnapshotRef[]
+): boolean {
+  const norm = (s: string) =>
+    s
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D")
+      .toLowerCase()
+      .replace(/^(thanh pho|tp|tinh|quan|huyen|city of)\s+/i, "")
+      .replace(/[^a-z0-9]/g, "")
+      .trim();
+
+  const target = norm(diemDen);
+  if (!target) return false;
+
+  return danhSachHopLe.some((item) => {
+    const fileTarget = norm(item.file.replace(".json", ""));
+    const nameTarget = item.diemDen ? norm(item.diemDen) : "";
+    return (
+      (fileTarget && (fileTarget.includes(target) || target.includes(fileTarget))) ||
+      (nameTarget && (nameTarget.includes(target) || target.includes(nameTarget)))
+    );
+  });
+}
+
+export interface KetQuaXuLyDiadiemFallback {
+  statuses: string[];
+  summary: string;
+  rows: Array<{
+    diemDen: string;
+    geocodeThanhCong: boolean;
+    trangThaiHienThi: string;
+    nguonDL: string;
+    sl: string;
+    oChuaLapHienThi: string;
+    ketQuaKeHoach: string;
+  }>;
+}
+
+/**
+ * Xử lý dữ liệu bảng có dự phòng của diadiem:
+ * - Điểm đến KHÔNG có snapshot hợp lệ -> trạng thái = "THIẾU DỮ LIỆU (không có snapshot)", ô chưa lấp = "—"
+ * - Điểm đến có snapshot hợp lệ -> giữ trạng thái ghi nhận kèm ghi chú "(từ lần chạy ngày X)"
+ */
+export function xuLyBangDiadiemFallback(
+  items: DiadiemFallbackItem[],
+  validSnapshots: ValidSnapshotRef[],
+  dateStr: string
+): KetQuaXuLyDiadiemFallback {
+  const statuses: string[] = [];
+  const rows = items.map((it) => {
+    const coSnap = coSnapshotHopLeChoDiemDen(it.diemDen, validSnapshots);
+    const sl = it.soLuongTheoLoai
+      ? `${it.soLuongTheoLoai.khachSan}/${it.soLuongTheoLoai.quanAn}/${it.soLuongTheoLoai.cafe}/${it.soLuongTheoLoai.hoatDong}`
+      : "-";
+
+    if (!coSnap) {
+      const statusText = "THIẾU DỮ LIỆU (không có snapshot)";
+      statuses.push(statusText);
+      return {
+        diemDen: it.diemDen,
+        geocodeThanhCong: Boolean(it.geocodeThanhCong),
+        trangThaiHienThi: `**${statusText}**`,
+        nguonDL: "—",
+        sl: "—",
+        oChuaLapHienThi: "—",
+        ketQuaKeHoach: "❌ Thiếu snapshot hợp lệ trong src/data/snapshots",
+      };
+    }
+
+    const recordedStatus =
+      it.trangThaiNoiDung || (it.coNoiDung ? "CÓ NỘI DUNG" : "THIẾU DỮ LIỆU");
+    statuses.push(recordedStatus);
+
+    const oChuaLap = it.soSlotChuaLap
+      ? `HĐ:${it.soSlotChuaLap.hoatDong}, Ăn:${it.soSlotChuaLap.buaAn}`
+      : "0";
+
+    return {
+      diemDen: it.diemDen,
+      geocodeThanhCong: Boolean(it.geocodeThanhCong),
+      trangThaiHienThi: `**${recordedStatus}** (từ lần chạy ngày ${dateStr})`,
+      nguonDL: it.nguonDL || "snapshot",
+      sl,
+      oChuaLapHienThi: oChuaLap,
+      ketQuaKeHoach: it.keHoachHopLe ? "✅ Hợp lệ, đủ ô" : "❌ Chưa đạt",
+    };
+  });
+
+  const summary = dinhDangTrangThaiDiaDiem(statuses);
+  return { statuses, summary, rows };
 }

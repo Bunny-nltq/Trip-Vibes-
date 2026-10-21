@@ -20,6 +20,9 @@ import { LiveDataSource } from "../src/data/live/LiveDataSource";
 import { getTavilyUsageToday } from "../src/data/live/searchClient";
 import { getGeminiCallCount } from "../src/data/live/researchTransport";
 import { getGeminiHotelCallCount } from "../src/data/live/researchHotelPrice";
+import { taoMetaEval } from "./lib/meta";
+import { QUY_TAC_VERSION } from "../src/core/assumptions";
+import { AGENT_PROMPT_VERSION } from "../src/ai/planAgent";
 
 loadEnvConfig(process.cwd());
 
@@ -123,6 +126,32 @@ async function main() {
   fs.writeFileSync(csvPath, csvHeader + csvRows, "utf-8");
   console.log(`\n📄 CSV kiểm tra thủ công: ${csvPath}`);
   console.log(`   (Điền cột gia_toi_tu_kiem, sao_google_toi_xem, dung_hay_sai)`);
+
+  const dateStr = new Date().toISOString().slice(0, 10);
+  const meta = taoMetaEval({
+    quyTacVersion: QUY_TAC_VERSION,
+    agentPromptVersion: AGENT_PROMPT_VERSION,
+    model: "khong_dung_ai",
+    ngayChayISO: new Date().toISOString(),
+    tenBo: "data",
+  });
+  const dataResult = {
+    meta,
+    date: dateStr,
+    total,
+    coNguon,
+    giaUocTinh,
+    theuTen,
+    thieuToaDo,
+    thieuGia,
+    soTavilyHom,
+    soGeminiTransport,
+    soGeminiHotel,
+    elapsed,
+  };
+  const jsonPath = path.join(csvDir, `data-${dateStr}.json`);
+  fs.writeFileSync(jsonPath, JSON.stringify(dataResult, null, 2), "utf-8");
+  console.log(`💾 Kết quả JSON đã lưu: ${jsonPath}`);
 }
 
 main().catch((err) => {

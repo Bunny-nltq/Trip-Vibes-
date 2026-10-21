@@ -11,26 +11,23 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { quetNoiDung, type ViPhamMau } from "./lib/quetMau";
+import { quetNoiDung, DANH_SACH_MIEN_TRU, type ViPhamMau } from "./lib/quetMau";
 
 const UI_DIR = path.resolve(process.cwd(), "src/ui");
+const APP_DIR = path.resolve(process.cwd(), "src/app");
 
-function scanDirectory(dir: string): string[] {
+function scanDirectory(dir: string, fileFilter?: (name: string) => boolean): string[] {
   let files: string[] = [];
+  if (!fs.existsSync(dir)) return files;
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      files = files.concat(scanDirectory(fullPath));
-    } else if (
-      entry.isFile() &&
-      (entry.name.endsWith(".tsx") ||
-        entry.name.endsWith(".ts") ||
-        entry.name.endsWith(".jsx") ||
-        entry.name.endsWith(".js") ||
-        entry.name.endsWith(".css"))
-    ) {
-      files.push(fullPath);
+      files = files.concat(scanDirectory(fullPath, fileFilter));
+    } else if (entry.isFile()) {
+      if (fileFilter ? fileFilter(entry.name) : true) {
+        files.push(fullPath);
+      }
     }
   }
   return files;
@@ -38,21 +35,36 @@ function scanDirectory(dir: string): string[] {
 
 export function runCheckColors(): boolean {
   console.log("================================================================================");
-  console.log("KIỂM TRA MÃ MÀU VÀ FONT CỨNG TRONG SRC/UI (CHECK:COLORS)");
+  console.log("KIỂM TRA MÃ MÀU VÀ FONT CỨNG TRONG SRC/UI VÀ SRC/APP (CHECK:COLORS)");
   console.log("================================================================================\n");
 
-  const files = scanDirectory(UI_DIR);
+  const uiFiles = scanDirectory(
+    UI_DIR,
+    (name) =>
+      name.endsWith(".tsx") ||
+      name.endsWith(".ts") ||
+      name.endsWith(".jsx") ||
+      name.endsWith(".js") ||
+      name.endsWith(".css")
+  );
+
+  const appFiles = scanDirectory(APP_DIR, (name) => name.endsWith(".tsx"));
+
+  const allFiles = [...uiFiles, ...appFiles];
   const violations: ViPhamMau[] = [];
 
-  for (const file of files) {
+  for (const file of allFiles) {
     const relPath = path.relative(process.cwd(), file).replace(/\\/g, "/");
+    if (DANH_SACH_MIEN_TRU.includes(relPath)) {
+      continue;
+    }
     const content = fs.readFileSync(file, "utf-8");
     const fileViolations = quetNoiDung(content, relPath);
     violations.push(...fileViolations);
   }
 
   if (violations.length > 0) {
-    console.warn(`⚠️ Phát hiện ${violations.length} vi phạm mã màu hoặc font viết cứng trong src/ui:`);
+    console.warn(`⚠️ Phát hiện ${violations.length} vi phạm mã màu hoặc font viết cứng:`);
 
     const byFile: Record<string, number> = {};
     for (const v of violations) {

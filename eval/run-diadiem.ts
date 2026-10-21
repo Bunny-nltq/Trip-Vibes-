@@ -41,6 +41,9 @@ import {
   type OverpassExecutionStats,
 } from "../src/data/live/overpassClient";
 import { soOKhaDung } from "../src/core/oKhaDung";
+import { taoMetaEval } from "./lib/meta";
+import { QUY_TAC_VERSION } from "../src/core/assumptions";
+import { AGENT_PROMPT_VERSION } from "../src/ai/planAgent";
 
 interface DestinationTestCase {
   name: string;
@@ -553,15 +556,32 @@ async function main() {
   const dateStr = new Date().toISOString().slice(0, 10);
   const resultsDir = path.resolve(process.cwd(), "eval/results");
   fs.mkdirSync(resultsDir, { recursive: true });
+
+  const meta = taoMetaEval({
+    quyTacVersion: QUY_TAC_VERSION,
+    agentPromptVersion: AGENT_PROMPT_VERSION,
+    model: "khong_dung_ai",
+    ngayChayISO: new Date().toISOString(),
+    tenBo: "diadiem",
+  });
+  const payloadLive = {
+    meta,
+    results: resultsLive,
+  };
+  const payloadFallback = {
+    meta,
+    results: resultsFallback,
+  };
+
   fs.writeFileSync(
     path.join(resultsDir, `diadiem-live-${dateStr}.json`),
-    JSON.stringify(resultsLive, null, 2),
+    JSON.stringify(payloadLive, null, 2),
     "utf-8"
   );
   if (!isLiveOnlyFlag) {
     fs.writeFileSync(
       path.join(resultsDir, `diadiem-fallback-${dateStr}.json`),
-      JSON.stringify(resultsFallback, null, 2),
+      JSON.stringify(payloadFallback, null, 2),
       "utf-8"
     );
   }
