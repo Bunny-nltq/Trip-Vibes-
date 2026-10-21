@@ -8,7 +8,7 @@ export function WelcomeScreen() {
   const features = [
     {
       icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2B55D6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
           <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
         </svg>
@@ -18,7 +18,7 @@ export function WelcomeScreen() {
     },
     {
       icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2B55D6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
           <circle cx="12" cy="12" r="3"/>
         </svg>
@@ -28,7 +28,7 @@ export function WelcomeScreen() {
     },
     {
       icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2B55D6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
           <circle cx="12" cy="13" r="3"/>
         </svg>
@@ -44,10 +44,10 @@ export function WelcomeScreen() {
       <header className="LandTop">
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <svg width="48" height="38" viewBox="0 0 62 48" aria-hidden="true">
-            <circle cx="43" cy="16" r="10" fill="#FFC24D" />
-            <path d="M2 44 22 14l11 16 7-9 20 23z" fill="#2FA7B5" />
-            <path d="M12 44 30 22l10 14 6-8 14 16z" fill="#3B82C4" />
-            <path d="M2 44h58" stroke="#1F3A7A" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="43" cy="16" r="10" fill="var(--color-art-sun)" />
+            <path d="M2 44 22 14l11 16 7-9 20 23z" fill="var(--color-art-mountain1)" />
+            <path d="M12 44 30 22l10 14 6-8 14 16z" fill="var(--color-art-mountain2)" />
+            <path d="M2 44h58" stroke="var(--color-art-line)" strokeWidth="2" strokeLinecap="round" />
           </svg>
           <div>
             <div className="LogoName Script">Trip Vibes</div>
@@ -73,17 +73,17 @@ export function WelcomeScreen() {
             fontSize: 42,
             lineHeight: 1.2,
             fontWeight: 800,
-            color: "#1F2A44",
+            color: "var(--color-text)",
             marginBottom: 16,
             letterSpacing: -0.5,
           }}
         >
           Lập kế hoạch du lịch,{" "}
-          <span style={{ color: "#2B55D6" }}>
+          <span style={{ color: "var(--color-primary)" }}>
             giữ đúng ngân sách
           </span>
         </h1>
-        <p style={{ fontSize: 16, color: "#5C6B88", maxWidth: 580, margin: "0 auto 40px", lineHeight: 1.6 }}>
+        <p style={{ fontSize: 16, color: "var(--color-text-sub)", maxWidth: 580, margin: "0 auto 40px", lineHeight: 1.6 }}>
           Chọn vài nút bấm là có kế hoạch đầy đủ giá vé, chỗ ở và lịch trình. Xem trước mọi thay đổi và theo dõi chi tiêu thực tế thông minh.
         </p>
 
@@ -101,18 +101,18 @@ export function WelcomeScreen() {
             <div
               key={f.title}
               style={{
-                background: "#F6F9FE",
+                background: "var(--color-surface-sub)",
                 borderRadius: 22,
                 padding: "26px 20px",
-                border: "1px solid #DCE6F5",
+                border: "1px solid var(--color-border)",
                 textAlign: "left",
               }}
             >
               <div style={{ fontSize: 32, marginBottom: 12 }}>{f.icon}</div>
-              <div style={{ fontWeight: 700, fontSize: 16, color: "#1F2A44", marginBottom: 6 }}>
+              <div style={{ fontWeight: 700, fontSize: 16, color: "var(--color-text)", marginBottom: 6 }}>
                 {f.title}
               </div>
-              <div style={{ fontSize: 13, color: "#5C6B88", lineHeight: 1.5 }}>
+              <div style={{ fontSize: 13, color: "var(--color-text-sub)", lineHeight: 1.5 }}>
                 {f.sub}
               </div>
             </div>
@@ -141,7 +141,7 @@ export function WelcomeScreen() {
           <span>Bắt đầu lập kế hoạch ngay</span>
         </button>
 
-        <div style={{ marginTop: 28, fontSize: 12, color: "#8593AE" }}>
+        <div style={{ marginTop: 28, fontSize: 12, color: "var(--color-light-muted)" }}>
           Bản mô phỏng AI Agent · Nguồn dữ liệu minh bạch · Không lưu giữ ảnh hóa đơn trên đĩa
         </div>
       </main>

@@ -370,7 +370,7 @@ export function B2AgentScreen() {
               type="button"
               className="Btn BtnSmall"
               onClick={() => nav("b1-chon-nhanh")}
-              style={{ background: "#FFFFFF" }}
+              style={{ background: "var(--color-surface)" }}
             >
               Chọn điểm đến khác
             </button>
@@ -378,7 +378,7 @@ export function B2AgentScreen() {
               type="button"
               className="Btn BtnSmall"
               onClick={handleCancel}
-              style={{ background: "#FFFFFF" }}
+              style={{ background: "var(--color-surface)" }}
             >
               Về màn hình chọn
             </button>
@@ -405,7 +405,7 @@ export function B2AgentScreen() {
             {planError || "Không nhận được phản hồi hợp lệ từ máy chủ."}
           </div>
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <button type="button" className="Btn BtnSmall" onClick={handleCancel} style={{ background: "#FFFFFF" }}>
+            <button type="button" className="Btn BtnSmall" onClick={handleCancel} style={{ background: "var(--color-surface)" }}>
               ← Về màn hình chọn
             </button>
             <button type="button" className="Btn BtnPrimary BtnSmall" onClick={retryPlan}>
@@ -416,7 +416,7 @@ export function B2AgentScreen() {
       )}
 
       {/* ─── CARD CHIP "AI HIỂU BẠN MUỐN GÌ" (CHỈ GIÁ TRỊ THẬT) ─── */}
-      <div className="card" style={{ padding: "18px 22px", marginBottom: 20, background: "#FFFFFF", borderRadius: 12, border: "1px solid var(--color-neutral-borderCard)" }}>
+      <div className="card" style={{ padding: "18px 22px", marginBottom: 20, background: "var(--color-surface)", borderRadius: 12, border: "1px solid var(--color-neutral-borderCard)" }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: "var(--color-neutral-navyText)", marginBottom: 10 }}>
           AI hiểu bạn muốn gì
         </div>
@@ -441,7 +441,7 @@ export function B2AgentScreen() {
 
       {/* ─── TIẾN TRÌNH THẬT BƯỚC A: CHUẨN BỊ DỮ LIỆU TỪNG HẠNG MỤC ─── */}
       {phase === "chuan_bi" && !dataPrepError && (
-        <div className="card" style={{ padding: 22, background: "#FFFFFF", borderRadius: 12, border: "1px solid var(--color-neutral-borderCard)" }}>
+        <div className="card" style={{ padding: 22, background: "var(--color-surface)", borderRadius: 12, border: "1px solid var(--color-neutral-borderCard)" }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: "var(--color-neutral-navyText)", marginBottom: 14 }}>
             Tiến trình thu thập dữ liệu
           </div>
@@ -493,7 +493,7 @@ export function B2AgentScreen() {
                           : isRunning
                           ? "var(--color-primary-brand)"
                           : "var(--color-neutral-gray100)",
-                        color: isRunning ? "#FFFFFF" : "var(--color-primary-brand)",
+                        color: isRunning ? "var(--color-primary-text)" : "var(--color-primary-brand)",
                       }}
                     >
                       {isRunning ? (
@@ -555,7 +555,7 @@ export function B2AgentScreen() {
               type="button"
               className="Btn BtnSmall"
               onClick={handleCancel}
-              style={{ background: "#FFFFFF", padding: "6px 20px" }}
+              style={{ background: "var(--color-surface)", padding: "6px 20px" }}
             >
               Hủy
             </button>
@@ -565,7 +565,7 @@ export function B2AgentScreen() {
 
       {/* ─── TIẾN TRÌNH THẬT BƯỚC B: LẬP KẾ HOẠCH BẰNG AI (KHI DỮ LIỆU ĐÃ SẴN SÀNG) ─── */}
       {phase === "lap_ke_hoach" && planStatus !== "error" && (
-        <div className="card" style={{ padding: 24, background: "#FFFFFF", borderRadius: 12, border: "1px solid var(--color-neutral-borderCard)" }}>
+        <div className="card" style={{ padding: 24, background: "var(--color-surface)", borderRadius: 12, border: "1px solid var(--color-neutral-borderCard)" }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: "var(--color-neutral-navyText)", marginBottom: 16 }}>
             Lập kế hoạch chi tiết
           </div>
@@ -605,7 +605,7 @@ export function B2AgentScreen() {
                     color: isDone
                       ? "var(--color-primary-brand)"
                       : isActive
-                      ? "#FFFFFF"
+                      ? "var(--color-primary-text)"
                       : "var(--color-neutral-mutedText)",
                   }}
                 >
@@ -666,7 +666,7 @@ export function B2AgentScreen() {
               type="button"
               className="Btn BtnSmall"
               onClick={handleCancel}
-              style={{ background: "#FFFFFF", padding: "6px 20px" }}
+              style={{ background: "var(--color-surface)", padding: "6px 20px" }}
             >
               Hủy
             </button>

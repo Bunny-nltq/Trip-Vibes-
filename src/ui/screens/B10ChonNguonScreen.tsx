@@ -416,7 +416,7 @@ export function B10ChonNguonScreen() {
             <div className="ModalTitle">Thêm chi tiêu</div>
             <div className="Sub">{subTitleText}</div>
             <div style={{ padding: "40px 20px" }}>
-              <RefreshCw size={36} className="spinner" style={{ color: "#2B55D6", margin: "0 auto 16px" }} />
+              <RefreshCw size={36} className="spinner" style={{ color: "var(--color-primary)", margin: "0 auto 16px" }} />
               <div className="InfoTitle" style={{ fontSize: 16 }}>Đang đọc thông tin từ ảnh bill...</div>
               <div className="Hint" style={{ marginTop: 8 }}>
                 AI đang nhận diện tên cửa hàng, ngày và số tiền thanh toán
@@ -497,8 +497,8 @@ export function B10ChonNguonScreen() {
                   width: 240,
                   flexShrink: 0,
                   position: "relative",
-                  background: "#F2F7FD",
-                  border: "1px solid #D5E0F3",
+                  background: "var(--color-surface-sub)",
+                  border: "1px solid var(--color-border)",
                 }}
               >
                 <img

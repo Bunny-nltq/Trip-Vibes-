@@ -108,7 +108,7 @@ export function B9ChiDuongPopover({ place, onClose, position }: B9ChiDuongPopove
               border: "none",
               background: "transparent",
               cursor: "pointer",
-              color: "#5C6B88",
+              color: "var(--color-text-sub)",
               padding: 4,
             }}
             title="Đóng"

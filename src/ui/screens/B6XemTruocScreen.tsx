@@ -234,14 +234,14 @@ export function B6XemTruocScreen() {
                     style={{
                       marginTop: 10,
                       padding: "4px 10px",
-                      background: "#DCFCE7",
+                      background: "var(--color-success-bg)",
                       borderRadius: "var(--r-full)",
                       display: "inline-flex",
                       alignItems: "center",
                       gap: 4,
                       fontSize: 12,
                       fontWeight: 600,
-                      color: "var(--success)",
+                      color: "var(--color-success-text)",
                     }}
                   >
                     <TrendingDown size={14} />
@@ -253,14 +253,14 @@ export function B6XemTruocScreen() {
                     style={{
                       marginTop: 10,
                       padding: "4px 10px",
-                      background: "#FEE2E2",
+                      background: "var(--color-error-bg)",
                       borderRadius: "var(--r-full)",
                       display: "inline-flex",
                       alignItems: "center",
                       gap: 4,
                       fontSize: 12,
                       fontWeight: 600,
-                      color: "var(--error)",
+                      color: "var(--color-error-text)",
                     }}
                   >
                     <TrendingUp size={14} />

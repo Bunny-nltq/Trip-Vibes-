@@ -21,6 +21,9 @@
     "data:snapshot": "tsx scripts/data-snapshot.ts",
     "data:snapshot:all": "tsx scripts/data-snapshot.ts",
     "audit:snapshots": "tsx scripts/audit-snapshots.ts",
+    "check:colors": "tsx scripts/check-colors.ts",
+    "check:contrast": "tsx scripts/check-contrast.ts",
+    "eval:tonghop": "tsx eval/run-tonghop.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

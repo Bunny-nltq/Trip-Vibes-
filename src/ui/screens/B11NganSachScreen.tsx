@@ -172,7 +172,7 @@ export function B11NganSachScreen() {
               margin: "60px auto",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "#8593AE" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "var(--color-text-sub)" }}>
               <Lock size={44} />
             </div>
             <h1 className="H1" style={{ fontSize: 22, marginBottom: 8 }}>
@@ -276,19 +276,19 @@ export function B11NganSachScreen() {
             style={{
               padding: "16px 20px",
               marginBottom: 24,
-              background: "#F0FDF4",
-              border: "1px solid #BBF7D0",
+              background: "var(--color-success-bg)",
+              border: "1px solid var(--color-border)",
               display: "flex",
               alignItems: "center",
               gap: 12,
             }}
           >
-            <CheckCircle size={22} style={{ color: "var(--success)", flexShrink: 0 }} />
+            <CheckCircle size={22} style={{ color: "var(--color-success-text)", flexShrink: 0 }} />
             <div style={{ fontSize: 14, color: "var(--navy)" }}>
               <span style={{ fontWeight: 700 }}>Ngày còn lại:</span> Kế hoạch chi{" "}
               {fmt(comparison.duBao.keHoachNgayConLaiVND)}, ngân sách hiện còn{" "}
               {fmt(comparison.duBao.conLaiSauChiTieuVND)}. &nbsp;
-              <span style={{ color: "var(--success)", fontWeight: 700 }}>
+              <span style={{ color: "var(--color-success-text)", fontWeight: 700 }}>
                 Ngân sách đủ, dự kiến dư {fmt(comparison.duBao.chenhDuBaoVND)}.
               </span>
             </div>
@@ -304,12 +304,12 @@ export function B11NganSachScreen() {
               gap: 12,
             }}
           >
-            <AlertTriangle size={22} style={{ color: "var(--warning)", flexShrink: 0 }} />
+            <AlertTriangle size={22} style={{ color: "var(--color-warning-text)", flexShrink: 0 }} />
             <div style={{ fontSize: 14, color: "var(--navy)" }}>
               <span style={{ fontWeight: 700 }}>Ngày còn lại:</span> Kế hoạch chi{" "}
               {fmt(comparison.duBao.keHoachNgayConLaiVND)}, còn lại{" "}
               {fmt(comparison.duBao.conLaiSauChiTieuVND)}. &nbsp;
-              <span style={{ color: "#92400E", fontWeight: 700 }}>
+              <span style={{ color: "var(--color-warning-text)", fontWeight: 700 }}>
                 Có thể vượt khoảng {fmt(Math.abs(comparison.duBao.chenhDuBaoVND))}.
               </span>
             </div>
@@ -482,9 +482,9 @@ export function B11NganSachScreen() {
                           className="pill"
                           style={{
                             marginLeft: 6,
-                            background: "#FEF3C7",
-                            color: "#92400E",
-                            borderColor: "#FDE68A",
+                            background: "var(--color-warning-bg)",
+                            color: "var(--color-warning-text)",
+                            borderColor: "var(--color-border)",
                             fontWeight: 600,
                           }}
                         >

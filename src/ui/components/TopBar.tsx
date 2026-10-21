@@ -44,7 +44,7 @@ export function TopBar() {
           height="18"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#5C6B88"
+          stroke="var(--color-text-sub)"
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -64,7 +64,7 @@ export function TopBar() {
             background: "transparent",
             width: "100%",
             fontSize: 13,
-            color: "#1F2A44",
+            color: "var(--color-text)",
           }}
         />
       </form>

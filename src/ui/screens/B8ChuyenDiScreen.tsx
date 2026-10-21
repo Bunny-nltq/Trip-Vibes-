@@ -97,7 +97,7 @@ export function B8ChuyenDiScreen() {
               margin: "60px auto",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "#8593AE" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "var(--color-text-sub)" }}>
               <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -191,9 +191,9 @@ export function B8ChuyenDiScreen() {
         {isSampleDataActive && (
           <div
             style={{
-              background: "#FFFBEB",
-              border: "1px solid #FDE68A",
-              color: "#92400E",
+              background: "var(--color-warning-bg)",
+              border: "1px solid var(--color-border)",
+              color: "var(--color-warning-text)",
               padding: "10px 16px",
               borderRadius: 14,
               fontSize: 13,
@@ -229,7 +229,7 @@ export function B8ChuyenDiScreen() {
           </div>
 
           {currentDayPlaces.length === 0 && (
-            <div style={{ padding: "32px 20px", textAlign: "center", color: "#5C6B88" }}>
+            <div style={{ padding: "32px 20px", textAlign: "center", color: "var(--color-text-sub)" }}>
               Chưa có lịch trình hoạt động nào cho Ngày {activeDay}.
             </div>
           )}
@@ -354,7 +354,7 @@ export function B8ChuyenDiScreen() {
               openB10({ tenCuaHang: toast.ten, ngayTrongChuyen: activeDay });
               setToast(null);
             }}
-            style={{ background: "#2B55D6", borderColor: "#2B55D6" }}
+            style={{ background: "var(--color-primary)", borderColor: "var(--color-primary)" }}
           >
             Ghi chi tiêu
           </button>

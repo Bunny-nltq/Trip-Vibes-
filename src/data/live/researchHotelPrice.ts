@@ -45,11 +45,15 @@ function readPriceCache(): CachedPrices["prices"] | null {
 }
 
 function writePriceCache(prices: CachedPrices["prices"]): void {
-  fs.writeFileSync(
-    getCachePath(),
-    JSON.stringify({ timestamp: Date.now(), prices }, null, 2),
-    "utf-8"
-  );
+  try {
+    fs.writeFileSync(
+      getCachePath(),
+      JSON.stringify({ timestamp: Date.now(), prices }, null, 2),
+      "utf-8"
+    );
+  } catch {
+    // ignore in read-only / serverless env
+  }
 }
 
 // Schema kết quả Gemini

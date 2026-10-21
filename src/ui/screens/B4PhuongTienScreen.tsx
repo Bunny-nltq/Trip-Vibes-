@@ -318,8 +318,8 @@ export function B4PhuongTienScreen() {
                         <span
                           style={{
                             padding: "2px 8px",
-                            background: "#FEF3C7",
-                            color: "var(--warning)",
+                            background: "var(--color-warning-bg)",
+                            color: "var(--color-warning-text)",
                             borderRadius: "var(--r-full)",
                             fontSize: 11,
                             fontWeight: 600,

@@ -14,6 +14,7 @@ import { B7XacNhanScreen } from "@/ui/screens/B7XacNhanScreen";
 import { B8ChuyenDiScreen } from "@/ui/screens/B8ChuyenDiScreen";
 import { B9ChiDuongScreen, B10ChonNguonScreen, B11NganSachScreen } from "@/ui/screens/B9to11Screens";
 import { SideNav, SidebarContext } from "@/ui/components/SideNav";
+import { useSessionLog } from "@/ui/hooks/useSessionLog";
 
 /**
  * Công cụ thử nghiệm:
@@ -21,7 +22,7 @@ import { SideNav, SidebarContext } from "@/ui/components/SideNav";
  * Khi hiện thì đặt ở góc có nút đóng, không che menu hay nội dung.
  */
 function DevTools() {
-  const { nav, screen, isSampleDataActive } = useApp();
+  const { nav, screen } = useApp();
   const [hasDevParam, setHasDevParam] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
 
@@ -56,9 +57,6 @@ function DevTools() {
 
   return (
     <>
-
-
-      {/* Bảng Chuyển nhanh màn hình - đặt ở góc phải, có nút đóng */}
       {isOpen && (
         <div
           style={{
@@ -67,10 +65,10 @@ function DevTools() {
             bottom: 20,
             width: 230,
             maxHeight: 380,
-            background: "#FFFFFF",
+            background: "var(--color-surface)",
             borderRadius: 16,
             boxShadow: "0 10px 30px rgba(0,0,0,0.18)",
-            border: "1px solid #D5E0F3",
+            border: "1px solid var(--color-border)",
             zIndex: 9999,
             display: "flex",
             flexDirection: "column",
@@ -80,18 +78,18 @@ function DevTools() {
           <div
             style={{
               padding: "10px 14px",
-              background: "#F4F8FE",
-              borderBottom: "1px solid #E1EAF8",
+              background: "var(--color-surface-sub)",
+              borderBottom: "1px solid var(--color-border)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
             <div>
-              <div style={{ fontWeight: 700, fontSize: 13, color: "#1F2A44" }}>
+              <div style={{ fontWeight: 700, fontSize: 13, color: "var(--color-text)" }}>
                 Chuyển nhanh màn hình
               </div>
-              <div style={{ fontSize: 11, color: "#5C6B88" }}>Thử nghiệm (?dev=1)</div>
+              <div style={{ fontSize: 11, color: "var(--color-text-sub)" }}>Thử nghiệm (?dev=1)</div>
             </div>
             <button
               type="button"
@@ -100,7 +98,7 @@ function DevTools() {
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                color: "#5C6B88",
+                color: "var(--color-text-sub)",
                 fontSize: 16,
                 fontWeight: 700,
                 padding: "2px 6px",
@@ -120,9 +118,9 @@ function DevTools() {
                   borderRadius: 8,
                   fontSize: 12,
                   cursor: "pointer",
-                  color: screen === s.id ? "#2B55D6" : "#34476E",
+                  color: screen === s.id ? "var(--color-primary)" : "var(--color-text)",
                   fontWeight: screen === s.id ? 700 : 500,
-                  background: screen === s.id ? "#DCE8FB" : "transparent",
+                  background: screen === s.id ? "var(--color-primary-tint)" : "transparent",
                   marginBottom: 2,
                 }}
               >
@@ -150,9 +148,9 @@ function MockDataBanner() {
       role="status"
       aria-label="Thông báo dữ liệu mẫu"
       style={{
-        background: "#fef3c7",
-        color: "#92400e",
-        borderBottom: "1.5px solid #fcd34d",
+        background: "var(--color-warning-bg)",
+        color: "var(--color-warning-text)",
+        borderBottom: "1.5px solid var(--color-border-input)",
         padding: "6px 16px",
         fontSize: 12,
         fontWeight: 800,
@@ -172,6 +170,94 @@ function MockDataBanner() {
         <line x1="12" y1="17" x2="12.01" y2="17" />
       </svg>
       <span>DỮ LIỆU MẪU</span>
+    </div>
+  );
+}
+
+/**
+ * Thanh trạng thái và xuất dữ liệu kiểm thử người dùng (chỉ bật khi URL có ?test=1)
+ */
+function UserTestModeBar() {
+  const {
+    isTestMode,
+    hasConsented,
+    acceptConsent,
+    events,
+    exportJson,
+    exportCsv,
+  } = useSessionLog();
+
+  if (!isTestMode) return null;
+
+  if (!hasConsented) {
+    return (
+      <div
+        role="region"
+        aria-label="Đồng ý chế độ kiểm thử"
+        style={{
+          background: "var(--color-primary-tint)",
+          color: "var(--color-primary)",
+          borderBottom: "1px solid var(--color-border)",
+          padding: "10px 20px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontSize: 13,
+          zIndex: 9999,
+        }}
+      >
+        <div>
+          <strong>Chế độ kiểm thử người dùng đang bật (?test=1):</strong> Các thao tác trong phiên làm việc này sẽ được lưu cục bộ trên trình duyệt để đánh giá trải nghiệm và hoàn toàn không gửi đi đâu.
+        </div>
+        <button
+          type="button"
+          className="Btn BtnSmall BtnPrimary"
+          onClick={acceptConsent}
+          style={{ marginLeft: 16 }}
+        >
+          Đồng ý & Bắt đầu
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        left: 20,
+        bottom: 20,
+        background: "var(--color-surface)",
+        border: "1px solid var(--color-border)",
+        borderRadius: 20,
+        boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+        padding: "8px 16px",
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        zIndex: 9999,
+        fontSize: 13,
+      }}
+    >
+      <span style={{ color: "var(--color-text)", fontWeight: 600 }}>
+        🧪 Test Mode: {events.length} sự kiện
+      </span>
+      <button
+        type="button"
+        className="Btn BtnSmall"
+        onClick={exportJson}
+        title="Tải kết quả kiểm thử dạng JSON"
+      >
+        Tải JSON
+      </button>
+      <button
+        type="button"
+        className="Btn BtnSmall BtnPrimary"
+        onClick={exportCsv}
+        title="Tải kết quả kiểm thử dạng CSV"
+      >
+        Tải CSV
+      </button>
     </div>
   );
 }
@@ -218,6 +304,7 @@ function ScreenRouter() {
     return (
       <div className="Frame">
         <MockDataBanner />
+        <UserTestModeBar />
         <DevTools />
         <main>{renderContent()}</main>
       </div>
@@ -227,6 +314,7 @@ function ScreenRouter() {
   return (
     <div className="Frame">
       <MockDataBanner />
+      <UserTestModeBar />
       <DevTools />
       <div className="Shell">
         <SideNav />

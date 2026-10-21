@@ -79,8 +79,20 @@ export class LiveDataSource implements DataSource {
     soNgay: number = 3,
     giaVeTuNhap?: { chieuDiVND: number; chieuVeVND: number }
   ) {
-    this.mode =
-      (process.env.DATA_MODE as DataMode | undefined) ?? mode ?? "live";
+    // Khi process.env.VERCEL có giá trị: DATA_MODE mặc định "snapshot"; chế độ live chỉ khi LIVE_DATA_ENABLED=true.
+    const isVercel = Boolean(
+      process.env.VERCEL && process.env.VERCEL !== "0" && process.env.VERCEL !== "false"
+    );
+    if (isVercel) {
+      if (process.env.LIVE_DATA_ENABLED === "true") {
+        this.mode = (process.env.DATA_MODE as DataMode) ?? "live";
+      } else {
+        this.mode = "snapshot";
+      }
+    } else {
+      this.mode =
+        (process.env.DATA_MODE as DataMode | undefined) ?? mode ?? "live";
+    }
     this.snapshotName = snapshotName ?? process.env.DATA_SNAPSHOT_NAME;
     if (this.mode === "mock") {
       this.mockSource = new JsonDataSource();
@@ -569,7 +581,11 @@ export class LiveDataSource implements DataSource {
     };
 
     const filePath = path.join(dir, `${name}.json`);
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+    try {
+      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+    } catch {
+      // ignore in read-only / serverless env
+    }
     return filePath;
   }
 

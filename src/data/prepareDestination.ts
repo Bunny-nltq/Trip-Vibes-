@@ -70,7 +70,7 @@ export function clearJobsForTest(): void {
 export function isProductionEnvironment(): boolean {
   return (
     process.env.NODE_ENV === "production" ||
-    process.env.VERCEL === "1" ||
+    Boolean(process.env.VERCEL && process.env.VERCEL !== "0" && process.env.VERCEL !== "false") ||
     process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
   );
 }

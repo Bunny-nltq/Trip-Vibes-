@@ -59,7 +59,9 @@ export interface PlanRepairResult {
     | "qua_thoi_gian"
     | "loi_mang_ai"
     | "ai_khong_sua_duoc_ngan_sach"
-    | "vuot_so_luot_goi_ai";
+    | "vuot_so_luot_goi_ai"
+    | "gioi_han_luot_ai"
+    | "live_ai_tat";
   dataSourceUsed: string;
   ngayDuLieu?: string;
   snapshotDate?: string;
@@ -68,7 +70,11 @@ export interface PlanRepairResult {
 
 export async function planWithRepair(
   incomingRequest: TripRequest,
-  options?: { provider?: GeminiProvider }
+  options?: {
+    provider?: GeminiProvider;
+    forceRulesOnly?: boolean;
+    lyDoDuPhong?: PlanRepairResult["lyDoDuPhong"];
+  }
 ): Promise<PlanRepairResult> {
   const startMs = Date.now();
   let request = { ...incomingRequest };
@@ -268,12 +274,7 @@ export async function planWithRepair(
   let currentRepairInfo: any = undefined;
 
   const fallbackToRules = (
-    lyDo:
-      | "het_luot_ai"
-      | "qua_thoi_gian"
-      | "loi_mang_ai"
-      | "ai_khong_sua_duoc_ngan_sach"
-      | "vuot_so_luot_goi_ai",
+    lyDo: NonNullable<PlanRepairResult["lyDoDuPhong"]>,
     curSoLanGoiAI: number,
     curSoLan429: number,
     vong: number
@@ -331,6 +332,10 @@ export async function planWithRepair(
       tuoiGioCache: dsUsedInfo.tuoiGio,
     };
   };
+
+  if (options?.forceRulesOnly) {
+    return fallbackToRules(options.lyDoDuPhong ?? "het_luot_ai", 0, 0, 0);
+  }
 
   for (let vong = 0; vong <= MAX_REPAIR_ROUNDS; vong++) {
     if (soLanGoiAI >= maxAICalls) {

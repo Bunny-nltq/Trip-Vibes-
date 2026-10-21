@@ -430,28 +430,28 @@ export function B1ChonNhanhScreen() {
           >
             <defs>
               <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#C9E5F8" />
-                <stop offset="50%" stopColor="#E2F0FB" />
-                <stop offset="100%" stopColor="#F5F9FE" />
+                <stop offset="0%" stopColor="var(--color-art-sky1)" />
+                <stop offset="50%" stopColor="var(--color-art-sky2)" />
+                <stop offset="100%" stopColor="var(--color-art-sky3)" />
               </linearGradient>
               <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#67B1D8" />
-                <stop offset="100%" stopColor="#3B8CB8" />
+                <stop offset="0%" stopColor="var(--color-art-sea-deep1)" />
+                <stop offset="100%" stopColor="var(--color-art-sea-deep2)" />
               </linearGradient>
               <linearGradient id="mountainGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#7EAF9B" />
-                <stop offset="100%" stopColor="#437762" />
+                <stop offset="0%" stopColor="var(--color-art-hill1)" />
+                <stop offset="100%" stopColor="var(--color-art-hill2)" />
               </linearGradient>
             </defs>
             <rect width="820" height="192" fill="url(#skyGrad)" />
             <path
               d="M260 130 C 380 70, 520 80, 680 125 L 820 120 L 820 192 L 260 192 Z"
-              fill="#9FC2D8"
+              fill="var(--color-art-sea-light)"
               opacity="0.6"
             />
             <path
               d="M420 120 C 530 85, 660 75, 820 110 L 820 192 L 420 192 Z"
-              fill="#88B49E"
+              fill="var(--color-art-hill3)"
               opacity="0.5"
             />
             <path
@@ -465,7 +465,7 @@ export function B1ChonNhanhScreen() {
             />
             <path
               d="M620 192 C 670 140, 750 135, 820 150 L 820 192 Z"
-              fill="#2E5C46"
+              fill="var(--color-art-hill4)"
               opacity="0.8"
             />
           </svg>
@@ -477,11 +477,11 @@ export function B1ChonNhanhScreen() {
               height="28"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#FFC24D"
+              stroke="var(--color-art-sun)"
               strokeWidth="2.5"
               strokeLinecap="round"
             >
-              <circle cx="12" cy="12" r="5" fill="#FFE58F" />
+              <circle cx="12" cy="12" r="5" fill="var(--color-art-sun-light)" />
               <line x1="12" y1="1" x2="12" y2="3" />
               <line x1="12" y1="21" x2="12" y2="23" />
               <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
@@ -556,7 +556,7 @@ export function B1ChonNhanhScreen() {
                         setDiemDiError(null);
                         setDiemDiCandidates([]);
                       }}
-                      style={{ padding: "4px 10px", fontSize: 12, background: "#FFFFFF" }}
+                      style={{ padding: "4px 10px", fontSize: 12, background: "var(--color-surface)" }}
                     >
                       <RefreshCw size={12} style={{ marginRight: 4 }} />
                       Đổi
@@ -636,7 +636,7 @@ export function B1ChonNhanhScreen() {
                           type="button"
                           className="Btn BtnSmall"
                           onClick={() => handleSelectDiemDiCandidate(c)}
-                          style={{ background: "#FFFFFF", fontSize: 12 }}
+                          style={{ background: "var(--color-surface)", fontSize: 12 }}
                         >
                           <MapPin size={12} style={{ marginRight: 4 }} />
                           {c.ten} ({c.quocGia})
@@ -720,7 +720,7 @@ export function B1ChonNhanhScreen() {
                         setDiemDenError(null);
                         setDiemDenCandidates([]);
                       }}
-                      style={{ padding: "4px 10px", fontSize: 12, background: "#FFFFFF" }}
+                      style={{ padding: "4px 10px", fontSize: 12, background: "var(--color-surface)" }}
                     >
                       <RefreshCw size={12} style={{ marginRight: 4 }} />
                       Đổi
@@ -800,7 +800,7 @@ export function B1ChonNhanhScreen() {
                           type="button"
                           className="Btn BtnSmall"
                           onClick={() => handleSelectDiemDenCandidate(c)}
-                          style={{ background: "#FFFFFF", fontSize: 12 }}
+                          style={{ background: "var(--color-surface)", fontSize: 12 }}
                         >
                           <MapPin size={12} style={{ marginRight: 4 }} />
                           {c.ten} ({c.quocGia})
@@ -937,40 +937,40 @@ export function B1ChonNhanhScreen() {
                   >
                     {preset.iconType === "couple" && (
                       <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
-                        <circle cx="17" cy="17" r="16" fill="#E8F4FD" />
-                        <ellipse cx="17" cy="25" rx="10" ry="3.5" fill="#F4D398" />
-                        <path d="M12 25 C13 18, 15 15, 17 11 C19 15, 21 18, 22 25" stroke="#7A5229" strokeWidth="2" strokeLinecap="round" />
-                        <path d="M17 11 C14 8, 10 9, 8 13 C12 13, 15 12, 17 11 Z" fill="#489C57" />
-                        <path d="M17 11 C20 8, 24 9, 26 13 C22 13, 19 12, 17 11 Z" fill="#58AB67" />
+                        <circle cx="17" cy="17" r="16" fill="var(--color-art-icon-bg-blue)" />
+                        <ellipse cx="17" cy="25" rx="10" ry="3.5" fill="var(--color-art-sand)" />
+                        <path d="M12 25 C13 18, 15 15, 17 11 C19 15, 21 18, 22 25" stroke="var(--color-art-wood-trunk)" strokeWidth="2" strokeLinecap="round" />
+                        <path d="M17 11 C14 8, 10 9, 8 13 C12 13, 15 12, 17 11 Z" fill="var(--color-art-palm1)" />
+                        <path d="M17 11 C20 8, 24 9, 26 13 C22 13, 19 12, 17 11 Z" fill="var(--color-art-palm2)" />
                       </svg>
                     )}
                     {preset.iconType === "group" && (
                       <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
-                        <circle cx="17" cy="17" r="16" fill="#EAF3FE" />
-                        <circle cx="12" cy="14" r="3.5" fill="#4B7BD8" />
-                        <circle cx="22" cy="14" r="3.5" fill="#4B7BD8" />
-                        <circle cx="17" cy="11.5" r="4" fill="#3B6DD0" />
-                        <path d="M9 25 C9 20, 15 20, 15 25" fill="#3B6DD0" />
-                        <path d="M19 25 C19 20, 25 20, 25 25" fill="#3B6DD0" />
-                        <path d="M13 25 C13 18.5, 21 18.5, 21 25" fill="#2454B8" />
+                        <circle cx="17" cy="17" r="16" fill="var(--color-art-icon-bg-primary)" />
+                        <circle cx="12" cy="14" r="3.5" fill="var(--color-art-blue-mid)" />
+                        <circle cx="22" cy="14" r="3.5" fill="var(--color-art-blue-mid)" />
+                        <circle cx="17" cy="11.5" r="4" fill="var(--color-art-blue-dark)" />
+                        <path d="M9 25 C9 20, 15 20, 15 25" fill="var(--color-art-blue-dark)" />
+                        <path d="M19 25 C19 20, 25 20, 25 25" fill="var(--color-art-blue-dark)" />
+                        <path d="M13 25 C13 18.5, 21 18.5, 21 25" fill="var(--color-art-blue-deep)" />
                       </svg>
                     )}
                     {preset.iconType === "family" && (
                       <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
-                        <circle cx="17" cy="17" r="16" fill="#EFF7ED" />
-                        <circle cx="13" cy="12" r="3.5" fill="#437762" />
-                        <circle cx="21" cy="12" r="3.5" fill="#437762" />
-                        <circle cx="17" cy="17" r="2.8" fill="#FFB74D" />
-                        <path d="M10 25 C10 19, 16 19, 16 25" fill="#437762" />
-                        <path d="M18 25 C18 19, 24 19, 24 25" fill="#437762" />
-                        <path d="M14 25 C14 22, 20 22, 20 25" fill="#FF9800" />
+                        <circle cx="17" cy="17" r="16" fill="var(--color-art-icon-bg-green)" />
+                        <circle cx="13" cy="12" r="3.5" fill="var(--color-art-hill2)" />
+                        <circle cx="21" cy="12" r="3.5" fill="var(--color-art-hill2)" />
+                        <circle cx="17" cy="17" r="2.8" fill="var(--color-art-warm-amber)" />
+                        <path d="M10 25 C10 19, 16 19, 16 25" fill="var(--color-art-hill2)" />
+                        <path d="M18 25 C18 19, 24 19, 24 25" fill="var(--color-art-hill2)" />
+                        <path d="M14 25 C14 22, 20 22, 20 25" fill="var(--color-art-orange)" />
                       </svg>
                     )}
                     {preset.iconType === "solo" && (
                       <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
-                        <circle cx="17" cy="17" r="16" fill="#EEF2FB" />
-                        <circle cx="17" cy="13" r="4.5" fill="#2B55D6" />
-                        <path d="M11 25 C11 19, 23 19, 23 25" fill="#2B55D6" />
+                        <circle cx="17" cy="17" r="16" fill="var(--color-art-icon-bg-tint)" />
+                        <circle cx="17" cy="13" r="4.5" fill="var(--color-primary)" />
+                        <path d="M11 25 C11 19, 23 19, 23 25" fill="var(--color-primary)" />
                       </svg>
                     )}
 
@@ -1037,7 +1037,7 @@ export function B1ChonNhanhScreen() {
                     padding: "6px 14px",
                     fontSize: 13,
                     fontWeight: nganSachTheo === "tong" ? 700 : 500,
-                    background: nganSachTheo === "tong" ? "#FFFFFF" : "transparent",
+                    background: nganSachTheo === "tong" ? "var(--color-surface)" : "transparent",
                     color:
                       nganSachTheo === "tong"
                         ? "var(--color-primary-brand)"
@@ -1058,7 +1058,7 @@ export function B1ChonNhanhScreen() {
                     padding: "6px 14px",
                     fontSize: 13,
                     fontWeight: nganSachTheo === "moi_nguoi" ? 700 : 500,
-                    background: nganSachTheo === "moi_nguoi" ? "#FFFFFF" : "transparent",
+                    background: nganSachTheo === "moi_nguoi" ? "var(--color-surface)" : "transparent",
                     color:
                       nganSachTheo === "moi_nguoi"
                         ? "var(--color-primary-brand)"
@@ -1374,47 +1374,47 @@ export function B1ChonNhanhScreen() {
           <svg width="294" height="680" viewBox="0 0 294 680" fill="none">
             <defs>
               <linearGradient id="baySky" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#CDE6F8" />
-                <stop offset="40%" stopColor="#E5F3FC" />
-                <stop offset="100%" stopColor="#F8FAFE" />
+                <stop offset="0%" stopColor="var(--color-art-sky4)" />
+                <stop offset="40%" stopColor="var(--color-art-sky5)" />
+                <stop offset="100%" stopColor="var(--color-art-sky6)" />
               </linearGradient>
               <linearGradient id="baySea" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#76B5DB" />
-                <stop offset="60%" stopColor="#4395C6" />
-                <stop offset="100%" stopColor="#256C98" />
+                <stop offset="0%" stopColor="var(--color-art-sea1)" />
+                <stop offset="60%" stopColor="var(--color-art-sea2)" />
+                <stop offset="100%" stopColor="var(--color-art-sea3)" />
               </linearGradient>
               <linearGradient id="woodPost" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#8C6239" />
-                <stop offset="100%" stopColor="#634424" />
+                <stop offset="0%" stopColor="var(--color-art-wood1)" />
+                <stop offset="100%" stopColor="var(--color-art-wood2)" />
               </linearGradient>
             </defs>
 
-            <path d="M0 240 C 60 210, 140 215, 294 250 L 294 400 L 0 400 Z" fill="#9CC5DB" opacity="0.6" />
-            <path d="M40 280 C 120 230, 220 240, 294 265 L 294 450 L 40 450 Z" fill="#75A88F" opacity="0.5" />
+            <path d="M0 240 C 60 210, 140 215, 294 250 L 294 400 L 0 400 Z" fill="var(--color-art-bay-sea)" opacity="0.6" />
+            <path d="M40 280 C 120 230, 220 240, 294 265 L 294 450 L 40 450 Z" fill="var(--color-art-hill5)" opacity="0.5" />
             <path d="M0 320 C 100 310, 200 330, 294 340 L 294 560 L 0 560 Z" fill="url(#baySea)" opacity="0.55" />
-            <path d="M80 680 C 140 540, 180 430, 294 410 L 294 680 Z" fill="#588D4A" />
-            <path d="M120 680 C 170 560, 230 490, 294 470 L 294 680 Z" fill="#3D6832" />
+            <path d="M80 680 C 140 540, 180 430, 294 410 L 294 680 Z" fill="var(--color-art-hill6)" />
+            <path d="M120 680 C 170 560, 230 490, 294 470 L 294 680 Z" fill="var(--color-art-hill7)" />
 
             <rect x="236" y="500" width="14" height="180" rx="3" fill="url(#woodPost)" />
-            <path d="M180 540 L 255 540 L 270 552 L 255 564 L 180 564 Z" fill="#9C6B3B" />
-            <text x="220" y="556" fill="#FBF5E8" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="sans-serif">
+            <path d="M180 540 L 255 540 L 270 552 L 255 564 L 180 564 Z" fill="var(--color-art-wood-sign1)" />
+            <text x="220" y="556" fill="var(--color-art-cream)" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="var(--font-sans)">
               Travel
             </text>
-            <path d="M170 575 L 260 575 L 275 587 L 260 599 L 170 599 Z" fill="#885A2E" />
-            <text x="218" y="591" fill="#FBF5E8" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="sans-serif">
+            <path d="M170 575 L 260 575 L 275 587 L 260 599 L 170 599 Z" fill="var(--color-art-wood-sign2)" />
+            <text x="218" y="591" fill="var(--color-art-cream)" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="var(--font-sans)">
               Explore
             </text>
-            <path d="M190 610 L 255 610 L 268 622 L 255 634 L 190 634 Z" fill="#744A22" />
-            <text x="226" y="626" fill="#FBF5E8" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="sans-serif">
+            <path d="M190 610 L 255 610 L 268 622 L 255 634 L 190 634 Z" fill="var(--color-art-wood-sign3)" />
+            <text x="226" y="626" fill="var(--color-art-cream)" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="var(--font-sans)">
               Love
             </text>
 
-            <circle cx="160" cy="650" r="10" fill="#FFFFFF" />
-            <circle cx="160" cy="650" r="4" fill="#FFC24D" />
-            <circle cx="190" cy="665" r="9" fill="#FFFFFF" />
-            <circle cx="190" cy="665" r="3.5" fill="#FFC24D" />
-            <circle cx="130" cy="660" r="8" fill="#FFFFFF" />
-            <circle cx="130" cy="660" r="3" fill="#FFC24D" />
+            <circle cx="160" cy="650" r="10" fill="var(--color-surface)" />
+            <circle cx="160" cy="650" r="4" fill="var(--color-art-sun)" />
+            <circle cx="190" cy="665" r="9" fill="var(--color-surface)" />
+            <circle cx="190" cy="665" r="3.5" fill="var(--color-art-sun)" />
+            <circle cx="130" cy="660" r="8" fill="var(--color-surface)" />
+            <circle cx="130" cy="660" r="3" fill="var(--color-art-sun)" />
           </svg>
         </div>
 

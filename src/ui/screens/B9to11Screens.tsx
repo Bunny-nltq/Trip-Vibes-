@@ -28,33 +28,33 @@ export function B9ChiDuongScreen() {
             overflow: "hidden",
             marginBottom: 20,
             height: 300,
-            background: "linear-gradient(135deg, #CFE5F8, #E9F4FE)",
+            background: "linear-gradient(135deg, var(--color-primary-tint), var(--color-surface-sub))",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            border: "1px solid #D5E0F3",
+            border: "1px solid var(--color-border)",
             position: "relative",
           }}
         >
-          <div style={{ textAlign: "center", color: "#5C6B88" }}>
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 8, color: "#2B55D6" }}>
+          <div style={{ textAlign: "center", color: "var(--color-text-sub)" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 8, color: "var(--color-primary)" }}>
               <Map size={48} />
             </div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: "#1F2A44" }}>Bản đồ chỉ đường trực tuyến</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: "var(--color-text)" }}>Bản đồ chỉ đường trực tuyến</div>
             <div style={{ fontSize: 13, marginTop: 4 }}>Ngũ Hành Sơn → Phố cổ Hội An</div>
           </div>
         </div>
 
         {/* Route Steps Card */}
         <div className="DayCard" style={{ padding: 24 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, borderBottom: "1px solid #EAF0FA", paddingBottom: 14 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, borderBottom: "1px solid var(--color-border)", paddingBottom: 14 }}>
             <div>
-              <div style={{ fontWeight: 700, fontSize: 16, color: "#1F2A44" }}>Khoảng cách</div>
-              <div style={{ color: "#5C6B88", fontSize: 13, marginTop: 2 }}>~12 km</div>
+              <div style={{ fontWeight: 700, fontSize: 16, color: "var(--color-text)" }}>Khoảng cách</div>
+              <div style={{ color: "var(--color-text-sub)", fontSize: 13, marginTop: 2 }}>~12 km</div>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontWeight: 700, fontSize: 16, color: "#1F2A44" }}>Thời gian dự kiến</div>
-              <div style={{ color: "#5C6B88", fontSize: 13, marginTop: 2 }}>~20 phút (xe máy/ô tô)</div>
+              <div style={{ fontWeight: 700, fontSize: 16, color: "var(--color-text)" }}>Thời gian dự kiến</div>
+              <div style={{ color: "var(--color-text-sub)", fontSize: 13, marginTop: 2 }}>~20 phút (xe máy/ô tô)</div>
             </div>
           </div>
 
@@ -70,9 +70,9 @@ export function B9ChiDuongScreen() {
                 gap: 12,
                 marginBottom: 10,
                 padding: "12px 14px",
-                background: "#F4F8FE",
+                background: "var(--color-surface-sub)",
                 borderRadius: 14,
-                border: "1px solid #E1EAF8",
+                border: "1px solid var(--color-border)",
                 alignItems: "center",
               }}
             >
@@ -80,12 +80,12 @@ export function B9ChiDuongScreen() {
                 style={{
                   width: 24,
                   height: 24,
-                  background: "#2B55D6",
+                  background: "var(--color-primary)",
                   borderRadius: 12,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "white",
+                  color: "var(--color-primary-text)",
                   fontSize: 12,
                   fontWeight: 700,
                   flexShrink: 0,
@@ -93,7 +93,7 @@ export function B9ChiDuongScreen() {
               >
                 {s.icon}
               </div>
-              <span style={{ fontSize: 14, color: "#34476E" }}>{s.text}</span>
+              <span style={{ fontSize: 14, color: "var(--color-text)" }}>{s.text}</span>
             </div>
           ))}
 
@@ -119,4 +119,3 @@ export function B9ChiDuongScreen() {
 
 export { B10ChonNguonScreen } from "./B10ChonNguonScreen";
 export { B11NganSachScreen } from "./B11NganSachScreen";
-export default B9ChiDuongScreen;

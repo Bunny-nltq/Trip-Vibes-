@@ -49,8 +49,8 @@ export function B7XacNhanScreen() {
                 width: 64,
                 height: 64,
                 borderRadius: "50%",
-                background: "#DCFCE7",
-                color: "var(--success)",
+                background: "var(--color-success-bg)",
+                color: "var(--color-success-text)",
                 marginBottom: 20,
               }}
             >

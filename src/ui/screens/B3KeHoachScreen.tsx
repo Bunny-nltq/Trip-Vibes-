@@ -78,6 +78,10 @@ function getLyDoDuPhongText(lyDo?: string): string {
       return "AI không cân đối được chi phí trong ngân sách";
     case "vuot_so_luot_goi_ai":
       return "đã đạt số lượt tương tác AI tối đa cho phép";
+    case "gioi_han_luot_ai":
+      return "đã đạt giới hạn lượt gọi AI trong ngày (GEMINI_DAILY_CAP) hoặc tối đa 5 lượt/giờ mỗi IP";
+    case "live_ai_tat":
+      return "chế độ AI trực tuyến (LIVE_AI_ENABLED) đang tắt";
     default:
       return "AI không thể hoàn tất kế hoạch";
   }
@@ -303,10 +307,10 @@ export function B3KeHoachScreen() {
                 alignItems: "center",
                 gap: 8,
                 padding: "8px 12px",
-                background: "#eff6ff",
-                border: "1px solid #bfdbfe",
+                background: "var(--color-primary-tint)",
+                border: "1px solid var(--color-border)",
                 borderRadius: "var(--r-md)",
-                color: "#1e40af",
+                color: "var(--color-primary)",
                 fontSize: 12,
                 marginBottom: 16,
               }}
@@ -330,10 +334,10 @@ export function B3KeHoachScreen() {
               <Check size={14} />
             </div>
             <div style={{ flex: 1 }}>
-              <div className="banner-title" style={{ color: "#166534" }}>
+              <div className="banner-title" style={{ color: "var(--color-success-text)" }}>
                 Kế hoạch được lập bằng quy tắc tự động
               </div>
-              <div className="banner-text" style={{ color: "#14532d" }}>
+              <div className="banner-text" style={{ color: "var(--color-success-text)" }}>
                 Kế hoạch này được lập bằng quy tắc tự động (phương án rẻ nhất phù hợp yêu cầu) vì{" "}
                 {getLyDoDuPhongText(
                   lyDoDuPhong ?? planResult?.lyDoDuPhong ?? (plan as any)?.lyDoDuPhong
@@ -353,9 +357,9 @@ export function B3KeHoachScreen() {
                     fontSize: 12,
                     fontWeight: 600,
                     borderRadius: "var(--r-sm)",
-                    background: "#ffffff",
-                    border: "1px solid #86efac",
-                    color: "#166534",
+                    background: "var(--color-surface)",
+                    border: "1px solid var(--color-border)",
+                    color: "var(--color-success-text)",
                     cursor: "pointer",
                   }}
                 >

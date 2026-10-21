@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const schemaVersion = 10;
+export const schemaVersion = 11;
 
 // ─── Enums cho TripRequest & Activity ────────────────────────────────────────
 
@@ -369,6 +369,8 @@ export const PlanSchema = z.object({
       "loi_mang_ai",
       "ai_khong_sua_duoc_ngan_sach",
       "vuot_so_luot_goi_ai",
+      "gioi_han_luot_ai",
+      "live_ai_tat",
     ])
     .optional(),
 });

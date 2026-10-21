@@ -5,27 +5,33 @@ import { useApp } from "@/ui/context/AppContext";
 export const SidebarContext = React.createContext<boolean>(false);
 
 export function SideNav() {
-  const isNested = React.useContext(SidebarContext);
-  const { screen, confirmed, nav } = useApp();
+  const { screen, nav, confirmed } = useApp();
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
-  if (isNested) {
-    return null;
-  }
-
-  // Xác định duy nhất 1 mục đang active theo màn hình hiện tại
-  let activeItem: "ke-hoach" | "chuyen-di" | "ngan-sach" | "cai-dat";
-
-  if (showSettingsModal) {
-    activeItem = "cai-dat";
-  } else if (["b8-chuyen-di", "b9-chi-duong"].includes(screen)) {
-    activeItem = "chuyen-di";
-  } else if (["b10-chon-nguon", "b11-ngan-sach"].includes(screen)) {
-    activeItem = "ngan-sach";
-  } else {
-    // b1-chon-nhanh, b2-dang-chay, b3-ke-hoach, b4-phuong-tien, b5-khach-san, b6-xem-truoc, b7-xac-nhan
-    activeItem = "ke-hoach";
-  }
+  // Xác định mục nào sáng duy nhất theo màn hình hiện tại
+  const activeItem = (() => {
+    if (showSettingsModal) return "cai-dat";
+    if (
+      [
+        "b1-chon-nhanh",
+        "b2-agent-dang-chay",
+        "b3-ke-hoach",
+        "b4-phuong-tien",
+        "b5-khach-san",
+        "b6-xem-truoc",
+        "b7-da-chot",
+      ].includes(screen)
+    ) {
+      return "ke-hoach";
+    }
+    if (["b8-chuyen-di", "b9-chi-duong"].includes(screen)) {
+      return "chuyen-di";
+    }
+    if (["b10-chon-nguon", "b11-ngan-sach"].includes(screen)) {
+      return "ngan-sach";
+    }
+    return "ke-hoach";
+  })();
 
   const handleNavClick = (target: "ke-hoach" | "chuyen-di" | "ngan-sach" | "cai-dat") => {
     if (target === "ke-hoach") {
@@ -47,10 +53,10 @@ export function SideNav() {
       {/* Logo Block */}
       <div className="LogoBlock" onClick={() => nav("b1-chon-nhanh")} style={{ cursor: "pointer" }}>
         <svg width="56" height="44" viewBox="0 0 62 48" aria-hidden="true">
-          <circle cx="43" cy="16" r="10" fill="#FFC24D" />
-          <path d="M2 44 22 14l11 16 7-9 20 23z" fill="#2FA7B5" />
-          <path d="M12 44 30 22l10 14 6-8 14 16z" fill="#3B82C4" />
-          <path d="M2 44h58" stroke="#1F3A7A" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="43" cy="16" r="10" fill="var(--color-art-sun)" />
+          <path d="M2 44 22 14l11 16 7-9 20 23z" fill="var(--color-art-mountain1)" />
+          <path d="M12 44 30 22l10 14 6-8 14 16z" fill="var(--color-art-mountain2)" />
+          <path d="M2 44h58" stroke="var(--color-art-line)" strokeWidth="2" strokeLinecap="round" />
         </svg>
         <div>
           <div className="LogoName Script">Trip Vibes</div>
@@ -98,7 +104,7 @@ export function SideNav() {
             strokeLinejoin="round"
           >
             <circle cx="12" cy="12" r="9" />
-            <path d="m15.5 8.5-2 5-5 2 2-5z" />
+            <polyline points="12 7 12 12 15 15" />
           </svg>
           <span>Chuyến đi</span>
           {!confirmed && (
@@ -111,7 +117,7 @@ export function SideNav() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={{ marginLeft: "auto", color: "#8593AE" }}
+              style={{ marginLeft: "auto", color: "var(--color-light-muted)" }}
               aria-label="Đang khóa"
             >
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
@@ -151,7 +157,7 @@ export function SideNav() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={{ marginLeft: "auto", color: "#8593AE" }}
+              style={{ marginLeft: "auto", color: "var(--color-light-muted)" }}
               aria-label="Đang khóa"
             >
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
@@ -176,7 +182,7 @@ export function SideNav() {
             strokeLinejoin="round"
           >
             <circle cx="12" cy="12" r="3" />
-            <path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
           </svg>
           <span>Cài đặt</span>
         </div>
@@ -194,12 +200,12 @@ export function SideNav() {
         {/* Promo */}
         <div className="Promo">
           <svg width="62" height="70" viewBox="0 0 62 70" aria-hidden="true">
-            <ellipse cx="22" cy="14" rx="20" ry="8" fill="#FFFFFF" opacity=".9" />
-            <ellipse cx="42" cy="10" rx="14" ry="6" fill="#FFFFFF" opacity=".9" />
-            <rect x="12" y="24" width="38" height="42" rx="14" fill="#F4A340" />
-            <rect x="18" y="44" width="26" height="16" rx="6" fill="#E8892A" />
-            <path d="M19 30 C 24 22, 38 22, 43 30" stroke="#C86F1A" strokeWidth="3" fill="none" />
-            <rect x="26" y="48" width="10" height="4" rx="2" fill="#FFD9A0" />
+            <ellipse cx="22" cy="14" rx="20" ry="8" fill="var(--color-surface)" opacity=".9" />
+            <ellipse cx="42" cy="10" rx="14" ry="6" fill="var(--color-surface)" opacity=".9" />
+            <rect x="12" y="24" width="38" height="42" rx="14" fill="var(--color-art-suit1)" />
+            <rect x="18" y="44" width="26" height="16" rx="6" fill="var(--color-art-suit2)" />
+            <path d="M19 30 C 24 22, 38 22, 43 30" stroke="var(--color-art-suit3)" strokeWidth="3" fill="none" />
+            <rect x="26" y="48" width="10" height="4" rx="2" fill="var(--color-art-suit-light)" />
           </svg>
           <div className="PromoText Script">Mỗi chuyến đi là một câu chuyện đẹp!</div>
         </div>
@@ -209,37 +215,37 @@ export function SideNav() {
           <svg width="150" height="190" viewBox="0 0 150 190" aria-hidden="true">
             <path
               d="M10 190 C 14 140, 28 110, 44 84"
-              stroke="#58A266"
+              stroke="var(--color-art-plant1)"
               strokeWidth="3"
               fill="none"
               strokeLinecap="round"
             />
             <path
               d="M44 84 C 24 80, 18 62, 24 48 C 40 54, 48 68, 44 84Z"
-              fill="#6DB878"
+              fill="var(--color-art-plant2)"
             />
             <path
               d="M30 130 C 12 122, 8 106, 14 94 C 30 100, 36 114, 30 130Z"
-              fill="#58A266"
+              fill="var(--color-art-plant1)"
             />
             <path
               d="M36 110 C 54 104, 62 88, 58 76 C 42 80, 34 94, 36 110Z"
-              fill="#7CC285"
+              fill="var(--color-art-plant3)"
             />
             <path
               d="M60 190 C 62 160, 74 140, 92 124"
-              stroke="#58A266"
+              stroke="var(--color-art-plant1)"
               strokeWidth="3"
               fill="none"
               strokeLinecap="round"
             />
             <path
               d="M92 124 C 76 118, 72 100, 80 90 C 94 98, 98 110, 92 124Z"
-              fill="#6DB878"
+              fill="var(--color-art-plant2)"
             />
             <path
               d="M76 160 C 96 156, 108 140, 104 128 C 86 130, 74 144, 76 160Z"
-              fill="#8CCB92"
+              fill="var(--color-art-plant4)"
             />
           </svg>
         </div>
@@ -251,7 +257,7 @@ export function SideNav() {
             <div className="UserName">Bunny</div>
             <div className="UserSub">Khám phá thế giới</div>
           </div>
-          <div style={{ color: "#5C6B88" }}>
+          <div style={{ color: "var(--color-text-sub)" }}>
             <svg
               width="18"
               height="18"
@@ -268,7 +274,7 @@ export function SideNav() {
         </div>
       </div>
 
-      {/* Settings Modal - chỉ mở khi người dùng bấm Cài đặt */}
+      {/* Settings Modal - Hộp Về Trip Vibes & Cài đặt */}
       {showSettingsModal && (
         <div
           style={{
@@ -286,16 +292,16 @@ export function SideNav() {
           <div
             className="DayCard"
             style={{
-              width: 380,
+              width: 440,
               padding: 24,
               boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
-              background: "#FFFFFF",
+              background: "var(--color-surface)",
               borderRadius: 22,
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
-              <div className="H1" style={{ fontSize: 18, margin: 0 }}>Về Trip Vibes & Cài đặt</div>
+              <div className="H1" style={{ fontSize: 18, margin: 0 }}>Về Trip Vibes</div>
               <button
                 type="button"
                 onClick={() => setShowSettingsModal(false)}
@@ -303,7 +309,7 @@ export function SideNav() {
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "#5C6B88",
+                  color: "var(--color-text-sub)",
                   fontSize: 18,
                   fontWeight: 700,
                   padding: 4,
@@ -313,20 +319,30 @@ export function SideNav() {
               </button>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ padding: "12px 14px", background: "#F4F8FE", borderRadius: 14 }}>
-                <div style={{ fontWeight: 600, fontSize: 13, color: "#1F2A44" }}>Nguồn dữ liệu</div>
-                <div style={{ fontSize: 12, color: "#5C6B88", marginTop: 4, lineHeight: 1.5 }}>
-                  Dữ liệu bản đồ và địa điểm từ OpenStreetMap contributors. Tỷ giá quy đổi ngoại tệ &quot;Rates By Exchange Rate API&quot; (khi có giá nước ngoài).
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ padding: "12px 14px", background: "var(--color-surface-sub)", borderRadius: 14 }}>
+                <div style={{ fontWeight: 600, fontSize: 13, color: "var(--color-text)" }}>Dữ liệu mẫu và ước tính</div>
+                <div style={{ fontSize: 12, color: "var(--color-text-sub)", marginTop: 4, lineHeight: 1.5 }}>
+                  Mọi chi phí và thời gian là ước tính phục vụ lập kế hoạch. Trip Vibes không đặt vé thật hay giữ phòng thực tế.
                 </div>
               </div>
-              <div style={{ padding: "12px 14px", background: "#F4F8FE", borderRadius: 14 }}>
-                <div style={{ fontWeight: 600, fontSize: 13, color: "#1F2A44" }}>Giao diện</div>
-                <div style={{ fontSize: 12, color: "#5C6B88", marginTop: 2 }}>Mặc định xanh trời hiện có</div>
+              <div style={{ padding: "12px 14px", background: "var(--color-surface-sub)", borderRadius: 14 }}>
+                <div style={{ fontWeight: 600, fontSize: 13, color: "var(--color-text)" }}>Bảo mật hoá đơn (Bill)</div>
+                <div style={{ fontSize: 12, color: "var(--color-text-sub)", marginTop: 4, lineHeight: 1.5 }}>
+                  Ảnh hoá đơn chỉ xử lý trong bộ nhớ tạm của phiên làm việc: tuyệt đối không lưu đĩa, không ghi nhật ký.
+                </div>
               </div>
-              <div style={{ padding: "12px 14px", background: "#F4F8FE", borderRadius: 14 }}>
-                <div style={{ fontWeight: 600, fontSize: 13, color: "#1F2A44" }}>Đơn vị tiền tệ</div>
-                <div style={{ fontSize: 12, color: "#5C6B88", marginTop: 2 }}>VND (đ)</div>
+              <div style={{ padding: "12px 14px", background: "var(--color-surface-sub)", borderRadius: 14 }}>
+                <div style={{ fontWeight: 600, fontSize: 13, color: "var(--color-text)" }}>Nguồn dữ liệu & Tỷ giá</div>
+                <div style={{ fontSize: 12, color: "var(--color-text-sub)", marginTop: 4, lineHeight: 1.5 }}>
+                  Dữ liệu địa điểm từ OpenStreetMap contributors. Tỷ giá quy đổi ngoại tệ cung cấp bởi &quot;Rates By Exchange Rate API&quot; (khi có giá nước ngoài).
+                </div>
+              </div>
+              <div style={{ padding: "12px 14px", background: "var(--color-surface-sub)", borderRadius: 14 }}>
+                <div style={{ fontWeight: 600, fontSize: 13, color: "var(--color-text)" }}>Pháp lý & Thị thực (Visa)</div>
+                <div style={{ fontSize: 12, color: "var(--color-text-sub)", marginTop: 4, lineHeight: 1.5 }}>
+                  Trip Vibes không tư vấn thủ tục visa hay xuất nhập cảnh. Vui lòng tham khảo cơ quan thẩm quyền trước khi khởi hành.
+                </div>
               </div>
             </div>
 

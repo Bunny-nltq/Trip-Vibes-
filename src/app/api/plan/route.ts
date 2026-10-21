@@ -14,6 +14,53 @@ export const maxDuration = 60;
  * - Yêu cầu 2: Chỉ dùng dữ liệu ĐÃ SẴN SÀNG. Chưa sẵn sàng thì trả 409 "du_lieu_chua_san_sang".
  * - Chạy qua planWithRepair (Agent + Repair tối đa 60s).
  */
+// Bộ nhớ tạm giới hạn lượt gọi theo IP (tối đa 5 lượt/giờ) và ngày (GEMINI_DAILY_CAP)
+interface IpRateLimit {
+  count: number;
+  resetAt: number;
+}
+const ipLimits = new Map<string, IpRateLimit>();
+
+interface DailyLimit {
+  day: string;
+  count: number;
+}
+let dailyCap: DailyLimit = {
+  day: new Date().toISOString().slice(0, 10),
+  count: 0,
+};
+
+function checkAndConsumeRateLimits(ip: string): { allowed: boolean; reason?: "gioi_han_ip" | "gioi_han_ngay" } {
+  const now = Date.now();
+  const today = new Date().toISOString().slice(0, 10);
+
+  // 1. Daily cap (mặc định 40)
+  if (dailyCap.day !== today) {
+    dailyCap = { day: today, count: 0 };
+  }
+  const maxDaily = Number(process.env.GEMINI_DAILY_CAP) || 40;
+  if (dailyCap.count >= maxDaily) {
+    return { allowed: false, reason: "gioi_han_ngay" };
+  }
+
+  // 2. IP limit (tối đa 5 lượt / giờ)
+  const ipRecord = ipLimits.get(ip);
+  if (ipRecord) {
+    if (now > ipRecord.resetAt) {
+      ipLimits.set(ip, { count: 1, resetAt: now + 3600_000 });
+    } else if (ipRecord.count >= 5) {
+      return { allowed: false, reason: "gioi_han_ip" };
+    } else {
+      ipRecord.count++;
+    }
+  } else {
+    ipLimits.set(ip, { count: 1, resetAt: now + 3600_000 });
+  }
+
+  dailyCap.count++;
+  return { allowed: true };
+}
+
 export async function POST(req: Request) {
   const start = Date.now();
 
@@ -88,7 +135,35 @@ export async function POST(req: Request) {
       }
     }
 
-    const result = await planWithRepair(tripRequest);
+    // Production AI limit check
+    const isProduction =
+      process.env.NODE_ENV === "production" ||
+      Boolean(process.env.VERCEL && process.env.VERCEL !== "0" && process.env.VERCEL !== "false");
+
+    let forceRulesOnly = false;
+    let fallbackReason: "het_luot_ai" | "gioi_han_luot_ai" | "live_ai_tat" | undefined;
+
+    if (isProduction) {
+      if (process.env.LIVE_AI_ENABLED !== "true") {
+        forceRulesOnly = true;
+        fallbackReason = "live_ai_tat";
+      } else {
+        const clientIp =
+          req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+          req.headers.get("x-real-ip") ||
+          "127.0.0.1";
+        const rateCheck = checkAndConsumeRateLimits(clientIp);
+        if (!rateCheck.allowed) {
+          forceRulesOnly = true;
+          fallbackReason = "gioi_han_luot_ai";
+        }
+      }
+    }
+
+    const result = await planWithRepair(tripRequest, {
+      forceRulesOnly,
+      lyDoDuPhong: fallbackReason,
+    });
     return NextResponse.json({
       ok: true,
       ...result,
