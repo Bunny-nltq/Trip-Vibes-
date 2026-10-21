@@ -153,6 +153,8 @@ export const DANH_SACH_MA_CANH_BAO = [
   "so_ngay_khong_hop_le",
   "ngan_sach_khong_hop_le",
   "diem_den_mac_dinh",
+  "gioi_han_ip",
+  "gioi_han_ngay",
 ] as const;
 
 export type MaCanhBao = (typeof DANH_SACH_MA_CANH_BAO)[number];

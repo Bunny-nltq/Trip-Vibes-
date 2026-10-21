@@ -61,6 +61,8 @@ export interface PlanRepairResult {
     | "ai_khong_sua_duoc_ngan_sach"
     | "vuot_so_luot_goi_ai"
     | "gioi_han_luot_ai"
+    | "gioi_han_ip"
+    | "gioi_han_ngay"
     | "live_ai_tat";
   dataSourceUsed: string;
   ngayDuLieu?: string;

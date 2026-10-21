@@ -24,6 +24,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Clock,
+  ThumbsUp,
 } from "lucide-react";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
@@ -354,7 +355,7 @@ export function B5KhachSanScreen() {
                           <div className="said" style={{ marginTop: 12 }}>
                             <div className="said-title">Đánh giá nổi bật:</div>
                             <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                              <span>👍</span> {h.praised.join(", ")}
+                              <ThumbsUp size={12} /> {h.praised.join(", ")}
                             </div>
                             {h.watchOut && h.watchOut.length > 0 && (
                               <div style={{ color: "var(--warning)", marginTop: 2, display: "flex", alignItems: "center", gap: 4 }}>

@@ -80,6 +80,10 @@ function getLyDoDuPhongText(lyDo?: string): string {
       return "đã đạt số lượt tương tác AI tối đa cho phép";
     case "gioi_han_luot_ai":
       return "đã đạt giới hạn lượt gọi AI trong ngày (GEMINI_DAILY_CAP) hoặc tối đa 5 lượt/giờ mỗi IP";
+    case "gioi_han_ip":
+      return "Đã đạt giới hạn lượt dùng AI trong giờ này; kế hoạch được lập bằng quy tắc tự động";
+    case "gioi_han_ngay":
+      return "Đã đạt giới hạn lượt dùng AI trong ngày; kế hoạch được lập bằng quy tắc tự động";
     case "live_ai_tat":
       return "chế độ AI trực tuyến (LIVE_AI_ENABLED) đang tắt";
     default:
@@ -338,11 +342,16 @@ export function B3KeHoachScreen() {
                 Kế hoạch được lập bằng quy tắc tự động
               </div>
               <div className="banner-text" style={{ color: "var(--color-success-text)" }}>
-                Kế hoạch này được lập bằng quy tắc tự động (phương án rẻ nhất phù hợp yêu cầu) vì{" "}
-                {getLyDoDuPhongText(
-                  lyDoDuPhong ?? planResult?.lyDoDuPhong ?? (plan as any)?.lyDoDuPhong
-                )}
-                . Bạn vẫn có thể đổi từng mục.
+                {(() => {
+                  const currentLyDo =
+                    lyDoDuPhong ?? planResult?.lyDoDuPhong ?? (plan as any)?.lyDoDuPhong;
+                  if (currentLyDo === "gioi_han_ip" || currentLyDo === "gioi_han_ngay") {
+                    return `${getLyDoDuPhongText(currentLyDo)}. Bạn vẫn có thể đổi từng mục.`;
+                  }
+                  return `Kế hoạch này được lập bằng quy tắc tự động (phương án rẻ nhất phù hợp yêu cầu) vì ${getLyDoDuPhongText(
+                    currentLyDo
+                  )}. Bạn vẫn có thể đổi từng mục.`;
+                })()}
               </div>
               <div style={{ marginTop: 8 }}>
                 <button

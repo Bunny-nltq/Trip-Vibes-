@@ -5,33 +5,15 @@
  * Quy tắc:
  * - Màu, cỡ chữ, khoảng cách, bo góc chỉ lấy từ biến CSS sinh từ src/design/tokens.json.
  * - Thất bại (exit code 1) nếu còn mã hex (#[0-9a-fA-F]{3,8}) hoặc tên font viết cứng trong src/ui.
+ *
+ * Sử dụng hàm thuần quetNoiDung từ scripts/lib/quetMau.ts
  */
 
 import fs from "node:fs";
 import path from "node:path";
+import { quetNoiDung, type ViPhamMau } from "./lib/quetMau";
 
 const UI_DIR = path.resolve(process.cwd(), "src/ui");
-
-// Regex tìm mã màu HEX: #RGB, #RGBA, #RRGGBB, #RRGGBBAA
-const HEX_COLOR_REGEX = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})\b/g;
-
-// Các tên font cứng không được viết trực tiếp trong src/ui
-const HARDCODED_FONTS = [
-  "Be Vietnam Pro",
-  "Dancing Script",
-  "Inter",
-  "Roboto",
-  "Arial",
-  "sans-serif",
-  "cursive",
-];
-
-interface Violation {
-  file: string;
-  line: number;
-  type: "Mã hex" | "Tên font";
-  content: string;
-}
 
 function scanDirectory(dir: string): string[] {
   let files: string[] = [];
@@ -60,51 +42,13 @@ export function runCheckColors(): boolean {
   console.log("================================================================================\n");
 
   const files = scanDirectory(UI_DIR);
-  const violations: Violation[] = [];
+  const violations: ViPhamMau[] = [];
 
   for (const file of files) {
     const relPath = path.relative(process.cwd(), file).replace(/\\/g, "/");
     const content = fs.readFileSync(file, "utf-8");
-    const lines = content.split("\n");
-
-    lines.forEach((lineText, idx) => {
-      // Bỏ qua dòng comment nếu có
-      const trimmed = lineText.trim();
-      if (trimmed.startsWith("//") || trimmed.startsWith("/*") || trimmed.startsWith("*")) {
-        return;
-      }
-
-      // 1. Kiểm tra mã HEX
-      const hexMatches = lineText.match(HEX_COLOR_REGEX);
-      if (hexMatches) {
-        // Loại trừ trường hợp id SVG "#clip" hoặc URL "#..."
-        for (const match of hexMatches) {
-          violations.push({
-            file: relPath,
-            line: idx + 1,
-            type: "Mã hex",
-            content: lineText.trim(),
-          });
-        }
-      }
-
-      // 2. Kiểm tra tên font cứng (chỉ kiểm tra khi xuất hiện trong chuỗi định nghĩa style / font-family)
-      for (const font of HARDCODED_FONTS) {
-        if (
-          (lineText.includes(`"${font}"`) ||
-            lineText.includes(`'${font}'`) ||
-            (lineText.includes("fontFamily") && lineText.includes(font))) &&
-          !lineText.includes("var(--font-")
-        ) {
-          violations.push({
-            file: relPath,
-            line: idx + 1,
-            type: "Tên font",
-            content: lineText.trim(),
-          });
-        }
-      }
-    });
+    const fileViolations = quetNoiDung(content, relPath);
+    violations.push(...fileViolations);
   }
 
   if (violations.length > 0) {
