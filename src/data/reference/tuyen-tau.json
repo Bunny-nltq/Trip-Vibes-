@@ -1,0 +1,28 @@
+{
+  "ghiChu": "Danh sách thành phố có ga tàu khách liên tỉnh. ỨNG VIÊN do người dùng đưa, CHƯA đối chiếu với dsvn.vn",
+  "trangThai": "chua_doi_chieu",
+  "thanhPho": [
+    "Hà Nội",
+    "Hải Phòng",
+    "Lào Cai",
+    "Lạng Sơn",
+    "Ninh Bình",
+    "Nam Định",
+    "Thanh Hóa",
+    "Vinh",
+    "Hà Tĩnh",
+    "Đồng Hới",
+    "Đông Hà",
+    "Huế",
+    "Đà Nẵng",
+    "Tam Kỳ",
+    "Quảng Ngãi",
+    "Quy Nhơn",
+    "Tuy Hòa",
+    "Nha Trang",
+    "Phan Rang",
+    "Phan Thiết",
+    "Biên Hòa",
+    "Hồ Chí Minh"
+  ]
+}

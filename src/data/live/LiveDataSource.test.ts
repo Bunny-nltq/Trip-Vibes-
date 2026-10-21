@@ -22,7 +22,7 @@ describe("LiveDataSource & Data Pipeline Tests (Bước 19)", () => {
   // ─── YÊU CẦU 3: Phương tiện ước lượng tính lúc đọc, không lưu trong snapshot ───
   describe("Yêu cầu 3: Phương tiện ước lượng tính lúc đọc", () => {
     const diemDiVN: DiemDen = {
-      ten: "Điểm Gốc",
+      ten: "TP.HCM",
       quocGia: "Việt Nam",
       maQuocGia: "VN",
       toaDo: { lat: 0, lng: 0 },
@@ -32,7 +32,7 @@ describe("LiveDataSource & Data Pipeline Tests (Bước 19)", () => {
     };
 
     const diemDenVN: DiemDen = {
-      ten: "Điểm Đến VN",
+      ten: "Hà Nội",
       quocGia: "Việt Nam",
       maQuocGia: "VN",
       toaDo: { lat: 5.3959, lng: 0 }, // 600.0 km
@@ -112,6 +112,38 @@ describe("LiveDataSource & Data Pipeline Tests (Bước 19)", () => {
       expect(xeKhach?.durationMinutes).toBe(1080);
       expect(xeKhach?.pricePerPerson).toBe(600_000);
       expect(xeKhach?.nguon).toBe("uoc_luong:khoang_cach:600km");
+    });
+
+    it("điểm đến Đà Lạt (không có ga tàu): chỉ có may_bay và xe_khach, KHÔNG có tau", async () => {
+      const diemDenDaLat: DiemDen = {
+        ...diemDenVN,
+        ten: "Đà Lạt",
+      };
+      const fakeSnapshot: SnapshotData = {
+        diemDen: "Đà Lạt",
+        createdAt: "2026-10-20T00:00:00Z",
+        khachSans: [],
+        quanAns: [],
+        cafes: [],
+        hoatDongs: [],
+        transports: [],
+      };
+      const ds = new LiveDataSource("snapshot", undefined, diemDenDaLat, diemDiVN);
+      vi.spyOn(ds as any, "loadSnapshot").mockReturnValue(fakeSnapshot);
+
+      const transports = await ds.getTransports();
+      const tau = transports.find((t) => t.type === "TRAIN");
+      expect(tau).toBeUndefined();
+
+      const mayBay = transports.find((t) => t.type === "PLANE");
+      expect(mayBay).toBeDefined();
+      expect(mayBay?.durationMinutes).toBe(138);
+      expect(mayBay?.pricePerPerson).toBe(1_260_000);
+
+      const xeKhach = transports.find((t) => t.type === "BUS");
+      expect(xeKhach).toBeDefined();
+      expect(xeKhach?.durationMinutes).toBe(1080);
+      expect(xeKhach?.pricePerPerson).toBe(600_000);
     });
 
     it("điểm đến nước khác (maQuocGia khác 'VN'): chỉ có may_bay", async () => {

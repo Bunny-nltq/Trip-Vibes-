@@ -22,6 +22,7 @@ import {
 import { khoangCachKm } from "@/core/haversine";
 import { layTyGiaSangVND } from "./tyGiaClient";
 import { quyDoiVND } from "@/core/quyDoiTien";
+import { coTuyenTau } from "../reference/tuyenTau";
 
 const DATA_TTL_MS =
   parseInt(process.env.DATA_TTL_HOURS ?? "24", 10) * 60 * 60 * 1000;
@@ -149,7 +150,10 @@ export function taoPhuongTienUocLuong(
   diemDi: DiemDen,
   diemDen: DiemDen
 ): Transport[] {
-  const loaiList = cacLoaiPhuongTienUocLuong(diemDi, diemDen);
+  let loaiList = cacLoaiPhuongTienUocLuong(diemDi, diemDen);
+  if (!coTuyenTau(diemDi.ten, diemDen.ten)) {
+    loaiList = loaiList.filter((l) => l !== "tau");
+  }
   if (loaiList.length === 0) return [];
 
   const distanceKm = khoangCachKm(diemDi.toaDo, diemDen.toaDo);
