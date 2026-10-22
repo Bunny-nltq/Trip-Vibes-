@@ -1,0 +1,33 @@
+=== CẤU TRÚC TRANG CHỦ (/) ===
+Độ dài HTML /: 64212 ký tự
+Độ dài HTML /lap-ke-hoach: 26784 ký tự
+
+--- Thẻ H1, H2, H3 của / ---
+<h1>: Lên lịch trình du lịch chuẩn xác, vừa vặn ngân sách
+<h2>: Điểm đến được hỗ trợ chính thức
+<h3>: Đà Nẵng
+<h3>: Hà Nội
+<h3>: Đà Lạt
+<h3>: Bangkok
+<h3>: Seoul
+<h2>: Trải nghiệm lập kế hoạch minh bạch và chủ động
+<h3>: Kế hoạch có giá đúng ngân sách
+<h3>: Xem trước thay đổi trước khi chốt
+<h3>: Chỉ đường bằng Google Maps
+<h3>: Đọc bill &amp; theo dõi chi tiêu
+<h3>: Cam kết minh bạch và an toàn dữ liệu
+<h2>: Câu hỏi thường gặp
+
+--- Thẻ <a> của / ---
+Tổng số thẻ <a>: 14
+Ba liên kết đầu:
+  1. #main-content
+  2. /
+  3. #diem-den
+
+--- Các chuỗi đặc biệt trong / ---
+Chứa "OpenStreetMap contributors": true
+Chứa "Sắp có": true
+Chứa chữ "emoji": false
+Số ký tự emoji vi phạm (quetEmoji): 0
+Chứa ký tự emoji: false

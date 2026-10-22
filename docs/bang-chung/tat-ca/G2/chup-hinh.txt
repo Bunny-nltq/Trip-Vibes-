@@ -1,0 +1,2 @@
+Ảnh chụp màn hình trình duyệt: chưa chụp
+(Thực hiện theo chỉ dẫn của đề bài: "Không chụp được thì ghi 'chưa chụp' (KHÔNG giả)")
