@@ -427,7 +427,7 @@ export function B10ChonNguonScreen() {
               <RefreshCw size={36} className="spinner" style={{ color: "var(--color-primary)", margin: "0 auto 16px" }} />
               <div className="InfoTitle" style={{ fontSize: 16 }}>Đang đọc thông tin từ ảnh bill...</div>
               <div className="Hint" style={{ marginTop: 8 }}>
-                AI đang nhận diện tên cửa hàng, ngày và số tiền thanh toán
+                AI đang nhận diện tên cửa hàng, ngày và số tiền chi tiêu
               </div>
             </div>
           </div>
@@ -453,7 +453,7 @@ export function B10ChonNguonScreen() {
                 </div>
                 <div className="BannerText">
                   {specialStatus === "khong_phai_chung_tu"
-                    ? "Hệ thống phát hiện ảnh tải lên không phải hóa đơn thanh toán. Bạn có thể chọn ảnh khác hoặc nhập tay."
+                    ? "Hệ thống phát hiện ảnh tải lên không phải hóa đơn chi tiêu. Bạn có thể chọn ảnh khác hoặc nhập tay."
                     : "Vui lòng nhập số tiền và nội dung bằng tay để tiếp tục ghi vào sổ chi tiêu."}
                 </div>
               </div>

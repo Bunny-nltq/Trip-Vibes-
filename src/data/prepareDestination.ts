@@ -24,39 +24,13 @@ import {
 import { researchTransports } from "./live/researchTransport";
 import { researchGiaDiemDen } from "./live/researchGiaDiemDen";
 
-export type CategoryKey =
-  | "khach_san"
-  | "quan_an"
-  | "cafe"
-  | "hoat_dong"
-  | "phuong_tien"
-  | "gia_diem_den";
-
-export type CategoryStatus = "cho" | "dang_chay" | "xong" | "thieu" | "loi";
-
-export interface CategoryProgress {
-  trangThai: CategoryStatus;
-  soMuc?: number;
-  mayChu?: string;
-  ms?: number;
-  lyDo?: string;
-}
-
-export type JobStatus = "cho" | "dang_chay" | "san_sang" | "thieu" | "loi";
-
-export interface DestinationJob {
-  id: string;
-  destinationKey: string;
-  diemDen: DiemDen;
-  diemDi: DiemDen;
-  soNgay: number;
-  trangThai: JobStatus;
-  taoLuc: number;
-  capNhatLuc: number;
-  tienTrinh: Record<CategoryKey, CategoryProgress>;
-  lyDoLoi?: string;
-  thieuChiTiet?: string[];
-}
+export type {
+  CategoryKey,
+  CategoryStatus,
+  CategoryProgress,
+  JobStatus,
+  DestinationJob,
+} from "@/contracts";
 
 // Bộ nhớ trong lưu các công việc chuẩn bị dữ liệu
 const jobsByDestinationKey = new Map<string, DestinationJob>();

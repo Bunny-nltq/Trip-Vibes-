@@ -1,6 +1,46 @@
 import { z } from "zod";
 
-export const schemaVersion = 13;
+export const schemaVersion = 14;
+
+// ─── Destination Job & Category Progress ──────────────────────────────────────
+
+export const CategoryKeySchema = z.enum([
+  "khach_san",
+  "quan_an",
+  "cafe",
+  "hoat_dong",
+  "phuong_tien",
+  "gia_diem_den",
+]);
+export type CategoryKey = z.infer<typeof CategoryKeySchema>;
+
+export const CategoryStatusSchema = z.enum(["cho", "dang_chay", "xong", "thieu", "loi"]);
+export type CategoryStatus = z.infer<typeof CategoryStatusSchema>;
+
+export interface CategoryProgress {
+  trangThai: CategoryStatus;
+  soMuc?: number;
+  mayChu?: string;
+  ms?: number;
+  lyDo?: string;
+}
+
+export const JobStatusSchema = z.enum(["cho", "dang_chay", "san_sang", "thieu", "loi"]);
+export type JobStatus = z.infer<typeof JobStatusSchema>;
+
+export interface DestinationJob {
+  id: string;
+  destinationKey: string;
+  diemDen: DiemDen;
+  diemDi: DiemDen;
+  soNgay: number;
+  trangThai: JobStatus;
+  taoLuc: number;
+  capNhatLuc: number;
+  tienTrinh: Record<CategoryKey, CategoryProgress>;
+  lyDoLoi?: string;
+  thieuChiTiet?: string[];
+}
 
 // ─── Enums cho TripRequest & Activity ────────────────────────────────────────
 

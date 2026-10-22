@@ -23,7 +23,7 @@ export async function GET() {
       soQuanAn: quanAns.length,
       soCafe: cafes.length,
       soHoatDong: hoatDongs.length,
-      nguon: "OpenStreetMap Overpass API + Tavily",
+      nguon: "OpenStreetMap Overpass API",
     });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);

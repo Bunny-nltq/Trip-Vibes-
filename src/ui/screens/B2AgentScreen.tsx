@@ -4,7 +4,7 @@ import { useApp } from "@/ui/context/AppContext";
 import { getDiemDenTen, type DiemDen } from "@/contracts";
 import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
-import type { CategoryKey, CategoryProgress } from "@/data/prepareDestination";
+import type { CategoryKey, CategoryProgress } from "@/contracts";
 import {
   Check,
   AlertCircle,
