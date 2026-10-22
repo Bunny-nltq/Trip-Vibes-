@@ -1,0 +1,46 @@
+
+> trip-vibes@0.1.0 eval:bill
+> tsx eval/run-bill.ts
+
+
+======================================================
+Bắt đầu đọc ảnh trong: D:\Trip_Vibes\eval\bills
+Số ảnh: 5 | Có expected.json: true
+Model: gemini-3.8-flash | Prompt: v1
+======================================================
+
+Tải cache cho b01_nhahang_haisan.jpg.
+Tải cache cho b02_cafe.jpg.
+Chạy AI cho b03_ve_tham_quan.jpg...
+
+========================================================
+
+📄 File: b01_nhahang_haisan.jpg
+   ✅ Đúng chuẩn
+node.exe : ❌ Lỗi API (Rate Limit/503) khi xử lý b03_ve_tham_quan.jpg. Dừng toàn bộ.
+At C:\Program Files\nodejs\npm.ps1:29 char:3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (❌ Lỗi API (Rate.... Dừng toàn bộ.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   - Cảnh báo từ core: Không
+   - Độ tin cậy (AI báo): cao
+
+📄 File: b02_cafe.jpg
+   ✅ Đúng chuẩn
+   - Cảnh báo từ core: Không
+   - Độ tin cậy (AI báo): cao
+
+========================================================
+TỔNG HỢP (dựa trên expected.json):
+- Số hóa đơn thật đúng: 2/2 (Tối đa 4 hóa đơn thật)
+- Xử lý đúng "không phải hóa đơn": 0/0
+- Không có lỗi nguy hiểm nào (sai số tiền đều có cảnh báo hợp lý).
+- Thời gian xử lý trung bình: 7223 ms
+- Tên model: gemini-3.8-flash
+- Phiên bản prompt: v1
+- Lần chạy: 2026-10-22T00:06:17.921Z
+========================================================
+
+Đã lưu kết quả tại D:\Trip_Vibes\eval\results\bill-2026-10-22.json

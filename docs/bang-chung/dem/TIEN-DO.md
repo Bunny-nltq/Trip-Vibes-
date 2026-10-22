@@ -7,4 +7,5 @@
 | 2026-10-21 22:50:30 | N2 | BỎ QUA | — | Tệp .dem-cho-phep-gemini không tồn tại, bỏ qua đánh giá Gemini theo luật cứng |
 | 2026-10-21 23:09:00 | N3 | XONG | a955b1d | Trang chủ gọn 6 khối, tách route /lap-ke-hoach, chuyển dữ liệu B1, cổng N3 DAT |
 | 2026-10-21 23:15:30 | N4 | XONG | 6306330 | Kiểm tra bản build cổng 3012: / 200, /lap-ke-hoach 200, /api/health 200 (5 snapshots), /demo 404, /api/plan 200 (snapshot, 0 AI) |
+| 2026-10-22 07:06:00 | N2 | DỪNG (429) | 02ccc6c | eval:ai-rate xong trọn (commit 02ccc6c). Dừng toàn bộ tại eval:bill do lỗi 429 ở b03_ve_tham_quan.jpg |
 
