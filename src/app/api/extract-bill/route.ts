@@ -4,19 +4,31 @@ import { checkBill } from "@/core/bill/checkBill";
 
 export async function POST(req: Request) {
   const startMs = Date.now();
+
+  if (process.env.LIVE_AI_ENABLED !== "true" || !process.env.GEMINI_API_KEY) {
+    return NextResponse.json(
+      {
+        ok: false,
+        maLoi: "ai_tat",
+        thongBao: "Tính năng này đang tắt trên bản hiện tại.",
+      },
+      { status: 503 }
+    );
+  }
+
   try {
     const formData = await req.formData();
-    const image = formData.get("image") as File | null;
+    const image = (formData.get("image") || formData.get("file")) as File | null;
     if (!image) {
-      return NextResponse.json({ error: "Thiếu file ảnh" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Thiếu file ảnh" }, { status: 400 });
     }
 
     if (image.size > 5 * 1024 * 1024) {
-      return NextResponse.json({ error: "File vượt quá 5MB" }, { status: 413 });
+      return NextResponse.json({ ok: false, error: "File vượt quá 5MB" }, { status: 413 });
     }
 
     if (!["image/jpeg", "image/png", "image/webp"].includes(image.type)) {
-      return NextResponse.json({ error: "Chỉ hỗ trợ jpeg, png, webp" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Chỉ hỗ trợ jpeg, png, webp" }, { status: 400 });
     }
 
     const arrayBuffer = await image.arrayBuffer();
@@ -29,7 +41,7 @@ export async function POST(req: Request) {
     if (bytes.length >= 12 && bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50) isValidType = true; // webp
     
     if (!isValidType) {
-      return NextResponse.json({ error: "Chỉ hỗ trợ jpeg, png, webp hợp lệ" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Chỉ hỗ trợ jpeg, png, webp hợp lệ" }, { status: 400 });
     }
 
     const base64Bytes = Buffer.from(arrayBuffer).toString('base64');
@@ -40,10 +52,11 @@ export async function POST(req: Request) {
     const ms = Date.now() - startMs;
     return NextResponse.json({ ok: true, extraction, ms });
   } catch (err: any) {
-    const msg = err.message || String(err);
+    console.error("Lỗi extract-bill:", err);
+    const msg = err?.message || String(err);
     if (msg.includes("429") || msg.includes("RESOURCE_EXHAUSTED")) {
-      return NextResponse.json({ error: "Đã vượt hạn mức sử dụng Gemini API. Vui lòng thử lại sau." }, { status: 429 });
+      return NextResponse.json({ ok: false, error: "Đã vượt hạn mức sử dụng. Vui lòng thử lại sau." }, { status: 429 });
     }
-    return NextResponse.json({ error: "Lỗi AI không đọc được ảnh: " + msg }, { status: 502 });
+    return NextResponse.json({ ok: false, error: "Lỗi AI không đọc được ảnh." }, { status: 502 });
   }
 }

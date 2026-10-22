@@ -163,10 +163,96 @@ function hasSpecificCacheForDestination(diemDen: DiemDen, diemDi: DiemDen = DEFA
 }
 
 /**
+ * Phân giải DiemDen từ file snapshot nếu có
+ */
+export function getSnapshotDiemDen(diemDen: DiemDen | string): DiemDen | null {
+  if (typeof diemDen !== "string") {
+    return diemDen;
+  }
+  const dir = path.join(process.cwd(), "src", "data", "snapshots");
+  if (!fs.existsSync(dir)) return null;
+
+  const targetNorm = normalizeDestName(diemDen);
+  if (!targetNorm) return null;
+
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json"));
+
+  for (const f of files) {
+    try {
+      const raw = JSON.parse(fs.readFileSync(path.join(dir, f), "utf-8"));
+      const dName = typeof raw.diemDen === "string" ? raw.diemDen : raw.diemDen?.ten ?? "";
+      const fNorm = normalizeDestName(f.replace(".json", ""));
+      const dNorm = normalizeDestName(dName);
+
+      if (
+        (fNorm && (fNorm.includes(targetNorm) || targetNorm.includes(fNorm))) ||
+        (dNorm && (dNorm.includes(targetNorm) || targetNorm.includes(dNorm)))
+      ) {
+        const places = [
+          ...(raw.khachSans || []),
+          ...(raw.quanAns || []),
+          ...(raw.cafes || []),
+          ...(raw.hoatDongs || []),
+        ];
+
+        const lat =
+          places.length > 0
+            ? Number(
+                (
+                  places.reduce((s: number, p: any) => s + p.toaDo.lat, 0) /
+                  places.length
+                ).toFixed(4)
+              )
+            : 0;
+        const lng =
+          places.length > 0
+            ? Number(
+                (
+                  places.reduce((s: number, p: any) => s + p.toaDo.lng, 0) /
+                  places.length
+                ).toFixed(4)
+              )
+            : 0;
+
+        let quocGia = "Việt Nam";
+        let maQuocGia = "VN";
+        let tienTe = "VND";
+        if (lat > 30) {
+          quocGia = "Hàn Quốc";
+          maQuocGia = "KR";
+          tienTe = "KRW";
+        } else if (lng < 101.5 && lat < 16) {
+          quocGia = "Thái Lan";
+          maQuocGia = "TH";
+          tienTe = "THB";
+        }
+
+        const ten = dName || diemDen;
+        const ngayLay = (raw.ngayTao || raw.createdAt || "2026-10-20").slice(0, 10);
+
+        return {
+          ten,
+          quocGia,
+          maQuocGia,
+          toaDo: { lat, lng },
+          tienTe,
+          nguon: "nominatim" as const,
+          ngayLay,
+        };
+      }
+    } catch {
+      // Bỏ qua file lỗi
+    }
+  }
+
+  return null;
+}
+
+/**
  * Kiểm tra xem dữ liệu điểm đến đã sẵn sàng hay chưa (snapshot hoặc cache)
  */
 export function isDataReadyForDestination(
-  diemDen: DiemDen,
+  diemDen: DiemDen | string,
   diemDi: DiemDen = DEFAULT_DIEM_DI,
   soNgay: number = 3
 ): boolean {
@@ -180,15 +266,20 @@ export function isDataReadyForDestination(
     return false;
   }
 
+  const resolved = typeof diemDen === "string" ? getSnapshotDiemDen(diemDen) : diemDen;
+  if (!resolved) {
+    return false;
+  }
+
   // 3. Nếu đã có công việc với trạng thái "san_sang" trong memory
-  const key = `${diemDen.maQuocGia || "VN"}_${normalizeDestName(diemDen.ten)}`;
+  const key = `${resolved.maQuocGia || "VN"}_${normalizeDestName(resolved.ten)}`;
   const existingJob = jobsByDestinationKey.get(key);
   if (existingJob && existingJob.trangThai === "san_sang") {
     return true;
   }
 
   // 4. Kiểm tra cache chính xác trên đĩa
-  return hasSpecificCacheForDestination(diemDen, diemDi);
+  return hasSpecificCacheForDestination(resolved, diemDi);
 }
 
 /**

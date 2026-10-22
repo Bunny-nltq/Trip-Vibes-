@@ -12,6 +12,7 @@ import { lapKeHoachTuDong } from "@/core/lapKeHoachTuDong";
 import { locUngVienTheoNganSach } from "@/core/locUngVienTheoNganSach";
 import { MAX_REPAIR_ROUNDS } from "@/core/assumptions";
 import { geocodeDestination, type GeocodeCandidate } from "@/data/live/geocodeClient";
+import { getSnapshotDiemDen } from "@/data/prepareDestination";
 
 import { getLastOverpassStatsSummary } from "@/data/live/overpassClient";
 
@@ -104,20 +105,26 @@ export async function planWithRepair(
   // Geocode nếu diemDen là string hoặc cần kiểm tra mơ hồ
   let resolvedDiemDen: DiemDen;
   if (typeof request.diemDen === "string") {
-    const geo = await geocodeDestination(request.diemDen);
-    if (geo.status === "can_lam_ro") {
-      emptyResult.lyDo = "diem_den_mo_ho";
-      emptyResult.ungVien = geo.ungVien;
-      emptyResult.ms = Date.now() - startMs;
-      return emptyResult;
+    const snapDiemDen = getSnapshotDiemDen(request.diemDen);
+    if (snapDiemDen) {
+      resolvedDiemDen = snapDiemDen;
+      request.diemDen = resolvedDiemDen;
+    } else {
+      const geo = await geocodeDestination(request.diemDen);
+      if (geo.status === "can_lam_ro") {
+        emptyResult.lyDo = "diem_den_mo_ho";
+        emptyResult.ungVien = geo.ungVien;
+        emptyResult.ms = Date.now() - startMs;
+        return emptyResult;
+      }
+      if (geo.status === "khong_tim_thay") {
+        emptyResult.lyDo = "thieu_thong_tin";
+        emptyResult.ms = Date.now() - startMs;
+        return emptyResult;
+      }
+      resolvedDiemDen = geo.diemDen;
+      request.diemDen = resolvedDiemDen;
     }
-    if (geo.status === "khong_tim_thay") {
-      emptyResult.lyDo = "thieu_thong_tin";
-      emptyResult.ms = Date.now() - startMs;
-      return emptyResult;
-    }
-    resolvedDiemDen = geo.diemDen;
-    request.diemDen = resolvedDiemDen;
   } else {
     resolvedDiemDen = request.diemDen;
   }
@@ -125,9 +132,14 @@ export async function planWithRepair(
   let resolvedDiemDi: DiemDen = DEFAULT_DIEM_DI;
   if (request.diemDi) {
     if (typeof request.diemDi === "string") {
-      const geoDi = await geocodeDestination(request.diemDi);
-      if (geoDi.status === "thanh_cong") {
-        resolvedDiemDi = geoDi.diemDen;
+      const snapDiemDi = getSnapshotDiemDen(request.diemDi);
+      if (snapDiemDi) {
+        resolvedDiemDi = snapDiemDi;
+      } else {
+        const geoDi = await geocodeDestination(request.diemDi);
+        if (geoDi.status === "thanh_cong") {
+          resolvedDiemDi = geoDi.diemDen;
+        }
       }
     } else {
       resolvedDiemDi = request.diemDi;
@@ -259,7 +271,7 @@ export async function planWithRepair(
   const maxAICalls = Number(process.env.PLAN_MAX_AI_CALLS) || 8;
 
   // c) Vòng lặp sửa lỗi
-  const provider = options?.provider ?? new GeminiProvider();
+  let provider = options?.provider;
   const sharedSeenIds = new Set<string>();
   const sharedFoodIds = new Set<string>();
   let soLanGoiAI = 0;
@@ -363,6 +375,9 @@ export async function planWithRepair(
     });
 
     try {
+      if (!provider) {
+        provider = new GeminiProvider();
+      }
       const agentPromise = runPlanAgent(request, {
         provider,
         dataSource: liveDataSource,

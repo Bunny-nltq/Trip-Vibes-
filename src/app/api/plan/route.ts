@@ -40,6 +40,16 @@ export async function POST(req: Request) {
     let tripRequest: TripRequest;
 
     if (typeof payload.text === "string" && payload.text.trim().length > 0) {
+      if (process.env.LIVE_AI_ENABLED !== "true" || !process.env.GEMINI_API_KEY) {
+        return NextResponse.json(
+          {
+            ok: false,
+            maLoi: "ai_tat",
+            error: "Tính năng phân tích văn bản tự do yêu cầu AI và đang tắt trên hệ thống. Vui lòng gửi cấu trúc request trực tiếp.",
+          },
+          { status: 503 }
+        );
+      }
       if (payload.text.length > 500) {
         return NextResponse.json(
           { ok: false, error: "Nội dung yêu cầu quá dài (tối đa 500 ký tự)." },
@@ -84,9 +94,9 @@ export async function POST(req: Request) {
     }
 
     // Kiểm tra dữ liệu đã sẵn sàng chưa (yêu cầu 2: /api/plan chỉ dùng dữ liệu ĐÃ SẴN SÀNG)
-    if (tripRequest.diemDen && typeof tripRequest.diemDen === "object") {
+    if (tripRequest.diemDen) {
       const isReady = isDataReadyForDestination(
-        tripRequest.diemDen as DiemDen,
+        tripRequest.diemDen,
         tripRequest.diemDi && typeof tripRequest.diemDi === "object"
           ? (tripRequest.diemDi as DiemDen)
           : undefined,
@@ -105,7 +115,7 @@ export async function POST(req: Request) {
       }
     }
 
-    // Production AI limit check
+    // AI limit check (Áp dụng LIVE_AI_ENABLED ở mọi môi trường kể cả dev)
     const isProduction = isProductionEnvironment();
 
     let forceRulesOnly = false;
@@ -117,24 +127,22 @@ export async function POST(req: Request) {
       | "live_ai_tat"
       | undefined;
 
-    if (isProduction) {
-      if (process.env.LIVE_AI_ENABLED !== "true") {
+    if (process.env.LIVE_AI_ENABLED !== "true" || !process.env.GEMINI_API_KEY) {
+      forceRulesOnly = true;
+      fallbackReason = "live_ai_tat";
+    } else if (isProduction) {
+      const clientIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+        req.headers.get("x-real-ip") ||
+        "127.0.0.1";
+      const maxDaily = Number(process.env.GEMINI_DAILY_CAP) || 40;
+      const rateCheck = kiemTraGioiHanAI(aiRateLimitState, clientIp, Date.now(), {
+        moiIpMoiGio: 5,
+        tongMoiNgay: maxDaily,
+      });
+      if (!rateCheck.choPhep) {
         forceRulesOnly = true;
-        fallbackReason = "live_ai_tat";
-      } else {
-        const clientIp =
-          req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-          req.headers.get("x-real-ip") ||
-          "127.0.0.1";
-        const maxDaily = Number(process.env.GEMINI_DAILY_CAP) || 40;
-        const rateCheck = kiemTraGioiHanAI(aiRateLimitState, clientIp, Date.now(), {
-          moiIpMoiGio: 5,
-          tongMoiNgay: maxDaily,
-        });
-        if (!rateCheck.choPhep) {
-          forceRulesOnly = true;
-          fallbackReason = rateCheck.lyDo;
-        }
+        fallbackReason = rateCheck.lyDo;
       }
     }
 
@@ -153,17 +161,14 @@ export async function POST(req: Request) {
     });
   } catch (err: unknown) {
     const ms = Date.now() - start;
+    console.error("Lỗi plan route:", err);
     const raw = err instanceof Error ? err.message : String(err);
 
     let error = "Lỗi khi lập kế hoạch du lịch.";
-    if (raw.includes("GEMINI_API_KEY")) {
-      error = "Chưa cấu hình GEMINI_API_KEY trong .env.local.";
-    } else if (raw.includes("429") || raw.includes("RESOURCE_EXHAUSTED")) {
+    if (raw.includes("429") || raw.includes("RESOURCE_EXHAUSTED")) {
       error = "Đã vượt hạn mức gọi Gemini API (429). Vui lòng thử lại sau.";
     } else if (raw.includes("agent_dung_id_la")) {
       error = "AI Agent sử dụng ID không tồn tại trong dữ liệu hệ thống.";
-    } else if (raw.length < 300) {
-      error = raw;
     }
 
     return NextResponse.json({ ok: false, error, ms }, { status: 500 });

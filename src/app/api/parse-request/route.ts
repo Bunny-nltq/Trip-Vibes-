@@ -12,6 +12,17 @@ import { normalizeRequest } from "@/core/normalizeRequest";
 export async function POST(req: Request) {
   const start = Date.now();
 
+  if (process.env.LIVE_AI_ENABLED !== "true" || !process.env.GEMINI_API_KEY) {
+    return NextResponse.json(
+      {
+        ok: false,
+        maLoi: "ai_tat",
+        thongBao: "Tính năng này đang tắt trên bản hiện tại.",
+      },
+      { status: 503 }
+    );
+  }
+
   try {
     let body: unknown;
     try {
@@ -61,21 +72,11 @@ export async function POST(req: Request) {
     });
   } catch (err: unknown) {
     const ms = Date.now() - start;
-    const raw = err instanceof Error ? err.message : String(err);
+    console.error("Lỗi parse-request:", err);
 
-    let error = "Lỗi khi xử lý yêu cầu du lịch.";
-    if (raw.includes("GEMINI_API_KEY")) {
-      error = "Chưa cấu hình GEMINI_API_KEY. Vui lòng cấu hình trong .env.local.";
-    } else if (raw.includes("GEMINI_MODEL")) {
-      error = "Chưa cấu hình GEMINI_MODEL trong .env.local.";
-    } else if (raw.includes("RESOURCE_EXHAUSTED") || raw.includes("429")) {
-      error = "Đã vượt hạn mức gọi Gemini API (quota). Vui lòng thử lại sau.";
-    } else if (raw.includes("API_KEY_INVALID") || raw.includes("401") || raw.includes("403")) {
-      error = "Lỗi xác thực: API key không hợp lệ hoặc không có quyền truy cập.";
-    } else if (raw.length < 300) {
-      error = raw;
-    }
-
-    return NextResponse.json({ ok: false, error, ms }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: "Lỗi khi xử lý yêu cầu du lịch.", ms },
+      { status: 500 }
+    );
   }
 }

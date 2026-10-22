@@ -54,6 +54,7 @@ describe("POST /api/plan - Giới hạn lượt AI theo IP", () => {
     process.env.VERCEL = "1";
     process.env.LIVE_AI_ENABLED = "true";
     process.env.DATA_MODE = "snapshot";
+    process.env.GEMINI_API_KEY = "mock-key-for-test";
   });
 
   it("gọi 6 lần với cùng IP 1.2.3.4: lần 1-5 có phuongThucLap 'ai', lần 6 có phuongThucLap 'quy_tac' và lyDoDuPhong 'gioi_han_ip' và soLanGoiAI = 0", async () => {

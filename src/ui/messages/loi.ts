@@ -152,3 +152,22 @@ export function layThongBaoLoi(
     hanhDong: goc.hanhDong,
   };
 }
+
+/**
+ * Làm sạch thông báo lỗi, tuyệt đối không lộ GEMINI_API_KEY, .env hoặc chi tiết nhạy cảm
+ */
+export function thongBaoLoiThanThien(rawMessage: string): string {
+  if (!rawMessage || typeof rawMessage !== "string") {
+    return "Đã xảy ra sự cố kết nối. Vui lòng thử lại sau.";
+  }
+  if (rawMessage.includes("GEMINI") || rawMessage.includes(".env")) {
+    return "Dịch vụ AI tạm thời không khả dụng. Vui lòng thử lại sau.";
+  }
+  if (rawMessage.includes("429") || rawMessage.includes("RESOURCE_EXHAUSTED")) {
+    return "Hệ thống đang bận do nhiều yêu cầu. Vui lòng thử lại sau ít phút.";
+  }
+  return rawMessage;
+}
+
+export const thuongBaoLoiThanThien = thongBaoLoiThanThien;
+
