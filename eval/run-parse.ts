@@ -43,6 +43,16 @@ interface CaseEvalResult {
   error?: string;
 }
 
+export function soSanhNganSach(
+  actual: number | null | undefined,
+  expected: number | null | undefined
+): boolean {
+  if (actual === null || actual === undefined) {
+    return expected === null || expected === undefined;
+  }
+  return actual === expected;
+}
+
 function setEquals<T>(a: T[], b: T[]): boolean {
   if (a.length !== b.length) return false;
   const setB = new Set(b);
@@ -263,7 +273,7 @@ async function main() {
 
   let correctSoNguoi = 0;
   let correctSoNgay = 0;
-  const correctNganSach = 0;
+  let correctNganSach = 0;
   let correctDiemDen = 0;
   let correctSothich = 0;
   let correctTranh = 0;
@@ -281,6 +291,7 @@ async function main() {
     if (res.request) {
       if (res.request.soNguoi === c.expected.soNguoi) correctSoNguoi++;
       if (res.request.soNgay === c.expected.soNgay) correctSoNgay++;
+      if (soSanhNganSach(res.request.ngansachTongVND, c.expected.ngansachTongVND)) correctNganSach++;
       const actualTen = getDiemDenTen(res.request.diemDen);
       if (removeVietnameseDiacritics(actualTen || "") === removeVietnameseDiacritics(c.expected.diemDen || "")) correctDiemDen++;
       if (isSubset(c.expected.sothichBaoGom, res.request.sothich)) correctSothich++;
@@ -351,7 +362,9 @@ async function main() {
   console.log(`\n💾 Đã lưu kết quả chi tiết vào: ${outputFilePath}\n`);
 }
 
-main().catch((err) => {
-  console.error("Lỗi chương trình:", err);
-  process.exit(1);
-});
+if (process.argv[1] && process.argv[1].includes("run-parse")) {
+  main().catch((err) => {
+    console.error("Lỗi chương trình:", err);
+    process.exit(1);
+  });
+}
