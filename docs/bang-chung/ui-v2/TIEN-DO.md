@@ -4,7 +4,7 @@
 |---|---|---|---|---|
 | 2026-10-22 11:14:00 | H0 | XONG | 4d0a165 | Chuyển sang nhánh ui-v2, lưu LENH-UI-V2.md, cong-kiem-tra H0 đạt |
 | 2026-10-22 11:36:00 | H1 | XONG | 23343fd | Sửa lỗi API AI tắt trả 503 ai_tat, hook useTrangThaiAI, cong-kiem-tra H1 đạt |
-| 2026-10-22 12:12:00 | H2 | XONG | (commit sau) | Vỏ khu lập kế hoạch, gỡ bỏ trang trí và chuỗi cấm, cong-kiem-tra H2 đạt |
+| 2026-10-22 12:12:00 | H2 | XONG | 26d2267 | Vỏ khu lập kế hoạch, gỡ bỏ trang trí và chuỗi cấm, cong-kiem-tra H2 đạt |
 
 ## Chi tiết H2: Danh sách chuỗi đã đổi
 1. `src/app/layout.tsx`:
