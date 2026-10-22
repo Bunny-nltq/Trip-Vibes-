@@ -50,3 +50,8 @@ Tài liệu này ghi nhận trung thực và minh bạch toàn bộ các giới 
 
 ### 8. Chi phí ăn uống tính theo ngày, không phụ thuộc giờ đến
 - Chi phí ăn uống tính theo ngày, không phụ thuộc giờ đến: khi đến sau nửa đêm, bữa trưa ngày đến vẫn xếp lúc 12:00 dù khách chưa đến.
+- Danh sách thành phố có ga tàu (src/data/reference/tuyen-tau.json) chưa đối chiếu với dsvn.vn.
+- Phương tiện là ước tính theo quãng đường chim bay (tàu và xe khách nhân hệ số đường bộ 1,5); giá và thời gian không phải số liệu của hãng.
+- Hạn mức Gemini miễn phí đã quan sát: khoảng 20 lượt gọi mỗi ngày; các bộ eval phải chạy rải nhiều ngày.
+- Trên bản triển khai mặc định AI tắt; kế hoạch lập bằng quy tắc (phuongThucLap quy_tac).
+

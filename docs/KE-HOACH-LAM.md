@@ -1,5 +1,18 @@
 # KẾ HOẠCH LÀM: Trip Vibes (21/10 đến 15/11/2026)
 
+## Trạng thái 22/10
+- **Các nhiệm vụ HOÃN và không làm trước 15/11**: Ảnh địa điểm D1 đến D7, lịch trình mẫu E7, trang điểm đến E6, E9, E10, E11.
+- **Lịch eval mới**:
+  - 23/10: `eval:ai-rate` 4 kịch bản
+  - 24/10: `eval:ai-rate` 4 kịch bản (đủ 8 kịch bản có snapshot)
+  - 25/10: `eval:bill`
+  - 26/10: `eval:parse`
+  - 27/10: `eval:likes`
+  - 28/10: `eval:repair`
+- **Ghi nhận trang chủ**: Trang chủ gọn nằm ở nhánh `dem-ui`, chưa gộp vào `main`.
+
+---
+
 Tệp này dành cho AI trong IDE. Đặt tại `docs/KE-HOACH-LAM.md`. Người dùng chỉ cần dán:
 
 ```
