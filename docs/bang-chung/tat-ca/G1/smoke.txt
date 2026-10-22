@@ -1,0 +1,16 @@
+
+> trip-vibes@0.1.0 smoke
+> tsx scripts/smoke.ts http://localhost:3012
+
+Bắt đầu smoke test tại: http://localhost:3012
+
+| Kiểm tra | Kỳ vọng | Thực tế | Kết quả |
+|---|---|---|---|
+| GET /api/health | 200, ít nhất 5 snapshot, mode snapshot | HTTP 200, 5 snapshots, mode=snapshot | ĐẠT |
+| GET /demo | 404 | HTTP 404 | ĐẠT |
+| GET / | 200 | HTTP 200 | ĐẠT |
+| GET /lap-ke-hoach | 200 (404 ghi CẢNH BÁO) | HTTP 200 | ĐẠT |
+| POST /api/plan | 200, ok true, dataSource snapshot, soLanGoiAI 0, items >= 1 | HTTP 200, ok=true, dataSource=snapshot, soLanGoiAI=0, items=11 | ĐẠT |
+| Kiểm rò khóa GEMINI_API_KEY | số khớp = 0 | số khớp = 0 | ĐẠT |
+
+KẾT QUẢ SMOKE TEST: THÀNH CÔNG

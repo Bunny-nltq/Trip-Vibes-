@@ -1,0 +1,10 @@
+
+> trip-vibes@0.1.0 check:colors
+> tsx scripts/check-colors.ts
+
+================================================================================
+KIỂM TRA MÃ MÀU VÀ FONT CỨNG TRONG SRC/UI VÀ SRC/APP (CHECK:COLORS)
+================================================================================
+
+✅ TUYỆT VỜI: src/ui hoàn toàn sạch mã hex và font cứng! Toàn bộ dùng biến CSS từ tokens.
+
