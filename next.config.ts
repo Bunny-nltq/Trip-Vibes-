@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
     "/": ["./src/data/snapshots/*.json", "./src/data/reference/*.json", "./src/data/site/*.json"],
     "/diem-den": ["./src/data/snapshots/*.json", "./src/data/reference/*.json", "./src/data/site/*.json"],
     "/diem-den/[slug]": ["./src/data/snapshots/*.json", "./src/data/reference/*.json", "./src/data/site/*.json"],
+    "/khach-san": ["./src/data/snapshots/*.json", "./src/data/reference/*.json", "./src/data/site/*.json"],
   },
 };
 

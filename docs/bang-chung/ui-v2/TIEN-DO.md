@@ -8,6 +8,20 @@
 | 2026-10-22 12:35:00 | H3 | XONG | 6419393 | Danh sách chọn điểm đi/đến, nâng số ngày lên 7, component ChonDiem, cong-kiem-tra H3 đạt |
 | 2026-10-22 12:46:00 | H4 | XONG | ac068e7 | Trang chủ: SiteHeader, HeroSearch, ThuDiemDen 3 cột, KhachSanThamKhao 4 thẻ, dải OpenStreetMap, SiteFooter 3 cột, cong-kiem-tra H4 đạt |
 | 2026-10-22 12:51:00 | H5 | XONG | d157057 | Trang điểm đến: /diem-den (lưới) và /diem-den/[slug] (SSG 5 điểm đến), 12 vui chơi, 6 quán ăn, 6 cafe, 6 khách sạn, sitemap, cong-kiem-tra H5 đạt |
+| 2026-10-22 12:58:00 | H6 | XONG | (commit sau) | Trang khách sạn: /khach-san, ChonDiem chọn điểm đến, lưới khách sạn, lọc số sao, xếp theo giá, Google Maps, OpenStreetMap, cong-kiem-tra H6 đạt |
+
+## Ghi chú công việc H6 (Trang khách sạn)
+1. **Tuyến đường `/khach-san` (`KhachSanScreen.tsx`, `/app/(site)/khach-san/page.tsx`)**:
+   - Chọn điểm đến bằng component `ChonDiem` (mặc định điểm đến đầu tiên, đồng bộ với query URL `?diem-den=<slug>`).
+   - Lưới khách sạn từ snapshot: tên khách sạn, số sao (nếu có; không bịa đánh giá), khu vực.
+   - Giá mỗi đêm tính bằng hàm chuẩn của core `getHotelPricePerNight` kèm nhãn "(ước tính)".
+   - Nút "Xem trên Google Maps" mở liên kết ngoài an toàn.
+   - Nhãn nguồn minh bạch: "Nguồn: OpenStreetMap contributors".
+   - Khung ảnh tỉ lệ cố định 16:10 với nền thay thế gradient token và icon `Building2`.
+   - Bộ lọc số sao dạng dropdown (Tất cả, 5 sao, 4 sao, 3 sao, Chưa xếp hạng).
+   - Bộ sắp xếp giá dạng dropdown (Mặc định, Giá tăng dần, Giá giảm dần).
+2. **Cấu hình Next.js (`next.config.ts`)**:
+   - Bổ sung `/khach-san` vào `outputFileTracingIncludes`.
 
 ## Ghi chú công việc H5 (Trang điểm đến)
 1. **Tuyến đường `/diem-den` (`DiemDenDanhSachScreen.tsx`, `/app/(site)/diem-den/page.tsx`)**:
