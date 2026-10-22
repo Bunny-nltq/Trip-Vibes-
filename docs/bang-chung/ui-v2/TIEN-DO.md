@@ -6,6 +6,35 @@
 | 2026-10-22 11:36:00 | H1 | XONG | 23343fd | Sửa lỗi API AI tắt trả 503 ai_tat, hook useTrangThaiAI, cong-kiem-tra H1 đạt |
 | 2026-10-22 12:12:00 | H2 | XONG | 26d2267 | Vỏ khu lập kế hoạch, gỡ bỏ trang trí và chuỗi cấm, cong-kiem-tra H2 đạt |
 | 2026-10-22 12:35:00 | H3 | XONG | 6419393 | Danh sách chọn điểm đi/đến, nâng số ngày lên 7, component ChonDiem, cong-kiem-tra H3 đạt |
+| 2026-10-22 12:46:00 | H4 | XONG | (commit sau) | Trang chủ: SiteHeader, HeroSearch, ThuDiemDen 3 cột, KhachSanThamKhao 4 thẻ, dải OpenStreetMap, SiteFooter 3 cột, cong-kiem-tra H4 đạt |
+
+## Ghi chú công việc H4 (Trang chủ)
+1. **Thanh trên (`SiteHeader.tsx`)**:
+   - Logo "Trip Vibes" (gỡ bỏ phụ đề).
+   - Menu liên kết: "Trang chủ" (`/`), "Điểm đến" (`/diem-den`), "Khách sạn" (`/khach-san`).
+   - Nút "Lập kế hoạch" (`/lap-ke-hoach`).
+   - Gỡ bỏ hoàn toàn nút "Đăng nhập" và huy hiệu "Sắp có".
+2. **Hero Section (`HomePageView.tsx`)**:
+   - Tiêu đề trung tính: "Lên kế hoạch du lịch theo ngân sách của bạn" (cỡ clamp 36px-52px, font-weight 800).
+   - Một dòng phụ: "Tự do lựa chọn điểm đến, tối ưu chi phí di chuyển, lưu trú và điểm tham quan bám sát ngân sách thực tế."
+   - Nền gradient token; form `HeroSearch` dùng `ChonDiem`, dropdown số ngày 2-7, số người, ngân sách, nút "Lập kế hoạch".
+3. **Khối Điểm đến (`ThuDiemDen.tsx`)**:
+   - Thẻ lớn cho 5 điểm đến từ snapshot (Đà Nẵng, Hà Nội, Đà Lạt, Bangkok, Seoul).
+   - Khung ảnh tỉ lệ cố định 16:10, nền gradient token và icon `MapPin`.
+   - Nút "Xem điểm đến" dẫn `/diem-den/<slug>`.
+   - Lưới 3 cột trên máy tính (hàng cuối canh giữa nhờ flex wrap + justify-content center), 1 cột trên điện thoại.
+   - Biên tập mô tả điểm đến lưu tại `src/data/site/mo-ta-diem-den.json`.
+4. **Khối Khách sạn tham khảo (`KhachSanThamKhao.tsx`)**:
+   - 4 thẻ khách sạn lấy từ 4 snapshot khác nhau (Đà Nẵng, Hà Nội, Đà Lạt, Bangkok).
+   - Khung ảnh tỉ lệ cố định 16:10, tên khách sạn, địa bàn, số sao (nếu có), giá mỗi đêm tính bằng hàm `getHotelPricePerNight` của core kèm nhãn "ước tính".
+   - Nút dẫn sang `/khach-san`.
+5. **Dải minh bạch một dòng**:
+   - Thay thế toàn bộ "Tính năng nổi bật", khối "Cam kết minh bạch" dài và FAQ bằng dải 1 dòng: "Dữ liệu: OpenStreetMap contributors. Giá là ước tính." cùng nút mở modal "Giới hạn dữ liệu".
+6. **Chân trang (`SiteFooter.tsx`)**:
+   - Gọn 3 cột: Điểm đến, Khách sạn, Thông tin.
+   - Cỡ chữ cơ bản 16px, container tối đa 1200px, khoảng cách theo token.
+7. **Bằng chứng chụp giao diện**:
+   - Đã chụp giao diện máy tính (1440px) và điện thoại (390px) lưu tại `docs/bang-chung/ui-v2/H4/desktop_homepage_1440.png` và `docs/bang-chung/ui-v2/H4/mobile_homepage_390.png`.
 
 ## Khai báo thay đổi Loại A (H3)
 1. `src/contracts/index.ts`: Tăng `schemaVersion` từ 12 lên 13 do bổ sung giá trị `"danh_sach_co_dinh"` vào trường `nguon` của `DiemDenSchema` và nâng giới hạn `soNgay` tối đa từ 5 lên 7.

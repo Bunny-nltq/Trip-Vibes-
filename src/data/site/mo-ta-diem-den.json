@@ -1,0 +1,38 @@
+{
+  "_ghiChu": "nội dung biên tập, cần người dùng rà soát",
+  "da-nang": {
+    "slug": "da-nang",
+    "snapshotId": "da_nang",
+    "ten": "Đà Nẵng",
+    "quocGia": "Việt Nam",
+    "moTa": "Thành phố đáng sống với biển Mỹ Khê, bán đảo Sơn Trà và cầu Rồng thơ mộng."
+  },
+  "ha-noi": {
+    "slug": "ha-noi",
+    "snapshotId": "ha_noi",
+    "ten": "Hà Nội",
+    "quocGia": "Việt Nam",
+    "moTa": "Thủ đô ngàn năm văn hiến với 36 phố phường, hồ Hoàn Kiếm và nét ẩm thực tinh tế."
+  },
+  "da-lat": {
+    "slug": "da-lat",
+    "snapshotId": "da_lat",
+    "ten": "Đà Lạt",
+    "quocGia": "Việt Nam",
+    "moTa": "Thành phố sương mù ngàn hoa với khí hậu se lạnh và đồi thông lãng mạn."
+  },
+  "bangkok": {
+    "slug": "bangkok",
+    "snapshotId": "bangkok",
+    "ten": "Bangkok",
+    "quocGia": "Thái Lan",
+    "moTa": "Đại đô thị Đông Nam Á sôi động với chùa vàng tráng lệ và ẩm thực phong phú."
+  },
+  "seoul": {
+    "slug": "seoul",
+    "snapshotId": "seoul",
+    "ten": "Seoul",
+    "quocGia": "Hàn Quốc",
+    "moTa": "Thủ đô giao hòa giữa cung điện cổ kính Joseon và nhịp sống K-Wave hiện đại."
+  }
+}

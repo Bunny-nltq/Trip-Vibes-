@@ -3,53 +3,46 @@ import fs from "node:fs";
 import path from "node:path";
 import { HomePageView } from "@/ui/screens/HomePageView";
 import type { DiemDenThe } from "@/ui/components/site/ThuDiemDen";
+import type { KhachSanThe } from "@/ui/components/site/KhachSanThamKhao";
+import { getHotelPricePerNight } from "@/core/minBudget";
 
-const DEST_CONFIGS = [
-  {
-    id: "da_nang",
-    ten: "Đà Nẵng",
-    quocGia: "Việt Nam",
-    moTa: "Thành phố đáng sống với biển Mỹ Khê, bán đảo Sơn Trà và cầu Rồng thơ mộng.",
-  },
-  {
-    id: "ha_noi",
-    ten: "Hà Nội",
-    quocGia: "Việt Nam",
-    moTa: "Thủ đô ngàn năm văn hiến với 36 phố phường, hồ Hoàn Kiếm và nét ẩm thực tinh tế.",
-  },
-  {
-    id: "da_lat",
-    ten: "Đà Lạt",
-    quocGia: "Việt Nam",
-    moTa: "Thành phố sương mù ngàn hoa với khí hậu se lạnh và đồi thông lãng mạn.",
-  },
-  {
-    id: "bangkok",
-    ten: "Bangkok",
-    quocGia: "Thái Lan",
-    moTa: "Đại đô thị Đông Nam Á sôi động với chùa vàng tráng lệ và ẩm thực phong phú.",
-  },
-  {
-    id: "seoul",
-    ten: "Seoul",
-    quocGia: "Hàn Quốc",
-    moTa: "Thủ đô giao hòa giữa cung điện cổ kính Joseon và nhịp sống K-Wave hiện đại.",
-  },
+const DEST_ORDER = [
+  { slug: "da-nang", id: "da_nang", snapshotPrefix: "snapshot_da_nang_" },
+  { slug: "ha-noi", id: "ha_noi", snapshotPrefix: "snapshot_ha_noi_" },
+  { slug: "da-lat", id: "da_lat", snapshotPrefix: "snapshot_da_lat_" },
+  { slug: "bangkok", id: "bangkok", snapshotPrefix: "snapshot_bangkok_" },
+  { slug: "seoul", id: "seoul", snapshotPrefix: "snapshot_seoul_" },
 ];
 
-function docDanhSachDiemDen(): { diemDens: DiemDenThe[]; ngayDuLieu: string } {
+function docDanhSachDiemDenVaKhachSan(): {
+  diemDens: DiemDenThe[];
+  khachSans: KhachSanThe[];
+  ngayDuLieu: string;
+} {
   const dir = path.join(process.cwd(), "src/data/snapshots");
+  const moTaPath = path.join(process.cwd(), "src/data/site/mo-ta-diem-den.json");
+
+  let moTaMap: Record<string, any> = {};
+  if (fs.existsSync(moTaPath)) {
+    try {
+      moTaMap = JSON.parse(fs.readFileSync(moTaPath, "utf-8"));
+    } catch {
+      // bỏ qua nếu file lỗi
+    }
+  }
+
   if (!fs.existsSync(dir)) {
-    return { diemDens: [], ngayDuLieu: "20/10/2026" };
+    return { diemDens: [], khachSans: [], ngayDuLieu: "20/10/2026" };
   }
 
   const files = fs.readdirSync(dir);
   const diemDens: DiemDenThe[] = [];
+  const khachSans: KhachSanThe[] = [];
   let ngayChung = "20/10/2026";
 
-  for (const cfg of DEST_CONFIGS) {
+  for (const item of DEST_ORDER) {
     const file = files.find(
-      (f) => f.startsWith(`snapshot_${cfg.id}_`) && f.endsWith(".json")
+      (f) => f.startsWith(item.snapshotPrefix) && f.endsWith(".json")
     );
     if (file) {
       try {
@@ -63,23 +56,44 @@ function docDanhSachDiemDen(): { diemDens: DiemDenThe[]; ngayDuLieu: string } {
         const formatted = `${day}/${month}/${year}`;
         ngayChung = formatted;
 
+        const info = moTaMap[item.slug] || {};
+        const ten = info.ten || data.diemDen || item.slug;
+        const quocGia = info.quocGia || "Việt Nam";
+        const moTa = info.moTa || "";
+
         diemDens.push({
-          id: cfg.id,
-          ten: cfg.ten,
-          quocGia: cfg.quocGia,
+          id: item.id,
+          slug: item.slug,
+          ten,
+          quocGia,
           ngayDuLieuFormatted: formatted,
-          moTaNgan: cfg.moTa,
+          moTaNgan: moTa,
         });
+
+        // Lấy 1 khách sạn từ mỗi điểm đến (tối đa 4 khách sạn từ 4 điểm đến khác nhau)
+        if (khachSans.length < 4 && data.khachSans && data.khachSans.length > 0) {
+          const ks = data.khachSans.find((h: any) => h.soSao && h.soSao > 0) || data.khachSans[0];
+          const giaDemUocTinh = getHotelPricePerNight(ks);
+          khachSans.push({
+            id: ks.id,
+            ten: ks.ten,
+            diemDenTen: ten,
+            diemDenSlug: item.slug,
+            khuVuc: ks.khuVuc || "",
+            soSao: ks.soSao ?? null,
+            giaDemUocTinh,
+          });
+        }
       } catch {
         // bỏ qua nếu file hỏng
       }
     }
   }
 
-  return { diemDens, ngayDuLieu: ngayChung };
+  return { diemDens, khachSans, ngayDuLieu: ngayChung };
 }
 
 export default function HomePage() {
-  const { diemDens, ngayDuLieu } = docDanhSachDiemDen();
-  return <HomePageView diemDens={diemDens} ngayDuLieu={ngayDuLieu} />;
+  const { diemDens, khachSans, ngayDuLieu } = docDanhSachDiemDenVaKhachSan();
+  return <HomePageView diemDens={diemDens} khachSans={khachSans} ngayDuLieu={ngayDuLieu} />;
 }
