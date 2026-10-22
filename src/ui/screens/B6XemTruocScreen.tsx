@@ -12,7 +12,6 @@ import {
   Info,
   TrendingDown,
   TrendingUp,
-  Sparkles,
 } from "lucide-react";
 import { moTaCanhBao } from "@/ui/messages/canhBao";
 
@@ -143,7 +142,7 @@ export function B6XemTruocScreen() {
                 gap: 6,
               }}
             >
-              <Sparkles size={14} />
+              <Check size={14} />
               Độ khớp sở thích: trước {diemKhopTruoc.toFixed(2).replace(".", ",")}, sau{" "}
               {diemKhopSau.toFixed(2).replace(".", ",")}
             </div>

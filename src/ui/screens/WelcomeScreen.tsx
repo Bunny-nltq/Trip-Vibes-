@@ -34,7 +34,7 @@ export function WelcomeScreen() {
         </svg>
       ),
       title: "Theo dõi chi tiêu",
-      sub: "Chụp bill, AI đọc giúp — bạn kiểm tra và xác nhận",
+      sub: "Bóc tách hóa đơn tự động — bạn kiểm tra và xác nhận",
     },
   ];
 
@@ -84,7 +84,7 @@ export function WelcomeScreen() {
           </span>
         </h1>
         <p style={{ fontSize: 16, color: "var(--color-text-sub)", maxWidth: 580, margin: "0 auto 40px", lineHeight: 1.6 }}>
-          Chọn vài nút bấm là có kế hoạch đầy đủ giá vé, chỗ ở và lịch trình. Xem trước mọi thay đổi và theo dõi chi tiêu thực tế thông minh.
+          Chọn vài nút bấm là có kế hoạch đầy đủ giá vé, chỗ ở và lịch trình. Xem trước mọi thay đổi và theo dõi chi tiêu thực tế.
         </p>
 
         {/* 3 Features */}
@@ -142,7 +142,7 @@ export function WelcomeScreen() {
         </button>
 
         <div style={{ marginTop: 28, fontSize: 12, color: "var(--color-light-muted)" }}>
-          Bản mô phỏng AI Agent · Nguồn dữ liệu minh bạch · Không lưu giữ ảnh hóa đơn trên đĩa
+          Phiên bản thử nghiệm · Nguồn dữ liệu minh bạch · Không lưu giữ ảnh hóa đơn trên đĩa
         </div>
       </main>
     </div>

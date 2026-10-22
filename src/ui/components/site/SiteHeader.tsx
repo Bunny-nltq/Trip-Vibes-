@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Compass, Sparkles, User, ArrowRight } from "lucide-react";
+import { Compass, User, ArrowRight } from "lucide-react";
 
 export interface SiteHeaderProps {
   onNavigatePlan?: () => void;
@@ -48,7 +48,7 @@ export function SiteHeader({ onNavigatePlan }: SiteHeaderProps) {
             Trip Vibes
           </span>
           <span style={{ fontSize: 10, fontWeight: 600, color: "var(--color-text-sub)", marginTop: -3, letterSpacing: "0.5px" }}>
-            AI TRAVEL AGENT
+            TRIP PLANNER
           </span>
         </div>
       </Link>
@@ -134,7 +134,6 @@ export function SiteHeader({ onNavigatePlan }: SiteHeaderProps) {
             transition: "all 0.15s"
           }}
         >
-          <Sparkles size={16} />
           <span>Lập kế hoạch</span>
           <ArrowRight size={15} />
         </Link>

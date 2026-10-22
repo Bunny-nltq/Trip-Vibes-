@@ -10,7 +10,8 @@ import { tiLeThoiGianDiChuyen, coCanhBaoDiChuyen } from "@/core/tiLeDiChuyen";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import {
   Map as MapIcon,
-  Sparkles,
+  Send,
+  SlidersHorizontal,
   MapPin,
   Navigation,
   Pencil,
@@ -70,15 +71,15 @@ function getTagClass(hangMuc: string): string {
 function getLyDoDuPhongText(lyDo?: string): string {
   switch (lyDo) {
     case "het_luot_ai":
-      return "AI đã hết hạn mức lượt gọi";
+      return "hệ thống đã hết hạn mức lượt xử lý";
     case "qua_thoi_gian":
-      return "thời gian xử lý của AI vượt quá giới hạn";
+      return "thời gian xử lý vượt quá giới hạn";
     case "loi_mang_ai":
-      return "lỗi kết nối mạng tới dịch vụ AI";
+      return "lỗi kết nối mạng tới dịch vụ phân tích";
     case "ai_khong_sua_duoc_ngan_sach":
-      return "AI không cân đối được chi phí trong ngân sách";
+      return "chưa cân đối được chi phí trong ngân sách";
     case "vuot_so_luot_goi_ai":
-      return "đã đạt số lượt tương tác AI tối đa cho phép";
+      return "đã đạt số lượt tương tác tối đa cho phép";
     case "gioi_han_luot_ai":
       return "đã đạt giới hạn lượt dùng trong ngày; kế hoạch được lập bằng quy tắc tự động";
     case "gioi_han_ip":
@@ -152,7 +153,7 @@ export function B3KeHoachScreen() {
 
       if (res.status === 429) {
         setRegenError(
-          "Hết lượt gợi ý bằng AI lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\" ở từng mục."
+          "Đã đạt giới hạn gợi ý lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\" ở từng mục."
         );
         setIsRegenerating(false);
         return;
@@ -162,7 +163,7 @@ export function B3KeHoachScreen() {
       if (!res.ok || !data) {
         if (data?.error?.includes("429") || data?.message?.includes("429")) {
           setRegenError(
-            "Hết lượt gợi ý bằng AI lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\" ở từng mục."
+            "Đã đạt giới hạn gợi ý lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\" ở từng mục."
           );
         } else {
           setRegenError(
@@ -232,14 +233,14 @@ export function B3KeHoachScreen() {
             Chưa có kế hoạch nào được lập
           </h2>
           <p style={{ color: "var(--g500)", marginBottom: 24, fontSize: 14 }}>
-            Vui lòng chọn thông tin chuyến đi để AI đề xuất lịch trình phù hợp nhất cho bạn.
+            Vui lòng chọn thông tin chuyến đi để xem lịch trình đề xuất phù hợp nhất cho bạn.
           </p>
           <button
             className="btn btn-primary"
             onClick={() => nav("b1-chon-nhanh")}
             style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
           >
-            <Sparkles size={16} />
+            <Send size={16} />
             Lập kế hoạch ngay
           </button>
         </div>
@@ -375,7 +376,7 @@ export function B3KeHoachScreen() {
                   }}
                 >
                   <RefreshCw size={13} />
-                  Thử lại bằng AI
+                  Thử lại
                 </button>
               </div>
             </div>
@@ -619,11 +620,11 @@ export function B3KeHoachScreen() {
         {!confirmed && aiBat && (
           <div className="personal-panel" style={{ marginTop: 24 }}>
             <div className="panel-title" style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <Sparkles size={16} />
+              <SlidersHorizontal size={16} />
               Muốn kế hoạch hợp gu hơn?
             </div>
             <div className="panel-sub">
-              Chọn điều bạn thích, AI sẽ gợi ý lại các hoạt động phù hợp nhất.
+              Chọn điều bạn thích, hệ thống sẽ gợi ý lại các hoạt động phù hợp nhất.
             </div>
             <div className="chips">
               {VIBES.map((v) => (
@@ -683,7 +684,7 @@ export function B3KeHoachScreen() {
                   </>
                 ) : (
                   <>
-                    <Sparkles size={14} />
+                    <RefreshCw size={14} />
                     Gợi ý lại
                   </>
                 )}

@@ -83,8 +83,8 @@ export const BANG_MA_LOI: Record<string, ThongBaoLoi> = {
     hanhDong: { nhan: "Thử lại", loai: "thu_lai" },
   },
   gemini_het_luot: {
-    tieuDe: "Hạn mức AI tạm thời hết",
-    noiDung: "Hết lượt AI hôm nay, thử lại sau hoặc ngày mai.",
+    tieuDe: "Hạn mức tạm thời hết",
+    noiDung: "Đã đạt giới hạn hôm nay, vui lòng thử lại sau.",
     hanhDong: { nhan: "Đóng", loai: "dong" },
   },
 

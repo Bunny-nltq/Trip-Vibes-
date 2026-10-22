@@ -43,7 +43,7 @@ function DevTools() {
     { id: "welcome", label: "Màn chào (Welcome)" },
     { id: "login", label: "Đăng nhập" },
     { id: "b1-chon-nhanh", label: "B1 · Chọn nhanh" },
-    { id: "b2-dang-chay", label: "B2 · AI Đang chạy" },
+    { id: "b2-dang-chay", label: "B2 · Đang tạo lịch trình" },
     { id: "b3-ke-hoach", label: "B3 · Kế hoạch" },
     { id: "b4-phuong-tien", label: "B4 · Phương tiện" },
     { id: "b5-khach-san", label: "B5 · Khách sạn" },

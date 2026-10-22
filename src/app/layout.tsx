@@ -9,22 +9,22 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Trip Vibes – AI Agent Lập Kế Hoạch Du Lịch Thông Minh",
+    default: "Trip Vibes – Lập Kế Hoạch Du Lịch Theo Ngân Sách",
     template: "%s | Trip Vibes",
   },
   description:
-    "Ứng dụng AI Agent lập kế hoạch du lịch tự động, tối ưu chi phí và bám sát ngân sách thực tế. Tra cứu giá vé, khách sạn, lịch trình chi tiết và quét hóa đơn thông minh.",
+    "Ứng dụng lập kế hoạch du lịch tự động, tối ưu chi phí và bám sát ngân sách thực tế. Tra cứu giá vé, khách sạn, lịch trình chi tiết và bóc tách hóa đơn tiện lợi.",
   keywords: [
     "du lịch",
     "kế hoạch du lịch",
     "trip planner",
-    "AI travel agent",
+    "lập kế hoạch du lịch",
     "quản lý chi tiêu du lịch",
     "Trip Vibes",
   ],
   authors: [{ name: "Trip Vibes Team" }],
   openGraph: {
-    title: "Trip Vibes – AI Agent Lập Kế Hoạch Du Lịch Thông Minh",
+    title: "Trip Vibes – Lập Kế Hoạch Du Lịch Theo Ngân Sách",
     description:
       "Lập kế hoạch du lịch tự động, tối ưu chi phí, bám sát ngân sách và minh bạch nguồn gốc dữ liệu.",
     url: "https://tripvibes.vn",
@@ -34,8 +34,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Trip Vibes – AI Agent Lập Kế Hoạch Du Lịch",
-    description: "Lập kế hoạch du lịch tự động và tối ưu ngân sách cùng AI.",
+    title: "Trip Vibes – Lập Kế Hoạch Du Lịch",
+    description: "Lập kế hoạch du lịch tự động và tối ưu ngân sách.",
   },
   robots: {
     index: true,

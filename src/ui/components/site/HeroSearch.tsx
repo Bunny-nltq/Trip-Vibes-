@@ -6,7 +6,7 @@ import {
   Calendar,
   Users,
   Wallet,
-  Sparkles,
+  Send,
   AlertCircle
 } from "lucide-react";
 import { dinhDangTien, docTien } from "@/core/formB1";
@@ -316,8 +316,8 @@ export function HeroSearch({ onSuccess }: HeroSearchProps) {
           boxShadow: "0 4px 14px rgba(43, 85, 214, 0.25)"
         }}
       >
-        <Sparkles size={18} />
-        <span>Tạo kế hoạch du lịch thông minh</span>
+        <Send size={18} />
+        <span>Lập kế hoạch</span>
       </button>
     </form>
   );

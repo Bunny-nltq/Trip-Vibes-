@@ -43,7 +43,7 @@ export function SiteFooter({ ngayDuLieu = "20/10/2026" }: SiteFooterProps) {
             </span>
           </div>
           <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--color-text-sub)", margin: 0 }}>
-            AI Agent lập kế hoạch du lịch thông minh, tối ưu ngân sách thực tế và minh bạch nguồn gốc dữ liệu.
+            Nền tảng lập kế hoạch du lịch theo ngân sách thực tế và minh bạch nguồn gốc dữ liệu.
           </p>
         </div>
 
@@ -118,7 +118,7 @@ export function SiteFooter({ ngayDuLieu = "20/10/2026" }: SiteFooterProps) {
         fontSize: 12,
         color: "var(--color-text-sub)"
       }}>
-        Bản quyền 2026 Trip Vibes. Dự án ứng dụng AI Agent du lịch tuân thủ chuẩn minh bạch dữ liệu.
+        Bản quyền 2026 Trip Vibes. Dự án lập kế hoạch du lịch tuân thủ chuẩn minh bạch dữ liệu.
       </div>
     </footer>
   );

@@ -353,28 +353,12 @@ body {
 .NavOn { color: var(--color-text); }
 .NavActive { background: var(--color-primary-tint); color: var(--color-primary); font-weight: 600; }
 .NavNote { margin: 10px 20px 0; font-size: 12px; line-height: 16px; color: var(--color-text-sub); }
-.SideBottom { margin-top: auto; position: relative; padding: 0 16px 36px; }
-.Promo { display: flex; align-items: center; gap: 8px; height: 104px; padding: 0 14px; margin-bottom: 26px; border-radius: 22px; background: var(--color-primary-tint); }
-.PromoText { font-size: 19px; line-height: 24px; font-weight: 600; color: var(--color-primary); }
-.Plant { position: absolute; left: -26px; bottom: -10px; opacity: 0.9; pointer-events: none; }
-.UserBlock { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; padding-left: 20px; cursor: pointer; }
-.Avatar { width: 44px; height: 44px; border-radius: 22px; flex: none; background: linear-gradient(135deg, var(--color-art-avatar1), var(--color-art-avatar2)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; color: var(--color-art-avatar-text); }
-.UserName { font-weight: 600; font-size: 14px; line-height: 18px; }
-.UserSub { font-size: 11.5px; line-height: 16px; color: var(--color-text-sub); white-space: nowrap; }
 .Content { flex: 1; padding: 0 32px 36px 32px; min-width: 0; position: relative; }
-.TopbarFlow { height: 88px; display: flex; align-items: center; justify-content: space-between; }
-.Search { display: flex; align-items: center; gap: 10px; width: 400px; height: 44px; padding: 0 18px; border-radius: 22px; background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text-sub); font-size: 13px; }
-.TopRight { display: flex; align-items: center; gap: 22px; }
-.Bell { position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--color-primary); cursor: pointer; }
-.Dot { position: absolute; right: 8px; top: 7px; width: 9px; height: 9px; border-radius: 5px; background: var(--color-badge-red); border: 2px solid var(--color-surface-sub); }
-.Me { width: 44px; height: 44px; border-radius: 22px; background: var(--color-border-input); display: flex; align-items: center; justify-content: center; color: var(--color-text); cursor: pointer; }
-.HomeRow { display: flex; gap: 28px; align-items: stretch; }
-.HomeCard { position: relative; width: 836px; flex: none; min-height: 890px; display: flex; flex-direction: column; border-radius: 30px; background: var(--color-surface); box-shadow: var(--shadow-home-card); overflow: hidden; }
-.Hero { position: relative; height: 192px; margin: 8px 8px 0; border-radius: 24px; overflow: hidden; flex: none; }
-.HeroTitle { position: absolute; left: 56px; top: 22px; font-size: 38px; line-height: 46px; font-weight: 700; color: var(--color-text); }
-.HeroSun { position: absolute; left: 22px; top: 60px; }
-.HeroSub { position: absolute; left: 56px; top: 122px; width: 340px; font-size: 13px; line-height: 20px; color: var(--color-text-sub); }
-.GoodTrip { position: absolute; right: 40px; top: 20px; font-size: 24px; line-height: 28px; font-weight: 700; color: var(--color-primary); transform: rotate(-6deg); }
+.TopbarFlow { height: 72px; display: flex; align-items: center; justify-content: flex-end; }
+.TopRight { display: flex; align-items: center; gap: 16px; }
+.HomeRow { display: flex; justify-content: center; width: 100%; }
+.HomeCard { position: relative; width: 100%; max-width: 920px; min-height: 800px; display: flex; flex-direction: column; border-radius: 28px; background: var(--color-surface); box-shadow: var(--shadow-home-card); overflow: hidden; }
+.HeroGradientBanner { position: relative; height: 120px; margin: 8px 8px 0; border-radius: 20px; overflow: hidden; flex: none; background: linear-gradient(135deg, var(--color-primary-main), var(--color-primary-sky)); display: flex; flex-direction: column; justify-content: center; padding: 0 36px; }
 .Body { padding: 18px 30px 0 28px; }
 .Sec { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 .NumC { width: 30px; height: 30px; border-radius: 15px; background: var(--color-primary); color: var(--color-surface); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex: none; }
@@ -405,10 +389,6 @@ body {
 .Go { display: flex; align-items: center; justify-content: center; gap: 10px; width: 200px; height: 50px; border-radius: 25px; background: var(--color-primary); color: var(--color-surface); font-size: 15px; font-weight: 600; box-shadow: var(--shadow-btn-go); cursor: pointer; border: none; flex: none; transition: all 0.2s ease; }
 .Go:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
 .GoOff { background: var(--color-border-input); box-shadow: none; cursor: not-allowed; }
-.HomeRight { position: relative; width: 264px; flex: none; overflow: hidden; min-height: 890px; }
-.Quote { position: absolute; left: 16px; top: 30px; width: 240px; font-size: 28px; line-height: 38px; font-weight: 600; color: var(--color-primary); transform: rotate(-7deg); transform-origin: left top; }
-.RightArt { position: absolute; left: -30px; bottom: 0; }
-.Fade { position: absolute; left: 0; bottom: 0; width: 80px; height: 700px; background: linear-gradient(90deg, var(--color-bg) 0%, rgba(238,244,251,0) 100%); pointer-events: none; }
 .DayCard { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 22px; margin-bottom: 16px; box-shadow: var(--shadow-day-card); }
 .DayHead { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--color-border); }
 .DayName { font-size: 16px; line-height: 24px; font-weight: 700; }

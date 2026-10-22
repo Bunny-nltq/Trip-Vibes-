@@ -273,7 +273,7 @@ export function usePlan() {
           raw.includes("het_luot_ai") ||
           raw.includes("hạn mức")
         ) {
-          errorMsg = "AI đã hết lượt gọi trong khoảng thời gian này. Vui lòng bấm 'Thử lại' sau ít phút.";
+          errorMsg = "Hệ thống đã hết lượt xử lý trong khoảng thời gian này. Vui lòng bấm 'Thử lại' sau ít phút.";
         } else if (
           raw.includes("qua_thoi_gian") ||
           raw.includes("timeout") ||
@@ -285,7 +285,7 @@ export function usePlan() {
           raw.includes("fetch failed") ||
           raw.includes("mạng")
         ) {
-          errorMsg = "Lỗi kết nối mạng tới dịch vụ AI. Vui lòng kiểm tra kết nối và bấm 'Thử lại'.";
+          errorMsg = "Lỗi kết nối mạng tới máy chủ. Vui lòng kiểm tra kết nối và bấm 'Thử lại'.";
         }
         setError(errorMsg);
         setStatus("error");

@@ -24,6 +24,7 @@ export function sinhCSSTuTokens(tokens: any): string {
   const pMain = tokens.colors?.primary?.main || tokens.colors?.primary || "#2B55D6";
   const pText = tokens.colors?.primary?.text || "#FFFFFF";
   const pTint = tokens.colors?.primary?.tint || "#EAF1FE";
+  const pSky = tokens.colors?.primary?.sky || "#1D6FA5";
   const p400 = tokens.colors?.primary?.["400"] || "#4A72E8";
   const pHover = tokens.colors?.primary?.brandHover || "#2244B0";
 
@@ -61,6 +62,8 @@ export function sinhCSSTuTokens(tokens: any): string {
   lines.push(`  --color-primary-light: ${pTint};`);
   lines.push(`  --color-primary-soft: ${bg};`);
   lines.push(`  --color-primary-active: ${pTint};`);
+  lines.push(`  --color-primary-sky: ${pSky};`);
+  lines.push(`  --color-gradient-sky: ${pSky};`);
   lines.push("");
 
   lines.push(`  --color-border: ${border};`);

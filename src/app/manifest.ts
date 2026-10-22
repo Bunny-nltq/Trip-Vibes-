@@ -3,9 +3,9 @@ import tokens from "@/design/tokens.json";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Trip Vibes - AI Agent Lập Kế Hoạch Du Lịch",
+    name: "Trip Vibes - Lập Kế Hoạch Du Lịch",
     short_name: "Trip Vibes",
-    description: "Lập kế hoạch du lịch thông minh, tối ưu ngân sách cùng AI Agent",
+    description: "Lập kế hoạch du lịch theo ngân sách của bạn",
     start_url: "/",
     display: "standalone",
     background_color: tokens.colors.background,

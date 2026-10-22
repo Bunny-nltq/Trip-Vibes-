@@ -449,19 +449,19 @@ export function B1ChonNhanhScreen() {
 
   // Chú thích lý do vì sao nút "Lập kế hoạch" đang tắt
   const getLyDoTat = (): string => {
-    if (validationErrors.includes("diem_di_thieu")) return "Chưa chọn điểm đi";
-    if (validationErrors.includes("diem_den_thieu")) return "Chưa chọn điểm đến";
     if (validationErrors.includes("diem_di_trung_diem_den"))
-      return "Điểm đi trùng điểm đến";
+      return "Điểm đi và điểm đến không được trùng nhau.";
     if (validationErrors.includes("so_nguoi_ngoai_pham_vi"))
-      return "Số người ngoài phạm vi (1–10)";
+      return "Số người cần trong khoảng từ 1 đến 10 người.";
     if (validationErrors.includes("ngan_sach_khong_hop_le"))
-      return "Chưa nhập ngân sách hợp lệ";
+      return "Vui lòng nhập ngân sách dự kiến hợp lệ.";
     if (validationErrors.includes("so_ngay_ngoai_pham_vi"))
-      return "Số ngày ngoài phạm vi (2–5)";
+      return "Số ngày cần trong khoảng từ 2 đến 5 ngày.";
     if (validationErrors.includes("ghi_chu_qua_dai"))
-      return "Ghi chú vượt quá 500 ký tự";
-    return "";
+      return "Ghi chú vượt quá 500 ký tự.";
+    if (validationErrors.includes("diem_di_thieu") || validationErrors.includes("diem_den_thieu") || tongNganSachQuyDoiVND <= 0)
+      return "Vui lòng chọn điểm đi, điểm đến và ngân sách để tiếp tục.";
+    return "Vui lòng hoàn thiện các thông tin để tiếp tục.";
   };
 
   const soDem = Math.max(1, soNgay - 1);
@@ -484,100 +484,44 @@ export function B1ChonNhanhScreen() {
     <div className="HomeRow">
       {/* CỘT CHÍNH: HomeCard */}
       <div className="HomeCard">
-        {/* HERO BANNER - ĐỘNG THEO TRẠNG THÁI */}
-        <div className="Hero">
-          {/* Scenic Coastal & Mountain background artwork */}
-          <svg
-            width="820"
-            height="192"
-            viewBox="0 0 820 192"
-            fill="none"
+        {/* HERO BANNER - NỀN GRADIENT TỪ TOKEN (PRIMARY SANG SKY) */}
+        <div
+          className="HeroGradientBanner"
+          style={{
+            position: "relative",
+            height: 120,
+            margin: "8px 8px 0",
+            borderRadius: "var(--r-xl)",
+            overflow: "hidden",
+            flex: "none",
+            background: "linear-gradient(135deg, var(--color-primary-main), var(--color-primary-sky))",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            padding: "0 36px",
+          }}
+        >
+          <div
             style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              width: "100%",
-              height: "100%",
+              fontSize: 26,
+              lineHeight: "32px",
+              fontWeight: 800,
+              color: "var(--color-primary-text)",
+              marginBottom: 4,
             }}
-            preserveAspectRatio="none"
           >
-            <defs>
-              <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--color-art-sky1)" />
-                <stop offset="50%" stopColor="var(--color-art-sky2)" />
-                <stop offset="100%" stopColor="var(--color-art-sky3)" />
-              </linearGradient>
-              <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--color-art-sea-deep1)" />
-                <stop offset="100%" stopColor="var(--color-art-sea-deep2)" />
-              </linearGradient>
-              <linearGradient id="mountainGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--color-art-hill1)" />
-                <stop offset="100%" stopColor="var(--color-art-hill2)" />
-              </linearGradient>
-            </defs>
-            <rect width="820" height="192" fill="url(#skyGrad)" />
-            <path
-              d="M260 130 C 380 70, 520 80, 680 125 L 820 120 L 820 192 L 260 192 Z"
-              fill="var(--color-art-sea-light)"
-              opacity="0.6"
-            />
-            <path
-              d="M420 120 C 530 85, 660 75, 820 110 L 820 192 L 420 192 Z"
-              fill="var(--color-art-hill3)"
-              opacity="0.5"
-            />
-            <path
-              d="M0 130 Q 350 125, 820 135 L 820 192 L 0 192 Z"
-              fill="url(#seaGrad)"
-              opacity="0.4"
-            />
-            <path
-              d="M480 192 C 550 145, 620 120, 720 115 C 770 112, 800 130, 820 145 L 820 192 Z"
-              fill="url(#mountainGrad)"
-            />
-            <path
-              d="M620 192 C 670 140, 750 135, 820 150 L 820 192 Z"
-              fill="var(--color-art-hill4)"
-              opacity="0.8"
-            />
-          </svg>
-
-          {/* Sun Doodle SVG */}
-          <div className="HeroSun">
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="var(--color-art-sun)"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            >
-              <circle cx="12" cy="12" r="5" fill="var(--color-art-sun-light)" />
-              <line x1="12" y1="1" x2="12" y2="3" />
-              <line x1="12" y1="21" x2="12" y2="23" />
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-              <line x1="1" y1="12" x2="3" y2="12" />
-              <line x1="21" y1="12" x2="23" y2="12" />
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-            </svg>
-          </div>
-
-          {/* TIÊU ĐỀ & PHỤ ĐỀ THEO ĐÚNG YÊU CẦU */}
-          <div className="HeroTitle">
             {tenDiemDen ? `Chuyến đi ${tenDiemDen} của bạn` : "Bạn muốn đi đâu?"}
           </div>
-          <div className="HeroSub">
+          <div
+            style={{
+              fontSize: 13,
+              lineHeight: "18px",
+              color: "var(--color-primary-tint)",
+            }}
+          >
             {tenDiemDi
               ? `${soNgay} ngày ${soDem} đêm từ ${tenDiemDi}`
               : "Chọn điểm đi và điểm đến để bắt đầu"}
-          </div>
-
-          <div className="GoodTrip Script">
-            Good trip<br />Good mood
           </div>
         </div>
 
@@ -1372,54 +1316,22 @@ export function B1ChonNhanhScreen() {
             <div className="BarText" style={{ display: "flex", alignItems: "center", gap: 10, flex: 1 }}>
               <MapPin size={18} color="var(--color-primary-brand)" style={{ flexShrink: 0 }} />
               <div style={{ lineHeight: "20px", fontSize: 13 }}>
-                {!diemDi && (
-                  <span style={{ color: "var(--color-status-error)", fontWeight: 600, marginRight: 8 }}>
-                    Chưa chọn điểm đi
-                  </span>
-                )}
-                {!diemDen && (
-                  <span style={{ color: "var(--color-status-error)", fontWeight: 600, marginRight: 8 }}>
-                    Chưa chọn điểm đến
-                  </span>
-                )}
-                {tongNganSachQuyDoiVND <= 0 && (
-                  <span style={{ color: "var(--color-status-error)", fontWeight: 600, marginRight: 8 }}>
-                    Chưa nhập ngân sách
-                  </span>
-                )}
-
-                {diemDi && diemDen && tongNganSachQuyDoiVND > 0 && (
+                {diemDi && diemDen && tongNganSachQuyDoiVND > 0 ? (
                   <span>
                     <strong>{soNguoi}</strong> người · <strong>{dinhDangTien(tongNganSachQuyDoiVND)} đ</strong> ·{" "}
                     <strong>{soNgay} ngày {soDem} đêm</strong> ({diemDi.ten} → {diemDen.ten})
                     {tranh.length > 0 ? ` · Tránh: ${tranh.join(", ")}` : ""}
                   </span>
+                ) : (
+                  <span style={{ color: "var(--color-text-sub)" }}>
+                    {soNguoi} người · {tongNganSachQuyDoiVND > 0 ? `${dinhDangTien(tongNganSachQuyDoiVND)} đ` : "Ngân sách đang trống"} · {soNgay} ngày {soDem} đêm · {diemDi ? (typeof diemDi === "string" ? diemDi : diemDi.ten) : "..."} → {diemDen ? (typeof diemDen === "string" ? diemDen : diemDen.ten) : "..."}
+                  </span>
                 )}
               </div>
             </div>
 
-            {/* Cụm nút submit + Chú thích vì sao tắt */}
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              {!isFormValid && (
-                <span
-                  style={{
-                    fontSize: 12,
-                    color: "var(--color-status-errText)",
-                    background: "var(--color-status-errBg)",
-                    padding: "4px 8px",
-                    borderRadius: 6,
-                    fontWeight: 600,
-                    maxWidth: 220,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                  title={getLyDoTat()}
-                >
-                  Đang tắt: {getLyDoTat()}
-                </span>
-              )}
-
+            {/* Cụm nút submit + Chú thích ngắn lý do bị tắt dưới nút */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
               <button
                 type="button"
                 className="Go"
@@ -1434,66 +1346,22 @@ export function B1ChonNhanhScreen() {
                 <span>Lập kế hoạch</span>
                 <span>→</span>
               </button>
+              {!isFormValid && (
+                <span
+                  style={{
+                    fontSize: 11,
+                    color: "var(--color-status-errText)",
+                    lineHeight: "14px",
+                    marginTop: 2,
+                    textAlign: "right",
+                  }}
+                >
+                  {getLyDoTat()}
+                </span>
+              )}
             </div>
           </div>
         </div>
-      </div>
-
-      {/* CỘT PHẢI: HomeRight */}
-      <div className="HomeRight">
-        <div className="Quote Script">
-          Đi để thấy thế giới rộng lớn và chính mình cũng thật tuyệt!
-        </div>
-
-        <div className="RightArt">
-          <svg width="294" height="680" viewBox="0 0 294 680" fill="none">
-            <defs>
-              <linearGradient id="baySky" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--color-art-sky4)" />
-                <stop offset="40%" stopColor="var(--color-art-sky5)" />
-                <stop offset="100%" stopColor="var(--color-art-sky6)" />
-              </linearGradient>
-              <linearGradient id="baySea" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--color-art-sea1)" />
-                <stop offset="60%" stopColor="var(--color-art-sea2)" />
-                <stop offset="100%" stopColor="var(--color-art-sea3)" />
-              </linearGradient>
-              <linearGradient id="woodPost" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="var(--color-art-wood1)" />
-                <stop offset="100%" stopColor="var(--color-art-wood2)" />
-              </linearGradient>
-            </defs>
-
-            <path d="M0 240 C 60 210, 140 215, 294 250 L 294 400 L 0 400 Z" fill="var(--color-art-bay-sea)" opacity="0.6" />
-            <path d="M40 280 C 120 230, 220 240, 294 265 L 294 450 L 40 450 Z" fill="var(--color-art-hill5)" opacity="0.5" />
-            <path d="M0 320 C 100 310, 200 330, 294 340 L 294 560 L 0 560 Z" fill="url(#baySea)" opacity="0.55" />
-            <path d="M80 680 C 140 540, 180 430, 294 410 L 294 680 Z" fill="var(--color-art-hill6)" />
-            <path d="M120 680 C 170 560, 230 490, 294 470 L 294 680 Z" fill="var(--color-art-hill7)" />
-
-            <rect x="236" y="500" width="14" height="180" rx="3" fill="url(#woodPost)" />
-            <path d="M180 540 L 255 540 L 270 552 L 255 564 L 180 564 Z" fill="var(--color-art-wood-sign1)" />
-            <text x="220" y="556" fill="var(--color-art-cream)" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="var(--font-sans)">
-              Travel
-            </text>
-            <path d="M170 575 L 260 575 L 275 587 L 260 599 L 170 599 Z" fill="var(--color-art-wood-sign2)" />
-            <text x="218" y="591" fill="var(--color-art-cream)" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="var(--font-sans)">
-              Explore
-            </text>
-            <path d="M190 610 L 255 610 L 268 622 L 255 634 L 190 634 Z" fill="var(--color-art-wood-sign3)" />
-            <text x="226" y="626" fill="var(--color-art-cream)" fontSize="12" fontWeight="700" textAnchor="middle" fontFamily="var(--font-sans)">
-              Love
-            </text>
-
-            <circle cx="160" cy="650" r="10" fill="var(--color-surface)" />
-            <circle cx="160" cy="650" r="4" fill="var(--color-art-sun)" />
-            <circle cx="190" cy="665" r="9" fill="var(--color-surface)" />
-            <circle cx="190" cy="665" r="3.5" fill="var(--color-art-sun)" />
-            <circle cx="130" cy="660" r="8" fill="var(--color-surface)" />
-            <circle cx="130" cy="660" r="3" fill="var(--color-art-sun)" />
-          </svg>
-        </div>
-
-        <div className="Fade" />
       </div>
     </div>
   );

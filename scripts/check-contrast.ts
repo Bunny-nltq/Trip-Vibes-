@@ -61,8 +61,9 @@ export const CONTRAST_CHECKS: ContrastCheck[] = [
   { tenCap: "Chữ phụ trên Thẻ trắng", fg: "#5C6B88", bg: "#FFFFFF", nguong: 4.5, loai: "Chữ (>= 4.5:1)" },
   { tenCap: "Chữ phụ trên Thẻ phụ", fg: "#5C6B88", bg: "#F6F9FE", nguong: 4.5, loai: "Chữ (>= 4.5:1)" },
 
-  // 3. Chữ trên primary
+  // 3. Chữ trên primary & gradient
   { tenCap: "Chữ trên nút Primary", fg: "#FFFFFF", bg: "#2B55D6", nguong: 4.5, loai: "Chữ (>= 4.5:1)" },
+  { tenCap: "Chữ trắng trên gradient", fg: "#FFFFFF", bg: "#1D6FA5", nguong: 4.5, loai: "Chữ (>= 4.5:1)" },
 
   // 4. Trạng thái (chữ / nền)
   { tenCap: "Thành công (chữ / nền)", fg: "#0B7A5C", bg: "#DDF7EE", nguong: 4.5, loai: "Chữ (>= 4.5:1)" },
@@ -107,7 +108,7 @@ export function runContrastAudit() {
     console.error("\n❌ Có cặp màu chưa đạt tỷ lệ tương phản yêu cầu!");
     process.exit(1);
   } else {
-    console.log("\n✅ Toàn bộ 15/15 cặp màu đạt chuẩn tương phản thiết kế (WCAG 2.1)!\n");
+    console.log(`\n✅ Toàn bộ ${CONTRAST_CHECKS.length}/${CONTRAST_CHECKS.length} cặp màu đạt chuẩn tương phản thiết kế (WCAG 2.1)!\n`);
   }
 }
 

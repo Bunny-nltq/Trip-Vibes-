@@ -6,7 +6,6 @@ import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import type { CategoryKey, CategoryProgress } from "@/data/prepareDestination";
 import {
-  Sparkles,
   Check,
   AlertCircle,
   AlertTriangle,
@@ -297,7 +296,7 @@ export function B2AgentScreen() {
           {dataPrepError || planStatus === "error" ? (
             <AlertCircle size={30} color="var(--color-status-error)" />
           ) : (
-            <Sparkles size={28} />
+            <Compass size={28} />
           )}
         </div>
 
@@ -318,7 +317,7 @@ export function B2AgentScreen() {
             ? planError || "Không thể hoàn thành việc lập kế hoạch."
             : phase === "chuan_bi"
             ? "Hệ thống đang chuẩn bị dữ liệu thực tế (khách sạn, quán ăn, điểm tham quan, giá vé)."
-            : "Gemini AI đang tối ưu lịch trình phù hợp ngân sách và sở thích của bạn."}
+            : "Đang tối ưu lịch trình phù hợp ngân sách và sở thích của bạn."}
         </p>
 
         {phase === "chuan_bi" && !dataPrepError && (
@@ -421,7 +420,7 @@ export function B2AgentScreen() {
       {aiBat && (
         <div className="card" style={{ padding: "18px 22px", marginBottom: 20, background: "var(--color-surface)", borderRadius: 12, border: "1px solid var(--color-neutral-borderCard)" }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: "var(--color-neutral-navyText)", marginBottom: 10 }}>
-            AI hiểu bạn muốn gì
+            Mong muốn chuyến đi của bạn
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
             {understoodChips.map((t, idx) => (

@@ -12,7 +12,6 @@ import {
 import { usePlanPreview } from "@/ui/hooks/usePlanPreview";
 import {
   Hotel,
-  Sparkles,
   Waves,
   Coffee,
   Star,
@@ -215,7 +214,7 @@ export function B5KhachSanScreen() {
             }}
             style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
           >
-            <Sparkles size={16} />
+            <Ticket size={16} />
             Hoạt động vui chơi
           </div>
         </div>
@@ -460,7 +459,7 @@ export function B5KhachSanScreen() {
                   onClick={() => setFilterTag("giai_tri_vui_choi")}
                   style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
                 >
-                  <Sparkles size={13} />
+                  <Ticket size={13} />
                   Vui chơi
                 </button>
               </div>
