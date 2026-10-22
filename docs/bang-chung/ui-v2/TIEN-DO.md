@@ -10,6 +10,46 @@
 | 2026-10-22 12:51:00 | H5 | XONG | d157057 | Trang điểm đến: /diem-den (lưới) và /diem-den/[slug] (SSG 5 điểm đến), 12 vui chơi, 6 quán ăn, 6 cafe, 6 khách sạn, sitemap, cong-kiem-tra H5 đạt |
 | 2026-10-22 12:58:00 | H6 | XONG | f22e8e9 | Trang khách sạn: /khach-san, ChonDiem chọn điểm đến, lưới khách sạn, lọc số sao, xếp theo giá, Google Maps, OpenStreetMap, cong-kiem-tra H6 đạt |
 | 2026-10-22 13:10:00 | H7 | XONG | d806d08 | Nhật ký chuyến đi: màn trống "Chưa có chuyến nào" kèm nút "Lập kế hoạch", 3 tab Hành trình / Chi tiêu / Ngân sách, cong-kiem-tra H7 đạt |
+| 2026-10-22 13:18:00 | H8 | XONG | 4ea6ef4 | Nghiệm thu tổng thể: kiểm tra UI, kiểm tra luồng, chụp 10 ảnh tại 1440 & 390 (hash khác nhau), cong-kiem-tra H8 đạt |
+
+## Ghi chú công việc H8 (Nghiệm thu tổng thể)
+1. **Kiểm tra UI và Chuỗi cấm (`scripts/kiem-tra-ui.ts`)**:
+   - `http://localhost:3012/` và `http://localhost:3012/lap-ke-hoach` hoàn toàn sạch 8 chuỗi cấm.
+2. **Kiểm tra Luồng API (`scripts/kiem-tra-luong.ts`)**:
+   - GET `/api/health` trả 200.
+   - POST `/api/destination/prepare` và GET `/api/destination/status` trả 200.
+   - POST `/api/parse-request` trả 503 (`ai_tat`), UI không gọi khi AI tắt.
+   - POST `/api/plan` trả 200 (`phuongThucLap: "quy_tac"`).
+   - GET `/api/destination?q=Hà Nội` trả 200 geocode.
+   - Kết quả thô lưu tại `docs/bang-chung/ui-v2/H8/luong/`.
+3. **Kiểm tra các tuyến bổ sung (`scripts/kiem-tra-h8-extra.ts`)**:
+   - GET `/diem-den`: 200 OK.
+   - GET `/diem-den/da-nang`: 200 OK.
+   - GET `/khach-san`: 200 OK.
+   - GET `/api/diem-chon`: 200 OK, gồm 8 điểm đi và 5 điểm đến. Toàn bộ 5 điểm đến (Đà Nẵng, Hà Nội, Đà Lạt, Bangkok, Seoul) đều có snapshot hợp lệ và vượt qua audit.
+4. **Bằng chứng chụp ảnh giao diện 1440px và 390px**:
+   - Toàn bộ 10 ảnh chụp được lưu tại `docs/bang-chung/ui-v2/H8/`:
+     * `desktop_home_1440.png` (SHA256: 8CBA49758021AC650914FDC86044F01ADFAE17526D7144D0A8FBFF5E4C47AAD3)
+     * `desktop_diem_den_1440.png` (SHA256: 6A1D1030B3AE748A52098EEE0B2CC05FEB973000B824FCD83074DA1605D3DFD7)
+     * `desktop_diem_den_da_nang_1440.png` (SHA256: CD34ADCD96719DAB4A8FBA1B6FB0FE1A2AEC73717A6DB357B4A23127B81D2632)
+     * `desktop_khach_san_1440.png` (SHA256: 1608041A22D609ECEB62002228593A31BF28BCC680C5BCFECE2FDA48D349E42B)
+     * `desktop_lap_ke_hoach_1440.png` (SHA256: 0564829FFF3DEBB22A1F8469EDDFD98A08274F4E47A98D1CDD75C2C6F4B2F52A)
+     * `mobile_home_390.png` (SHA256: 618A72118CFEF2BE4006D5FABB9FCC82A9E68A823868DC3E47012979AA443A15)
+     * `mobile_diem_den_390.png` (SHA256: 612A4A1AF82381A09F95B284E005245216AF96CF5B12CE09E3F3E2B6C03B4006)
+     * `mobile_diem_den_da_nang_390.png` (SHA256: A0FCE9AD3FD8D8F039B921C4EB1546CB32DBF8388D5008678D7D5282830623B1)
+     * `mobile_khach_san_390.png` (SHA256: 881726E42ADB72AF8918E04C7C10CAA20373C23AC041FC4F54CAD228F082F4E1)
+     * `mobile_lap_ke_hoach_390.png` (SHA256: 264FBA148503F9810F7C0FB47C2CD03CA2753D3FCD18B1B69D2C9BD99A5E9A2D)
+   - Tất cả 10 mã băm SHA256 đều khác nhau hoàn toàn.
+5. **Cổng kiểm tra `cong-kiem-tra.ps1 -MaNV H8`**:
+   - vitest: DAT (exit 0, 58 test files, 377 passed)
+   - typecheck: DAT (exit 0)
+   - build: DAT (exit 0)
+   - check-colors: DAT (exit 0)
+   - check-contrast: DAT (exit 0)
+   - check-emoji: DAT (exit 0)
+   - check-env: DAT (exit 0)
+   - TONG: DAT
+
 
 ## Ghi chú công việc H7 (Nhật ký chuyến đi)
 1. **Component `NhatKyTabBar` (`src/ui/components/NhatKyTabBar.tsx`)**:
