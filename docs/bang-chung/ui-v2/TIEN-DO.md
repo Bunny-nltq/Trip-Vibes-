@@ -6,7 +6,7 @@
 | 2026-10-22 11:36:00 | H1 | XONG | 23343fd | Sửa lỗi API AI tắt trả 503 ai_tat, hook useTrangThaiAI, cong-kiem-tra H1 đạt |
 | 2026-10-22 12:12:00 | H2 | XONG | 26d2267 | Vỏ khu lập kế hoạch, gỡ bỏ trang trí và chuỗi cấm, cong-kiem-tra H2 đạt |
 | 2026-10-22 12:35:00 | H3 | XONG | 6419393 | Danh sách chọn điểm đi/đến, nâng số ngày lên 7, component ChonDiem, cong-kiem-tra H3 đạt |
-| 2026-10-22 12:46:00 | H4 | XONG | (commit sau) | Trang chủ: SiteHeader, HeroSearch, ThuDiemDen 3 cột, KhachSanThamKhao 4 thẻ, dải OpenStreetMap, SiteFooter 3 cột, cong-kiem-tra H4 đạt |
+| 2026-10-22 12:46:00 | H4 | XONG | ac068e7 | Trang chủ: SiteHeader, HeroSearch, ThuDiemDen 3 cột, KhachSanThamKhao 4 thẻ, dải OpenStreetMap, SiteFooter 3 cột, cong-kiem-tra H4 đạt |
 
 ## Ghi chú công việc H4 (Trang chủ)
 1. **Thanh trên (`SiteHeader.tsx`)**:
