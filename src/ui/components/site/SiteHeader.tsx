@@ -93,6 +93,18 @@ export function SiteHeader({ onNavigatePlan }: SiteHeaderProps) {
         >
           Khách sạn
         </Link>
+        <Link
+          href="/lich-trinh"
+          style={{
+            textDecoration: "none",
+            fontSize: 15,
+            fontWeight: 600,
+            color: "var(--color-text-sub)",
+            transition: "color 0.15s",
+          }}
+        >
+          Lịch trình
+        </Link>
       </nav>
 
       {/* Nút Lập kế hoạch */}

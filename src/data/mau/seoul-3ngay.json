@@ -1,0 +1,248 @@
+{
+  "slug": "seoul",
+  "tieuDe": "Trải Nghiệm Seoul 3N2Đ: Cung Điện Cổ Kính & Nhịp Sống Hiện Đại",
+  "tenDiemDen": "Seoul",
+  "quocGia": "Hàn Quốc",
+  "soNgay": 3,
+  "soDem": 2,
+  "soNguoi": 2,
+  "ngansachTongVND": 43100000,
+  "tongTienVND": 21532520,
+  "tiLeDiChuyen": 17.5,
+  "gioDen": "08:00",
+  "canhBao": [],
+  "plan": {
+    "schemaVersion": 14,
+    "request": {
+      "diemDi": {
+        "ten": "TP.HCM",
+        "quocGia": "Việt Nam",
+        "maQuocGia": "VN",
+        "toaDo": {
+          "lat": 10.7769,
+          "lng": 106.7009
+        },
+        "tienTe": "VND",
+        "nguon": "nominatim",
+        "ngayLay": "2026-10-19T00:00:00.000Z"
+      },
+      "diemDen": {
+        "ten": "Seoul",
+        "quocGia": "Hàn Quốc",
+        "maQuocGia": "KR",
+        "toaDo": {
+          "lat": 37.5446,
+          "lng": 126.9507
+        },
+        "tienTe": "KRW",
+        "nguon": "nominatim",
+        "ngayLay": "2026-10-20"
+      },
+      "soNguoi": 2,
+      "soNgay": 3,
+      "ngansach": 43100000,
+      "ngansachTongVND": 43100000
+    },
+    "items": [
+      {
+        "ngay": 1,
+        "gio": "08:00",
+        "hangMuc": "Di chuyển",
+        "noiDung": "Di chuyển chiều đi: Ước tính theo quãng đường 3598 km (TP.HCM → Seoul)",
+        "soLuong": 2,
+        "donGia": 4558130,
+        "thanhTien": 9116260,
+        "refId": "est_di_may_bay_0",
+        "nguon": "uoc_luong:khoang_cach:3598km",
+        "doTinCay": "uoc_tinh",
+        "giaLaUocTinh": true,
+        "thoiLuongPhut": 378
+      },
+      {
+        "ngay": 1,
+        "gio": "14:18",
+        "hangMuc": "Chỗ ở",
+        "noiDung": "Lưu trú: K Pop Hotel (2 đêm, 1 phòng)",
+        "soLuong": 2,
+        "donGia": 750000,
+        "thanhTien": 1500000,
+        "refId": "osm:node:6698262065",
+        "nguon": "osm:node:6698262065",
+        "giaLaUocTinh": true,
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=K%20Pop%20Hotel%2C%20Seoul"
+      },
+      {
+        "ngay": 1,
+        "gio": "15:30",
+        "hangMuc": "Vui chơi",
+        "noiDung": "독도체험관",
+        "soLuong": 2,
+        "donGia": 0,
+        "thanhTien": 0,
+        "refId": "osm:node:11014563967",
+        "nguon": "osm:node:11014563967",
+        "doTinCay": "tham_khao",
+        "giaLaUocTinh": false,
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=%EB%8F%85%EB%8F%84%EC%B2%B4%ED%97%98%EA%B4%80%2C%20Seoul",
+        "nhan": [
+          "van_hoa_lich_su"
+        ]
+      },
+      {
+        "ngay": 1,
+        "gio": "18:30",
+        "hangMuc": "Ăn uống",
+        "noiDung": "Tối ngày 1 – ước tính (2 người)",
+        "soLuong": 2,
+        "donGia": 150000,
+        "thanhTien": 300000,
+        "refId": null,
+        "nguon": null,
+        "giaLaUocTinh": true
+      },
+      {
+        "ngay": 1,
+        "gio": null,
+        "hangMuc": "Ăn uống",
+        "noiDung": "Trưa ngày 1 – ước tính (2 người)",
+        "soLuong": 2,
+        "donGia": 150000,
+        "thanhTien": 300000,
+        "refId": null,
+        "nguon": null,
+        "giaLaUocTinh": true
+      },
+      {
+        "ngay": 2,
+        "gio": "09:30",
+        "hangMuc": "Vui chơi",
+        "noiDung": "레드로드",
+        "soLuong": 2,
+        "donGia": 0,
+        "thanhTien": 0,
+        "refId": "osm:node:11014563993",
+        "nguon": "osm:node:11014563993",
+        "doTinCay": "tham_khao",
+        "giaLaUocTinh": false,
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=%EB%A0%88%EB%93%9C%EB%A1%9C%EB%93%9C%2C%20Seoul",
+        "nhan": [
+          "giai_tri_vui_choi"
+        ]
+      },
+      {
+        "ngay": 2,
+        "gio": "12:00",
+        "hangMuc": "Ăn uống",
+        "noiDung": "Trưa ngày 2 – ước tính (2 người)",
+        "soLuong": 2,
+        "donGia": 150000,
+        "thanhTien": 300000,
+        "refId": null,
+        "nguon": null,
+        "giaLaUocTinh": true
+      },
+      {
+        "ngay": 2,
+        "gio": "15:30",
+        "hangMuc": "Vui chơi",
+        "noiDung": "나의 아저씨 촬영지",
+        "soLuong": 2,
+        "donGia": 0,
+        "thanhTien": 0,
+        "refId": "osm:node:11545900069",
+        "nguon": "osm:node:11545900069",
+        "doTinCay": "tham_khao",
+        "giaLaUocTinh": false,
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=%EB%82%98%EC%9D%98%20%EC%95%84%EC%A0%80%EC%94%A8%20%EC%B4%AC%EC%98%81%EC%A7%80%2C%20Seoul",
+        "nhan": [
+          "giai_tri_vui_choi"
+        ]
+      },
+      {
+        "ngay": 2,
+        "gio": "18:30",
+        "hangMuc": "Ăn uống",
+        "noiDung": "Tối ngày 2 – ước tính (2 người)",
+        "soLuong": 2,
+        "donGia": 150000,
+        "thanhTien": 300000,
+        "refId": null,
+        "nguon": null,
+        "giaLaUocTinh": true
+      },
+      {
+        "ngay": 3,
+        "gio": "09:30",
+        "hangMuc": "Vui chơi",
+        "noiDung": "왕벚나무",
+        "soLuong": 2,
+        "donGia": 0,
+        "thanhTien": 0,
+        "refId": "osm:node:11807097035",
+        "nguon": "osm:node:11807097035",
+        "doTinCay": "tham_khao",
+        "giaLaUocTinh": false,
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=%EC%99%95%EB%B2%9A%EB%82%98%EB%AC%B4%2C%20Seoul",
+        "nhan": [
+          "giai_tri_vui_choi"
+        ]
+      },
+      {
+        "ngay": 3,
+        "gio": "12:00",
+        "hangMuc": "Ăn uống",
+        "noiDung": "Trưa ngày 3 – ước tính (2 người)",
+        "soLuong": 2,
+        "donGia": 150000,
+        "thanhTien": 300000,
+        "refId": null,
+        "nguon": null,
+        "giaLaUocTinh": true
+      },
+      {
+        "ngay": 3,
+        "gio": "17:30",
+        "hangMuc": "Di chuyển",
+        "noiDung": "Di chuyển chiều về: Ước tính theo quãng đường 3598 km (Seoul → TP.HCM)",
+        "soLuong": 2,
+        "donGia": 4558130,
+        "thanhTien": 9116260,
+        "refId": "est_ve_may_bay_0",
+        "nguon": "uoc_luong:khoang_cach:3598km",
+        "doTinCay": "uoc_tinh",
+        "giaLaUocTinh": true,
+        "thoiLuongPhut": 378
+      },
+      {
+        "ngay": 3,
+        "gio": null,
+        "hangMuc": "Ăn uống",
+        "noiDung": "Tối ngày 3 – ước tính (2 người)",
+        "soLuong": 2,
+        "donGia": 150000,
+        "thanhTien": 300000,
+        "refId": null,
+        "nguon": null,
+        "giaLaUocTinh": true
+      }
+    ],
+    "tongKet": {
+      "tongVND": 21532520,
+      "conLaiVND": 21567480,
+      "phanTramDaDung": 50,
+      "theoHangMuc": {
+        "Di chuyển": 18232520,
+        "Chỗ ở": 1500000,
+        "Ăn uống": 1800000,
+        "Vui chơi": 0
+      },
+      "tongThoiGianDiChuyenPhut": 756,
+      "trangThaiNganSach": "trong"
+    },
+    "canhBao": []
+  },
+  "nguon": "OpenStreetMap contributors (snapshot 2026-10-20)",
+  "ngayTao": "2026-10-22",
+  "quyTacVersion": "4",
+  "giaLaUocTinh": true
+}

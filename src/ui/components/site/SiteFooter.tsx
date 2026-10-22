@@ -190,14 +190,8 @@ export function SiteFooter({ ngayDuLieu = "20/10/2026", onOpenGioiHan }: SiteFoo
               <strong style={{ color: "var(--color-text)" }}>Cập nhật:</strong> {ngayDuLieu}
             </div>
             <div>
-              <a
-                href="#gioi-han-du-lieu"
-                onClick={(e) => {
-                  if (onOpenGioiHan) {
-                    e.preventDefault();
-                    onOpenGioiHan();
-                  }
-                }}
+              <Link
+                href="/gioi-han"
                 style={{
                   color: "var(--color-primary-main)",
                   textDecoration: "none",
@@ -205,7 +199,43 @@ export function SiteFooter({ ngayDuLieu = "20/10/2026", onOpenGioiHan }: SiteFoo
                 }}
               >
                 Giới hạn dữ liệu & pháp lý
-              </a>
+              </Link>
+            </div>
+            <div>
+              <Link
+                href="/tro-giup"
+                style={{
+                  color: "var(--color-text-sub)",
+                  textDecoration: "none",
+                  transition: "color 0.15s",
+                }}
+              >
+                Trợ giúp & Hướng dẫn
+              </Link>
+            </div>
+            <div>
+              <Link
+                href="/nguon-anh"
+                style={{
+                  color: "var(--color-text-sub)",
+                  textDecoration: "none",
+                  transition: "color 0.15s",
+                }}
+              >
+                Nguồn ảnh & Bản quyền
+              </Link>
+            </div>
+            <div>
+              <Link
+                href="/lich-trinh"
+                style={{
+                  color: "var(--color-text-sub)",
+                  textDecoration: "none",
+                  transition: "color 0.15s",
+                }}
+              >
+                Lịch trình mẫu 3N2Đ
+              </Link>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--color-status-success)" }}>
               <ShieldCheck size={18} />
@@ -227,7 +257,7 @@ export function SiteFooter({ ngayDuLieu = "20/10/2026", onOpenGioiHan }: SiteFoo
         </div>
       </div>
 
-      {/* Dòng bản quyền & tuyên bố từ chối */}
+      {/* Dòng bản quyền & pháp lý */}
       <div
         style={{
           maxWidth: 1200,
@@ -238,7 +268,7 @@ export function SiteFooter({ ngayDuLieu = "20/10/2026", onOpenGioiHan }: SiteFoo
           alignItems: "center",
           justifyContent: "space-between",
           flexWrap: "wrap",
-          gap: 12,
+          gap: 16,
           fontSize: 14,
           color: "var(--color-text-sub)",
         }}
@@ -260,7 +290,15 @@ export function SiteFooter({ ngayDuLieu = "20/10/2026", onOpenGioiHan }: SiteFoo
           </div>
           <span>Bản quyền 2026 Trip Vibes. Dự án lập kế hoạch du lịch theo ngân sách.</span>
         </div>
-        <div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <Link href="/dieu-khoan" style={{ color: "var(--color-text-sub)", textDecoration: "none" }}>
+            Điều khoản
+          </Link>
+          <span>•</span>
+          <Link href="/quyen-rieng-tu" style={{ color: "var(--color-text-sub)", textDecoration: "none" }}>
+            Quyền riêng tư
+          </Link>
+          <span>•</span>
           <span>Dữ liệu: OpenStreetMap contributors. Giá là ước tính.</span>
         </div>
       </div>

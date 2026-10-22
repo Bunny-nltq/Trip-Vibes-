@@ -23,6 +23,7 @@
     "eval:likes": "tsx eval/run-likes.ts",
     "eval:diadiem": "tsx eval/run-diadiem.ts",
     "data:refresh": "tsx scripts/data-refresh.ts",
+    "data:mau": "tsx scripts/tao-du-lieu-mau.ts",
     "data:snapshot": "tsx scripts/data-snapshot.ts",
     "data:snapshot:all": "tsx scripts/data-snapshot.ts",
     "audit:snapshots": "tsx scripts/audit-snapshots.ts",
