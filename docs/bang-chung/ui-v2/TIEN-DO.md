@@ -7,6 +7,21 @@
 | 2026-10-22 12:12:00 | H2 | XONG | 26d2267 | Vỏ khu lập kế hoạch, gỡ bỏ trang trí và chuỗi cấm, cong-kiem-tra H2 đạt |
 | 2026-10-22 12:35:00 | H3 | XONG | 6419393 | Danh sách chọn điểm đi/đến, nâng số ngày lên 7, component ChonDiem, cong-kiem-tra H3 đạt |
 | 2026-10-22 12:46:00 | H4 | XONG | ac068e7 | Trang chủ: SiteHeader, HeroSearch, ThuDiemDen 3 cột, KhachSanThamKhao 4 thẻ, dải OpenStreetMap, SiteFooter 3 cột, cong-kiem-tra H4 đạt |
+| 2026-10-22 12:51:00 | H5 | XONG | (commit sau) | Trang điểm đến: /diem-den (lưới) và /diem-den/[slug] (SSG 5 điểm đến), 12 vui chơi, 6 quán ăn, 6 cafe, 6 khách sạn, sitemap, cong-kiem-tra H5 đạt |
+
+## Ghi chú công việc H5 (Trang điểm đến)
+1. **Tuyến đường `/diem-den` (`DiemDenDanhSachScreen.tsx`, `/app/(site)/diem-den/page.tsx`)**:
+   - Hiển thị danh sách 5 điểm đến chính thức dưới dạng thẻ lớn với khung ảnh tỉ lệ 16:10, icon và nút dẫn sang trang chi tiết.
+2. **Tuyến đường `/diem-den/[slug]` (`DiemDenChiTietScreen.tsx`, `/app/(site)/diem-den/[slug]/page.tsx`)**:
+   - `generateStaticParams` từ snapshot hỗ trợ đúng 5 slug: `da-nang`, `ha-noi`, `da-lat`, `bangkok`, `seoul`.
+   - Tiêu đề, quốc gia và mô tả biên tập lấy từ `src/data/site/mo-ta-diem-den.json`.
+   - Nút nổi bật "Lập kế hoạch đi X" mở `/lap-ke-hoach?den=...`.
+   - Khối "Địa điểm vui chơi": tối đa 12 địa điểm từ snapshot, nút "Xem trên Google Maps", nhãn loại, tuyệt đối không sao đánh giá.
+   - Khối "Ẩm thực": 6 quán ăn và 6 quán cà phê có liên kết Google Maps.
+   - Khối "Khách sạn": 6 thẻ khách sạn kèm giá ước tính (tính bằng `getHotelPricePerNight`), liên kết `/khach-san?diem-den=<slug>`.
+   - Mỗi thẻ có khung ảnh tỉ lệ cố định 16:10 với nền thay thế gradient token và icon SVG tương ứng.
+3. **Sitemap (`src/app/sitemap.ts`)**:
+   - Đã tạo sitemap.ts bổ sung các route: `/`, `/diem-den`, `/diem-den/[slug]` (5 slug), `/khach-san`, `/lap-ke-hoach`.
 
 ## Ghi chú công việc H4 (Trang chủ)
 1. **Thanh trên (`SiteHeader.tsx`)**:

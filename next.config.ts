@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
     "/api/health": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
     "/api/diem-chon": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
     "/": ["./src/data/snapshots/*.json", "./src/data/reference/*.json", "./src/data/site/*.json"],
+    "/diem-den": ["./src/data/snapshots/*.json", "./src/data/reference/*.json", "./src/data/site/*.json"],
+    "/diem-den/[slug]": ["./src/data/snapshots/*.json", "./src/data/reference/*.json", "./src/data/site/*.json"],
   },
 };
 
