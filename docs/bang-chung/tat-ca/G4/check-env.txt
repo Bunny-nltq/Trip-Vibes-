@@ -1,0 +1,15 @@
+
+> trip-vibes@0.1.0 check:env
+> tsx scripts/check-env.ts
+
+================================================================================
+             KIỂM TRA BIẾN MÔI TRƯỜNG (CHECK:ENV)                               
+================================================================================
+
+Đã đọc 25 biến từ .env.example: GEMINI_API_KEY, GEMINI_MODEL, LIVE_AI_ENABLED, GEMINI_DAILY_CAP, PLAN_MAX_AI_CALLS, PLAN_TIME_BUDGET_MS, DATA_MODE, LIVE_DATA_ENABLED, DATA_FALLBACK, DATA_TTL_HOURS, DATA_MAX_SEARCH_PER_DAY, NOMINATIM_USER_AGENT, OVERPASS_ENDPOINTS, NEXT_PUBLIC_SHOW_DEMO, SITE_URL, TAVILY_API_KEY, UNSPLASH_ACCESS_KEY, DATA_SNAPSHOT_NAME, GOOGLE_API_KEY, NEXT_PUBLIC_VERCEL_ENV, NO_AGENT_CACHE, OVERPASS_RUN_ID, RUN_ID, TOI_DA, npm_config_toi_da
+
+Đã phát hiện 25 biến process.env trong mã nguồn (src, scripts, eval).
+
+✅ ĐẠT: Mọi biến môi trường đọc trong mã đều đã có trong .env.example.
+✅ ĐẠT: Không có biến thừa trong .env.example.
+

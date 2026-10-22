@@ -1,0 +1,245 @@
+
+> trip-vibes@0.1.0 eval:diadiem
+> tsx eval/run-diadiem.ts
+
+================================================================================
+          TRIP VIBES – ĐÁNH GIÁ ĐIỂM ĐẾN BẤT KỲ (EVAL:DIADIEM)                 
+================================================================================
+6 điểm đến mẫu: Đà Nẵng, Hà Nội, Đà Lạt, Phú Quốc, Bangkok, Seoul
+Điểm khởi hành: TP.HCM
+🌐 Thứ tự máy chủ Overpass cấu hình: https://maps.mail.ru/osm/tools/overpass/api/interpreter -> https://overpass.private.coffee/api/interpreter -> https://overpass-api.de/api/interpreter
+
+================================================================================
+▶ BẮT ĐẦU CHẠY ĐÁNH GIÁ CHẾ ĐỘ: LIVE-ONLY (TẮT DỰ PHÒNG)
+================================================================================
+🧹 Xóa cache Overpass trước lượt chạy LIVE-ONLY để đo mạng thật...
+
+--------------------------------------------------------------------------------
+▶ [LIVE-ONLY (TẮT DỰ PHÒNG)] Đang kiểm tra: Đà Nẵng (3 ngày, 2 người, 15 triệu VND)...
+   ✅ Geocode thành công: Thành phố Đà Nẵng, Việt Nam (VN) [16.068501, 108.2240242], Tiền tệ: VND
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Thành phố Đà Nẵng
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+node.exe : [planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng 
+trước khi gọi Gemini.
+At C:\Program Files\nodejs\npm.ps1:29 char:3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([planWithRepair...khi gọi Gemini.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 557ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Thành phố Đà Nẵng chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+--------------------------------------------------------------------------------
+▶ [LIVE-ONLY (TẮT DỰ PHÒNG)] Đang kiểm tra: Hà Nội (3 ngày, 2 người, 15 triệu VND)...
+   ✅ Geocode thành công: Hà Nội, Việt Nam (VN) [21.0283334, 105.854041], Tiền tệ: VND
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Hà Nội
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+[planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng trước khi gọi 
+Gemini.
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 5ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Hà Nội chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+--------------------------------------------------------------------------------
+▶ [LIVE-ONLY (TẮT DỰ PHÒNG)] Đang kiểm tra: Đà Lạt (3 ngày, 2 người, 15 triệu VND)...
+   ✅ Geocode thành công: Đà Lạt, Việt Nam (VN) [11.9402416, 108.4375758], Tiền tệ: VND
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Đà Lạt
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+[planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng trước khi gọi 
+Gemini.
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 842ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Đà Lạt chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+--------------------------------------------------------------------------------
+▶ [LIVE-ONLY (TẮT DỰ PHÒNG)] Đang kiểm tra: Phú Quốc (3 ngày, 2 người, 15 triệu VND)...
+   ✅ Geocode thành công: Đặc khu Phú Quốc, Việt Nam (VN) [10.2163457, 103.9587878], Tiền tệ: VND
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Đặc khu Phú Quốc
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+[planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng trước khi gọi 
+Gemini.
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 890ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Đặc khu Phú Quốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+--------------------------------------------------------------------------------
+▶ [LIVE-ONLY (TẮT DỰ PHÒNG)] Đang kiểm tra: Bangkok (3 ngày, 2 người, 25 triệu VND)...
+   ✅ Geocode thành công: Băng Cốc, Thái Lan (TH) [13.7524938, 100.4935089], Tiền tệ: THB
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Băng Cốc
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+[planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng trước khi gọi 
+Gemini.
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 878ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Băng Cốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+--------------------------------------------------------------------------------
+▶ [LIVE-ONLY (TẮT DỰ PHÒNG)] Đang kiểm tra: Seoul (3 ngày, 2 người, 25 triệu VND)...
+   ✅ Geocode thành công: Seoul, Hàn Quốc (KR) [37.5666791, 126.9782914], Tiền tệ: KRW
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Seoul
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+[planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng trước khi gọi 
+Gemini.
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 806ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Seoul chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+================================================================================
+▶ BẮT ĐẦU CHẠY ĐÁNH GIÁ CHẾ ĐỘ: CÓ DỰ PHÒNG SNAPSHOT
+================================================================================
+
+--------------------------------------------------------------------------------
+▶ [CÓ DỰ PHÒNG SNAPSHOT] Đang kiểm tra: Đà Nẵng (3 ngày, 2 người, 15 triệu VND)...
+   ✅ Geocode thành công: Thành phố Đà Nẵng, Việt Nam (VN) [16.068501, 108.2240242], Tiền tệ: VND
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Thành phố Đà Nẵng
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+[planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng trước khi gọi 
+Gemini.
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 6ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Thành phố Đà Nẵng chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+--------------------------------------------------------------------------------
+▶ [CÓ DỰ PHÒNG SNAPSHOT] Đang kiểm tra: Hà Nội (3 ngày, 2 người, 15 triệu VND)...
+   ✅ Geocode thành công: Hà Nội, Việt Nam (VN) [21.0283334, 105.854041], Tiền tệ: VND
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Hà Nội
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+[planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng trước khi gọi 
+Gemini.
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 4ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Hà Nội chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+--------------------------------------------------------------------------------
+▶ [CÓ DỰ PHÒNG SNAPSHOT] Đang kiểm tra: Đà Lạt (3 ngày, 2 người, 15 triệu VND)...
+   ✅ Geocode thành công: Đà Lạt, Việt Nam (VN) [11.9402416, 108.4375758], Tiền tệ: VND
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Đà Lạt
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+[planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng trước khi gọi 
+Gemini.
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 5ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Đà Lạt chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+--------------------------------------------------------------------------------
+▶ [CÓ DỰ PHÒNG SNAPSHOT] Đang kiểm tra: Phú Quốc (3 ngày, 2 người, 15 triệu VND)...
+   ✅ Geocode thành công: Đặc khu Phú Quốc, Việt Nam (VN) [10.2163457, 103.9587878], Tiền tệ: VND
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Đặc khu Phú Quốc
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+[planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng trước khi gọi 
+Gemini.
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 6ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Đặc khu Phú Quốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+--------------------------------------------------------------------------------
+▶ [CÓ DỰ PHÒNG SNAPSHOT] Đang kiểm tra: Bangkok (3 ngày, 2 người, 25 triệu VND)...
+   ✅ Geocode thành công: Băng Cốc, Thái Lan (TH) [13.7524938, 100.4935089], Tiền tệ: THB
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Băng Cốc
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+[planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng trước khi gọi 
+Gemini.
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 5ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Băng Cốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+--------------------------------------------------------------------------------
+▶ [CÓ DỰ PHÒNG SNAPSHOT] Đang kiểm tra: Seoul (3 ngày, 2 người, 25 triệu VND)...
+   ✅ Geocode thành công: Seoul, Hàn Quốc (KR) [37.5666791, 126.9782914], Tiền tệ: KRW
+   📦 Dữ liệu địa điểm: 0 KS, 0 quán ăn, 0 cafe, 0 hoạt động (Tổng: 0, nguồn: mock)
+   🚗 Phương tiện: 0 web, 6 ước lượng
+[planWithRepair] Initializing LiveDataSource for: Seoul
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 0 hotels, 0 food, 0 activities
+[planWithRepair] Kho dữ liệu không đủ: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Dừng trước khi gọi 
+Gemini.
+   🏁 Kết quả: THIẾU DỮ LIỆU | Nguồn: không có | Thời gian: 4ms | Máy chủ Overpass: N/A (0 lần thử)
+   ℹ️ Lý do lỗi/thiếu: Dữ liệu địa phương tại Seoul chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.
+   📊 Tỷ lệ lấp: HĐ 0% (0/4 ô khả dụng), Ăn: không có quán | Đánh giá: THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu
+   ⏳ Nghỉ 5 giây trước điểm đến kế tiếp...
+
+================================================================================
+     BẢNG A: KẾT QUẢ ĐÁNH GIÁ LIVE-ONLY (ĐO ĐỘ TIN CẬY THỰC TẾ TỪ MẠNG)         
+================================================================================
+┌─────────┬────────────┬─────────┬────┬─────────┬──────┬────────┬─────────────────┬────────────┬────────┬─────────────────┬───────────┬────────────────────────┬──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ (index) │ Điểm đến   │ Geocode │ KS │ Quán ăn │ Cafe │ H.Động │ Trạng thái      │ Nguồn DL   │ Lấp HĐ │ Ăn              │ Thời gian │ Máy chủ Overpass / Thử │ Lý do lỗi / vi phạm                                                                                                                                                                                                                  │
+├─────────┼────────────┼─────────┼────┼─────────┼──────┼────────┼─────────────────┼────────────┼────────┼─────────────────┼───────────┼────────────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 0       │ 'Đà Nẵng'  │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '557ms'   │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Thành phố Đà Nẵng chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.' │
+│ 1       │ 'Hà Nội'   │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '5ms'     │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Hà Nội chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.'            │
+│ 2       │ 'Đà Lạt'   │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '842ms'   │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Đà Lạt chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.'            │
+│ 3       │ 'Phú Quốc' │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '890ms'   │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Đặc khu Phú Quốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.'  │
+│ 4       │ 'Bangkok'  │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '878ms'   │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Băng Cốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.'          │
+│ 5       │ 'Seoul'    │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '806ms'   │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Seoul chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.'             │
+└─────────┴────────────┴─────────┴────┴─────────┴──────┴────────┴─────────────────┴────────────┴────────┴─────────────────┴───────────┴────────────────────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+     BẢNG B: KẾT QUẢ ĐÁNH GIÁ CÓ DỰ PHÒNG SNAPSHOT                              
+================================================================================
+┌─────────┬────────────┬─────────┬────┬─────────┬──────┬────────┬─────────────────┬────────────┬────────┬─────────────────┬───────────┬────────────────────────┬──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ (index) │ Điểm đến   │ Geocode │ KS │ Quán ăn │ Cafe │ H.Động │ Trạng thái      │ Nguồn DL   │ Lấp HĐ │ Ăn              │ Thời gian │ Máy chủ Overpass / Thử │ Ghi chú nguồn / Lý do                                                                                                                                                                                                                │
+├─────────┼────────────┼─────────┼────┼─────────┼──────┼────────┼─────────────────┼────────────┼────────┼─────────────────┼───────────┼────────────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 0       │ 'Đà Nẵng'  │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '6ms'     │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Thành phố Đà Nẵng chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.' │
+│ 1       │ 'Hà Nội'   │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '4ms'     │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Hà Nội chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.'            │
+│ 2       │ 'Đà Lạt'   │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '5ms'     │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Đà Lạt chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.'            │
+│ 3       │ 'Phú Quốc' │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '6ms'     │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Đặc khu Phú Quốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.'  │
+│ 4       │ 'Bangkok'  │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '5ms'     │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Băng Cốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.'          │
+│ 5       │ 'Seoul'    │ 'OK'    │ 0  │ 0       │ 0    │ 0      │ 'THIẾU DỮ LIỆU' │ 'không có' │ '0%'   │ 'không có quán' │ '4ms'     │ 'N/A (0 lần)'          │ '[khong_du_du_lieu] Dữ liệu địa phương tại Seoul chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.'             │
+└─────────┴────────────┴─────────┴────┴─────────┴──────┴────────┴─────────────────┴────────────┴────────┴─────────────────┴───────────┴────────────────────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Chi tiết nguồn gốc và tuổi của cache (Bảng B):
+- Đà Nẵng: dữ liệu live mới từ mạng hoặc snapshot trực tiếp.
+- Hà Nội: dữ liệu live mới từ mạng hoặc snapshot trực tiếp.
+- Đà Lạt: dữ liệu live mới từ mạng hoặc snapshot trực tiếp.
+- Phú Quốc: dữ liệu live mới từ mạng hoặc snapshot trực tiếp.
+- Bangkok: dữ liệu live mới từ mạng hoặc snapshot trực tiếp.
+- Seoul: dữ liệu live mới từ mạng hoặc snapshot trực tiếp.
+
+ℹ️ Ghi chú máy chủ https://overpass-api.de: Thường xuyên gặp lỗi (fetch failed / timeout kết nối) do bị nghẽn mạng quốc tế hoặc quá tải. Hệ thống tự động ưu tiên máy chủ phản hồi nhanh https://maps.mail.ru và dự phòng https://overpass.private.coffee.
+================================================================================
+

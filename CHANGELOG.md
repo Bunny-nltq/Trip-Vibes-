@@ -4,6 +4,21 @@ Tất cả các thay đổi của dự án Trip Vibes được ghi nhận trung 
 
 ---
 
+- `f6b954d` - G3: eval:ai-rate ngay 2026-10-22 va dung tai 429
+- `3688eea` - G2: Bang chung cau truc trang chu va ghi nhan kiem tra
+- `b323af0` - G1: Bang chung cong-kiem-tra va smoke test sau khi gop dem-ui
+- `2b82df8` - G1: Gop dem-ui vao main (giu phien ban main cho docs/bang-chung/dem/TIEN-DO.md)
+- `90ebe7a` - G0: Luu lenh tat ca, kiem tra cong trong va cong-kiem-tra dat
+- `803343e` - P5: Bang chung thu gop dem-ui va ghi nhan xung dot tai docs/bang-chung/dem/TIEN-DO.md
+- `9d1377e` - P4: Cap nhat tai lieu gioi han da biet va ke hoach lam
+- `b9a4adc` - P3: Bo kiem tra nhanh smoke test va ham thuan smokeRules
+- `354755b` - P2: Thu hep outputFileTracingIncludes sang *.json
+- `ba8cdb0` - P1: Bo cham eval:parse voi soSanhNganSach va 4 unit test dat
+- `076a953` - P0: Luu lenh hom nay, go co Gemini va khoi tao tien do hom nay
+- `4493af6` - N7: Sửa eval:ai-rate, thêm eval/lib/phanLoai.ts và dừng sớm 2 lần khong_do_duoc
+- `f26c9b6` - N2: Ghi nhan tien do N2 dung tai eval:bill do loi 429
+- `02ccc6c` - N2: eval:ai-rate ngay 2026-10-22
+- `1146a10` - N5: bao cao dem
 - `B2` - Đóng băng lõi quy tắc và đánh giá phiên bản 4 (tag core-frozen-4)
 - `0eb91a8` - B1b: Kế hoạch dự phòng nhanh nhất trong ngân sách với dự trữ hoạt động 10%
 - `6b07c54` - B1a: Sửa 3 lỗi số đêm, ô hoạt động khi đến sau nửa đêm, và cảnh báo quy tắc

@@ -6,3 +6,4 @@
 | 2026-10-22 10:13:00 | G1 | XONG | G1-done | Gộp dem-ui vào main thành công, cong-kiem-tra G1 đạt, smoke test /lap-ke-hoach trả 200 ĐẠT |
 | 2026-10-22 10:14:00 | G2 | XONG | G2-done | Đã xuất cấu trúc trang chủ home-cau-truc.txt, cong-kiem-tra G2 đạt |
 | 2026-10-22 10:18:00 | G3 | XONG | G3-done | ai-ping 1.14s; ai-rate xong 2/8 kịch bản (16 lượt Gemini), gặp 429 tại kịch bản #4 nên dừng toàn bộ G3; các bộ bill, parse, likes, repair chờ lượt tiếp theo |
+| 2026-10-22 10:22:00 | G4 | XONG | G4-done | Chạy eval:diadiem, eval:data, eval:tonghop, cập nhật CHANGELOG, README, GIOI-HAN, HUONG-DAN-DEPLOY |

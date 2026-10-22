@@ -70,6 +70,7 @@ Toàn bộ 26 lệnh phát triển, kiểm tra chất lượng và đánh giá �
 ### 3.2. Kiểm thử Tự động (Testing)
 - `npm run test`: Chạy toàn bộ bài kiểm thử tự động toàn dự án với Vitest (`vitest run`).
 - `npm run test:core`: Chạy riêng bộ kiểm thử cho tầng logic cốt lõi domain (`vitest run src/core`).
+- `npm run smoke -- <URL>`: Kiểm tra nhanh bản triển khai thực tế (GET `/api/health` 5 snapshot, GET `/demo` 404, GET `/` 200, GET `/lap-ke-hoach` 200, POST `/api/plan`, kiểm tra chống rò rỉ khóa API bí mật).
 
 ### 3.3. Kiểm tra Chuẩn Thiết kế & Dữ liệu
 - `npm run check:colors`: Quét sạch mã màu hex và font cứng trong `src/ui` và `src/app` (đảm bảo 100% dùng CSS tokens).
@@ -88,7 +89,7 @@ Toàn bộ 26 lệnh phát triển, kiểm tra chất lượng và đánh giá �
 
 ### 3.5. Bộ Đánh giá Độc lập (Evaluation Suite)
 - `npm run eval:tonghop`: Chạy tổng hợp toàn bộ số liệu các bộ đánh giá vào `eval/results/SO-LIEU-BAO-CAO.md`.
-- `npm run eval:ai-rate`: Đánh giá tỷ lệ và độ hiệu quả lập kế hoạch của AI Agent (`tsx eval/run-ai-rate.ts`).
+- `npm run eval:ai-rate`: Đánh giá tỷ lệ và độ hiệu quả lập kế hoạch của AI Agent (`tsx eval/run-ai-rate.ts`). Hỗ trợ cờ `--toi-da=N` và cơ chế chạy tiếp tục (resume) kịch bản chưa hoàn thành từ `ai-rate-progress.json`.
 - `npm run eval:bill`: Đánh giá độ chính xác OCR và bóc tách dữ liệu hóa đơn chi tiêu (`tsx eval/run-bill.ts`).
 - `npm run eval:parse`: Đánh giá trích xuất thông số từ yêu cầu ngôn ngữ tự nhiên (`tsx eval/run-parse.ts`).
 - `npm run eval:repair`: Đánh giá cơ chế tự sửa vi phạm kế hoạch của AI (`tsx eval/run-repair.ts`).

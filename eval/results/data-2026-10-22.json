@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "quyTacVersion": "5",
+    "agentPromptVersion": "v4",
+    "model": "khong_dung_ai",
+    "ngayChay": "2026-10-22T03:20:16.565Z",
+    "tenBo": "data"
+  },
+  "date": "2026-10-22",
+  "total": 0,
+  "coNguon": 0,
+  "giaUocTinh": 0,
+  "theuTen": 0,
+  "thieuToaDo": 0,
+  "thieuGia": 0,
+  "soTavilyHom": 5,
+  "soGeminiTransport": 0,
+  "soGeminiHotel": 0,
+  "elapsed": 6
+}

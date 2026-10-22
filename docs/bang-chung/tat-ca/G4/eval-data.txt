@@ -1,0 +1,35 @@
+
+> trip-vibes@0.1.0 eval:data
+> tsx eval/run-data.ts
+
+
+=========================================
+     TRIP VIBES – EVAL DỮ LIỆU LIVE
+=========================================
+
+📡 Đang tải dữ liệu...
+
+📊 KẾT QUẢ DỮ LIỆU:
+   Tổng địa điểm:          0
+   - Khách sạn:            0
+   - Quán ăn:              0
+   - Cafe:                 0
+   - Hoạt động:            0
+   - Phương tiện:          6
+
+📋 CHẤT LƯỢNG:
+   Tỷ lệ có nguồn:          0% (0/0)
+   Tỷ lệ giá ước tính:      0% (0/0)
+   Thiếu tên:              0
+   Thiếu toạ độ:           0
+   Thiếu giá:              0
+
+🔢 API USAGE:
+   Lượt Tavily hôm nay:    5
+   Lượt Gemini (transport):0
+   Lượt Gemini (hotel):    0
+   Thời gian tải dữ liệu:  6 ms
+
+📄 CSV kiểm tra thủ công: D:\Trip_Vibes\eval\results\kiem-tra-thu-cong.csv
+   (Điền cột gia_toi_tu_kiem, sao_google_toi_xem, dung_hay_sai)
+💾 Kết quả JSON đã lưu: D:\Trip_Vibes\eval\results\data-2026-10-22.json
