@@ -1,0 +1,5 @@
+HTTP/1.1 400
+URL: http://127.0.0.1:3012/api/destination/status?jobId=
+Method: GET
+
+{"ok":false,"error":"Thiếu tham số jobId trong query."}

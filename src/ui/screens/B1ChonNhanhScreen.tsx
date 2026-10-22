@@ -15,6 +15,7 @@ import {
 } from "@/core/formB1";
 import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
 import { docGoiChuyenTuSession } from "@/ui/lib/chuyenB1";
+import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import {
   MapPin,
   Search,
@@ -105,6 +106,7 @@ export function B1ChonNhanhScreen() {
     executePlan,
     planResult,
   } = useApp();
+  const { aiBat } = useTrangThaiAI();
 
   // ─── 1. Form state B1 ───
   const [diemDi, setDiemDi] = useState<DiemDen | null>(
@@ -1312,51 +1314,53 @@ export function B1ChonNhanhScreen() {
               })}
             </div>
 
-            {/* Ghi chú tùy chọn với bộ đếm ký tự chuẩn */}
-            <div style={{ marginTop: 12 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
-                  Ghi chú thêm (không bắt buộc)
-                </span>
-                <span
-                  style={{
-                    fontSize: 12,
-                    color: ghiChu.length > 500 ? "var(--color-status-error)" : "var(--color-neutral-mutedText)",
-                  }}
-                >
-                  {ghiChu.length}/500
-                </span>
-              </div>
-
-              <textarea
-                className="Area"
-                placeholder="Ví dụ: đi cùng gia đình, thích trải nghiệm văn hóa địa phương, muốn nghỉ ngơi thong thả..."
-                value={ghiChu}
-                maxLength={600}
-                onChange={(e) => setGhiChu(e.target.value)}
-                style={{ width: "100%", resize: "none", outline: "none", fontFamily: "inherit" }}
-              />
-
-              {hasGhiChuError && (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    background: "var(--color-status-errBg)",
-                    border: "1px solid var(--color-status-errBorder)",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    marginTop: 6,
-                  }}
-                >
-                  <AlertCircle size={16} color="var(--color-status-errText)" />
-                  <span style={{ fontSize: 12, color: "var(--color-status-errText)", fontWeight: 600 }}>
-                    Nội dung ghi chú tối đa 500 ký tự. Vui lòng rút gọn lại.
+            {/* Ghi chú tùy chọn với bộ đếm ký tự chuẩn - chỉ hiện khi AI bật */}
+            {aiBat && (
+              <div style={{ marginTop: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
+                    Ghi chú thêm (không bắt buộc)
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: ghiChu.length > 500 ? "var(--color-status-error)" : "var(--color-neutral-mutedText)",
+                    }}
+                  >
+                    {ghiChu.length}/500
                   </span>
                 </div>
-              )}
-            </div>
+
+                <textarea
+                  className="Area"
+                  placeholder="Ví dụ: đi cùng gia đình, thích trải nghiệm văn hóa địa phương, muốn nghỉ ngơi thong thả..."
+                  value={ghiChu}
+                  maxLength={600}
+                  onChange={(e) => setGhiChu(e.target.value)}
+                  style={{ width: "100%", resize: "none", outline: "none", fontFamily: "inherit" }}
+                />
+
+                {hasGhiChuError && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      background: "var(--color-status-errBg)",
+                      border: "1px solid var(--color-status-errBorder)",
+                      borderRadius: 8,
+                      padding: "8px 12px",
+                      marginTop: 6,
+                    }}
+                  >
+                    <AlertCircle size={16} color="var(--color-status-errText)" />
+                    <span style={{ fontSize: 12, color: "var(--color-status-errText)", fontWeight: 600 }}>
+                      Nội dung ghi chú tối đa 500 ký tự. Vui lòng rút gọn lại.
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

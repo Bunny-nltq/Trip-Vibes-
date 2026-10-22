@@ -153,17 +153,14 @@ export async function POST(req: Request) {
     });
   } catch (err: unknown) {
     const ms = Date.now() - start;
+    console.error("Lỗi plan route:", err);
     const raw = err instanceof Error ? err.message : String(err);
 
     let error = "Lỗi khi lập kế hoạch du lịch.";
-    if (raw.includes("GEMINI_API_KEY")) {
-      error = "Chưa cấu hình GEMINI_API_KEY trong .env.local.";
-    } else if (raw.includes("429") || raw.includes("RESOURCE_EXHAUSTED")) {
-      error = "Đã vượt hạn mức gọi Gemini API (429). Vui lòng thử lại sau.";
+    if (raw.includes("429") || raw.includes("RESOURCE_EXHAUSTED")) {
+      error = "Đã vượt hạn mức gọi dịch vụ. Vui lòng thử lại sau.";
     } else if (raw.includes("agent_dung_id_la")) {
-      error = "AI Agent sử dụng ID không tồn tại trong dữ liệu hệ thống.";
-    } else if (raw.length < 300) {
-      error = raw;
+      error = "Hệ thống gặp sự cố khi xử lý dữ liệu địa điểm.";
     }
 
     return NextResponse.json({ ok: false, error, ms }, { status: 500 });

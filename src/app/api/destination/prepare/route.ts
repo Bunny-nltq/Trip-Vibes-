@@ -43,10 +43,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const jobId = result.jobId || `ready_${diemDen.maQuocGia || "VN"}_${Date.now()}`;
+
     return NextResponse.json({
       ok: true,
       trangThai: result.trangThai,
-      jobId: result.jobId,
+      jobId,
     });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);

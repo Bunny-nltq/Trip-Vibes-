@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useApp } from "@/ui/context/AppContext";
+import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import type { ExpenseCategory, BillExtraction } from "@/contracts";
 import { B8ChuyenDiScreen } from "./B8ChuyenDiScreen";
 import {
@@ -31,14 +32,21 @@ const HANG_MUC_OPTIONS: Array<{ value: ExpenseCategory; label: string }> = [
 
 export function B10ChonNguonScreen() {
   const { nav, confirmed, plan, ledger, addExpenseToLedger, b10Prefill, setB10Prefill } = useApp();
+  const { aiBat } = useTrangThaiAI();
 
   const [activeTab, setActiveTab] = useState<"bill" | "manual">(() => {
     if (typeof window !== "undefined") {
       const q = new URLSearchParams(window.location.search).get("state");
       if (q === "nhap_tay") return "manual";
     }
-    return "bill";
+    return "manual"; // Safe default, switched to bill if aiBat
   });
+
+  useEffect(() => {
+    if (!aiBat) {
+      setActiveTab("manual");
+    }
+  }, [aiBat]);
   const soNgay = plan?.request.soNgay || 3;
 
   // Form state
@@ -197,9 +205,9 @@ export function B10ChonNguonScreen() {
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("image", file);
 
-      const res = await fetch("/api/bill", {
+      const res = await fetch("/api/extract-bill", {
         method: "POST",
         body: formData,
       });
@@ -613,13 +621,15 @@ export function B10ChonNguonScreen() {
             <div className="ModalTitle">Thêm chi tiêu</div>
             <div className="Sub">{subTitleText}</div>
 
-            {/* Tabs */}
-            <div className="Tabs">
-              <div className="Tab" onClick={() => setActiveTab("bill")}>
-                Ảnh bill
+            {/* Tabs - Chỉ hiển thị khi AI bật */}
+            {aiBat && (
+              <div className="Tabs">
+                <div className="Tab" onClick={() => setActiveTab("bill")}>
+                  Ảnh bill
+                </div>
+                <div className="Tab TabOn">Nhập tay</div>
               </div>
-              <div className="Tab TabOn">Nhập tay</div>
-            </div>
+            )}
 
             <div className="Field">
               <div className="FieldLabel">Tên cửa hàng hoặc nội dung</div>

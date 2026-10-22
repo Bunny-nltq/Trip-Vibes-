@@ -1,0 +1,125 @@
+=== GIT GREP UI CALLS ===
+src/ui/components/B9ChiDuongPopover.tsx:38:    `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(diaChi)}`;
+src/ui/hooks/useOptions.ts:22:  destination: string;
+src/ui/screens/B10ChonNguonScreen.tsx:202:      const res = await fetch("/api/bill", {
+src/ui/screens/B1ChonNhanhScreen.tsx:298:      const res = await fetch(`/api/destination?q=${encodeURIComponent(q)}`);
+src/ui/screens/B2AgentScreen.tsx:95:  // 1. Kích hoạt Bước A: Gọi /api/destination/prepare
+src/ui/screens/B2AgentScreen.tsx:106:      const res = await fetch("/api/destination/prepare", {
+src/ui/screens/B2AgentScreen.tsx:183:        const res = await fetch(`/api/destination/status?jobId=${encodeURIComponent(jobId)}`);
+src/ui/screens/B3KeHoachScreen.tsx:136:      const res = await fetch("/api/plan/regenerate", {
+src/ui/screens/B3KeHoachScreen.tsx:471:                const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(queryTarget)}`;
+src/ui/screens/B4PhuongTienScreen.tsx:282:                      <div style={{ fontSize: 12, color: "var(--g500)" }}>{f.destination}</div>
+src/ui/screens/B9to11Screens.tsx:101:            href="https://www.google.com/maps/dir/?api=1&destination=Ph%E1%BB%91+c%E1%BB%95+H%E1%BB%99i+An"
+
+=== GIT GREP ERROR DISPLAYS IN UI ===
+src/ui/components/Badge.tsx:5:  variant?: "default" | "success" | "warning" | "error" | "info" | "outline";
+src/ui/components/Badge.tsx:14:      : variant === "error"
+src/ui/components/Badge.tsx:15:      ? "border-transparent bg-[var(--color-error-bg)] text-[var(--color-error-text)]"
+src/ui/components/ThemeProvider.tsx:22:    "--color-error": tokens.colors.status.error,
+src/ui/components/site/HeroSearch.tsx:29:  const [loi, setLoi] = useState<string | null>(null);
+src/ui/components/site/HeroSearch.tsx:33:    setLoi(null);
+src/ui/components/site/HeroSearch.tsx:48:      if (res.loi === "thieu_diem_den") setLoi("Vui lòng chọn hoặc nhập điểm đến.");
+src/ui/components/site/HeroSearch.tsx:49:      else if (res.loi === "so_nguoi") setLoi("Số người phải từ 1 đến 10 người.");
+src/ui/components/site/HeroSearch.tsx:50:      else if (res.loi === "so_ngay") setLoi("Thời gian chuyến đi phải từ 2 đến 5 ngày.");
+src/ui/components/site/HeroSearch.tsx:51:      else if (res.loi === "ngan_sach") setLoi("Vui lòng nhập ngân sách hợp lệ (lớn hơn 0).");
+src/ui/components/site/HeroSearch.tsx:283:      {loi && (
+src/ui/components/site/HeroSearch.tsx:296:          <span>{loi}</span>
+src/ui/messages/loi.ts:2: * src/ui/messages/loi.ts
+src/ui/messages/loi.ts:9:export interface ThongBaoLoi {
+src/ui/messages/loi.ts:24:export const BANG_MA_LOI: Record<string, ThongBaoLoi> = {
+src/ui/messages/loi.ts:80:  mang_loi: {
+src/ui/messages/loi.ts:117:  loi_khong_ro: {
+src/ui/messages/loi.ts:127:export function layThongBaoLoi(
+src/ui/messages/loi.ts:128:  maLoi: string,
+src/ui/messages/loi.ts:135:): ThongBaoLoi {
+src/ui/messages/loi.ts:136:  const goc = BANG_MA_LOI[maLoi] || BANG_MA_LOI.loi_khong_ro;
+src/ui/messages/loi.ts:139:  if (maLoi === "geocode_khong_thay" && thamSo?.tenDiaDiem) {
+src/ui/messages/loi.ts:141:  } else if (maLoi === "ngan_sach_khong_du" && thamSo?.nganSachToiThieu) {
+src/ui/messages/loi.ts:143:  } else if (maLoi === "khong_du_du_lieu" && thamSo?.loaiThieu) {
+src/ui/messages/loi.ts:145:  } else if (maLoi === "loi_khong_ro" && thamSo?.requestId) {
+src/ui/screens/B10ChonNguonScreen.tsx:94:    "khong_phai_chung_tu" | "khong_doc_duoc_so_tien" | "429" | "network_error" | null
+src/ui/screens/B10ChonNguonScreen.tsx:214:        setSpecialStatus("network_error");
+src/ui/screens/B10ChonNguonScreen.tsx:228:          setSpecialStatus("network_error");
+src/ui/screens/B10ChonNguonScreen.tsx:262:      setSpecialStatus("network_error");
+src/ui/screens/B11NganSachScreen.tsx:265:              style={{ color: comparison.conLaiVND >= 0 ? "var(--success)" : "var(--error)" }}
+src/ui/screens/B11NganSachScreen.tsx:365:                        color: diff === 0 ? "var(--g500)" : isOver ? "var(--error)" : "var(--success)",
+src/ui/screens/B11NganSachScreen.tsx:374:                        color: r.chenhPhanTram === 0 ? "var(--g500)" : isOver ? "var(--error)" : "var(--success)",
+src/ui/screens/B11NganSachScreen.tsx:397:                        ? "var(--error)"
+src/ui/screens/B11NganSachScreen.tsx:411:                        ? "var(--error)"
+src/ui/screens/B11NganSachScreen.tsx:508:                        style={{ color: "var(--error)" }}
+src/ui/screens/B1ChonNhanhScreen.tsx:16:import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
+src/ui/screens/B1ChonNhanhScreen.tsx:139:  const [diemDiError, setDiemDiError] = useState<ThongBaoLoi | null>(null);
+src/ui/screens/B1ChonNhanhScreen.tsx:144:  const [diemDenError, setDiemDenError] = useState<ThongBaoLoi | null>(null);
+src/ui/screens/B1ChonNhanhScreen.tsx:291:    error?: ThongBaoLoi;
+src/ui/screens/B1ChonNhanhScreen.tsx:295:      return { error: layThongBaoLoi("geocode_khong_thay", { tenDiaDiem: query }) };
+src/ui/screens/B1ChonNhanhScreen.tsx:300:        return { error: layThongBaoLoi("geocode_ban") };
+src/ui/screens/B1ChonNhanhScreen.tsx:303:        return { error: layThongBaoLoi("mang_loi") };
+src/ui/screens/B1ChonNhanhScreen.tsx:312:      return { error: layThongBaoLoi("geocode_khong_thay", { tenDiaDiem: q }) };
+src/ui/screens/B1ChonNhanhScreen.tsx:314:      return { error: layThongBaoLoi("mang_loi") };
+src/ui/screens/B1ChonNhanhScreen.tsx:329:    if (res.error) {
+src/ui/screens/B1ChonNhanhScreen.tsx:330:      setDiemDiError(res.error);
+src/ui/screens/B1ChonNhanhScreen.tsx:352:    if (res.error) {
+src/ui/screens/B1ChonNhanhScreen.tsx:353:      setDiemDenError(res.error);
+src/ui/screens/B1ChonNhanhScreen.tsx:1324:                    color: ghiChu.length > 500 ? "var(--color-status-error)" : "var(--color-neutral-mutedText)",
+src/ui/screens/B1ChonNhanhScreen.tsx:1372:                  <span style={{ color: "var(--color-status-error)", fontWeight: 600, marginRight: 8 }}>
+src/ui/screens/B1ChonNhanhScreen.tsx:1377:                  <span style={{ color: "var(--color-status-error)", fontWeight: 600, marginRight: 8 }}>
+src/ui/screens/B1ChonNhanhScreen.tsx:1382:                  <span style={{ color: "var(--color-status-error)", fontWeight: 600, marginRight: 8 }}>
+src/ui/screens/B2AgentScreen.tsx:5:import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
+src/ui/screens/B2AgentScreen.tsx:80:    maLoi: string;
+src/ui/screens/B2AgentScreen.tsx:119:        if (data.maLoi === "khong_co_du_lieu_luu_san") {
+src/ui/screens/B2AgentScreen.tsx:121:            maLoi: "khong_co_du_lieu_luu_san",
+src/ui/screens/B2AgentScreen.tsx:129:            maLoi: "loi_khong_ro",
+src/ui/screens/B2AgentScreen.tsx:131:            noiDung: data.error || "Không thể chuẩn bị dữ liệu cho điểm đến này.",
+src/ui/screens/B2AgentScreen.tsx:149:        maLoi: "mang_loi",
+src/ui/screens/B2AgentScreen.tsx:175:          maLoi: "loi_khong_ro",
+src/ui/screens/B2AgentScreen.tsx:201:            maLoi: "khong_du_du_lieu",
+src/ui/screens/B2AgentScreen.tsx:204:              data.thieuChiTiet ? data.thieuChiTiet.join(", ") : data.lyDoLoi || "một số hạng mục bị thiếu"
+src/ui/screens/B2AgentScreen.tsx:208:        } else if (data.trangThai === "loi") {
+src/ui/screens/B2AgentScreen.tsx:211:            maLoi: "loi_khong_ro",
+src/ui/screens/B2AgentScreen.tsx:213:            noiDung: data.lyDoLoi || "Đã xảy ra lỗi khi thu thập dữ liệu điểm đến.",
+src/ui/screens/B2AgentScreen.tsx:257:      : planStatus === "error"
+src/ui/screens/B2AgentScreen.tsx:295:          {dataPrepError || planStatus === "error" ? (
+src/ui/screens/B2AgentScreen.tsx:296:            <AlertCircle size={30} color="var(--color-status-error)" />
+src/ui/screens/B2AgentScreen.tsx:303:          {dataPrepError || planStatus === "error"
+src/ui/screens/B2AgentScreen.tsx:315:            : planStatus === "error"
+src/ui/screens/B2AgentScreen.tsx:343:            border: "1.5px solid var(--color-status-error)",
+src/ui/screens/B2AgentScreen.tsx:356:            {dataPrepError.maLoi === "khong_du_du_lieu" && (
+src/ui/screens/B2AgentScreen.tsx:390:      {!dataPrepError && planStatus === "error" && (
+src/ui/screens/B2AgentScreen.tsx:396:            border: "1.5px solid var(--color-status-error)",
+src/ui/screens/B2AgentScreen.tsx:458:              const isError = item.trangThai === "loi";
+src/ui/screens/B2AgentScreen.tsx:543:                      <span style={{ fontSize: 12, fontWeight: 700, color: "var(--color-status-error)" }}>
+src/ui/screens/B2AgentScreen.tsx:567:      {phase === "lap_ke_hoach" && planStatus !== "error" && (
+src/ui/screens/B3KeHoachScreen.tsx:75:    case "loi_mang_ai":
+src/ui/screens/B3KeHoachScreen.tsx:161:        if (data?.error?.includes("429") || data?.message?.includes("429")) {
+src/ui/screens/B3KeHoachScreen.tsx:167:            data?.message || data?.error || "Không thể gợi ý lại lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\"."
+src/ui/screens/B3KeHoachScreen.tsx:385:          <div className="banner banner-error" style={{ marginBottom: 16 }}>
+src/ui/screens/B4PhuongTienScreen.tsx:27:  const { items: transports, loading: loadingOptions, error: errorOptions } =
+src/ui/screens/B4PhuongTienScreen.tsx:34:  const { preview, loading: loadingPreview, error: errorPreview } = usePlanPreview();
+src/ui/screens/B4PhuongTienScreen.tsx:219:        {errorOptions && (
+src/ui/screens/B4PhuongTienScreen.tsx:220:          <div className="banner banner-error" style={{ marginBottom: 16 }}>
+src/ui/screens/B4PhuongTienScreen.tsx:222:            <div>{errorOptions}</div>
+src/ui/screens/B4PhuongTienScreen.tsx:226:        {errorPreview && (
+src/ui/screens/B4PhuongTienScreen.tsx:227:          <div className="banner banner-error" style={{ marginBottom: 16 }}>
+src/ui/screens/B4PhuongTienScreen.tsx:229:            <div>{errorPreview}</div>
+src/ui/screens/B5KhachSanScreen.tsx:64:    error: errorHotels,
+src/ui/screens/B5KhachSanScreen.tsx:75:    error: errorActivities,
+src/ui/screens/B5KhachSanScreen.tsx:82:  const { preview, loading: loadingPreview, error: errorPreview } = usePlanPreview();
+src/ui/screens/B5KhachSanScreen.tsx:278:            {errorHotels && (
+src/ui/screens/B5KhachSanScreen.tsx:279:              <div className="banner banner-error" style={{ marginBottom: 16 }}>
+src/ui/screens/B5KhachSanScreen.tsx:281:                <div>{errorHotels}</div>
+src/ui/screens/B5KhachSanScreen.tsx:386:                          <div style={{ fontSize: 12, fontWeight: 600, marginTop: 4, color: diff > 0 ? "var(--error)" : "var(--success)" }}>
+src/ui/screens/B5KhachSanScreen.tsx:479:            {errorActivities && (
+src/ui/screens/B5KhachSanScreen.tsx:480:              <div className="banner banner-error" style={{ marginBottom: 16 }}>
+src/ui/screens/B5KhachSanScreen.tsx:482:                <div>{errorActivities}</div>
+src/ui/screens/B5KhachSanScreen.tsx:622:        {errorPreview && (
+src/ui/screens/B5KhachSanScreen.tsx:623:          <div className="banner banner-error" style={{ marginTop: 16 }}>
+src/ui/screens/B5KhachSanScreen.tsx:625:            <div>{errorPreview}</div>
+src/ui/screens/B6XemTruocScreen.tsx:256:                      background: "var(--color-error-bg)",
+src/ui/screens/B6XemTruocScreen.tsx:263:                      color: "var(--color-error-text)",
+src/ui/screens/B6XemTruocScreen.tsx:293:                  color: isCostIncrease ? "var(--error)" : isCostDecrease ? "var(--success)" : "var(--navy)",
+src/ui/screens/B6XemTruocScreen.tsx:298:              <div style={{ fontSize: 11, fontWeight: 600, marginTop: 4, color: isCostIncrease ? "var(--error)" : "var(--success)" }}>
+src/ui/screens/B6XemTruocScreen.tsx:319:                  color: diff.conLaiVND.sau >= 0 ? "var(--success)" : "var(--error)",
+src/ui/screens/B6XemTruocScreen.tsx:324:              <div style={{ fontSize: 11, fontWeight: 600, marginTop: 4, color: diff.conLaiVND.chenh >= 0 ? "var(--success)" : "var(--error)" }}>
+src/ui/screens/B6XemTruocScreen.tsx:392:                            color: row.chenh > 0 ? "var(--error)" : row.chenh < 0 ? "var(--success)" : "var(--g400)",
+src/ui/screens/B6XemTruocScreen.tsx:487:          <div className="banner banner-error" style={{ marginBottom: 16 }}>
+src/ui/screens/B7XacNhanScreen.tsx:105:                      color: plan.tongKet.conLaiVND >= 0 ? "var(--success)" : "var(--error)",

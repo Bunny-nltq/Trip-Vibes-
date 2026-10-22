@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useApp } from "@/ui/context/AppContext";
 import { getDiemDenTen, type DiemDen } from "@/contracts";
 import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
+import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import type { CategoryKey, CategoryProgress } from "@/data/prepareDestination";
 import {
   Sparkles,
@@ -61,6 +62,7 @@ export function B2AgentScreen() {
     retryPlan,
     abortPlan,
   } = useApp();
+  const { aiBat } = useTrangThaiAI();
 
   // Pha thực thi: "chuan_bi" (Bước A) | "lap_ke_hoach" (Bước B)
   const [phase, setPhase] = useState<"chuan_bi" | "lap_ke_hoach">("chuan_bi");
@@ -415,29 +417,31 @@ export function B2AgentScreen() {
         </div>
       )}
 
-      {/* ─── CARD CHIP "AI HIỂU BẠN MUỐN GÌ" (CHỈ GIÁ TRỊ THẬT) ─── */}
-      <div className="card" style={{ padding: "18px 22px", marginBottom: 20, background: "var(--color-surface)", borderRadius: 12, border: "1px solid var(--color-neutral-borderCard)" }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "var(--color-neutral-navyText)", marginBottom: 10 }}>
-          AI hiểu bạn muốn gì
+      {/* ─── CARD CHIP "AI HIỂU BẠN MUỐN GÌ" (CHỈ HIỆN KHI AI BẬT) ─── */}
+      {aiBat && (
+        <div className="card" style={{ padding: "18px 22px", marginBottom: 20, background: "var(--color-surface)", borderRadius: 12, border: "1px solid var(--color-neutral-borderCard)" }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "var(--color-neutral-navyText)", marginBottom: 10 }}>
+            AI hiểu bạn muốn gì
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
+            {understoodChips.map((t, idx) => (
+              <span
+                key={idx}
+                className="Chip ChipOn"
+                style={{ fontSize: 12, padding: "4px 10px" }}
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+          <span
+            onClick={handleCancel}
+            style={{ cursor: "pointer", fontSize: 12, color: "var(--color-primary-brand)", fontWeight: 600 }}
+          >
+            Sửa yêu cầu
+          </span>
         </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
-          {understoodChips.map((t, idx) => (
-            <span
-              key={idx}
-              className="Chip ChipOn"
-              style={{ fontSize: 12, padding: "4px 10px" }}
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-        <span
-          onClick={handleCancel}
-          style={{ cursor: "pointer", fontSize: 12, color: "var(--color-primary-brand)", fontWeight: 600 }}
-        >
-          Sửa yêu cầu
-        </span>
-      </div>
+      )}
 
       {/* ─── TIẾN TRÌNH THẬT BƯỚC A: CHUẨN BỊ DỮ LIỆU TỪNG HẠNG MỤC ─── */}
       {phase === "chuan_bi" && !dataPrepError && (

@@ -7,6 +7,7 @@ import type { PlanItem, Preference, DiemDen } from "@/contracts";
 import { getDiemDenTen } from "@/contracts";
 import { nhanNguonDuLieu } from "@/core/nhanNguon";
 import { tiLeThoiGianDiChuyen, coCanhBaoDiChuyen } from "@/core/tiLeDiChuyen";
+import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import {
   Map as MapIcon,
   Sparkles,
@@ -79,19 +80,20 @@ function getLyDoDuPhongText(lyDo?: string): string {
     case "vuot_so_luot_goi_ai":
       return "đã đạt số lượt tương tác AI tối đa cho phép";
     case "gioi_han_luot_ai":
-      return "đã đạt giới hạn lượt gọi AI trong ngày (GEMINI_DAILY_CAP) hoặc tối đa 5 lượt/giờ mỗi IP";
+      return "đã đạt giới hạn lượt dùng trong ngày; kế hoạch được lập bằng quy tắc tự động";
     case "gioi_han_ip":
-      return "Đã đạt giới hạn lượt dùng AI trong giờ này; kế hoạch được lập bằng quy tắc tự động";
+      return "Đã đạt giới hạn lượt dùng trong giờ này; kế hoạch được lập bằng quy tắc tự động";
     case "gioi_han_ngay":
-      return "Đã đạt giới hạn lượt dùng AI trong ngày; kế hoạch được lập bằng quy tắc tự động";
+      return "Đã đạt giới hạn lượt dùng trong ngày; kế hoạch được lập bằng quy tắc tự động";
     case "live_ai_tat":
-      return "chế độ AI trực tuyến (LIVE_AI_ENABLED) đang tắt";
+      return "kế hoạch được lập theo quy tắc tự động";
     default:
-      return "AI không thể hoàn tất kế hoạch";
+      return "kế hoạch được lập theo quy tắc tự động";
   }
 }
 
 export function B3KeHoachScreen() {
+  const { aiBat } = useTrangThaiAI();
   const {
     nav,
     plan,
@@ -613,8 +615,8 @@ export function B3KeHoachScreen() {
           );
         })}
 
-        {/* Khung Muốn kế hoạch hợp gu hơn - bị ẩn khi kế hoạch đã chốt */}
-        {!confirmed && (
+        {/* Khung Muốn kế hoạch hợp gu hơn - bị ẩn khi kế hoạch đã chốt hoặc AI tắt */}
+        {!confirmed && aiBat && (
           <div className="personal-panel" style={{ marginTop: 24 }}>
             <div className="panel-title" style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <Sparkles size={16} />

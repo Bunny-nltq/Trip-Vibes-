@@ -1,0 +1,5 @@
+HTTP/1.1 200
+URL: http://127.0.0.1:3012/api/parse-request
+Method: POST
+
+{"ok":true,"request":{"schemaVersion":12,"diemDi":"Đà Nẵng","diemDen":"Hà Nội","soNgay":2,"soNguoi":2,"ngansachTongVND":5000000,"sothich":[],"tranh":[],"ghiChu":["tôi cần tìm villa"],"thieu":[],"cauHoiLamRo":[],"canhBao":[]},"ms":6786}

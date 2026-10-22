@@ -5,6 +5,17 @@ import { GeminiProvider } from "@/ai/provider";
 import { planRegenerate } from "@/ai/planRegenerate";
 
 export async function POST(req: Request) {
+  if (process.env.LIVE_AI_ENABLED !== "true" || !process.env.GEMINI_API_KEY) {
+    return NextResponse.json(
+      {
+        ok: false,
+        maLoi: "ai_tat",
+        thongBao: "Tính năng này đang tắt trên bản hiện tại.",
+      },
+      { status: 503 }
+    );
+  }
+
   try {
     const body = await req.json();
     const request = body.request as TripRequest;
@@ -12,7 +23,7 @@ export async function POST(req: Request) {
 
     if (!request || !currentSelection) {
       return NextResponse.json(
-        { error: "Thiếu dữ liệu request hoặc selection" },
+        { ok: false, error: "Thiếu dữ liệu request hoặc selection" },
         { status: 400 }
       );
     }
@@ -44,10 +55,15 @@ export async function POST(req: Request) {
     let provider: GeminiProvider;
     try {
       provider = new GeminiProvider();
-    } catch {
+    } catch (e) {
+      console.error("Lỗi khởi tạo provider:", e);
       return NextResponse.json(
-        { error: "Chưa cấu hình GEMINI_API_KEY hoặc GEMINI_MODEL." },
-        { status: 500 }
+        {
+          ok: false,
+          maLoi: "ai_tat",
+          thongBao: "Tính năng này đang tắt trên bản hiện tại.",
+        },
+        { status: 503 }
       );
     }
 
@@ -60,16 +76,18 @@ export async function POST(req: Request) {
 
     return NextResponse.json(result);
   } catch (err: any) {
-    const msg = err.message || String(err);
+    console.error("Lỗi plan/regenerate:", err);
+    const msg = err?.message || String(err);
     if (msg.includes("429") || msg.includes("RESOURCE_EXHAUSTED")) {
       return NextResponse.json(
-        { error: "Hết lượt gọi AI hôm nay. Bạn có thể đổi hoạt động thủ công bằng nút 'Đổi'." },
+        { ok: false, error: "Hết lượt gợi ý hôm nay. Bạn có thể đổi hoạt động thủ công bằng nút 'Đổi'." },
         { status: 429 }
       );
     }
     return NextResponse.json(
-      { error: "Lỗi hệ thống khi gợi ý lại: " + msg },
+      { ok: false, error: "Lỗi hệ thống khi gợi ý lại." },
       { status: 500 }
     );
   }
 }
+

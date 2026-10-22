@@ -1,0 +1,5 @@
+HTTP/1.1 200
+URL: http://127.0.0.1:3012/api/destination/prepare
+Method: POST
+
+{"ok":true,"trangThai":"san_sang","jobId":"ready_VN_1792643595373"}
