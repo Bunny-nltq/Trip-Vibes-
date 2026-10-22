@@ -7,7 +7,7 @@
 | 2026-10-22 12:12:00 | H2 | XONG | 26d2267 | Vỏ khu lập kế hoạch, gỡ bỏ trang trí và chuỗi cấm, cong-kiem-tra H2 đạt |
 | 2026-10-22 12:35:00 | H3 | XONG | 6419393 | Danh sách chọn điểm đi/đến, nâng số ngày lên 7, component ChonDiem, cong-kiem-tra H3 đạt |
 | 2026-10-22 12:46:00 | H4 | XONG | ac068e7 | Trang chủ: SiteHeader, HeroSearch, ThuDiemDen 3 cột, KhachSanThamKhao 4 thẻ, dải OpenStreetMap, SiteFooter 3 cột, cong-kiem-tra H4 đạt |
-| 2026-10-22 12:51:00 | H5 | XONG | (commit sau) | Trang điểm đến: /diem-den (lưới) và /diem-den/[slug] (SSG 5 điểm đến), 12 vui chơi, 6 quán ăn, 6 cafe, 6 khách sạn, sitemap, cong-kiem-tra H5 đạt |
+| 2026-10-22 12:51:00 | H5 | XONG | d157057 | Trang điểm đến: /diem-den (lưới) và /diem-den/[slug] (SSG 5 điểm đến), 12 vui chơi, 6 quán ăn, 6 cafe, 6 khách sạn, sitemap, cong-kiem-tra H5 đạt |
 
 ## Ghi chú công việc H5 (Trang điểm đến)
 1. **Tuyến đường `/diem-den` (`DiemDenDanhSachScreen.tsx`, `/app/(site)/diem-den/page.tsx`)**:
