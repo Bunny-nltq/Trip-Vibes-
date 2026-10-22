@@ -17,6 +17,7 @@ export async function POST(req: Request) {
   }
 
   try {
+    const formData = await req.formData();
     // Chấp nhận cả "image" lẫn "file" để tương thích ngược
     const image = (formData.get("image") || formData.get("file")) as File | null;
     if (!image) {
