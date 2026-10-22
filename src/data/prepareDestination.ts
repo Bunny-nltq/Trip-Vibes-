@@ -12,7 +12,19 @@
 
 import path from "node:path";
 import fs from "node:fs";
-import type { DiemDen, KhachSan, QuanAn, Cafe, HoatDong, Transport } from "@/contracts";
+import type {
+  DiemDen,
+  KhachSan,
+  QuanAn,
+  Cafe,
+  HoatDong,
+  Transport,
+  CategoryKey,
+  CategoryStatus,
+  CategoryProgress,
+  JobStatus,
+  DestinationJob,
+} from "@/contracts";
 import { DEFAULT_DIEM_DI } from "@/contracts";
 import {
   fetchKhachSansOSM,
@@ -30,7 +42,7 @@ export type {
   CategoryProgress,
   JobStatus,
   DestinationJob,
-} from "@/contracts";
+};
 
 // Bộ nhớ trong lưu các công việc chuẩn bị dữ liệu
 const jobsByDestinationKey = new Map<string, DestinationJob>();
