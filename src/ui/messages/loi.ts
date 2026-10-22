@@ -83,8 +83,8 @@ export const BANG_MA_LOI: Record<string, ThongBaoLoi> = {
     hanhDong: { nhan: "Thử lại", loai: "thu_lai" },
   },
   gemini_het_luot: {
-    tieuDe: "Hạn mức AI tạm thời hết",
-    noiDung: "Hết lượt AI hôm nay, thử lại sau hoặc ngày mai.",
+    tieuDe: "Hạn mức tạm thời hết",
+    noiDung: "Đã đạt giới hạn hôm nay, vui lòng thử lại sau.",
     hanhDong: { nhan: "Đóng", loai: "dong" },
   },
 
@@ -154,20 +154,47 @@ export function layThongBaoLoi(
 }
 
 /**
- * Làm sạch thông báo lỗi, tuyệt đối không lộ GEMINI_API_KEY, .env hoặc chi tiết nhạy cảm
+ * Chuyển đổi chuỗi lỗi kỹ thuật thành thông báo thân thiện với người dùng.
+ * Đảm bảo tuyệt đối không chứa '.env', 'GEMINI' hay mã lỗi thô.
  */
-export function thongBaoLoiThanThien(rawMessage: string): string {
-  if (!rawMessage || typeof rawMessage !== "string") {
-    return "Đã xảy ra sự cố kết nối. Vui lòng thử lại sau.";
+export function thongBaoLoiThanThien(input: unknown): string {
+  if (!input) return "Đã xảy ra sự cố không xác định. Vui lòng thử lại.";
+  let str = typeof input === "string" ? input : (input as any)?.message || String(input);
+
+  // Nếu chứa các từ khóa kỹ thuật hoặc cấu hình API
+  if (/GEMINI|\.env/i.test(str)) {
+    return "Tính năng tạm thời không khả dụng. Vui lòng thử lại sau.";
   }
-  if (rawMessage.includes("GEMINI") || rawMessage.includes(".env")) {
-    return "Dịch vụ AI tạm thời không khả dụng. Vui lòng thử lại sau.";
-  }
-  if (rawMessage.includes("429") || rawMessage.includes("RESOURCE_EXHAUSTED")) {
+
+  if (/RESOURCE_EXHAUSTED|429/i.test(str)) {
     return "Hệ thống đang bận do nhiều yêu cầu. Vui lòng thử lại sau ít phút.";
   }
-  return rawMessage;
+
+  if (/timeout|qua_thoi_gian/i.test(str)) {
+    return "Yêu cầu mất nhiều thời gian hơn dự kiến. Vui lòng thử lại.";
+  }
+
+  // Loại bỏ các từ khóa nhạy cảm nếu còn sót
+  return str
+    .replace(/GEMINI[A-Z0-9_]*/gi, "hệ thống")
+    .replace(/\.env[a-z0-9._-]*/gi, "cấu hình")
+    .replace(/API_KEY/gi, "khóa truy cập");
 }
 
 export const thuongBaoLoiThanThien = thongBaoLoiThanThien;
 
+/**
+ * Quyết định có gọi parse-request để phân tích ghi chú tự do hay không.
+ * (false, "x") -> false
+ * (true, "") -> false
+ * (true, "   ") -> false
+ * (true, "tôi cần villa") -> true
+ */
+export function quyetDinhGoiParse(params: {
+  aiBat: boolean;
+  ghiChu?: string | null;
+}): boolean {
+  if (!params.aiBat) return false;
+  if (!params.ghiChu || typeof params.ghiChu !== "string") return false;
+  return params.ghiChu.trim().length > 0;
+}

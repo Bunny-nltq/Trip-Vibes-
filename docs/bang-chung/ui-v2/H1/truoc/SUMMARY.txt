@@ -1,0 +1,9 @@
+Thời gian: 2026-10-22T04:22:46.366Z
+Môi trường: Base=http://127.0.0.1:3012
+--------------------------------------------------
+[200] GET http://127.0.0.1:3012/api/health -> 1-health.txt
+[200] POST http://127.0.0.1:3012/api/destination/prepare -> 2a-destination-prepare.txt
+[400] GET http://127.0.0.1:3012/api/destination/status?jobId= -> 2b-destination-status.txt
+[200] POST http://127.0.0.1:3012/api/parse-request -> 3-parse-request.txt
+[200] POST http://127.0.0.1:3012/api/plan -> 4-plan.txt
+[200] GET http://127.0.0.1:3012/api/destination?q=H%C3%A0%20N%E1%BB%99i -> 5-destination-geocode.txt

@@ -1,4 +1,11 @@
-param([Parameter(Mandatory=$true)][string]$MaNV, [string]$Nhom = "tat-ca")
+param([Parameter(Mandatory=$true)][string]$MaNV, [string]$Nhom = "")
+if (-not $Nhom) {
+  if ($MaNV -match "^H") { $Nhom = "ui-v2" }
+  elseif ($MaNV -match "^G") { $Nhom = "tat-ca" }
+  elseif ($MaNV -match "^P") { $Nhom = "hom-nay" }
+  elseif ($MaNV -match "^N") { $Nhom = "dem" }
+  else { $Nhom = "ui-v2" }
+}
 $dir = "docs/bang-chung/$Nhom/$MaNV"
 New-Item -ItemType Directory -Force -Path $dir | Out-Null
 $utf8 = New-Object System.Text.UTF8Encoding $false

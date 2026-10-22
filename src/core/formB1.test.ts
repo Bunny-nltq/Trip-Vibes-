@@ -97,7 +97,7 @@ describe("Kiểm tra và xử lý Form B1", () => {
     );
   });
 
-  it("soNgay 1 và 6 -> mỗi trường hợp chứa 'so_ngay_ngoai_pham_vi'", () => {
+  it("soNgay 1 và 8 -> mỗi trường hợp chứa 'so_ngay_ngoai_pham_vi'", () => {
     const base: FormB1 = {
       diemDi: TPHCM,
       diemDen: DANANG,
@@ -109,7 +109,20 @@ describe("Kiểm tra và xử lý Form B1", () => {
     };
 
     expect(kiemTraFormB1({ ...base, soNgay: 1 })).toContain("so_ngay_ngoai_pham_vi");
-    expect(kiemTraFormB1({ ...base, soNgay: 6 })).toContain("so_ngay_ngoai_pham_vi");
+    expect(kiemTraFormB1({ ...base, soNgay: 8 })).toContain("so_ngay_ngoai_pham_vi");
+  });
+
+  it("soNgay 7 hợp lệ", () => {
+    const base: FormB1 = {
+      diemDi: TPHCM,
+      diemDen: DANANG,
+      soNguoi: 2,
+      nganSach: { soTien: 10_000_000, theo: "tong" },
+      soNgay: 7,
+      tranh: [],
+      ghiChu: "",
+    };
+    expect(kiemTraFormB1(base)).toEqual([]);
   });
 
   it("form hợp lệ -> []", () => {

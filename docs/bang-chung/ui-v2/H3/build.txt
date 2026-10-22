@@ -1,0 +1,73 @@
+
+> trip-vibes@0.1.0 build
+> next build
+
+▲ Next.js 16.3.8 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 29ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1519ms
+  Running TypeScript ...
+  Finished TypeScript in 3.1s ...
+  Collecting page data using 19 workers ...
+  Generating static pages using 19 workers (0/47) ...
+  Generating static pages using 19 workers (11/47) 
+  Generating static pages using 19 workers (23/47) 
+  Generating static pages using 19 workers (35/47) 
+✓ Generating static pages using 19 workers (47/47) in 652ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/ai-ping
+├ ƒ /api/data/status
+├ ƒ /api/destination
+├ ƒ /api/destination/prepare
+├ ƒ /api/destination/status
+├ ƒ /api/diem-chon
+├ ƒ /api/expenses/confirm
+├ ƒ /api/extract-bill
+├ ƒ /api/health
+├ ƒ /api/options
+├ ƒ /api/parse-request
+├ ƒ /api/plan
+├ ƒ /api/plan/preview
+├ ƒ /api/plan/regenerate
+├ ○ /demo
+├ ○ /demo/01-b1-chon-nhanh
+├ ○ /demo/02-b2-agent-dang-chay
+├ ○ /demo/03-b3-ke-hoach
+├ ○ /demo/04-b4-chon-phuong-tien
+├ ○ /demo/05-b5-chon-khach-san
+├ ○ /demo/06-b6-xem-truoc-thay-doi
+├ ○ /demo/07-b7-xac-nhan
+├ ○ /demo/08-b8-chuyen-di
+├ ○ /demo/09-b9-chi-duong
+├ ○ /demo/10-b10a-chon-nguon
+├ ○ /demo/11-b10b-xac-nhan-ket-qua
+├ ○ /demo/12-b10c-nhap-tay
+├ ○ /demo/13-b11-ngan-sach-thuc-te
+├ ○ /demo/14-b1-can-lam-ro
+├ ○ /demo/15-b1-ngan-sach-khong-du
+├ ○ /demo/16-b3-co-vi-pham
+├ ○ /demo/17-b6-vi-pham-nang
+├ ○ /demo/18-b7-da-chot
+├ ○ /demo/19-b10-khong-doc-duoc
+├ ○ /demo/20-b11-lech-ngan-sach
+├ ○ /demo/21-a1-chat
+├ ○ /demo/22-a2-ket-qua-van-ban
+├ ○ /demo/23-a3-chat-tiep
+├ ○ /demo/24-w0-man-chao
+├ ○ /demo/25-l1-dang-nhap
+├ ○ /demo/26-l2-dang-ky
+├ ○ /demo/27-l3-quen-mat-khau
+├ ○ /demo/28-ve-trip-vibes
+├ ○ /lap-ke-hoach
+└ ○ /manifest.webmanifest
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

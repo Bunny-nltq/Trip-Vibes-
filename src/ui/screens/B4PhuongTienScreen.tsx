@@ -119,7 +119,7 @@ export function B4PhuongTienScreen() {
         </span>
         <h1 className="page-title">Chọn phương tiện di chuyển</h1>
         <p className="page-sub">
-          Xem và so sánh các phương án di chuyển thực tế. Không gọi lại AI, core tính toán tức thì.
+          Xem và so sánh các phương án di chuyển thực tế. Tính toán tức thì theo dữ liệu sẵn có.
         </p>
 
         {/* Tabs Chiều đi / Chiều về */}

@@ -425,7 +425,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const q = new URLSearchParams(window.location.search).get("screen");
       if (q) return q as Screen;
     }
-    return "welcome";
+    return "b1-chon-nhanh";
   });
   const [confirmed, setConfirmedState] = useState<boolean>(() => {
     if (typeof window !== "undefined") {

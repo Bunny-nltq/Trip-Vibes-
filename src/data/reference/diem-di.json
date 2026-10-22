@@ -1,0 +1,101 @@
+{
+  "ghiChu": "tọa độ tham khảo do người dùng cung cấp",
+  "danhSach": [
+    {
+      "ten": "TP.HCM",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 10.7769,
+        "lng": 106.7009
+      },
+      "tienTe": "VND",
+      "nguon": "danh_sach_co_dinh",
+      "ngayLay": "2026-10-22"
+    },
+    {
+      "ten": "Hà Nội",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 21.0285,
+        "lng": 105.8542
+      },
+      "tienTe": "VND",
+      "nguon": "danh_sach_co_dinh",
+      "ngayLay": "2026-10-22"
+    },
+    {
+      "ten": "Đà Nẵng",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 16.0544,
+        "lng": 108.2022
+      },
+      "tienTe": "VND",
+      "nguon": "danh_sach_co_dinh",
+      "ngayLay": "2026-10-22"
+    },
+    {
+      "ten": "Hải Phòng",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 20.8449,
+        "lng": 106.6881
+      },
+      "tienTe": "VND",
+      "nguon": "danh_sach_co_dinh",
+      "ngayLay": "2026-10-22"
+    },
+    {
+      "ten": "Cần Thơ",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 10.0452,
+        "lng": 105.7469
+      },
+      "tienTe": "VND",
+      "nguon": "danh_sach_co_dinh",
+      "ngayLay": "2026-10-22"
+    },
+    {
+      "ten": "Huế",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 16.4637,
+        "lng": 107.5909
+      },
+      "tienTe": "VND",
+      "nguon": "danh_sach_co_dinh",
+      "ngayLay": "2026-10-22"
+    },
+    {
+      "ten": "Nha Trang",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 12.2388,
+        "lng": 109.1967
+      },
+      "tienTe": "VND",
+      "nguon": "danh_sach_co_dinh",
+      "ngayLay": "2026-10-22"
+    },
+    {
+      "ten": "Đà Lạt",
+      "quocGia": "Việt Nam",
+      "maQuocGia": "VN",
+      "toaDo": {
+        "lat": 11.9404,
+        "lng": 108.4583
+      },
+      "tienTe": "VND",
+      "nguon": "danh_sach_co_dinh",
+      "ngayLay": "2026-10-22"
+    }
+  ]
+}

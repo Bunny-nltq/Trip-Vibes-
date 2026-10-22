@@ -17,6 +17,9 @@ import type {
   Avoidance,
   Preference,
 } from "@/contracts";
+import { schemaVersion } from "@/contracts";
+import { useTrangThaiAI } from "./useTrangThaiAI";
+import { quyetDinhGoiParse, thongBaoLoiThanThien } from "../messages/loi";
 
 export interface Violation {
   code: string;
@@ -117,10 +120,12 @@ const PREF_MAP: Record<string, Preference> = {
 };
 
 export function usePlan() {
+  const { aiBat } = useTrangThaiAI();
   const [status, setStatus] = useState<PlanStatus>("idle");
   const [result, setResult] = useState<PlanApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loadingStep, setLoadingStep] = useState<number>(0);
+  const [thongBaoGhiChu, setThongBaoGhiChu] = useState<string | null>(null);
 
   const lastInputRef = useRef<PlanInput | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -177,50 +182,72 @@ export function usePlan() {
           .map((p) => PREF_MAP[p])
           .filter((p): p is Preference => Boolean(p));
 
-        const tenDiemDen = getDiemDenTen(sInput.diemDen);
-        const tenDiemDi = sInput.diemDi
-          ? typeof sInput.diemDi === "string"
-            ? sInput.diemDi
-            : sInput.diemDi.ten
-          : "";
-
         const noteTrimmed = sInput.note?.trim();
+        let parseFailed = false;
+        let parsedPrefs = mappedPrefs;
+        let parsedAvoids = mappedAvoids;
+        let parsedBudget = sInput.budget ?? null;
 
-        // Nếu người dùng có nhập ghi chú tự do, gửi qua text để AI phân tích toàn diện
-        if (noteTrimmed && noteTrimmed.length > 0) {
-          const avoidsStr = sInput.avoids?.length
-            ? `Tránh: ${sInput.avoids.join(", ")}.`
-            : "";
-          bodyPayload = {
-            text: `Đi ${tenDiemDen || ""} ${sInput.people ?? 2} người, ngân sách ${
-              ((sInput.budget ?? 10_000_000) / 1_000_000).toFixed(0)
-            } triệu, ${sInput.soNgay ?? 3} ngày từ ${tenDiemDi}. ${avoidsStr} Ghi chú: ${noteTrimmed}`,
-          };
-        } else {
-          // Gửi request có cấu trúc trực tiếp
-          const thieuList: ("soNguoi" | "ngansach" | "diemDen" | "soNgay")[] = [];
-          if (!sInput.diemDen) thieuList.push("diemDen");
-          if (!sInput.people) thieuList.push("soNguoi");
-          if (!sInput.budget) thieuList.push("ngansach");
-          if (!sInput.soNgay) thieuList.push("soNgay");
-
-          const tripRequest: TripRequest = {
-            schemaVersion: 7,
-            diemDi: sInput.diemDi || "",
-            diemDen: sInput.diemDen || null,
-            soNgay: sInput.soNgay ?? 3,
-            soNguoi: sInput.people ?? null,
-            ngansachTongVND: sInput.budget ?? null,
-            sothich: mappedPrefs,
-            tranh: mappedAvoids,
-            ghiChu: [],
-            thieu: thieuList,
-            cauHoiLamRo: [],
-            canhBao: [],
-            giaVeTuNhap: sInput.giaVeTuNhap,
-          };
-          bodyPayload = { request: tripRequest };
+        const canParse = quyetDinhGoiParse({ aiBat, ghiChu: noteTrimmed });
+        if (canParse && noteTrimmed) {
+          try {
+            const parseRes = await fetch("/api/parse-request", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: noteTrimmed }),
+              signal: controller.signal,
+            });
+            if (parseRes.ok) {
+              const parseData = await parseRes.json();
+              if (parseData.ok && parseData.request) {
+                if (parseData.request.sothich?.length) {
+                  parsedPrefs = Array.from(new Set([...parsedPrefs, ...parseData.request.sothich]));
+                }
+                if (parseData.request.tranh?.length) {
+                  parsedAvoids = Array.from(new Set([...parsedAvoids, ...parseData.request.tranh]));
+                }
+                if (parseData.request.ngansachTongVND && !parsedBudget) {
+                  parsedBudget = parseData.request.ngansachTongVND;
+                }
+              } else {
+                parseFailed = true;
+              }
+            } else {
+              parseFailed = true;
+            }
+          } catch {
+            parseFailed = true;
+          }
         }
+
+        if (parseFailed) {
+          setThongBaoGhiChu("Chưa đọc được ghi chú; kế hoạch lập theo các lựa chọn của bạn");
+        } else {
+          setThongBaoGhiChu(null);
+        }
+
+        const thieuList: ("soNguoi" | "ngansach" | "diemDen" | "soNgay")[] = [];
+        if (!sInput.diemDen) thieuList.push("diemDen");
+        if (!sInput.people) thieuList.push("soNguoi");
+        if (!sInput.budget) thieuList.push("ngansach");
+        if (!sInput.soNgay) thieuList.push("soNgay");
+
+        const tripRequest: TripRequest = {
+          schemaVersion,
+          diemDi: sInput.diemDi || "",
+          diemDen: sInput.diemDen || null,
+          soNgay: sInput.soNgay ?? 3,
+          soNguoi: sInput.people ?? null,
+          ngansachTongVND: parsedBudget,
+          sothich: parsedPrefs,
+          tranh: parsedAvoids,
+          ghiChu: noteTrimmed ? [noteTrimmed] : [],
+          thieu: thieuList,
+          cauHoiLamRo: [],
+          canhBao: [],
+          giaVeTuNhap: sInput.giaVeTuNhap,
+        };
+        bodyPayload = { request: tripRequest };
       }
 
       const res = await fetch("/api/plan", {
@@ -238,7 +265,7 @@ export function usePlan() {
       const data: PlanApiResponse = await res.json();
 
       if (!res.ok || !data.ok) {
-        let errorMsg = data.error || `Lỗi máy chủ (${res.status})`;
+        let errorMsg = thongBaoLoiThanThien(data.error || `Lỗi máy chủ (${res.status})`);
         const raw = (data.error || "").toLowerCase();
         if (
           raw.includes("429") ||
@@ -246,7 +273,7 @@ export function usePlan() {
           raw.includes("het_luot_ai") ||
           raw.includes("hạn mức")
         ) {
-          errorMsg = "AI đã hết lượt gọi trong khoảng thời gian này. Vui lòng bấm 'Thử lại' sau ít phút.";
+          errorMsg = "Hệ thống đã hết lượt xử lý trong khoảng thời gian này. Vui lòng bấm 'Thử lại' sau ít phút.";
         } else if (
           raw.includes("qua_thoi_gian") ||
           raw.includes("timeout") ||
@@ -258,7 +285,7 @@ export function usePlan() {
           raw.includes("fetch failed") ||
           raw.includes("mạng")
         ) {
-          errorMsg = "Lỗi kết nối mạng tới dịch vụ AI. Vui lòng kiểm tra kết nối và bấm 'Thử lại'.";
+          errorMsg = "Lỗi kết nối mạng tới máy chủ. Vui lòng kiểm tra kết nối và bấm 'Thử lại'.";
         }
         setError(errorMsg);
         setStatus("error");
@@ -322,5 +349,6 @@ export function usePlan() {
     dataSourceUsed: result?.dataSourceUsed ?? "",
     ngayDuLieu: result?.snapshotDate ?? result?.ngayDuLieu,
     tuoiGioCache: result?.tuoiGioCache,
+    thongBaoGhiChu,
   };
 }

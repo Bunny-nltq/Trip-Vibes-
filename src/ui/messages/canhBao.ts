@@ -27,8 +27,8 @@ export const BANG_ANH_XA_CANH_BAO: Record<string, string> = {
   so_ngay_khong_hop_le: "Số ngày không hợp lệ",
   ngan_sach_khong_hop_le: "Ngân sách không hợp lệ",
   diem_den_mac_dinh: "Chưa rõ điểm đến",
-  gioi_han_ip: "Đã đạt giới hạn lượt dùng AI trong giờ này; kế hoạch được lập bằng quy tắc tự động",
-  gioi_han_ngay: "Đã đạt giới hạn lượt dùng AI trong ngày; kế hoạch được lập bằng quy tắc tự động",
+  gioi_han_ip: "Đã đạt giới hạn lượt dùng trong giờ này; kế hoạch được lập bằng quy tắc tự động",
+  gioi_han_ngay: "Đã đạt giới hạn lượt dùng trong ngày; kế hoạch được lập bằng quy tắc tự động",
 };
 
 /**

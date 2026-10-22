@@ -52,4 +52,10 @@ describe("soOKhaDung", () => {
     expect(soOKhaDung(4, 2291, 960)).toBe(4);
     expect(soOKhaDung(4, 1087, 1080)).toBe(5);
   });
+
+  it("H3 test: soOKhaDung(7,475,1080) = 12 và soOKhaDung(6,475,1080) = 10", () => {
+    expect(soOKhaDung(7, 475, 1080)).toBe(12);
+    expect(soOKhaDung(6, 475, 1080)).toBe(10);
+  });
 });
+

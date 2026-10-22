@@ -1,0 +1,5 @@
+HTTP/1.1 200
+URL: http://127.0.0.1:3012/api/plan
+Method: POST
+
+{"ok":true,"status":"khong_du_du_lieu","request":{"schemaVersion":12,"diemDi":{"ten":"Đà Nẵng","quocGia":"Việt Nam","maQuocGia":"VN","toaDo":{"lat":16.0544,"lng":108.2022},"tienTe":"VND","nguon":"nominatim","ngayLay":"2026-10-21T00:00:00.000Z"},"diemDen":{"ten":"Hà Nội","quocGia":"Việt Nam","maQuocGia":"VN","toaDo":{"lat":21.0285,"lng":105.8542},"tienTe":"VND","nguon":"nominatim","ngayLay":"2026-10-21T00:00:00.000Z"},"soNgay":2,"soNguoi":2,"ngansachTongVND":5000000,"sothich":[],"tranh":[],"ghiChu":["tôi cần tìm villa"],"thieu":[],"cauHoiLamRo":[],"canhBao":[]},"hard":[{"code":"khong_du_du_lieu","chiTiet":"Dữ liệu địa phương tại Hà Nội chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào."}],"soft":[],"lichSu":[],"soVongSua":0,"soLanGoiAI":0,"soLan429":0,"ms":13,"dataSourceUsed":"mock","ngayDuLieu":"2026-10-22T04:22:46.339Z","lyDo":"khong_du_du_lieu","chiTietThieu":{"phuongTien":6,"khachSan":0,"quanAn":0,"hoatDong":0,"mayChuDaThu":"Chưa có lượt gọi Overpass nào."},"phuongThucLap":"ai"}

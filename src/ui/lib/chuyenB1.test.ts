@@ -59,7 +59,7 @@ describe("chuyenB1 – taoGoiChuyenB1 (đáp án người dùng N3)", () => {
     }
   });
 
-  it("số ngày ngoài 2-5 trả lỗi so_ngay", () => {
+  it("số ngày ngoài 2-7 trả lỗi so_ngay", () => {
     const res1 = taoGoiChuyenB1({
       diemDen: "Hà Nội",
       soNguoi: 2,
@@ -69,14 +69,14 @@ describe("chuyenB1 – taoGoiChuyenB1 (đáp án người dùng N3)", () => {
     expect(res1.ok).toBe(false);
     if (!res1.ok) expect(res1.loi).toBe("so_ngay");
 
-    const res6 = taoGoiChuyenB1({
+    const res8 = taoGoiChuyenB1({
       diemDen: "Hà Nội",
       soNguoi: 2,
-      soNgay: 6,
+      soNgay: 8,
       nganSach: { soTien: 5_000_000, theo: "tong" },
     });
-    expect(res6.ok).toBe(false);
-    if (!res6.ok) expect(res6.loi).toBe("so_ngay");
+    expect(res8.ok).toBe(false);
+    if (!res8.ok) expect(res8.loi).toBe("so_ngay");
   });
 
   it("ngân sách <= 0 trả lỗi ngan_sach", () => {

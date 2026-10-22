@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const schemaVersion = 12;
+export const schemaVersion = 13;
 
 // ─── Enums cho TripRequest & Activity ────────────────────────────────────────
 
@@ -37,7 +37,7 @@ export const DiemDenSchema = z.object({
   maQuocGia: z.string(), // mã ISO 2 ký tự (VN, TH, KR, JP, ...)
   toaDo: z.object({ lat: z.number(), lng: z.number() }),
   tienTe: z.string(), // mã ISO (VND, THB, USD, ...)
-  nguon: z.literal("nominatim"),
+  nguon: z.enum(["nominatim", "danh_sach_co_dinh"]),
   ngayLay: z.string(),
 });
 export type DiemDen = z.infer<typeof DiemDenSchema>;
@@ -169,7 +169,7 @@ export const TripRequestSchema = z.object({
   schemaVersion: z.number().int().default(schemaVersion),
   diemDi: z.union([DiemDenSchema, z.string()]).default(DEFAULT_DIEM_DI),
   diemDen: z.union([DiemDenSchema, z.string()]).nullable(),
-  soNgay: z.number().int().min(2).max(5).nullable(),
+  soNgay: z.number().int().min(2).max(7).nullable(),
   soNguoi: z.number().int().nullable(),
   /** Ngân sách tổng tính bằng VND (số nguyên), null nếu thiếu thông tin ngân sách */
   ngansachTongVND: z.number().int().nullable(),

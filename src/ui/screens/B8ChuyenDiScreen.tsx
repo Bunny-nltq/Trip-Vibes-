@@ -8,6 +8,8 @@ import {
 } from "@/core/tripProgress";
 import { soSanhKeHoachThucTe } from "@/core/soSanhThucTe";
 import { B9ChiDuongPopover } from "@/ui/components/B9ChiDuongPopover";
+import { NhatKyTabBar } from "@/ui/components/NhatKyTabBar";
+import { BookOpen } from "lucide-react";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
 
@@ -83,7 +85,7 @@ export function B8ChuyenDiScreen() {
     };
   }, [plan, ledger, activeDay, tripConfig.budget]);
 
-  // Nếu chưa xác nhận kế hoạch: màn hình khóa
+  // Nếu chưa xác nhận kế hoạch: màn trống "Chưa có chuyến nào" kèm nút "Lập kế hoạch"
   if (!confirmed) {
     return (
       <div className="Row2" style={{ padding: "0 0 40px" }}>
@@ -91,23 +93,32 @@ export function B8ChuyenDiScreen() {
           <div
             className="DayCard"
             style={{
-              padding: "48px 32px",
+              padding: "56px 32px",
               textAlign: "center",
               maxWidth: 560,
               margin: "60px auto",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "var(--color-text-sub)" }}>
-              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: "var(--r-full)",
+                background: "var(--color-surface-sub)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 16px",
+                color: "var(--color-primary-main)",
+              }}
+            >
+              <BookOpen size={28} />
             </div>
-            <h1 className="H1" style={{ fontSize: 22, marginBottom: 8 }}>
-              Tính năng chưa mở
+            <h1 className="H1" style={{ fontSize: 24, marginBottom: 8, color: "var(--color-text)" }}>
+              Chưa có chuyến nào
             </h1>
-            <div className="Sub" style={{ marginBottom: 24 }}>
-              Bạn cần xác nhận kế hoạch trước khi bắt đầu theo dõi chuyến đi thực tế.
+            <div className="Sub" style={{ marginBottom: 24, color: "var(--color-text-sub)", lineHeight: 1.6 }}>
+              Bạn chưa có chuyến đi nào được xác nhận. Hãy bắt đầu lập kế hoạch ngay để theo dõi hành trình và chi tiêu.
             </div>
             <button
               type="button"
@@ -115,7 +126,7 @@ export function B8ChuyenDiScreen() {
               style={{ margin: "0 auto" }}
               onClick={() => nav("b1-chon-nhanh")}
             >
-              Về trang Kế hoạch
+              Lập kế hoạch
             </button>
           </div>
         </div>
@@ -149,7 +160,7 @@ export function B8ChuyenDiScreen() {
               style={{ margin: "0 auto" }}
               onClick={() => nav("b1-chon-nhanh")}
             >
-              Lên kế hoạch ngay
+              Lập kế hoạch
             </button>
           </div>
         </div>
@@ -181,6 +192,9 @@ export function B8ChuyenDiScreen() {
     <div className="Row2" style={{ padding: "0 0 40px" }}>
       {/* CỘT CHÍNH (780px) */}
       <div className="Main">
+        {/* Ba tab Nhật ký chuyến đi: Hành trình, Chi tiêu, Ngân sách */}
+        <NhatKyTabBar activeTab="hanh-trinh" />
+
         <h1 className="H1">Chuyến đi</h1>
         <div className="Sub">
           {progress.tong > 0

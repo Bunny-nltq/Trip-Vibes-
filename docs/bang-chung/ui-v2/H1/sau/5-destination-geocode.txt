@@ -1,0 +1,5 @@
+HTTP/1.1 200
+URL: http://127.0.0.1:3012/api/destination?q=H%C3%A0%20N%E1%BB%99i
+Method: GET
+
+{"status":"thanh_cong","diemDen":{"ten":"Hà Nội","quocGia":"Việt Nam","maQuocGia":"VN","toaDo":{"lat":21.0283334,"lng":105.854041},"tienTe":"VND","nguon":"nominatim","ngayLay":"2026-10-21T09:14:34.127Z"},"ungVien":[{"ten":"Hà Nội","quocGia":"Việt Nam","maQuocGia":"VN","toaDo":{"lat":21.0283334,"lng":105.854041},"tienTe":"VND","loai":"administrative","moTa":"Hà Nội, Việt Nam","importance":0.6887246755750441,"nguon":"nominatim","ngayLay":"2026-10-21T09:14:34.127Z"}],"nguon":"OpenStreetMap contributors"}

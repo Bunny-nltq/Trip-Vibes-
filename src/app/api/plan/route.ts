@@ -166,9 +166,9 @@ export async function POST(req: Request) {
 
     let error = "Lỗi khi lập kế hoạch du lịch.";
     if (raw.includes("429") || raw.includes("RESOURCE_EXHAUSTED")) {
-      error = "Đã vượt hạn mức gọi Gemini API (429). Vui lòng thử lại sau.";
+      error = "Đã vượt hạn mức gọi dịch vụ. Vui lòng thử lại sau.";
     } else if (raw.includes("agent_dung_id_la")) {
-      error = "AI Agent sử dụng ID không tồn tại trong dữ liệu hệ thống.";
+      error = "Hệ thống gặp sự cố khi xử lý dữ liệu địa điểm.";
     }
 
     return NextResponse.json({ ok: false, error, ms }, { status: 500 });

@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const formData = await req.formData();
+    // Chấp nhận cả "image" lẫn "file" để tương thích ngược
     const image = (formData.get("image") || formData.get("file")) as File | null;
     if (!image) {
       return NextResponse.json({ ok: false, error: "Thiếu file ảnh" }, { status: 400 });
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     // Check magic bytes
     let isValidType = false;
     if (bytes.length >= 2 && bytes[0] === 0xff && bytes[1] === 0xd8) isValidType = true; // jpeg
-    if (bytes.length >= 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) isValidType = true; // png
+    if (bytes.length >= 8 && bytes[0] === 0x89 && bytes[1] === 0x4e && bytes[2] === 0x47) isValidType = true; // png
     if (bytes.length >= 12 && bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50) isValidType = true; // webp
     
     if (!isValidType) {
@@ -60,3 +60,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Lỗi AI không đọc được ảnh." }, { status: 502 });
   }
 }
+

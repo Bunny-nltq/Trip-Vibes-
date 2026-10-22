@@ -1,0 +1,5 @@
+HTTP/1.1 503
+URL: http://127.0.0.1:3012/api/parse-request
+Method: POST
+
+{"ok":false,"maLoi":"ai_tat","thongBao":"Tính năng này đang tắt trên bản hiện tại."}

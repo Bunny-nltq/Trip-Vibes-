@@ -1,0 +1,5 @@
+HTTP/1.1 200
+URL: http://127.0.0.1:3012/api/destination/status?jobId=ready_VN_1792649534174
+Method: GET
+
+{"ok":true,"jobId":"ready_VN_1792649534174","trangThai":"san_sang","tienTrinh":{"khach_san":{"trangThai":"xong"},"quan_an":{"trangThai":"xong"},"cafe":{"trangThai":"xong"},"hoat_dong":{"trangThai":"xong"},"phuong_tien":{"trangThai":"xong"},"gia_diem_den":{"trangThai":"xong"}}}

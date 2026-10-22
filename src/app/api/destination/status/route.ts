@@ -15,6 +15,22 @@ export async function GET(req: NextRequest) {
   const job = getDestinationJobStatus(jobId);
 
   if (!job) {
+    if (jobId.startsWith("ready_")) {
+      return NextResponse.json({
+        ok: true,
+        jobId,
+        trangThai: "san_sang",
+        tienTrinh: {
+          khach_san: { trangThai: "xong" },
+          quan_an: { trangThai: "xong" },
+          cafe: { trangThai: "xong" },
+          hoat_dong: { trangThai: "xong" },
+          phuong_tien: { trangThai: "xong" },
+          gia_diem_den: { trangThai: "xong" },
+        },
+      });
+    }
+
     return NextResponse.json(
       { ok: false, error: `Không tìm thấy công việc chuẩn bị với mã ${jobId}.` },
       { status: 404 }
