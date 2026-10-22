@@ -1,0 +1,85 @@
+
+> trip-vibes@0.1.0 eval:ai-rate
+> tsx eval/run-ai-rate.ts
+
+================================================================================
+EVAL: RUN-AI-RATE (Bước 15: Chạy tiếp được, lưu tiến trình từng kịch bản)
+================================================================================
+
+[Cờ --toi-da=4]: Tối đa 4 kịch bản MỚI mỗi lần chạy.
+
+[Tiến trình]: Đã nạp 7 kịch bản đã xong từ D:\Trip_Vibes\eval\results\ai-rate-progress.json.
+
+[1/10] Chuẩn bị kịch bản: Đà Nẵng (1.3x)...
+ -> [ĐỌC LẠI]: Kịch bản đã xong từ lần chạy ngày 2026-10-21 (0 lượt Gemini).
+[2/10] Chuẩn bị kịch bản: Đà Nẵng (2.0x)...
+ -> [ĐỌC LẠI]: Kịch bản đã xong từ lần chạy ngày 2026-10-21 (0 lượt Gemini).
+[3/10] Chuẩn bị kịch bản: Hà Nội (1.3x)...
+ -> [ĐỌC LẠI]: Kịch bản đã xong từ lần chạy ngày 2026-10-21 (0 lượt Gemini).
+[4/10] Chuẩn bị kịch bản: Hà Nội (2.0x)...
+ -> [ĐỌC LẠI]: Kịch bản đã xong từ lần chạy ngày 2026-10-21 (0 lượt Gemini).
+[5/10] Chuẩn bị kịch bản: Đà Lạt (1.3x)...
+ -> Ngân sách: 4.800.000 đ (tối thiểu: 3.624.800 đ). Đang chạy planWithRepair (kịch bản mới #1)...
+[planWithRepair] Initializing LiveDataSource for: Đà Lạt
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 4 transports, 15 hotels, 15 food, 15 activities
+[PlanAgent] Step 1: Sending request to Gemini (gemini-3.8-flash)...
+ -> Kết quả: quy_tac (qua_thoi_gian) | 3.624.800 đ (75.5%) | Ô: 3/3 (tối đa 4) | Di chuyển: 19.3% | Lượt AI: 0 | 23738ms
+ -> Nghỉ 5 giây giữa các kịch bản...
+[6/10] Chuẩn bị kịch bản: Đà Lạt (2.0x)...
+ -> Ngân sách: 7.300.000 đ (tối thiểu: 3.624.800 đ). Đang chạy planWithRepair (kịch bản mới #2)...
+[planWithRepair] Initializing LiveDataSource for: Đà Lạt
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 4 transports, 15 hotels, 15 food, 15 activities
+[PlanAgent] Step 1: Sending request to Gemini (gemini-3.8-flash)...
+ -> Kết quả: quy_tac (qua_thoi_gian) | 6.117.280 đ (83.8%) | Ô: 4/4 (tối đa 4) | Di chuyển: 5.0% | Lượt AI: 0 | 20010ms
+ -> Nghỉ 5 giây giữa các kịch bản...
+[7/10] Chuẩn bị kịch bản: Phú Quốc (1.3x)...
+ -> Bỏ qua Phú Quốc vì không tìm thấy file snapshot.
+[8/10] Chuẩn bị kịch bản: Phú Quốc (2.0x)...
+ -> Bỏ qua Phú Quốc vì không tìm thấy file snapshot.
+[9/10] Chuẩn bị kịch bản: Bangkok (1.3x)...
+ -> Ngân sách: 11.800.000 đ (tối thiểu: 9.002.200 đ). Đang chạy planWithRepair (kịch bản mới #3)...
+[planWithRepair] Initializing LiveDataSource for: Bangkok
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 2 transports, 15 hotels, 15 food, 15 activities
+[PlanAgent] Step 1: Sending request to Gemini (gemini-3.8-flash)...
+ -> Kết quả: quy_tac (qua_thoi_gian) | 9.002.200 đ (76.3%) | Ô: 4/4 (tối đa 4) | Di chuyển: 6.9% | Lượt AI: 0 | 20011ms
+ -> Nghỉ 5 giây giữa các kịch bản...
+[10/10] Chuẩn bị kịch bản: Bangkok (2.0x)...
+ -> Ngân sách: 18.100.000 đ (tối thiểu: 9.002.200 đ). Đang chạy planWithRepair (kịch bản mới #4)...
+[planWithRepair] Initializing LiveDataSource for: Bangkok
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 2 transports, 15 hotels, 15 food, 15 activities
+[PlanAgent] Step 1: Sending request to Gemini (gemini-3.8-flash)...
+ -> Kết quả: quy_tac (qua_thoi_gian) | 9.002.200 đ (49.7%) | Ô: 4/4 (tối đa 4) | Di chuyển: 6.9% | Lượt AI: 0 | 23636ms
+
+================================================================================
+BẢNG KẾT QUẢ KỊCH BẢN (8/10 kịch bản đã chạy với quy tắc hiện tại):
+================================================================================
+┌─────────┬─────┬───────────┬────────┬──────────────┬─────────────┬───────────────────────┬─────────┬─────────────┬─────────┬──────────────────┬───────────┬──────────┬────────┬───────────────────────────────┬───────┐
+│ (index) │ STT │ Điểm đến  │ Hệ     │ Ngân sách    │ Phương thức │ Lý do                 │ Lượt AI │ Tổng VND    │ % NS    │ Ô                │ Di chuyển │ Tỉ lệ DC │ CB nhẹ │ Nguồn                         │ ms    │
+├─────────┼─────┼───────────┼────────┼──────────────┼─────────────┼───────────────────────┼─────────┼─────────────┼─────────┼──────────────────┼───────────┼──────────┼────────┼───────────────────────────────┼───────┤
+│ 0       │ 1   │ 'Đà Nẵng' │ '1.3x' │ '7.500.000'  │ 'quy_tac'   │ 'vuot_so_luot_goi_ai' │ 8       │ '5.735.600' │ '76.5%' │ '3/3 (tối đa 4)' │ '1992p'   │ '46.1%'  │ 0      │ 'từ lần chạy ngày 2026-10-21' │ 10633 │
+│ 1       │ 2   │ 'Đà Nẵng' │ '2.0x' │ '11.500.000' │ 'ai'        │ '-'                   │ 3       │ '8.679.160' │ '75.5%' │ '4/4 (tối đa 4)' │ '278p'    │ '6.4%'   │ 1      │ 'từ lần chạy ngày 2026-10-21' │ 7767  │
+│ 2       │ 3   │ 'Hà Nội'  │ '1.3x' │ '10.300.000' │ 'quy_tac'   │ 'vuot_so_luot_goi_ai' │ 8       │ '7.874.000' │ '76.4%' │ '3/3 (tối đa 4)' │ '3742p'   │ '86.6%'  │ 0      │ 'từ lần chạy ngày 2026-10-21' │ 14673 │
+│ 3       │ 4   │ 'Hà Nội'  │ '2.0x' │ '15.800.000' │ 'quy_tac'   │ 'het_luot_ai'         │ 1       │ '7.874.000' │ '49.8%' │ '3/3 (tối đa 4)' │ '3742p'   │ '86.6%'  │ 0      │ 'từ lần chạy ngày 2026-10-21' │ 2626  │
+│ 4       │ 5   │ 'Đà Lạt'  │ '1.3x' │ '4.800.000'  │ 'quy_tac'   │ 'qua_thoi_gian'       │ 0       │ '3.624.800' │ '75.5%' │ '3/3 (tối đa 4)' │ '832p'    │ '19.3%'  │ 0      │ 'mới'                         │ 23738 │
+│ 5       │ 6   │ 'Đà Lạt'  │ '2.0x' │ '7.300.000'  │ 'quy_tac'   │ 'qua_thoi_gian'       │ 0       │ '6.117.280' │ '83.8%' │ '4/4 (tối đa 4)' │ '216p'    │ '5.0%'   │ 1      │ 'mới'                         │ 20010 │
+│ 6       │ 9   │ 'Bangkok' │ '1.3x' │ '11.800.000' │ 'quy_tac'   │ 'qua_thoi_gian'       │ 0       │ '9.002.200' │ '76.3%' │ '4/4 (tối đa 4)' │ '300p'    │ '6.9%'   │ 1      │ 'mới'                         │ 20011 │
+│ 7       │ 10  │ 'Bangkok' │ '2.0x' │ '18.100.000' │ 'quy_tac'   │ 'qua_thoi_gian'       │ 0       │ '9.002.200' │ '49.7%' │ '4/4 (tối đa 4)' │ '300p'    │ '6.9%'   │ 1      │ 'mới'                         │ 23636 │
+└─────────┴─────┴───────────┴────────┴──────────────┴─────────────┴───────────────────────┴─────────┴─────────────┴─────────┴──────────────────┴───────────┴──────────┴────────┴───────────────────────────────┴───────┘
+
+================================================================================
+TỔNG HỢP (8/10 kịch bản đã chạy với quy tắc hiện tại):
+⚠️ CHƯA ĐỦ MẪU, không dùng làm kết luận
+- Số ca AI lập hợp lệ ngay lần đầu: 1/8
+- Số ca AI lập hợp lệ sau sửa: 0/8
+- Số ca phải dự phòng: 7/8 (vuot_so_luot_goi_ai, vuot_so_luot_goi_ai, het_luot_ai, qua_thoi_gian, qua_thoi_gian, qua_thoi_gian, qua_thoi_gian)
+- Trung bình số lượt Gemini: 2.5
+- Tổng số lượt Gemini đã dùng: 20
+- ms trung bình: 15387 ms
+- Tiến trình đã lưu tại: D:\Trip_Vibes\eval\results\ai-rate-progress.json
+- Báo cáo kết quả tại: D:\Trip_Vibes\eval\results\ai-rate-2026-10-22.json
+================================================================================
+
