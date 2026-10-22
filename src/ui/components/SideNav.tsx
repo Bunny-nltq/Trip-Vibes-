@@ -2,12 +2,12 @@
 import React from "react";
 import Link from "next/link";
 import { useApp } from "@/ui/context/AppContext";
-import { Compass, Send, BookOpen, Lock } from "lucide-react";
+import { Compass, Send, BookOpen } from "lucide-react";
 
 export const SidebarContext = React.createContext<boolean>(false);
 
 export function SideNav() {
-  const { screen, nav, confirmed } = useApp();
+  const { screen, nav } = useApp();
 
   // Xác định mục nào sáng duy nhất theo màn hình hiện tại
   const activeItem = (() => {
@@ -34,9 +34,7 @@ export function SideNav() {
     if (target === "ke-hoach") {
       nav("b1-chon-nhanh");
     } else if (target === "nhat-ky") {
-      if (confirmed) {
-        nav("b8-chuyen-di");
-      }
+      nav("b8-chuyen-di");
     }
   };
 
@@ -45,17 +43,19 @@ export function SideNav() {
       {/* Logo Block dẫn về "/" */}
       <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
         <div className="LogoBlock" style={{ cursor: "pointer" }}>
-          <div style={{
-            width: 38,
-            height: 38,
-            borderRadius: "var(--r-md)",
-            background: "linear-gradient(135deg, var(--color-primary-main), var(--color-primary-sky))",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "var(--color-primary-text)",
-            flexShrink: 0
-          }}>
+          <div
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: "var(--r-md)",
+              background: "linear-gradient(135deg, var(--color-primary-main), var(--color-primary-sky))",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "var(--color-primary-text)",
+              flexShrink: 0,
+            }}
+          >
             <Compass size={22} />
           </div>
           <div>
@@ -82,23 +82,12 @@ export function SideNav() {
         <div
           className={`NavItem ${activeItem === "nhat-ky" ? "NavActive" : "NavOn"}`}
           onClick={() => handleNavClick("nhat-ky")}
-          style={{ opacity: !confirmed ? 0.6 : 1, cursor: !confirmed ? "not-allowed" : "pointer" }}
           role="button"
           tabIndex={0}
         >
           <BookOpen size={18} />
           <span>Nhật ký chuyến đi</span>
-          {!confirmed && (
-            <Lock size={14} style={{ marginLeft: "auto", color: "var(--color-light-muted)" }} aria-label="Đang khóa" />
-          )}
         </div>
-
-        {/* Chú thích duy nhất một dòng cho tới khi có kế hoạch xác nhận */}
-        {!confirmed && (
-          <div className="NavNote">
-            Nhật ký chuyến đi mở sau khi xác nhận kế hoạch.
-          </div>
-        )}
       </nav>
     </aside>
   );

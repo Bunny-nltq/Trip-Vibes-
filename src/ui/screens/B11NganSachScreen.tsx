@@ -5,6 +5,7 @@ import { SideNav } from "@/ui/components/SideNav";
 import { soSanhKeHoachThucTe } from "@/core/soSanhThucTe";
 import { gomDiaDiemTheoNgay } from "@/core/tripProgress";
 import type { Expense, ExpenseCategory } from "@/contracts";
+import { NhatKyTabBar } from "@/ui/components/NhatKyTabBar";
 import {
   Wallet,
   Plus,
@@ -18,6 +19,7 @@ import {
   ArrowRight,
   TrendingDown,
   TrendingUp,
+  BookOpen,
 } from "lucide-react";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
@@ -166,20 +168,32 @@ export function B11NganSachScreen() {
           <div
             className="DayCard"
             style={{
-              padding: "48px 32px",
+              padding: "56px 32px",
               textAlign: "center",
               maxWidth: 560,
               margin: "60px auto",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "var(--color-text-sub)" }}>
-              <Lock size={44} />
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: "var(--r-full)",
+                background: "var(--color-surface-sub)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 16px",
+                color: "var(--color-primary-main)",
+              }}
+            >
+              <BookOpen size={28} />
             </div>
-            <h1 className="H1" style={{ fontSize: 22, marginBottom: 8 }}>
-              Tính năng chưa mở
+            <h1 className="H1" style={{ fontSize: 24, marginBottom: 8, color: "var(--color-text)" }}>
+              Chưa có chuyến nào
             </h1>
-            <div className="Sub" style={{ marginBottom: 24 }}>
-              Bạn cần xác nhận kế hoạch trước khi theo dõi ngân sách thực tế.
+            <div className="Sub" style={{ marginBottom: 24, color: "var(--color-text-sub)", lineHeight: 1.6 }}>
+              Bạn chưa có chuyến đi nào được xác nhận. Hãy bắt đầu lập kế hoạch ngay để theo dõi hành trình và chi tiêu.
             </div>
             <button
               type="button"
@@ -187,7 +201,7 @@ export function B11NganSachScreen() {
               style={{ margin: "0 auto" }}
               onClick={() => nav("b1-chon-nhanh")}
             >
-              Về trang Kế hoạch
+              Lập kế hoạch
             </button>
           </div>
         </div>
@@ -232,6 +246,9 @@ export function B11NganSachScreen() {
 
   return (
     <div className="MainWide" style={{ width: "100%", padding: "0 0 40px" }}>
+      {/* Ba tab Nhật ký chuyến đi: Hành trình, Chi tiêu, Ngân sách */}
+      <NhatKyTabBar activeTab="ngan-sach" />
+
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
         <div>
