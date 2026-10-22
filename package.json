@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "smoke": "tsx scripts/smoke.ts",
     "check:data": "npx tsx scripts/check-data.ts",
     "test": "vitest run",
     "test:core": "vitest run src/core",
