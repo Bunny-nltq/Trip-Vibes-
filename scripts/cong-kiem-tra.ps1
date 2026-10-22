@@ -1,5 +1,5 @@
-param([Parameter(Mandatory=$true)][string]$MaNV)
-$dir = "docs/bang-chung/dem/$MaNV"
+param([Parameter(Mandatory=$true)][string]$MaNV, [string]$Nhom = "hom-nay")
+$dir = "docs/bang-chung/$Nhom/$MaNV"
 New-Item -ItemType Directory -Force -Path $dir | Out-Null
 $utf8 = New-Object System.Text.UTF8Encoding $false
 $lenh = [ordered]@{ "vitest"="npx vitest run"; "typecheck"="npm run typecheck"; "build"="npm run build"; "check-colors"="npm run check:colors"; "check-contrast"="npm run check:contrast"; "check-emoji"="npm run check:emoji"; "check-env"="npm run check:env" }
