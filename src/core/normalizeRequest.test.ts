@@ -72,27 +72,27 @@ describe("normalizeRequest", () => {
   });
 
   describe("soNgay", () => {
-    it("soNgay trong khoảng 2-5 giữ nguyên và không cảnh báo", () => {
-      for (const d of [2, 3, 4, 5]) {
+    it("soNgay trong khoảng 2-7 giữ nguyên và không cảnh báo", () => {
+      for (const d of [2, 3, 4, 5, 6, 7]) {
         const res = normalizeRequest(createBaseRaw({ soNgay: d }));
         expect(res.soNgay).toBe(d);
         expect(res.canhBao).not.toContain("ngoai_pham_vi_so_ngay");
       }
     });
 
-    it("soNgay 1 hoặc 6 trả canhBao ngoai_pham_vi_so_ngay và đặt soNgay null kèm vào thieu", () => {
+    it("soNgay 1 hoặc 8 trả canhBao ngoai_pham_vi_so_ngay và đặt soNgay null kèm vào thieu", () => {
       const res1 = normalizeRequest(createBaseRaw({ soNgay: 1 }));
       expect(res1.soNgay).toBeNull();
       expect(res1.thieu).toContain("soNgay");
       expect(res1.canhBao).toContain("ngoai_pham_vi_so_ngay");
 
-      const res6 = normalizeRequest(createBaseRaw({ soNgay: 6 }));
-      expect(res6.soNgay).toBeNull();
-      expect(res6.thieu).toContain("soNgay");
-      expect(res6.canhBao).toContain("ngoai_pham_vi_so_ngay");
+      const res8 = normalizeRequest(createBaseRaw({ soNgay: 8 }));
+      expect(res8.soNgay).toBeNull();
+      expect(res8.thieu).toContain("soNgay");
+      expect(res8.canhBao).toContain("ngoai_pham_vi_so_ngay");
     });
 
-    it("soNgay ngoài 1-7 thì đặt null, thêm thieu và canhBao so_ngay_khong_hop_le", () => {
+    it("soNgay ngoài 1-8 thì đặt null, thêm thieu và canhBao so_ngay_khong_hop_le", () => {
       const res0 = normalizeRequest(createBaseRaw({ soNgay: 0 }));
       expect(res0.soNgay).toBeNull();
       expect(res0.thieu).toContain("soNgay");

@@ -11,5 +11,7 @@ describe("src/core/soDem - soDemOKhachSan", () => {
     expect(soDemOKhachSan(2, 0)).toBe(1);
     expect(soDemOKhachSan(2, 1440)).toBe(0);
     expect(soDemOKhachSan(5, 4000)).toBe(2);
+    expect(soDemOKhachSan(7, 565)).toBe(6);
   });
 });
+

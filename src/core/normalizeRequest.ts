@@ -72,13 +72,13 @@ export function normalizeRequest(raw: RawTripRequest): TripRequest {
     thieuSet.add("soNguoi");
   }
 
-  // 4. Số ngày (hợp lệ trong phạm vi đồ án: 2 - 5 ngày)
+  // 4. Số ngày (hợp lệ trong phạm vi đồ án: 2 - 7 ngày)
   let soNgay: number | null = null;
   if (raw.soNgay !== null && raw.soNgay !== undefined) {
     if (Number.isInteger(raw.soNgay)) {
-      if (raw.soNgay >= 2 && raw.soNgay <= 5) {
+      if (raw.soNgay >= 2 && raw.soNgay <= 7) {
         soNgay = raw.soNgay;
-      } else if (raw.soNgay === 1 || raw.soNgay === 6 || raw.soNgay === 7) {
+      } else if (raw.soNgay === 1 || raw.soNgay === 8) {
         soNgay = null;
         thieuSet.add("soNgay");
         canhBao.push("ngoai_pham_vi_so_ngay");

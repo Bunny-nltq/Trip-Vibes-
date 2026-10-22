@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { describe, it, expect } from "vitest";
 import { buildPlan, type PlanData } from "./buildPlan";
 import type { TripRequest, Selection } from "@/contracts";
@@ -832,6 +834,100 @@ describe("buildPlan – N ngày, Fixture A", () => {
         expect(res.plan.tongKet.tongVND).toBe(7180000);
       }
     });
+
+    it("H3 test: buildPlan 7 ngày (snapshot Đà Nẵng, 2 người, ngân sách đủ lớn) cho Chỗ ở 6 đêm, mọi mục có ngay trong 1..7", () => {
+      const snapPath = path.resolve(process.cwd(), "src/data/snapshots/snapshot_da_nang_2026-10-20.json");
+      const snap = JSON.parse(fs.readFileSync(snapPath, "utf-8"));
+
+      const data: PlanData = {
+        transports: [
+          {
+            schemaVersion: 6,
+            id: "T_DI",
+            huong: "di",
+            type: "PLANE",
+            provider: "Hãng A",
+            origin: "TP.HCM",
+            destination: "Đà Nẵng",
+            departureTime: "06:30",
+            durationMinutes: 85,
+            pricePerPerson: 1000000,
+            seatClass: "Phổ thông",
+            boardingPoint: "Sân bay TSN",
+            dropOffPoint: "Sân bay ĐN",
+          },
+          {
+            schemaVersion: 6,
+            id: "T_VE",
+            huong: "ve",
+            type: "PLANE",
+            provider: "Hãng A",
+            origin: "Đà Nẵng",
+            destination: "TP.HCM",
+            departureTime: "18:00",
+            durationMinutes: 85,
+            pricePerPerson: 1000000,
+            seatClass: "Phổ thông",
+            boardingPoint: "Sân bay ĐN",
+            dropOffPoint: "Sân bay TSN",
+          },
+        ],
+        hotels: [],
+        activities: [],
+        khachSans: snap.khachSans,
+        quanAns: snap.quanAns,
+        cafes: snap.cafes,
+        hoatDongs: snap.hoatDongs,
+      };
+
+      const soNgay = 7;
+      const req: TripRequest = {
+        schemaVersion: 13,
+        diemDi: "TP.HCM",
+        diemDen: "Đà Nẵng",
+        soNguoi: 2,
+        soNgay,
+        ngansachTongVND: 50000000,
+        sothich: [],
+        tranh: [],
+        ghiChu: [],
+        thieu: [],
+        cauHoiLamRo: [],
+        canhBao: [],
+      };
+
+      const hotel = snap.khachSans[0];
+      const acts = snap.hoatDongs;
+      const hoatDongTheoNgay: string[][] = [
+        [acts[0].id],
+        [acts[1].id, acts[2].id],
+        [acts[3].id, acts[4].id],
+        [acts[5].id, acts[6].id],
+        [acts[7].id, acts[8].id],
+        [acts[9].id, acts[10].id],
+        [acts[11].id],
+      ];
+
+      const sel: Selection = {
+        transportDiId: "T_DI",
+        transportVeId: "T_VE",
+        hotelId: hotel.id,
+        hoatDongTheoNgay,
+      };
+
+      const res = buildPlan(req, sel, data);
+      expect(res.ok).toBe(true);
+      if (res.ok) {
+        const choO = res.plan.items.find((i) => i.hangMuc === "Chỗ ở");
+        expect(choO).toBeDefined();
+        expect(choO!.noiDung).toContain("6 đêm");
+        for (const item of res.plan.items) {
+          expect(item.ngay).toBeGreaterThanOrEqual(1);
+          expect(item.ngay).toBeLessThanOrEqual(7);
+        }
+      }
+    });
   });
 });
+
 

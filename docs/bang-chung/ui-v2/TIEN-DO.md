@@ -5,8 +5,19 @@
 | 2026-10-22 11:14:00 | H0 | XONG | 4d0a165 | Chuyển sang nhánh ui-v2, lưu LENH-UI-V2.md, cong-kiem-tra H0 đạt |
 | 2026-10-22 11:36:00 | H1 | XONG | 23343fd | Sửa lỗi API AI tắt trả 503 ai_tat, hook useTrangThaiAI, cong-kiem-tra H1 đạt |
 | 2026-10-22 12:12:00 | H2 | XONG | 26d2267 | Vỏ khu lập kế hoạch, gỡ bỏ trang trí và chuỗi cấm, cong-kiem-tra H2 đạt |
+| 2026-10-22 12:35:00 | H3 | XONG | (commit sau) | Danh sách chọn điểm đi/đến, nâng số ngày lên 7, component ChonDiem, cong-kiem-tra H3 đạt |
 
-## Chi tiết H2: Danh sách chuỗi đã đổi
+## Khai báo thay đổi Loại A (H3)
+1. `src/contracts/index.ts`: Tăng `schemaVersion` từ 12 lên 13 do bổ sung giá trị `"danh_sach_co_dinh"` vào trường `nguon` của `DiemDenSchema` và nâng giới hạn `soNgay` tối đa từ 5 lên 7.
+2. Các bài test kiểm tra giới hạn số ngày tối đa (cũ là 5, mới là 7) được cập nhật kỳ vọng (loại A):
+   - `src/core/formB1.test.ts`: kiểm tra `soNgay 7` hợp lệ; `soNgay 8` và `soNgay 1` không hợp lệ (`so_ngay_ngoai_pham_vi`).
+   - `src/core/normalizeRequest.test.ts`: cập nhật dải 2-7 ngày giữ nguyên, 1 và 8 trả cảnh báo `ngoai_pham_vi_so_ngay`.
+   - `src/ui/lib/chuyenB1.test.ts`: cập nhật kiểm tra ngoài dải 2-7 ngày trả lỗi `so_ngay`.
+3. Bổ sung các test đáp án người dùng:
+   - `soOKhaDung(7, 475, 1080) = 12` và `soOKhaDung(6, 475, 1080) = 10`.
+   - `soDemOKhachSan(7, 565) = 6`.
+   - `buildPlan 7 ngày` (snapshot Đà Nẵng, 2 người, ngân sách đủ lớn) cho Chỗ ở 6 đêm, mọi mục có ngay trong 1..7.
+   - `GET /api/diem-chon` trả đúng 8 điểm đi (TP.HCM, Hà Nội, Đà Nẵng, Hải Phòng, Cần Thơ, Huế, Nha Trang, Đà Lạt) và các điểm đến từ snapshot hợp lệ.
 1. `src/app/layout.tsx`:
    - "Trip Vibes – AI Agent Lập Kế Hoạch Du Lịch Thông Minh" -> "Trip Vibes – Lập Kế Hoạch Du Lịch Theo Ngân Sách"
    - "Ứng dụng AI Agent lập kế hoạch du lịch tự động, tối ưu chi phí và bám sát ngân sách thực tế. Tra cứu giá vé, khách sạn, lịch trình chi tiết và quét hóa đơn thông minh." -> "Ứng dụng lập kế hoạch du lịch tự động, tối ưu chi phí và bám sát ngân sách thực tế. Tra cứu giá vé, khách sạn, lịch trình chi tiết và bóc tách hóa đơn tiện lợi."

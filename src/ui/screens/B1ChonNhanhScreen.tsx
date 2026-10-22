@@ -16,6 +16,8 @@ import {
 import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
 import { docGoiChuyenTuSession } from "@/ui/lib/chuyenB1";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
+import { ChonDiem } from "@/ui/components/ChonDiem";
+import { useDiemChon } from "@/ui/hooks/useDiemChon";
 import {
   MapPin,
   Search,
@@ -36,14 +38,6 @@ import {
   Plus,
   Loader2,
 } from "lucide-react";
-
-interface UngVienGeo {
-  ten: string;
-  quocGia: string;
-  maQuocGia: string;
-  toaDo: { lat: number; lng: number };
-  tienTe: string;
-}
 
 const PRESETS = [
   {
@@ -96,7 +90,7 @@ const AVOID_ITEMS = [
   { label: "Tránh chỗ đông", icon: Users },
   { label: "Tránh đi bộ nhiều", icon: Footprints },
 ];
-const DURATION_DAYS = [2, 3, 4, 5];
+const DURATION_DAYS = [2, 3, 4, 5, 6, 7];
 
 export function B1ChonNhanhScreen() {
   const {
@@ -107,6 +101,7 @@ export function B1ChonNhanhScreen() {
     planResult,
   } = useApp();
   const { aiBat } = useTrangThaiAI();
+  const { data: diemChonData } = useDiemChon();
 
   // ─── 1. Form state B1 ───
   const [diemDi, setDiemDi] = useState<DiemDen | null>(
@@ -134,17 +129,6 @@ export function B1ChonNhanhScreen() {
   const [soNgay, setSoNgay] = useState<number>(tripConfig.soNgay || 3);
   const [tranh, setTranh] = useState<string[]>(tripConfig.avoids || []);
   const [ghiChu, setGhiChu] = useState<string>(tripConfig.note || "");
-
-  // ─── Geocoding Search States ───
-  const [diemDiInput, setDiemDiInput] = useState("");
-  const [diemDiLoading, setDiemDiLoading] = useState(false);
-  const [diemDiError, setDiemDiError] = useState<ThongBaoLoi | null>(null);
-  const [diemDiCandidates, setDiemDiCandidates] = useState<UngVienGeo[]>([]);
-
-  const [diemDenInput, setDiemDenInput] = useState("");
-  const [diemDenLoading, setDiemDenLoading] = useState(false);
-  const [diemDenError, setDiemDenError] = useState<ThongBaoLoi | null>(null);
-  const [diemDenCandidates, setDiemDenCandidates] = useState<UngVienGeo[]>([]);
 
   // Đã từng thử submit hoặc tương tác
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -216,31 +200,10 @@ export function B1ChonNhanhScreen() {
         });
       }
       if (nguoi >= 1 && nguoi <= 10 && !pkg) setSoNguoi(nguoi);
-      if (ngay >= 2 && ngay <= 5 && !pkg) setSoNgay(ngay);
+      if (ngay >= 2 && ngay <= 7 && !pkg) setSoNgay(ngay);
       if (ns > 0 && !pkg) {
         setNganSachSoTien(ns);
         setNganSachInputStr(dinhDangTien(ns));
-      }
-
-      // 3. Môi trường phát triển preview
-      const isDev = process.env.NODE_ENV === "development";
-      if (isDev && sp.get("previewMoHo") === "1") {
-        setDiemDenCandidates([
-          {
-            ten: "Dalat",
-            quocGia: "Malaysia",
-            maQuocGia: "MY",
-            toaDo: { lat: 2.701, lng: 111.96 },
-            tienTe: "MYR",
-          },
-          {
-            ten: "Đà Lạt",
-            quocGia: "Việt Nam",
-            maQuocGia: "VN",
-            toaDo: { lat: 11.94, lng: 108.43 },
-            tienTe: "VND",
-          },
-        ]);
       }
     }
   }, []);
@@ -283,117 +246,6 @@ export function B1ChonNhanhScreen() {
   // Tính tổng quy đổi ngân sách
   const tongNganSachQuyDoiVND =
     nganSachTheo === "tong" ? nganSachSoTien : nganSachSoTien * soNguoi;
-
-  // Tìm kiếm địa điểm chung
-  const executeSearch = async (
-    query: string
-  ): Promise<{
-    diemDen?: DiemDen;
-    candidates?: UngVienGeo[];
-    error?: ThongBaoLoi;
-  }> => {
-    const q = query.trim();
-    if (!q) {
-      return { error: layThongBaoLoi("geocode_khong_thay", { tenDiaDiem: query }) };
-    }
-    try {
-      const res = await fetch(`/api/destination?q=${encodeURIComponent(q)}`);
-      if (res.status === 429 || res.status === 403) {
-        return { error: layThongBaoLoi("geocode_ban") };
-      }
-      if (!res.ok) {
-        return { error: layThongBaoLoi("mang_loi") };
-      }
-      const data = await res.json();
-      if (data.status === "thanh_cong" && data.diemDen) {
-        return { diemDen: data.diemDen };
-      }
-      if (data.status === "can_lam_ro" && data.ungVien && data.ungVien.length > 0) {
-        return { candidates: data.ungVien.slice(0, 3) };
-      }
-      return { error: layThongBaoLoi("geocode_khong_thay", { tenDiaDiem: q }) };
-    } catch {
-      return { error: layThongBaoLoi("mang_loi") };
-    }
-  };
-
-  // Tìm điểm đi
-  const handleSearchDiemDi = async (overrideQ?: string) => {
-    const q = overrideQ !== undefined ? overrideQ : diemDiInput;
-    if (!q.trim()) return;
-    setDiemDiLoading(true);
-    setDiemDiError(null);
-    setDiemDiCandidates([]);
-
-    const res = await executeSearch(q);
-    setDiemDiLoading(false);
-
-    if (res.error) {
-      setDiemDiError(res.error);
-    } else if (res.candidates && res.candidates.length > 0) {
-      setDiemDiCandidates(res.candidates);
-    } else if (res.diemDen) {
-      setDiemDi(res.diemDen);
-      setDiemDiInput("");
-      setDiemDiCandidates([]);
-      setDiemDiError(null);
-    }
-  };
-
-  // Tìm điểm đến
-  const handleSearchDiemDen = async (overrideQ?: string) => {
-    const q = overrideQ !== undefined ? overrideQ : diemDenInput;
-    if (!q.trim()) return;
-    setDiemDenLoading(true);
-    setDiemDenError(null);
-    setDiemDenCandidates([]);
-
-    const res = await executeSearch(q);
-    setDiemDenLoading(false);
-
-    if (res.error) {
-      setDiemDenError(res.error);
-    } else if (res.candidates && res.candidates.length > 0) {
-      setDiemDenCandidates(res.candidates);
-    } else if (res.diemDen) {
-      setDiemDen(res.diemDen);
-      setDiemDenInput("");
-      setDiemDenCandidates([]);
-      setDiemDenError(null);
-    }
-  };
-
-  // Chọn ứng viên cho điểm đi
-  const handleSelectDiemDiCandidate = (c: UngVienGeo) => {
-    setDiemDi({
-      ten: c.ten,
-      quocGia: c.quocGia,
-      maQuocGia: c.maQuocGia,
-      toaDo: c.toaDo,
-      tienTe: c.tienTe,
-      nguon: "nominatim",
-      ngayLay: new Date().toISOString().slice(0, 10),
-    });
-    setDiemDiCandidates([]);
-    setDiemDiInput("");
-    setDiemDiError(null);
-  };
-
-  // Chọn ứng viên cho điểm đến
-  const handleSelectDiemDenCandidate = (c: UngVienGeo) => {
-    setDiemDen({
-      ten: c.ten,
-      quocGia: c.quocGia,
-      maQuocGia: c.maQuocGia,
-      toaDo: c.toaDo,
-      tienTe: c.tienTe,
-      nguon: "nominatim",
-      ngayLay: new Date().toISOString().slice(0, 10),
-    });
-    setDiemDenCandidates([]);
-    setDiemDenInput("");
-    setDiemDenError(null);
-  };
 
   // Xử lý gõ ngân sách (dấu chấm phân cách hàng nghìn)
   const handleNganSachChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -456,7 +308,7 @@ export function B1ChonNhanhScreen() {
     if (validationErrors.includes("ngan_sach_khong_hop_le"))
       return "Vui lòng nhập ngân sách dự kiến hợp lệ.";
     if (validationErrors.includes("so_ngay_ngoai_pham_vi"))
-      return "Số ngày cần trong khoảng từ 2 đến 5 ngày.";
+      return "Số ngày cần trong khoảng từ 2 đến 7 ngày.";
     if (validationErrors.includes("ghi_chu_qua_dai"))
       return "Ghi chú vượt quá 500 ký tự.";
     if (validationErrors.includes("diem_di_thieu") || validationErrors.includes("diem_den_thieu") || tongNganSachQuyDoiVND <= 0)
@@ -541,336 +393,34 @@ export function B1ChonNhanhScreen() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               {/* Ô 1: Điểm đi */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <label style={{ fontSize: 13, fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
-                  Điểm đi
-                </label>
-
-                {diemDi ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "10px 14px",
-                      background: "var(--color-primary-brandSoft)",
-                      border: "1.5px solid var(--color-primary-brand)",
-                      borderRadius: 10,
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <MapPin size={16} color="var(--color-primary-brand)" />
-                      <span style={{ fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
-                        {diemDi.ten} ({diemDi.quocGia})
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      className="Btn BtnSmall"
-                      onClick={() => {
-                        setDiemDi(null);
-                        setDiemDiInput("");
-                        setDiemDiError(null);
-                        setDiemDiCandidates([]);
-                      }}
-                      style={{ padding: "4px 10px", fontSize: 12, background: "var(--color-surface)" }}
-                    >
-                      <RefreshCw size={12} style={{ marginRight: 4 }} />
-                      Đổi
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <input
-                        type="text"
-                        className="Input"
-                        placeholder="Nhập nơi xuất phát..."
-                        value={diemDiInput}
-                        onChange={(e) => setDiemDiInput(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") handleSearchDiemDi();
-                        }}
-                        style={{ flex: 1 }}
-                      />
-                      <button
-                        type="button"
-                        className="Btn BtnPrimary"
-                        disabled={diemDiLoading || !diemDiInput.trim()}
-                        onClick={() => handleSearchDiemDi()}
-                        style={{ display: "flex", alignItems: "center", gap: 6 }}
-                      >
-                        {diemDiLoading ? (
-                          <Loader2 size={16} className="animate-spin" />
-                        ) : (
-                          <Search size={16} />
-                        )}
-                        <span>Tìm</span>
-                      </button>
-                    </div>
-
-                    {/* Gợi ý nhanh điểm đi */}
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
-                      <span style={{ fontSize: 12, color: "var(--color-neutral-mutedText)", alignSelf: "center" }}>
-                        Gợi ý:
-                      </span>
-                      {QUICK_ORIGINS.map((city) => (
-                        <button
-                          key={city}
-                          type="button"
-                          className="Chip"
-                          onClick={() => {
-                            setDiemDiInput(city);
-                            handleSearchDiemDi(city);
-                          }}
-                          style={{ padding: "4px 10px", fontSize: 12 }}
-                        >
-                          {city}
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
-
-                {/* Ứng viên điểm đi mơ hồ */}
-                {diemDiCandidates.length > 0 && !diemDi && (
-                  <div
-                    style={{
-                      background: "var(--color-status-warnBg)",
-                      border: "1px solid var(--color-status-warnBorder)",
-                      borderRadius: 8,
-                      padding: 10,
-                      marginTop: 6,
-                    }}
-                  >
-                    <div style={{ fontSize: 12, fontWeight: 600, color: "var(--color-status-warnText)" }}>
-                      Chọn điểm đi chính xác:
-                    </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 6 }}>
-                      {diemDiCandidates.map((c, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          className="Btn BtnSmall"
-                          onClick={() => handleSelectDiemDiCandidate(c)}
-                          style={{ background: "var(--color-surface)", fontSize: 12 }}
-                        >
-                          <MapPin size={12} style={{ marginRight: 4 }} />
-                          {c.ten} ({c.quocGia})
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Lỗi ở ô điểm đi */}
-                {(diemDiError || hasDiemDiError) && (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 8,
-                      background: "var(--color-status-errBg)",
-                      border: "1px solid var(--color-status-errBorder)",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      marginTop: 4,
-                    }}
-                  >
-                    <AlertCircle size={16} color="var(--color-status-errText)" style={{ flexShrink: 0, marginTop: 2 }} />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: "var(--color-status-errText)" }}>
-                        {diemDiError?.tieuDe || "Thiếu điểm khởi hành"}
-                      </div>
-                      <div style={{ fontSize: 12, color: "var(--color-status-errText)" }}>
-                        {diemDiError?.noiDung || "Vui lòng chọn hoặc nhập điểm đi của chuyến đi."}
-                      </div>
-                      {diemDiError?.hanhDong && (
-                        <button
-                          type="button"
-                          className="Btn BtnSmall"
-                          onClick={() => {
-                            if (diemDiError.hanhDong?.loai === "thu_lai") {
-                              handleSearchDiemDi();
-                            }
-                          }}
-                          style={{ marginTop: 6, padding: "2px 8px", fontSize: 11 }}
-                        >
-                          {diemDiError.hanhDong.nhan}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <ChonDiem
+                id="b1-diem-di"
+                label="Điểm khởi hành"
+                placeholder="Chọn điểm xuất phát..."
+                value={diemDi}
+                onChange={(val) => setDiemDi(val)}
+                options={diemChonData.diemDi}
+                disabledOptionTen={diemDen?.ten}
+                error={hasDiemDiError}
+                errorMessage="Vui lòng chọn điểm khởi hành trong danh sách."
+              />
 
               {/* Ô 2: Điểm đến */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <label style={{ fontSize: 13, fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
-                  Điểm đến
-                </label>
-
-                {diemDen ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "10px 14px",
-                      background: "var(--color-primary-brandSoft)",
-                      border: "1.5px solid var(--color-primary-brand)",
-                      borderRadius: 10,
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <MapPin size={16} color="var(--color-primary-brand)" />
-                      <span style={{ fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
-                        {diemDen.ten} ({diemDen.quocGia})
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      className="Btn BtnSmall"
-                      onClick={() => {
-                        setDiemDen(null);
-                        setDiemDenInput("");
-                        setDiemDenError(null);
-                        setDiemDenCandidates([]);
-                      }}
-                      style={{ padding: "4px 10px", fontSize: 12, background: "var(--color-surface)" }}
-                    >
-                      <RefreshCw size={12} style={{ marginRight: 4 }} />
-                      Đổi
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <input
-                        type="text"
-                        className="Input"
-                        placeholder="Nhập nơi muốn đến..."
-                        value={diemDenInput}
-                        onChange={(e) => setDiemDenInput(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") handleSearchDiemDen();
-                        }}
-                        style={{ flex: 1 }}
-                      />
-                      <button
-                        type="button"
-                        className="Btn BtnPrimary"
-                        disabled={diemDenLoading || !diemDenInput.trim()}
-                        onClick={() => handleSearchDiemDen()}
-                        style={{ display: "flex", alignItems: "center", gap: 6 }}
-                      >
-                        {diemDenLoading ? (
-                          <Loader2 size={16} className="animate-spin" />
-                        ) : (
-                          <Search size={16} />
-                        )}
-                        <span>Tìm</span>
-                      </button>
-                    </div>
-
-                    {/* Gợi ý nhanh điểm đến */}
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
-                      <span style={{ fontSize: 12, color: "var(--color-neutral-mutedText)", alignSelf: "center" }}>
-                        Gợi ý:
-                      </span>
-                      {QUICK_DESTINATIONS.map((city) => (
-                        <button
-                          key={city}
-                          type="button"
-                          className="Chip"
-                          onClick={() => {
-                            setDiemDenInput(city);
-                            handleSearchDiemDen(city);
-                          }}
-                          style={{ padding: "4px 10px", fontSize: 12 }}
-                        >
-                          {city}
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
-
-                {/* Ứng viên điểm đến mơ hồ */}
-                {diemDenCandidates.length > 0 && !diemDen && (
-                  <div
-                    style={{
-                      background: "var(--color-status-warnBg)",
-                      border: "1px solid var(--color-status-warnBorder)",
-                      borderRadius: 8,
-                      padding: 10,
-                      marginTop: 6,
-                    }}
-                  >
-                    <div style={{ fontSize: 12, fontWeight: 600, color: "var(--color-status-warnText)" }}>
-                      Chọn điểm đến chính xác (tối đa 3):
-                    </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 6 }}>
-                      {diemDenCandidates.map((c, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          className="Btn BtnSmall"
-                          onClick={() => handleSelectDiemDenCandidate(c)}
-                          style={{ background: "var(--color-surface)", fontSize: 12 }}
-                        >
-                          <MapPin size={12} style={{ marginRight: 4 }} />
-                          {c.ten} ({c.quocGia})
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Lỗi ở ô điểm đến */}
-                {(diemDenError || hasDiemDenMissingError || hasDiemTrungError) && (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 8,
-                      background: "var(--color-status-errBg)",
-                      border: "1px solid var(--color-status-errBorder)",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      marginTop: 4,
-                    }}
-                  >
-                    <AlertCircle size={16} color="var(--color-status-errText)" style={{ flexShrink: 0, marginTop: 2 }} />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: "var(--color-status-errText)" }}>
-                        {hasDiemTrungError
-                          ? "Điểm đi trùng điểm đến"
-                          : diemDenError?.tieuDe || "Thiếu điểm đến"}
-                      </div>
-                      <div style={{ fontSize: 12, color: "var(--color-status-errText)" }}>
-                        {hasDiemTrungError
-                          ? "Điểm khởi hành và điểm đến nằm cùng khu vực (dưới 15 km). Vui lòng chọn điểm đến khác."
-                          : diemDenError?.noiDung || "Vui lòng chọn hoặc nhập điểm đến bạn muốn tới."}
-                      </div>
-                      {diemDenError?.hanhDong && (
-                        <button
-                          type="button"
-                          className="Btn BtnSmall"
-                          onClick={() => {
-                            if (diemDenError.hanhDong?.loai === "thu_lai") {
-                              handleSearchDiemDen();
-                            }
-                          }}
-                          style={{ marginTop: 6, padding: "2px 8px", fontSize: 11 }}
-                        >
-                          {diemDenError.hanhDong.nhan}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <ChonDiem
+                id="b1-diem-den"
+                label="Điểm đến"
+                placeholder="Chọn điểm đến..."
+                value={diemDen}
+                onChange={(val) => setDiemDen(val)}
+                options={diemChonData.diemDen}
+                disabledOptionTen={diemDi?.ten}
+                error={hasDiemDenMissingError || hasDiemTrungError}
+                errorMessage={
+                  hasDiemTrungError
+                    ? "Điểm khởi hành và điểm đến không được trùng nhau."
+                    : "Vui lòng chọn điểm đến trong danh sách."
+                }
+              />
             </div>
           </div>
 
@@ -1189,23 +739,35 @@ export function B1ChonNhanhScreen() {
               <div className="NumC">4</div>
               <div>
                 <div className="STitle">Thời gian</div>
-                <div className="SSub">Thời lượng chuyến đi từ 2 đến 5 ngày</div>
+                <div className="SSub">Thời lượng chuyến đi từ 2 đến 7 ngày</div>
               </div>
             </div>
 
-            <div className="ChipsNo">
-              {DURATION_DAYS.map((d) => {
-                const isSelected = soNgay === d;
-                return (
-                  <div
-                    key={d}
-                    className={`Chip ${isSelected ? "ChipOn" : ""}`}
-                    onClick={() => setSoNgay(d)}
-                  >
+            <div style={{ maxWidth: 360, marginTop: 10 }}>
+              <select
+                id="select-so-ngay-b1"
+                aria-label="Chọn số ngày đi"
+                value={soNgay}
+                onChange={(e) => setSoNgay(parseInt(e.target.value, 10))}
+                style={{
+                  width: "100%",
+                  height: 44,
+                  padding: "0 14px",
+                  fontSize: "var(--font-size-base)",
+                  borderRadius: "var(--r-md)",
+                  border: "1px solid var(--color-border)",
+                  background: "var(--color-surface)",
+                  color: "var(--color-text)",
+                  outline: "none",
+                  cursor: "pointer",
+                }}
+              >
+                {[2, 3, 4, 5, 6, 7].map((d) => (
+                  <option key={d} value={d}>
                     {d} ngày {d - 1} đêm
-                  </div>
-                );
-              })}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {hasSoNgayError && (
@@ -1223,7 +785,7 @@ export function B1ChonNhanhScreen() {
               >
                 <AlertCircle size={16} color="var(--color-status-errText)" />
                 <span style={{ fontSize: 12, color: "var(--color-status-errText)", fontWeight: 600 }}>
-                  Chuyến đi hỗ trợ từ 2 đến 5 ngày (tương ứng 1 đến 4 đêm).
+                  Chuyến đi hỗ trợ từ 2 đến 7 ngày (tương ứng 1 đến 6 đêm).
                 </span>
               </div>
             )}

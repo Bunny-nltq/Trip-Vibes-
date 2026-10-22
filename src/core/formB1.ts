@@ -85,7 +85,7 @@ export function kiemTraFormB1(form: FormB1): FormB1ErrorCode[] {
   if (
     !Number.isInteger(form.soNgay) ||
     form.soNgay < 2 ||
-    form.soNgay > 5
+    form.soNgay > 7
   ) {
     errors.push("so_ngay_ngoai_pham_vi");
   }

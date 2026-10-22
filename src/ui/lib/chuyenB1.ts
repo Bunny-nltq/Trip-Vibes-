@@ -50,7 +50,7 @@ export function taoGoiChuyenB1(form: FormHomeChuyen): GoiChuyenB1Result {
   }
 
   const soNgay = form.soNgay ?? 0;
-  if (!Number.isInteger(soNgay) || soNgay < 2 || soNgay > 5) {
+  if (!Number.isInteger(soNgay) || soNgay < 2 || soNgay > 7) {
     return { ok: false, loi: "so_ngay" };
   }
 

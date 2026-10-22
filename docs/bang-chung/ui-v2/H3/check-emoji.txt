@@ -1,0 +1,16 @@
+
+> trip-vibes@0.1.0 check:emoji
+> tsx scripts/check-emoji.ts
+
+================================================================================
+             KIỂM TRA EMOJI TRONG GIAO DIỆN (CHECK:EMOJI)                       
+================================================================================
+
+=== KẾT QUẢ QUÉT EMOJI TRONG src/ui ===
+✅ Không có emoji nào trong src/ui. (0 vi phạm)
+
+=== KẾT QUẢ QUÉT EMOJI TRONG src/app ===
+✅ Không có emoji nào trong src/app. (0 vi phạm)
+
+✅ ĐẠT: Toàn bộ src/ui sạch emoji, chỉ sử dụng icon SVG theo AGENTS.md!
+
