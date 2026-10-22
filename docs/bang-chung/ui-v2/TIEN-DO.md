@@ -9,8 +9,19 @@
 | 2026-10-22 12:46:00 | H4 | XONG | ac068e7 | Trang chủ: SiteHeader, HeroSearch, ThuDiemDen 3 cột, KhachSanThamKhao 4 thẻ, dải OpenStreetMap, SiteFooter 3 cột, cong-kiem-tra H4 đạt |
 | 2026-10-22 12:51:00 | H5 | XONG | d157057 | Trang điểm đến: /diem-den (lưới) và /diem-den/[slug] (SSG 5 điểm đến), 12 vui chơi, 6 quán ăn, 6 cafe, 6 khách sạn, sitemap, cong-kiem-tra H5 đạt |
 | 2026-10-22 12:58:00 | H6 | XONG | f22e8e9 | Trang khách sạn: /khach-san, ChonDiem chọn điểm đến, lưới khách sạn, lọc số sao, xếp theo giá, Google Maps, OpenStreetMap, cong-kiem-tra H6 đạt |
+| 2026-10-22 13:10:00 | H7 | XONG | d806d08 | Nhật ký chuyến đi: màn trống "Chưa có chuyến nào" kèm nút "Lập kế hoạch", 3 tab Hành trình / Chi tiêu / Ngân sách, cong-kiem-tra H7 đạt |
 
-## Ghi chú công việc H6 (Trang khách sạn)
+## Ghi chú công việc H7 (Nhật ký chuyến đi)
+1. **Component `NhatKyTabBar` (`src/ui/components/NhatKyTabBar.tsx`)**:
+   - Thanh điều hướng gồm 3 tab: "Hành trình" (B8), "Chi tiêu" (B10; khi AI tắt chỉ hiển thị "Nhập tay"), "Ngân sách" (B11).
+   - Thiết kế sử dụng hoàn toàn CSS variables/tokens (`var(--color-surface)`, `var(--color-primary-main)`, v.v.), icon SVG từ `lucide-react`.
+2. **Trạng thái chưa xác nhận kế hoạch (`!confirmed`)**:
+   - Màn hình trống "Chưa có chuyến nào" với icon `BookOpen` và nút "Lập kế hoạch" (chuyển về `b1-chon-nhanh`) được hiển thị nhất quán trên cả `B8ChuyenDiScreen` và `B11NganSachScreen`.
+   - `SideNav`: mục "Nhật ký chuyến đi" mở và bấm được bất kỳ lúc nào để xem màn trống hoặc chuyển vào hành trình.
+3. **Trạng thái đã xác nhận kế hoạch (`confirmed`)**:
+   - Hiển thị thanh `NhatKyTabBar` ở đầu màn hình cho phép người dùng chuyển đổi linh hoạt giữa Hành trình (`b8-chuyen-di`), Chi tiêu (`b10-chon-nguon`), và Ngân sách (`b11-ngan-sach`).
+   - Giữ nguyên toàn bộ logic tính toán, sổ chi tiêu (ledger), so sánh thực tế và dữ liệu kế hoạch.
+
 1. **Tuyến đường `/khach-san` (`KhachSanScreen.tsx`, `/app/(site)/khach-san/page.tsx`)**:
    - Chọn điểm đến bằng component `ChonDiem` (mặc định điểm đến đầu tiên, đồng bộ với query URL `?diem-den=<slug>`).
    - Lưới khách sạn từ snapshot: tên khách sạn, số sao (nếu có; không bịa đánh giá), khu vực.
