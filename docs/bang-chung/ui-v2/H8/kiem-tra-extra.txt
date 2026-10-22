@@ -1,0 +1,13 @@
+✅ GET /diem-den: HTTP 200 OK
+✅ GET /diem-den/da-nang: HTTP 200 OK
+✅ GET /khach-san: HTTP 200 OK
+✅ GET /api/diem-chon: HTTP 200 OK
+
+Kiểm tra dữ liệu /api/diem-chon:
+- Số điểm đi: 8
+- Số điểm đến: 5
+✅ Điểm đến "Băng Cốc": Snapshot snapshot_bangkok_2026-10-20.json HỢP LỆ (status: HỢP LỆ)
+✅ Điểm đến "Đà Lạt": Snapshot snapshot_da_lat_2026-10-20.json HỢP LỆ (status: HỢP LỆ)
+✅ Điểm đến "Thành phố Đà Nẵng": Snapshot snapshot_da_nang_2026-10-20.json HỢP LỆ (status: HỢP LỆ)
+✅ Điểm đến "Hà Nội": Snapshot snapshot_ha_noi_2026-10-20.json HỢP LỆ (status: HỢP LỆ)
+✅ Điểm đến "Seoul": Snapshot snapshot_seoul_2026-10-20.json HỢP LỆ (status: HỢP LỆ)

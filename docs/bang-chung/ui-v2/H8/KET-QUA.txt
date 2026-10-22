@@ -1,0 +1,9 @@
+vitest : DAT (exit 0)
+  [2m Test Files [22m [1m[32m58 passed[39m[22m[90m (58)[39m
+typecheck : DAT (exit 0)
+build : DAT (exit 0)
+check-colors : DAT (exit 0)
+check-contrast : DAT (exit 0)
+check-emoji : DAT (exit 0)
+check-env : DAT (exit 0)
+TONG: DAT
