@@ -14,6 +14,7 @@ import {
   docTien,
 } from "@/core/formB1";
 import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
+import { docGoiChuyenTuSession } from "@/ui/lib/chuyenB1";
 import {
   MapPin,
   Search,
@@ -146,12 +147,82 @@ export function B1ChonNhanhScreen() {
   // Đã từng thử submit hoặc tương tác
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  // Xem trước môi trường phát triển (preview URL)
+  // Xem trước môi trường phát triển (preview URL) và đọc dữ liệu chuyển từ Home
   useEffect(() => {
-    const isDev = process.env.NODE_ENV === "development";
-    if (isDev && typeof window !== "undefined") {
+    // 1. Đọc từ sessionStorage (gói chuyển taoGoiChuyenB1)
+    const pkg = docGoiChuyenTuSession();
+    if (pkg) {
+      if (pkg.diemDiTen) {
+        setDiemDi({
+          ten: pkg.diemDiTen,
+          quocGia: "Việt Nam",
+          maQuocGia: "VN",
+          toaDo: { lat: 10.7769, lng: 106.7009 },
+          tienTe: "VND",
+          nguon: "nominatim",
+          ngayLay: new Date().toISOString(),
+        });
+      }
+      if (pkg.diemDenTen) {
+        setDiemDen({
+          ten: pkg.diemDenTen,
+          quocGia: "Việt Nam",
+          maQuocGia: "VN",
+          toaDo: { lat: 16.0544, lng: 108.2022 },
+          tienTe: "VND",
+          nguon: "nominatim",
+          ngayLay: new Date().toISOString(),
+        });
+      }
+      if (pkg.soNguoi) setSoNguoi(pkg.soNguoi);
+      if (pkg.soNgay) setSoNgay(pkg.soNgay);
+      if (pkg.nganSachSoTien) {
+        setNganSachSoTien(pkg.nganSachSoTien);
+        setNganSachInputStr(dinhDangTien(pkg.nganSachSoTien));
+      }
+      if (pkg.nganSachTheo) setNganSachTheo(pkg.nganSachTheo);
+    }
+
+    if (typeof window !== "undefined") {
       const sp = new URLSearchParams(window.location.search);
-      if (sp.get("previewMoHo") === "1") {
+      // 2. Fallback tham số URL
+      const tu = sp.get("tu");
+      const den = sp.get("den");
+      const ngay = parseInt(sp.get("ngay") || "0", 10);
+      const nguoi = parseInt(sp.get("nguoi") || "0", 10);
+      const ns = parseInt(sp.get("ngansach") || "0", 10);
+      if (den && !pkg) {
+        setDiemDen({
+          ten: den,
+          quocGia: "Việt Nam",
+          maQuocGia: "VN",
+          toaDo: { lat: 16.0544, lng: 108.2022 },
+          tienTe: "VND",
+          nguon: "nominatim",
+          ngayLay: new Date().toISOString(),
+        });
+      }
+      if (tu && !pkg) {
+        setDiemDi({
+          ten: tu,
+          quocGia: "Việt Nam",
+          maQuocGia: "VN",
+          toaDo: { lat: 10.7769, lng: 106.7009 },
+          tienTe: "VND",
+          nguon: "nominatim",
+          ngayLay: new Date().toISOString(),
+        });
+      }
+      if (nguoi >= 1 && nguoi <= 10 && !pkg) setSoNguoi(nguoi);
+      if (ngay >= 2 && ngay <= 5 && !pkg) setSoNgay(ngay);
+      if (ns > 0 && !pkg) {
+        setNganSachSoTien(ns);
+        setNganSachInputStr(dinhDangTien(ns));
+      }
+
+      // 3. Môi trường phát triển preview
+      const isDev = process.env.NODE_ENV === "development";
+      if (isDev && sp.get("previewMoHo") === "1") {
         setDiemDenCandidates([
           {
             ten: "Dalat",

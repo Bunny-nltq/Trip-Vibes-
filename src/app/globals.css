@@ -511,3 +511,21 @@ body {
   }
 }
 
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background: var(--color-primary-main);
+  color: var(--color-text-inverse);
+  padding: 10px 16px;
+  border-radius: var(--r-md);
+  font-weight: 600;
+  z-index: 10000;
+  transition: top 0.2s ease;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+

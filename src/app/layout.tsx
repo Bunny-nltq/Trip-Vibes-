@@ -69,6 +69,9 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${beVietnamPro.variable} ${dancingScript.variable}`}>
       <body className="antialiased">
+        <a href="#main-content" className="skip-link">
+          Bỏ qua đến nội dung chính
+        </a>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
