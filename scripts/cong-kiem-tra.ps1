@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$MaNV, [string]$Nhom = "hom-nay")
+param([Parameter(Mandatory=$true)][string]$MaNV, [string]$Nhom = "tat-ca")
 $dir = "docs/bang-chung/$Nhom/$MaNV"
 New-Item -ItemType Directory -Force -Path $dir | Out-Null
 $utf8 = New-Object System.Text.UTF8Encoding $false
