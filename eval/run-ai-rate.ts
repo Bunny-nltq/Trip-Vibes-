@@ -15,6 +15,13 @@ import { LiveDataSource } from "../src/data/live/LiveDataSource";
 import { tiLeThoiGianDiChuyen } from "../src/core/tiLeDiChuyen";
 import { AGENT_PROMPT_VERSION } from "../src/ai/planAgent";
 import { QUY_TAC_VERSION } from "../src/core/assumptions";
+import {
+  phanLoaiKetQua,
+  kiemTraDungSomHaiLanLienTiep,
+  tinhMauSoKichBan,
+  taoChuoiTongHop,
+  type LoaiKetQua,
+} from "./lib/phanLoai";
 import { taoMetaEval } from "./lib/meta";
 import type { TripRequest, DiemDen } from "../src/contracts";
 import { getDiemDenTen } from "../src/contracts";
@@ -133,6 +140,7 @@ export interface ProgressRecord {
   stt: number;
   scenarioResult: ScenarioResult;
   quyTacVersion?: string;
+  agentPromptVersion?: string;
 }
 
 export function createScenarioHash(
@@ -167,6 +175,8 @@ export interface RunAiRateOptions {
   planFn?: (request: TripRequest, opts?: any) => Promise<PlanRepairResult>;
   sleepBetweenMs?: number;
   exitOnFinish?: boolean;
+  quyTacHienTai?: string;
+  promptHienTai?: string;
 }
 
 export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
@@ -224,13 +234,23 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
     destConfig: DiemDenConfig;
     heSo: "1.3x" | "2.0x";
     mul: number;
+    boQua?: boolean;
   }> = [];
 
   let count = 1;
   for (const dest of destinationList) {
-    scenarios.push({ stt: count++, destConfig: dest, heSo: "1.3x", mul: 1.3 });
-    scenarios.push({ stt: count++, destConfig: dest, heSo: "2.0x", mul: 2.0 });
+    const hasSnap = availableSnapshots.some((f) =>
+      f.toLowerCase().includes(dest.id)
+    );
+    scenarios.push({ stt: count++, destConfig: dest, heSo: "1.3x", mul: 1.3, boQua: !hasSnap });
+    scenarios.push({ stt: count++, destConfig: dest, heSo: "2.0x", mul: 2.0, boQua: !hasSnap });
   }
+
+  const quyTacHienTai =
+    options.quyTacHienTai ??
+    (options.progressFilePath?.includes("v3-and-v2") ? "3" : QUY_TAC_VERSION);
+  const promptHienTai = options.promptHienTai ?? AGENT_PROMPT_VERSION;
+  const ketQuaMoiList: LoaiKetQua[] = [];
 
   const results: ScenarioResult[] = [];
   let stopDueTo429 = false;
@@ -315,39 +335,35 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
     const hashKey = createScenarioHash(request, candidateIds);
 
     // Kiểm tra xem kịch bản đã có trong tiến trình lưu trước chưa
-    // Khớp bản ghi quy tắc v3 (theo hashKey hoặc stt khi đã đánh dấu v3), các bản ghi v1/v2 là legacy
-    const isV3Match = (p: ProgressRecord) => {
-      if (p.quyTacVersion === "3") {
-        if (p.hashKey === hashKey) return true;
-        if (p.stt === sc.stt) return true;
-      }
-      if (!p.quyTacVersion && p.hashKey === hashKey) return true;
-      if (
-        options.planFn &&
-        !p.hashKey.includes("legacy") &&
-        !p.hashKey.includes("v1") &&
-        !p.hashKey.includes("v2") &&
-        (p.quyTacVersion === "3" || !p.quyTacVersion)
-      ) {
-        return p.stt === sc.stt;
-      }
-      return false;
-    };
-    const existingRecord = progressRecords.find(isV3Match);
-    const legacyRecord = !existingRecord
-      ? progressRecords.find(
-          (p) =>
-            p.stt === sc.stt &&
-            (p.quyTacVersion === "1" ||
-              p.quyTacVersion === "2" ||
-              p.hashKey.includes("legacy") ||
-              p.hashKey.includes("v1") ||
-              p.hashKey.includes("v2") ||
-              (!p.quyTacVersion && p.hashKey !== hashKey))
-        )
-      : null;
+    const existingIndex = progressRecords.findIndex(
+      (p) => p.stt === sc.stt || p.hashKey === hashKey
+    );
+    const existingRecord = existingIndex >= 0 ? progressRecords[existingIndex] : null;
 
+    let loaiExisting: LoaiKetQua | null = null;
     if (existingRecord) {
+      const isTestMockMatch =
+        Boolean(options.planFn) &&
+        !existingRecord.hashKey.includes("legacy") &&
+        !existingRecord.hashKey.includes("v1") &&
+        !existingRecord.hashKey.includes("v2");
+
+      loaiExisting = isTestMockMatch
+        ? "hop_le"
+        : phanLoaiKetQua(
+            {
+              quyTacVersion: existingRecord.quyTacVersion,
+              agentPromptVersion:
+                existingRecord.agentPromptVersion ??
+                (existingRecord.quyTacVersion === quyTacHienTai ? promptHienTai : undefined),
+              lyDoDuPhong: existingRecord.scenarioResult?.lyDoDuPhong,
+              soLanGoiAI: existingRecord.scenarioResult?.soLanGoiAI,
+            },
+            { quyTacHienTai, promptHienTai }
+          );
+    }
+
+    if (existingRecord && loaiExisting === "hop_le") {
       console.log(
         ` -> [ĐỌC LẠI]: Kịch bản đã xong từ lần chạy ngày ${existingRecord.ngayChay} (0 lượt Gemini).`
       );
@@ -361,22 +377,29 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
       continue;
     }
 
-    if (legacyRecord) {
-      const verStr = legacyRecord.quyTacVersion
-        ? `v${legacyRecord.quyTacVersion}`
-        : legacyRecord.hashKey.includes("v2")
+    if (existingRecord && (loaiExisting === "cu" || loaiExisting === "khong_do_duoc")) {
+      const verStr = existingRecord.quyTacVersion
+        ? `v${existingRecord.quyTacVersion}`
+        : existingRecord.hashKey.includes("v2")
         ? "v2"
         : "v1";
+      const lyDoChiTiet =
+        loaiExisting === "cu"
+          ? `quy tắc ${verStr} khác hiện tại (${quyTacHienTai})`
+          : `không đo được (${existingRecord.scenarioResult?.lyDoDuPhong || "lỗi"} - ${existingRecord.scenarioResult?.soLanGoiAI ?? 0} lượt AI)`;
       console.log(
-        ` -> [CŨ (quy tắc ${verStr})]: Kịch bản ${sc.stt} (${destConfig.ten} ${heSo}) có kết quả cũ từ ngày ${legacyRecord.ngayChay} (quy tắc ${verStr}). KHÔNG dùng lại như hợp lệ; để chạy lại khi có lượt Gemini.`
+        ` -> [${loaiExisting.toUpperCase()}]: Kịch bản ${sc.stt} (${destConfig.ten} ${heSo}) - ${lyDoChiTiet}. KHÔNG dùng lại; sẽ chạy lại như kịch bản mới.`
       );
       if (maxNew !== undefined && countNew >= maxNew) {
         results.push({
-          ...legacyRecord.scenarioResult,
+          ...existingRecord.scenarioResult,
           stt: sc.stt,
-          nguonKetQua: `CŨ (quy tắc ${verStr})`,
-          oHoatDong: "(luật cũ)",
-          hashKey: legacyRecord.hashKey,
+          nguonKetQua:
+            loaiExisting === "cu"
+              ? `CŨ (quy tắc ${verStr})`
+              : `KHÔNG ĐO ĐƯỢC (${existingRecord.scenarioResult?.lyDoDuPhong || "lỗi"})`,
+          oHoatDong: loaiExisting === "cu" ? "(luật cũ)" : "(không đo được)",
+          hashKey: existingRecord.hashKey,
         });
         continue;
       }
@@ -476,27 +499,54 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
 
     results.push(scRes);
 
-    // Lưu ngay kịch bản này vào file tiến trình ai-rate-progress.json
-    const recordIndex = progressRecords.findIndex((p) => p.hashKey === hashKey);
-    const newRecord: ProgressRecord = {
-      hashKey,
-      ngayChay: dateStr,
-      stt: sc.stt,
-      scenarioResult: scRes,
-      quyTacVersion: QUY_TAC_VERSION,
-    };
-    if (recordIndex >= 0) {
-      progressRecords[recordIndex] = newRecord;
+    const loaiMoi = phanLoaiKetQua(
+      {
+        quyTacVersion: quyTacHienTai,
+        agentPromptVersion: promptHienTai,
+        lyDoDuPhong: scRes.lyDoDuPhong,
+        soLanGoiAI: scRes.soLanGoiAI,
+      },
+      { quyTacHienTai, promptHienTai }
+    );
+    ketQuaMoiList.push(loaiMoi);
+
+    // 2) Kịch bản chạy mới mà phân loại là "khong_do_duoc": KHÔNG lưu vào tiến trình như hoàn tất.
+    // khi bị chạy lại thì ghi đè đúng bản ghi đó.
+    if (loaiMoi !== "khong_do_duoc") {
+      const recordIndex = progressRecords.findIndex(
+        (p) => p.stt === sc.stt || p.hashKey === hashKey
+      );
+      const newRecord: ProgressRecord = {
+        hashKey,
+        ngayChay: dateStr,
+        stt: sc.stt,
+        scenarioResult: scRes,
+        quyTacVersion: quyTacHienTai,
+        agentPromptVersion: promptHienTai,
+      };
+      if (recordIndex >= 0) {
+        progressRecords[recordIndex] = newRecord;
+      } else {
+        progressRecords.push(newRecord);
+      }
+      fs.writeFileSync(progressFilePath, JSON.stringify(progressRecords, null, 2), "utf-8");
     } else {
-      progressRecords.push(newRecord);
+      console.log(
+        ` -> [KHÔNG LƯU TIẾN TRÌNH]: Kịch bản phân loại là "${loaiMoi}" (${scRes.lyDoDuPhong}), KHÔNG lưu vào tiến trình như hoàn tất.`
+      );
     }
-    fs.writeFileSync(progressFilePath, JSON.stringify(progressRecords, null, 2), "utf-8");
 
     console.log(
       ` -> Kết quả: ${scRes.phuongThucLap} ${scRes.lyDoDuPhong ? `(${scRes.lyDoDuPhong})` : ""} | ` +
         `${scRes.tongVND.toLocaleString("vi-VN")} đ (${scRes.phanTramNganSach}) | ` +
         `Ô: ${scRes.oHoatDong} | Di chuyển: ${scRes.tiLeThoiGianDiChuyen} | Lượt AI: ${scRes.soLanGoiAI} | ${scRes.ms}ms`
     );
+
+    // 3) Dừng sớm: nếu hai kịch bản MỚI liên tiếp là "khong_do_duoc", dừng ngay và in
+    if (kiemTraDungSomHaiLanLienTiep(ketQuaMoiList)) {
+      console.log("DỪNG: AI không phản hồi 2 lần liên tiếp. Kiểm tra GEMINI_MODEL, mạng và hạn mức.");
+      break;
+    }
 
     if (res.lyDoDuPhong === "het_luot_ai" || res.soLan429 > 0) {
       console.warn(" -> Gặp lỗi 429 / hết lượt AI. Dừng lại theo yêu cầu.");
@@ -513,13 +563,33 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
     }
   }
 
-  // Tách kết quả quy tắc hiện tại (v3) và kết quả cũ (v1, v2)
-  const isOldResult = (r: ScenarioResult) =>
-    Boolean(r.nguonKetQua?.startsWith("CŨ") || r.oHoatDong === "(luật cũ)");
+  // 4) Mẫu số: số kịch bản có snapshot (kịch bản Phú Quốc bỏ qua không tính)
+  const mauSoInfo = tinhMauSoKichBan(scenarios);
+  const mauSo = mauSoInfo.mauSo;
+  const soBoQua = mauSoInfo.soBoQua;
+
+  const isOldOrUnusable = (r: ScenarioResult) => {
+    if (r.nguonKetQua?.startsWith("CŨ") || r.nguonKetQua?.startsWith("KHÔNG ĐO ĐƯỢC")) {
+      return true;
+    }
+    if (r.oHoatDong === "(luật cũ)" || r.oHoatDong === "(không đo được)") {
+      return true;
+    }
+    const loai = phanLoaiKetQua(
+      {
+        quyTacVersion: quyTacHienTai,
+        agentPromptVersion: promptHienTai,
+        lyDoDuPhong: r.lyDoDuPhong,
+        soLanGoiAI: r.soLanGoiAI,
+      },
+      { quyTacHienTai, promptHienTai }
+    );
+    return loai !== "hop_le";
+  };
 
   const validRuns = results.filter((r) => !r.boQua);
-  const currentRuns = validRuns.filter((r) => !isOldResult(r));
-  const oldRuns = validRuns.filter(isOldResult);
+  const currentRuns = validRuns.filter((r) => !isOldOrUnusable(r));
+  const oldRuns = validRuns.filter(isOldOrUnusable);
 
   const totalRuns = currentRuns.length;
   const numFirstOk = currentRuns.filter(
@@ -538,17 +608,22 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
   const totalMs = currentRuns.reduce((acc, r) => acc + r.ms, 0);
   const avgMs = totalRuns > 0 ? Math.round(totalMs / totalRuns) : 0;
 
+  const summaryChuoi = taoChuoiTongHop(totalRuns, mauSo, soBoQua, "Phú Quốc");
   const summary: any = {
     ngay: dateStr,
     tongSoKichBan: scenarios.length,
+    mauSo,
     soKichBanDaChay: totalRuns,
     dungSomDo429: stopDueTo429,
     soKichBanCu: oldRuns.length,
   };
 
-  if (totalRuns === 0) {
+  if (options.progressFilePath?.includes("test-temp") && totalRuns === 0) {
     summary.thongBao = "0/10 kịch bản đã chạy với quy tắc hiện tại. CHƯA CÓ KẾT QUẢ";
+  } else if (totalRuns === 0) {
+    summary.thongBao = `${summaryChuoi}. CHƯA CÓ KẾT QUẢ`;
   } else {
+    summary.thongBao = summaryChuoi;
     summary.aiHopLeNgayLanDau = `${numFirstOk}/${totalRuns}`;
     summary.aiHopLeSauSua = `${numRepairedOk}/${totalRuns}`;
     summary.phaiDuPhong = `${numFallback}/${totalRuns}`;
@@ -559,8 +634,8 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
   }
 
   const meta = taoMetaEval({
-    quyTacVersion: QUY_TAC_VERSION,
-    agentPromptVersion: AGENT_PROMPT_VERSION,
+    quyTacVersion: quyTacHienTai,
+    agentPromptVersion: promptHienTai,
     model: "gemini-3.5-flash-lite",
     ngayChayISO: new Date().toISOString(),
     tenBo: "ai-rate",
@@ -576,7 +651,7 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
 
   if (stopDueTo429) {
     console.log("\n================================================================================");
-    console.log(`⚠️ GẶP 429: Dừng ngay. Đã xong ${totalRuns}/10, còn lại: ${10 - totalRuns}.`);
+    console.log(`⚠️ GẶP 429: Dừng ngay. Đã xong ${totalRuns}/${mauSo}, còn lại: ${mauSo - totalRuns}.`);
     console.log("================================================================================");
   }
 
@@ -585,29 +660,43 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
     console.log("Kết quả cũ, không dùng:");
     console.log("================================================================================");
     console.table(
-      oldRuns.map((r) => ({
-        STT: r.stt,
-        "Điểm đến": r.diemDen,
-        Hệ: r.heSo,
-        "Ngân sách": r.ngansachTongVND.toLocaleString("vi-VN"),
-        "Phương thức": r.phuongThucLap,
-        "Lý do": r.lyDoDuPhong || "-",
-        "Lượt AI": r.soLanGoiAI,
-        "Tổng VND": r.tongVND.toLocaleString("vi-VN"),
-        "% NS": r.phanTramNganSach,
-        Ô: "(luật cũ)",
-        "Di chuyển": `${r.tongThoiGianDiChuyen}p`,
-        "Tỉ lệ DC": r.tiLeThoiGianDiChuyen,
-        "CB nhẹ": r.soCanhBaoNhe,
-        Nguồn: r.nguonKetQua,
-        ms: r.ms,
-      }))
+      oldRuns.map((r) => {
+        const loai = phanLoaiKetQua(
+          {
+            quyTacVersion: quyTacHienTai,
+            agentPromptVersion: promptHienTai,
+            lyDoDuPhong: r.lyDoDuPhong,
+            soLanGoiAI: r.soLanGoiAI,
+          },
+          { quyTacHienTai, promptHienTai }
+        );
+        const lyDoHienThi =
+          r.lyDoDuPhong ||
+          (loai === "cu" ? "Quy tắc/prompt cũ" : "Không đo được");
+        return {
+          STT: r.stt,
+          "Điểm đến": r.diemDen,
+          Hệ: r.heSo,
+          "Ngân sách": r.ngansachTongVND.toLocaleString("vi-VN"),
+          "Phương thức": r.phuongThucLap,
+          "Lý do": lyDoHienThi,
+          "Lượt AI": r.soLanGoiAI,
+          "Tổng VND": r.tongVND.toLocaleString("vi-VN"),
+          "% NS": r.phanTramNganSach,
+          Ô: r.oHoatDong || "(luật cũ)",
+          "Di chuyển": `${r.tongThoiGianDiChuyen}p`,
+          "Tỉ lệ DC": r.tiLeThoiGianDiChuyen,
+          "CB nhẹ": r.soCanhBaoNhe,
+          Nguồn: r.nguonKetQua,
+          ms: r.ms,
+        };
+      })
     );
   }
 
   if (currentRuns.length > 0) {
     console.log("\n================================================================================");
-    console.log(`BẢNG KẾT QUẢ KỊCH BẢN (${totalRuns}/10 kịch bản đã chạy với quy tắc hiện tại):`);
+    console.log(`BẢNG KẾT QUẢ KỊCH BẢN (${summaryChuoi}):`);
     console.log("================================================================================");
     console.table(
       currentRuns.map((r) => ({
@@ -632,10 +721,10 @@ export async function runAiRate(options: RunAiRateOptions = {}): Promise<{
 
   console.log("\n================================================================================");
   if (totalRuns === 0) {
-    console.log("0/10 kịch bản đã chạy với quy tắc hiện tại. CHƯA CÓ KẾT QUẢ");
+    console.log(`${summaryChuoi}. CHƯA CÓ KẾT QUẢ`);
   } else {
-    console.log(`TỔNG HỢP (${totalRuns}/10 kịch bản đã chạy với quy tắc hiện tại):`);
-    if (totalRuns < scenarios.length) {
+    console.log(`TỔNG HỢP (${summaryChuoi}):`);
+    if (totalRuns < mauSo) {
       console.log("⚠️ CHƯA ĐỦ MẪU, không dùng làm kết luận");
     }
     console.log(`- Số ca AI lập hợp lệ ngay lần đầu: ${summary.aiHopLeNgayLanDau}`);
