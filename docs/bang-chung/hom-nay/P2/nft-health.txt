@@ -1,0 +1,12 @@
+../../../../../src/data/reference/timetable.json
+../../../../../src/data/snapshots/snapshotAudit.test.ts
+../../../../../src/data/snapshots/snapshot_bangkok_2026-10-20.json
+../../../../../src/data/snapshots/snapshot_bangkok_2026-10-20.json
+../../../../../src/data/snapshots/snapshot_da_lat_2026-10-20.json
+../../../../../src/data/snapshots/snapshot_da_lat_2026-10-20.json
+../../../../../src/data/snapshots/snapshot_da_nang_2026-10-20.json
+../../../../../src/data/snapshots/snapshot_da_nang_2026-10-20.json
+../../../../../src/data/snapshots/snapshot_ha_noi_2026-10-20.json
+../../../../../src/data/snapshots/snapshot_ha_noi_2026-10-20.json
+../../../../../src/data/snapshots/snapshot_seoul_2026-10-20.json
+../../../../../src/data/snapshots/snapshot_seoul_2026-10-20.json

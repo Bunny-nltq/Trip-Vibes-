@@ -2,14 +2,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
-    "/api/plan": ["./src/data/snapshots/**/*", "./src/data/reference/**/*"],
-    "/api/plan/preview": ["./src/data/snapshots/**/*", "./src/data/reference/**/*"],
-    "/api/plan/regenerate": ["./src/data/snapshots/**/*", "./src/data/reference/**/*"],
-    "/api/options": ["./src/data/snapshots/**/*", "./src/data/reference/**/*"],
-    "/api/destination": ["./src/data/snapshots/**/*", "./src/data/reference/**/*"],
-    "/api/destination/prepare": ["./src/data/snapshots/**/*", "./src/data/reference/**/*"],
-    "/api/data/status": ["./src/data/snapshots/**/*", "./src/data/reference/**/*"],
-    "/api/health": ["./src/data/snapshots/**/*", "./src/data/reference/**/*"],
+    "/api/plan": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
+    "/api/plan/preview": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
+    "/api/plan/regenerate": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
+    "/api/options": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
+    "/api/destination": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
+    "/api/destination/prepare": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
+    "/api/data/status": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
+    "/api/health": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
   },
 };
 
