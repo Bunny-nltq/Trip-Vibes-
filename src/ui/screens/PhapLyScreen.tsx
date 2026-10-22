@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { ShieldCheck, FileText, ArrowRight, Info } from "lucide-react";
+import { ArrowRight, Info } from "lucide-react";
 import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";
 

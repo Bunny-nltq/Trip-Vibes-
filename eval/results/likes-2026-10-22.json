@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "quyTacVersion": "5",
+    "agentPromptVersion": "v4",
+    "model": "gemini-3-flash-preview",
+    "ngayChay": "2026-10-22T10:26:19.635Z",
+    "tenBo": "likes"
+  },
+  "date": "2026-10-22",
+  "timestamp": "2026-10-22T10:26:19.635Z",
+  "promptVersion": "v1",
+  "model": "gemini-3-flash-preview",
+  "summary": {
+    "totalRan": 0,
+    "totalScenarios": 5,
+    "hopLeRate": 0,
+    "numHigher": 0,
+    "avgCalls": 0,
+    "stoppedBy429": true
+  },
+  "results": []
+}

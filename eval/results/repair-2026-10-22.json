@@ -1,0 +1,113 @@
+{
+  "meta": {
+    "quyTacVersion": "5",
+    "agentPromptVersion": "v4",
+    "model": "gemini-2.5-flash",
+    "ngayChay": "2026-10-22T10:12:07.003Z",
+    "tenBo": "repair"
+  },
+  "results": [
+    {
+      "caseId": "r01",
+      "status": "ok",
+      "initHardCount": 0,
+      "finalHardCount": 0,
+      "soVongSua": 0,
+      "soLanGoiAI": 0,
+      "tongVND": 8379160,
+      "ms": 551,
+      "invariants": {
+        "I1": true,
+        "I2": true,
+        "I3": true,
+        "I4": false,
+        "I5": true
+      }
+    },
+    {
+      "caseId": "r02",
+      "status": "ok",
+      "initHardCount": 0,
+      "finalHardCount": 0,
+      "soVongSua": 0,
+      "soLanGoiAI": 0,
+      "tongVND": 5735600,
+      "ms": 414,
+      "invariants": {
+        "I1": true,
+        "I2": true,
+        "I3": true,
+        "I4": false,
+        "I5": true
+      }
+    },
+    {
+      "caseId": "r03",
+      "status": "ok",
+      "initHardCount": 0,
+      "finalHardCount": 0,
+      "soVongSua": 0,
+      "soLanGoiAI": 0,
+      "tongVND": 8379160,
+      "ms": 416,
+      "invariants": {
+        "I1": true,
+        "I2": true,
+        "I3": true,
+        "I4": false,
+        "I5": true
+      }
+    },
+    {
+      "caseId": "r04",
+      "status": "ok",
+      "initHardCount": 0,
+      "finalHardCount": 0,
+      "soVongSua": 0,
+      "soLanGoiAI": 0,
+      "tongVND": 13318740,
+      "ms": 435,
+      "invariants": {
+        "I1": true,
+        "I2": true,
+        "I3": true,
+        "I4": false,
+        "I5": true
+      }
+    },
+    {
+      "caseId": "r05",
+      "status": "ok",
+      "initHardCount": 0,
+      "finalHardCount": 0,
+      "soVongSua": 0,
+      "soLanGoiAI": 0,
+      "tongVND": 4985600,
+      "ms": 326,
+      "invariants": {
+        "I1": true,
+        "I2": true,
+        "I3": true,
+        "I4": false,
+        "I5": true
+      }
+    },
+    {
+      "caseId": "r06",
+      "status": "ok",
+      "initHardCount": 0,
+      "finalHardCount": 0,
+      "soVongSua": 0,
+      "soLanGoiAI": 0,
+      "tongVND": 4939580,
+      "ms": 405,
+      "invariants": {
+        "I1": true,
+        "I2": true,
+        "I3": true,
+        "I4": false,
+        "I5": true
+      }
+    }
+  ]
+}

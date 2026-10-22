@@ -29,7 +29,7 @@ cp .env.example .env.local
 | Tên biến | Bắt buộc | Mặc định | Mô tả |
 |:---|:---:|:---:|:---|
 | `GEMINI_API_KEY` | Khi bật AI | - | Khóa API Google Gemini từ Google AI Studio (bảo mật, không ghi vào code). |
-| `GEMINI_MODEL` | Không | `gemini-2.5-flash` | Tên mô hình Gemini sử dụng để phân tích và lập kế hoạch. |
+| `GEMINI_MODEL` | Không | `gemini-3-flash-preview` | Tên mô hình Gemini sử dụng để phân tích và lập kế hoạch. |
 | `LIVE_AI_ENABLED` | Không | `false` | Bật/tắt gọi AI thật trên môi trường chạy. Khi `false` hoặc gặp lỗi/vượt hạn mức, hệ thống tự động kích hoạt kế hoạch dự phòng bằng thuật toán quy tắc thuần túy (`lapKeHoachTuDong`). |
 | `GEMINI_DAILY_CAP` | Không | `40` | Hạn mức tổng số lượt gọi AI tối đa mỗi ngày trên toàn hệ thống (bộ nhớ tạm). |
 | `PLAN_MAX_AI_CALLS` | Không | `8` | Số lượt gọi AI tối đa cho mỗi phiên lập kế hoạch (bao gồm cả vòng tự sửa lỗi). |

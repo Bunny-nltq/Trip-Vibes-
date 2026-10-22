@@ -14,11 +14,10 @@ import {
   Clock,
   MapPin,
   ShieldCheck,
-  CheckCircle2,
 } from "lucide-react";
 import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";
-import type { Plan, PlanItem } from "@/contracts";
+import type { Plan } from "@/contracts";
 
 export interface LichTrinhChiTietData {
   slug: string;

@@ -3,7 +3,7 @@
     "quyTacVersion": "5",
     "agentPromptVersion": "v4",
     "model": "khong_dung_ai",
-    "ngayChay": "2026-10-22T03:20:08.796Z",
+    "ngayChay": "2026-10-22T10:28:10.150Z",
     "tenBo": "diadiem"
   },
   "results": [
@@ -22,43 +22,41 @@
         "nguon": "nominatim",
         "ngayLay": "2026-10-22T03:19:05.234Z"
       },
-      "durationMs": 557,
+      "durationMs": 2764,
       "soLuongTheoLoai": {
-        "khachSan": 0,
-        "quanAn": 0,
-        "cafe": 0,
-        "hoatDong": 0
+        "khachSan": 15,
+        "quanAn": 15,
+        "cafe": 15,
+        "hoatDong": 15
       },
-      "tongSoMuc": 0,
-      "tyLeCoNguon": 0,
+      "tongSoMuc": 60,
+      "tyLeCoNguon": 1,
       "soPhuongTienWeb": 0,
       "soPhuongTienUocLuong": 6,
-      "keHoachHopLe": false,
-      "coNoiDung": false,
-      "trangThaiNoiDung": "THIẾU DỮ LIỆU",
-      "nguonDL": "không có",
-      "ngayDuLieu": "2026-10-22T03:19:05.236Z",
-      "tyLeLapHD": 0,
+      "keHoachHopLe": true,
+      "coNoiDung": true,
+      "trangThaiNoiDung": "CÓ NỘI DUNG",
+      "nguonDL": "snapshot (ngày 2026-10-20)",
+      "ngayDuLieu": "2026-10-20T15:52:18.179Z",
+      "snapshotDate": "2026-10-20T15:52:18.179Z",
+      "tyLeLapHD": 1,
       "tyLeLapAn": 0,
-      "hienThiAn": "không có quán",
+      "hienThiAn": "0%",
       "chiTietCache": [],
       "overpassSummary": "Chưa có lượt gọi Overpass nào.",
       "overpassServer": "N/A",
       "overpassAttempts": 0,
-      "overpassError": "Dữ liệu địa phương tại Thành phố Đà Nẵng chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.",
-      "loiHard": [
-        "[khong_du_du_lieu] Dữ liệu địa phương tại Thành phố Đà Nẵng chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào."
-      ],
+      "loiHard": [],
       "soSlotChuaLap": {
-        "hoatDong": 4,
+        "hoatDong": 0,
         "buaAn": 6
       },
       "soLuotGoi": {
         "nominatim": 1,
         "tavily": 0,
-        "gemini": 0
+        "gemini": 1
       },
-      "danhGia": "THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu"
+      "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard)."
     },
     {
       "diemDen": "Hà Nội",
@@ -75,43 +73,41 @@
         "nguon": "nominatim",
         "ngayLay": "2026-10-21T09:14:34.127Z"
       },
-      "durationMs": 5,
+      "durationMs": 16057,
       "soLuongTheoLoai": {
-        "khachSan": 0,
-        "quanAn": 0,
-        "cafe": 0,
-        "hoatDong": 0
+        "khachSan": 15,
+        "quanAn": 15,
+        "cafe": 15,
+        "hoatDong": 15
       },
-      "tongSoMuc": 0,
-      "tyLeCoNguon": 0,
+      "tongSoMuc": 60,
+      "tyLeCoNguon": 1,
       "soPhuongTienWeb": 0,
       "soPhuongTienUocLuong": 6,
-      "keHoachHopLe": false,
-      "coNoiDung": false,
-      "trangThaiNoiDung": "THIẾU DỮ LIỆU",
-      "nguonDL": "không có",
-      "ngayDuLieu": "2026-10-22T03:19:10.257Z",
-      "tyLeLapHD": 0,
-      "tyLeLapAn": 0,
-      "hienThiAn": "không có quán",
+      "keHoachHopLe": true,
+      "coNoiDung": true,
+      "trangThaiNoiDung": "CÓ NỘI DUNG",
+      "nguonDL": "snapshot (ngày 2026-10-20)",
+      "ngayDuLieu": "2026-10-20T15:23:00.638Z",
+      "snapshotDate": "2026-10-20T15:23:00.638Z",
+      "tyLeLapHD": 1,
+      "tyLeLapAn": 1,
+      "hienThiAn": "100%",
       "chiTietCache": [],
       "overpassSummary": "Chưa có lượt gọi Overpass nào.",
       "overpassServer": "N/A",
       "overpassAttempts": 0,
-      "overpassError": "Dữ liệu địa phương tại Hà Nội chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.",
-      "loiHard": [
-        "[khong_du_du_lieu] Dữ liệu địa phương tại Hà Nội chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào."
-      ],
+      "loiHard": [],
       "soSlotChuaLap": {
-        "hoatDong": 4,
-        "buaAn": 6
+        "hoatDong": 0,
+        "buaAn": 0
       },
       "soLuotGoi": {
         "nominatim": 1,
         "tavily": 0,
-        "gemini": 0
+        "gemini": 3
       },
-      "danhGia": "THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu"
+      "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard)."
     },
     {
       "diemDen": "Đà Lạt",
@@ -128,43 +124,41 @@
         "nguon": "nominatim",
         "ngayLay": "2026-10-22T03:19:16.108Z"
       },
-      "durationMs": 842,
+      "durationMs": 2687,
       "soLuongTheoLoai": {
-        "khachSan": 0,
-        "quanAn": 0,
-        "cafe": 0,
-        "hoatDong": 0
+        "khachSan": 15,
+        "quanAn": 15,
+        "cafe": 15,
+        "hoatDong": 15
       },
-      "tongSoMuc": 0,
-      "tyLeCoNguon": 0,
+      "tongSoMuc": 60,
+      "tyLeCoNguon": 1,
       "soPhuongTienWeb": 0,
-      "soPhuongTienUocLuong": 6,
-      "keHoachHopLe": false,
-      "coNoiDung": false,
-      "trangThaiNoiDung": "THIẾU DỮ LIỆU",
-      "nguonDL": "không có",
-      "ngayDuLieu": "2026-10-22T03:19:16.109Z",
-      "tyLeLapHD": 0,
+      "soPhuongTienUocLuong": 4,
+      "keHoachHopLe": true,
+      "coNoiDung": true,
+      "trangThaiNoiDung": "CÓ NỘI DUNG",
+      "nguonDL": "snapshot (ngày 2026-10-20)",
+      "ngayDuLieu": "2026-10-20T15:27:16.190Z",
+      "snapshotDate": "2026-10-20T15:27:16.190Z",
+      "tyLeLapHD": 1,
       "tyLeLapAn": 0,
-      "hienThiAn": "không có quán",
+      "hienThiAn": "0%",
       "chiTietCache": [],
       "overpassSummary": "Chưa có lượt gọi Overpass nào.",
       "overpassServer": "N/A",
       "overpassAttempts": 0,
-      "overpassError": "Dữ liệu địa phương tại Đà Lạt chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.",
-      "loiHard": [
-        "[khong_du_du_lieu] Dữ liệu địa phương tại Đà Lạt chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào."
-      ],
+      "loiHard": [],
       "soSlotChuaLap": {
-        "hoatDong": 4,
+        "hoatDong": 0,
         "buaAn": 6
       },
       "soLuotGoi": {
         "nominatim": 1,
         "tavily": 0,
-        "gemini": 0
+        "gemini": 1
       },
-      "danhGia": "THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu"
+      "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard)."
     },
     {
       "diemDen": "Phú Quốc",
@@ -181,7 +175,7 @@
         "nguon": "nominatim",
         "ngayLay": "2026-10-22T03:19:22.004Z"
       },
-      "durationMs": 890,
+      "durationMs": 60,
       "soLuongTheoLoai": {
         "khachSan": 0,
         "quanAn": 0,
@@ -191,12 +185,12 @@
       "tongSoMuc": 0,
       "tyLeCoNguon": 0,
       "soPhuongTienWeb": 0,
-      "soPhuongTienUocLuong": 6,
+      "soPhuongTienUocLuong": 4,
       "keHoachHopLe": false,
       "coNoiDung": false,
       "trangThaiNoiDung": "THIẾU DỮ LIỆU",
       "nguonDL": "không có",
-      "ngayDuLieu": "2026-10-22T03:19:22.006Z",
+      "ngayDuLieu": "2026-10-22T10:27:04.297Z",
       "tyLeLapHD": 0,
       "tyLeLapAn": 0,
       "hienThiAn": "không có quán",
@@ -234,43 +228,41 @@
         "nguon": "nominatim",
         "ngayLay": "2026-10-22T03:19:27.881Z"
       },
-      "durationMs": 878,
+      "durationMs": 2664,
       "soLuongTheoLoai": {
-        "khachSan": 0,
-        "quanAn": 0,
-        "cafe": 0,
-        "hoatDong": 0
+        "khachSan": 15,
+        "quanAn": 15,
+        "cafe": 15,
+        "hoatDong": 15
       },
-      "tongSoMuc": 0,
-      "tyLeCoNguon": 0,
+      "tongSoMuc": 60,
+      "tyLeCoNguon": 1,
       "soPhuongTienWeb": 0,
-      "soPhuongTienUocLuong": 6,
-      "keHoachHopLe": false,
-      "coNoiDung": false,
-      "trangThaiNoiDung": "THIẾU DỮ LIỆU",
-      "nguonDL": "không có",
-      "ngayDuLieu": "2026-10-22T03:19:27.883Z",
-      "tyLeLapHD": 0,
+      "soPhuongTienUocLuong": 2,
+      "keHoachHopLe": true,
+      "coNoiDung": true,
+      "trangThaiNoiDung": "CÓ NỘI DUNG",
+      "nguonDL": "snapshot (ngày 2026-10-20)",
+      "ngayDuLieu": "2026-10-20T15:38:18.712Z",
+      "snapshotDate": "2026-10-20T15:38:18.712Z",
+      "tyLeLapHD": 1,
       "tyLeLapAn": 0,
-      "hienThiAn": "không có quán",
+      "hienThiAn": "0%",
       "chiTietCache": [],
       "overpassSummary": "Chưa có lượt gọi Overpass nào.",
       "overpassServer": "N/A",
       "overpassAttempts": 0,
-      "overpassError": "Dữ liệu địa phương tại Băng Cốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.",
-      "loiHard": [
-        "[khong_du_du_lieu] Dữ liệu địa phương tại Băng Cốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào."
-      ],
+      "loiHard": [],
       "soSlotChuaLap": {
-        "hoatDong": 4,
+        "hoatDong": 0,
         "buaAn": 6
       },
       "soLuotGoi": {
         "nominatim": 1,
         "tavily": 0,
-        "gemini": 0
+        "gemini": 1
       },
-      "danhGia": "THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu"
+      "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard)."
     },
     {
       "diemDen": "Seoul",
@@ -287,43 +279,41 @@
         "nguon": "nominatim",
         "ngayLay": "2026-10-22T03:19:33.697Z"
       },
-      "durationMs": 806,
+      "durationMs": 7219,
       "soLuongTheoLoai": {
-        "khachSan": 0,
-        "quanAn": 0,
-        "cafe": 0,
-        "hoatDong": 0
+        "khachSan": 15,
+        "quanAn": 15,
+        "cafe": 15,
+        "hoatDong": 15
       },
-      "tongSoMuc": 0,
-      "tyLeCoNguon": 0,
+      "tongSoMuc": 60,
+      "tyLeCoNguon": 1,
       "soPhuongTienWeb": 0,
-      "soPhuongTienUocLuong": 6,
-      "keHoachHopLe": false,
-      "coNoiDung": false,
-      "trangThaiNoiDung": "THIẾU DỮ LIỆU",
-      "nguonDL": "không có",
-      "ngayDuLieu": "2026-10-22T03:19:33.697Z",
-      "tyLeLapHD": 0,
+      "soPhuongTienUocLuong": 2,
+      "keHoachHopLe": true,
+      "coNoiDung": true,
+      "trangThaiNoiDung": "CÓ NỘI DUNG",
+      "nguonDL": "snapshot (ngày 2026-10-20)",
+      "ngayDuLieu": "2026-10-20T15:43:24.818Z",
+      "snapshotDate": "2026-10-20T15:43:24.818Z",
+      "tyLeLapHD": 1,
       "tyLeLapAn": 0,
-      "hienThiAn": "không có quán",
+      "hienThiAn": "0%",
       "chiTietCache": [],
       "overpassSummary": "Chưa có lượt gọi Overpass nào.",
       "overpassServer": "N/A",
       "overpassAttempts": 0,
-      "overpassError": "Dữ liệu địa phương tại Seoul chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào.",
-      "loiHard": [
-        "[khong_du_du_lieu] Dữ liệu địa phương tại Seoul chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào."
-      ],
+      "loiHard": [],
       "soSlotChuaLap": {
-        "hoatDong": 4,
+        "hoatDong": 0,
         "buaAn": 6
       },
       "soLuotGoi": {
         "nominatim": 1,
         "tavily": 0,
-        "gemini": 0
+        "gemini": 1
       },
-      "danhGia": "THIẾU DỮ LIỆU: kho địa điểm thiếu hoặc chưa đủ tối thiểu"
+      "danhGia": "Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard)."
     }
   ]
 }

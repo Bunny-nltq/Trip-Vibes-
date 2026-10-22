@@ -3,7 +3,7 @@
     "quyTacVersion": "5",
     "agentPromptVersion": "v4",
     "model": "khong_dung_ai",
-    "ngayChay": "2026-10-22T03:20:16.565Z",
+    "ngayChay": "2026-10-22T10:22:28.383Z",
     "tenBo": "data"
   },
   "date": "2026-10-22",
@@ -16,5 +16,5 @@
   "soTavilyHom": 5,
   "soGeminiTransport": 0,
   "soGeminiHotel": 0,
-  "elapsed": 6
+  "elapsed": 11
 }

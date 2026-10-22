@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   ExternalLink,
   ArrowRight,
-  Info,
 } from "lucide-react";
 import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";

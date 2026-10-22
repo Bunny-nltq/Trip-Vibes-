@@ -159,7 +159,7 @@ export function layThongBaoLoi(
  */
 export function thongBaoLoiThanThien(input: unknown): string {
   if (!input) return "Đã xảy ra sự cố không xác định. Vui lòng thử lại.";
-  let str = typeof input === "string" ? input : (input as any)?.message || String(input);
+  const str = typeof input === "string" ? input : (input as any)?.message || String(input);
 
   // Nếu chứa các từ khóa kỹ thuật hoặc cấu hình API
   if (/GEMINI|\.env/i.test(str)) {

@@ -3,16 +3,9 @@ import React, { useState } from "react";
 import Link from "next/link";
 import {
   HelpCircle,
-  Compass,
-  CreditCard,
-  Camera,
   AlertTriangle,
-  Clock,
-  MapPin,
-  CheckCircle2,
   ChevronDown,
   ArrowRight,
-  ShieldCheck,
 } from "lucide-react";
 import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";

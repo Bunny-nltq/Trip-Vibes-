@@ -12,7 +12,8 @@ interface SmokeRow {
 }
 
 async function runSmoke() {
-  const targetUrl = (process.argv[2] || "http://localhost:3000").replace(/\/$/, "");
+  const defaultPort = process.env.PORT || "3012";
+  const targetUrl = (process.argv[2] || `http://localhost:${defaultPort}`).replace(/\/$/, "");
   console.log(`Bắt đầu smoke test tại: ${targetUrl}`);
 
   const rows: SmokeRow[] = [];
@@ -58,11 +59,15 @@ async function runSmoke() {
     const text = await res.text();
     responseBodies.push(text);
 
+    const showDemo = process.env.NEXT_PUBLIC_SHOW_DEMO === "true";
+    const kyVong = showDemo ? "200 (NEXT_PUBLIC_SHOW_DEMO=true) hoặc 404" : "404";
+    const isOk = showDemo ? (res.status === 200 || res.status === 404) : res.status === 404;
+
     rows.push({
       kiemTra: "GET /demo",
-      kyVong: "404",
+      kyVong,
       thucTe: `HTTP ${res.status}`,
-      ketQua: res.status === 404 ? "ĐẠT" : "LỖI",
+      ketQua: isOk ? "ĐẠT" : "LỖI",
     });
   } catch (err) {
     rows.push({

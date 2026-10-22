@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useApp, extractSelectionFromPlan } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
-import type { PlanItem, Preference, DiemDen } from "@/contracts";
+import type { PlanItem, Preference } from "@/contracts";
 import { getDiemDenTen } from "@/contracts";
 import { nhanNguonDuLieu } from "@/core/nhanNguon";
 import { tiLeThoiGianDiChuyen, coCanhBaoDiChuyen } from "@/core/tiLeDiChuyen";
@@ -187,7 +187,7 @@ export function B3KeHoachScreen() {
 
       setIsRegenerating(false);
       nav("b6-xem-truoc");
-    } catch (err: any) {
+    } catch {
       setRegenError(
         "Có lỗi kết nối khi gợi ý lại. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\"."
       );

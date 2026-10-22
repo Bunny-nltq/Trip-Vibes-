@@ -146,7 +146,7 @@ export interface ProgressRecord {
 export function createScenarioHash(
   request: TripRequest,
   candidateIds: string[],
-  model = process.env.GEMINI_MODEL ?? "gemini-2.5-flash",
+  model = process.env.GEMINI_MODEL ?? "gemini-3-flash-preview",
   promptVersion = AGENT_PROMPT_VERSION,
   quyTacVersion = QUY_TAC_VERSION
 ): string {

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Database, ShieldCheck, X } from "lucide-react";
+import { Database, X } from "lucide-react";
 import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";
 import { HeroSearch } from "@/ui/components/site/HeroSearch";

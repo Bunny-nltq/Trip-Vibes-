@@ -2,8 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { loadEnvConfig } from "@next/env";
-import type { TripRequest, Selection } from "../src/contracts";
+import { type TripRequest, type Selection, DEFAULT_DIEM_DI } from "../src/contracts";
 import { LiveDataSource } from "../src/data/live/LiveDataSource";
+import { getSnapshotDiemDen } from "../src/data/prepareDestination";
 import { GeminiProvider } from "../src/ai/provider";
 import { planRegenerate, REGEN_PROMPT_VERSION } from "../src/ai/planRegenerate";
 import { taoMetaEval } from "./lib/meta";
@@ -73,7 +74,15 @@ async function main() {
     process.exit(1);
   }
 
-  const dataSource = new LiveDataSource();
+  const resolvedDiemDen = getSnapshotDiemDen("Đà Nẵng")!;
+  const resolvedDiemDi = DEFAULT_DIEM_DI;
+  const dataSource = new LiveDataSource(
+    "snapshot",
+    "snapshot_da_nang_2026-10-20.json",
+    resolvedDiemDen,
+    resolvedDiemDi,
+    3
+  );
   const [transports, hotels, activities, khachSans, quanAns, cafes, hoatDongs] =
     await Promise.all([
       dataSource.getTransports(),
@@ -84,6 +93,9 @@ async function main() {
       dataSource.getCafes(),
       dataSource.getHoatDongs(),
     ]);
+
+  const allHotels = [...hotels, ...(khachSans || [])];
+  const allActs = [...activities, ...(hoatDongs || [])];
 
   const data = {
     transports,
@@ -104,12 +116,10 @@ async function main() {
       (t: any) => t.huong === "ve" && (t.pricePerPerson ?? t.giaVeNguoi ?? 0) <= 1_200_000
     ) || transports[transports.length - 1];
   const hotel =
-    hotels.find(
+    allHotels.find(
       (h: any) => (h.pricePerNight ?? h.giaPhongDem ?? 0) <= 1_500_000
-    ) || hotels[1] || hotels[0];
+    ) || allHotels[1] || allHotels[0];
 
-  // Gom danh sách hoạt động ứng viên thực tế
-  const allActs = [...activities, ...(hoatDongs || [])];
   const act1 = allActs[0]?.id;
   const act2 = allActs[1]?.id;
   const act3 = allActs[2]?.id;

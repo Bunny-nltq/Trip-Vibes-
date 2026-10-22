@@ -4,12 +4,9 @@ import Link from "next/link";
 import {
   ShieldAlert,
   ShieldCheck,
-  CheckCircle2,
-  AlertTriangle,
   Database,
   Lock,
   ArrowRight,
-  Info,
   MapPin,
   Calendar,
 } from "lucide-react";
@@ -151,7 +148,7 @@ export function GioiHanScreen() {
                 <strong style={{ color: "var(--color-text)" }}>Địa điểm, Khách sạn, Quán ăn, Hoạt động:</strong> Thu thập từ <strong>OpenStreetMap (OSM)</strong> qua Overpass API và Geocoding bởi Nominatim với giới hạn tuân thủ 1 yêu cầu/giây.
               </li>
               <li>
-                <strong style={{ color: "var(--color-text)" }}>Giá cả ước tính:</strong> Mọi mức giá khách sạn theo sao, chi phí bữa ăn và vé tham quan đều là số liệu ước tính tham khảo (được gắn nhãn <em>"Giá ước tính"</em>). Trip Vibes không bịa đặt đánh giá sao hoặc giá giả mạo.
+                <strong style={{ color: "var(--color-text)" }}>Giá cả ước tính:</strong> Mọi mức giá khách sạn theo sao, chi phí bữa ăn và vé tham quan đều là số liệu ước tính tham khảo (được gắn nhãn <em>&quot;Giá ước tính&quot;</em>). Trip Vibes không bịa đặt đánh giá sao hoặc giá giả mạo.
               </li>
               <li>
                 <strong style={{ color: "var(--color-text)" }}>Tỷ giá ngoại tệ:</strong> Quy đổi về VND dựa trên tỷ giá thị trường có nguồn và ngày trích xuất cụ thể.

@@ -27,13 +27,13 @@ export class GeminiProvider implements LLMProvider {
     if (!model) {
       throw new Error(
         "Thiếu biến môi trường GEMINI_MODEL. " +
-          "Ví dụ: GEMINI_MODEL=gemini-2.0-flash"
+          "Ví dụ: GEMINI_MODEL=gemini-3-flash-preview"
       );
     }
 
     this.modelName = model;
     // Đảm bảo dùng GEMINI_API_KEY, tránh bị biến môi trường toàn cục GOOGLE_API_KEY ghi đè
-    if (process.env.GOOGLE_API_KEY && process.env.GOOGLE_API_KEY !== apiKey) {
+    if (process.env.GOOGLE_API_KEY) {
       delete process.env.GOOGLE_API_KEY;
     }
     // Xác thực bằng auth key (tạo từ AI Studio từ 28/5/2026)
@@ -57,33 +57,51 @@ export class GeminiProvider implements LLMProvider {
       config.responseSchema = options.responseSchema;
     }
 
-    let timer: NodeJS.Timeout;
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      timer = setTimeout(() => {
-        const err = new Error("qua_thoi_gian: Gemini call timed out after 20000ms");
-        err.name = "TimeoutError";
-        reject(err);
-      }, 20_000);
-    });
+    const maxRetries = 2;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      let timer: NodeJS.Timeout;
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        timer = setTimeout(() => {
+          const err = new Error("qua_thoi_gian: Gemini call timed out after 20000ms");
+          err.name = "TimeoutError";
+          reject(err);
+        }, 20_000);
+      });
 
-    let response;
-    try {
-      response = await Promise.race([
-        this.client.models.generateContent({
-          model: this.modelName,
-          contents: prompt,
-          config: Object.keys(config).length > 0 ? (config as never) : undefined,
-        }),
-        timeoutPromise,
-      ]);
-    } finally {
-      clearTimeout(timer!);
+      try {
+        const response = await Promise.race([
+          this.client.models.generateContent({
+            model: this.modelName,
+            contents: prompt,
+            config: Object.keys(config).length > 0 ? (config as never) : undefined,
+          }),
+          timeoutPromise,
+        ]);
+        const text = response.text;
+        if (!text) {
+          throw new Error("Gemini trả về phản hồi rỗng.");
+        }
+        return text;
+      } catch (err: unknown) {
+        const anyErr = err as { status?: number; message?: string };
+        const isTransient =
+          anyErr?.status === 503 ||
+          anyErr?.status === 429 ||
+          (typeof anyErr?.message === "string" &&
+            (anyErr.message.includes("503") ||
+              anyErr.message.includes("high demand") ||
+              anyErr.message.includes("RESOURCE_EXHAUSTED")));
+
+        if (isTransient && attempt < maxRetries) {
+          await new Promise((resolve) => setTimeout(resolve, 1500 * (attempt + 1)));
+          continue;
+        }
+        throw err;
+      } finally {
+        clearTimeout(timer!);
+      }
     }
 
-    const text = response.text;
-    if (!text) {
-      throw new Error("Gemini trả về phản hồi rỗng.");
-    }
-    return text;
+    throw new Error("Gemini không phản hồi sau các lần thử.");
   }
 }
