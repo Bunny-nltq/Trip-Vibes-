@@ -1,0 +1,12 @@
+Switched to a new branch 'tam-gop-thu'
+Auto-merging docs/bang-chung/dem/TIEN-DO.md
+CONFLICT (content): Merge conflict in docs/bang-chung/dem/TIEN-DO.md
+Automatic merge failed; fix conflicts and then commit the result.
+
+Danh sách tệp xung đột:
+- docs/bang-chung/dem/TIEN-DO.md
+
+Thao tác thực hiện:
+- git merge --abort
+- git switch main
+- git branch -D tam-gop-thu
