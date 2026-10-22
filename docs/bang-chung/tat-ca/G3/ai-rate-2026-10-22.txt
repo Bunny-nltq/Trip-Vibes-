@@ -1,0 +1,124 @@
+
+> trip-vibes@0.1.0 eval:ai-rate
+> tsx eval/run-ai-rate.ts
+
+================================================================================
+EVAL: RUN-AI-RATE (Bước 15: Chạy tiếp được, lưu tiến trình từng kịch bản)
+================================================================================
+
+[Cờ --toi-da=4]: Tối đa 4 kịch bản MỚI mỗi lần chạy.
+
+[Tiến trình]: Đã nạp 11 kịch bản đã xong từ D:\Trip_Vibes\eval\results\ai-rate-progress.json.
+
+[1/10] Chuẩn bị kịch bản: Đà Nẵng (1.3x)...
+ -> [CU]: Kịch bản 1 (Đà Nẵng 1.3x) - quy tắc v1 khác hiện tại (5). KHÔNG dùng lại; sẽ chạy lại như kịch bản mới.
+ -> Ngân sách: 6.500.000 đ (tối thiểu: 4.985.600 đ). Đang chạy planWithRepair (kịch bản mới #1)...
+[planWithRepair] Initializing LiveDataSource for: Đà Nẵng
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 15 hotels, 15 food, 15 activities
+[PlanAgent] Step 1: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 1: Received 6 function calls: [
+  'timPhuongTien',
+  'timPhuongTien',
+  'timKhachSan',
+  'timQuanAn',
+  'timCafe',
+  'goiYHoatDong'
+]
+[PlanAgent] Step 2: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 2: Received 1 function calls: [ 'chotKeHoach' ]
+[PlanAgent] Step 1: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 1: Received 1 function calls: [ 'timPhuongTien' ]
+[PlanAgent] Step 2: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 2: Received 1 function calls: [ 'timPhuongTien' ]
+[PlanAgent] Step 3: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 3: Received 1 function calls: [ 'timPhuongTien' ]
+[PlanAgent] Step 4: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 4: Received 1 function calls: [ 'timPhuongTien' ]
+[PlanAgent] Step 5: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 5: Received 1 function calls: [ 'chotKeHoach' ]
+ -> Kết quả: ai  | 6.035.600 đ (92.9%) | Ô: 3/3 (tối đa 4) | Di chuyển: 46.1% | Lượt AI: 7 | 10075ms
+ -> Nghỉ 5 giây giữa các kịch bản...
+[2/10] Chuẩn bị kịch bản: Đà Nẵng (2.0x)...
+ -> [CU]: Kịch bản 2 (Đà Nẵng 2.0x) - quy tắc v1 khác hiện tại (5). KHÔNG dùng lại; sẽ chạy lại như kịch bản mới.
+ -> Ngân sách: 10.000.000 đ (tối thiểu: 4.985.600 đ). Đang chạy planWithRepair (kịch bản mới #2)...
+[planWithRepair] Initializing LiveDataSource for: Đà Nẵng
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 15 hotels, 15 food, 15 activities
+[PlanAgent] Step 1: Sending request to Gemini (gemini-3.5-flash-lite)...
+ -> [KHÔNG LƯU TIẾN TRÌNH]: Kịch bản phân loại là "khong_do_duoc" (qua_thoi_gian), KHÔNG lưu vào tiến trình như hoàn tất.
+ -> Kết quả: quy_tac (qua_thoi_gian) | 8.379.160 đ (83.8%) | Ô: 4/4 (tối đa 4) | Di chuyển: 6.4% | Lượt AI: 0 | 20011ms
+ -> Nghỉ 5 giây giữa các kịch bản...
+[3/10] Chuẩn bị kịch bản: Hà Nội (1.3x)...
+ -> [CU]: Kịch bản 3 (Hà Nội 1.3x) - quy tắc v1 khác hiện tại (5). KHÔNG dùng lại; sẽ chạy lại như kịch bản mới.
+ -> Ngân sách: 9.300.000 đ (tối thiểu: 7.124.000 đ). Đang chạy planWithRepair (kịch bản mới #3)...
+[planWithRepair] Initializing LiveDataSource for: Hà Nội
+[planWithRepair] Fetching all data via Promise.all...
+[planWithRepair] Data ready: 6 transports, 15 hotels, 15 food, 15 activities
+[PlanAgent] Step 1: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 1: Received 5 function calls: [
+  'timPhuongTien',
+  'timPhuongTien',
+  'timKhachSan',
+  'timQuanAn',
+  'goiYHoatDong'
+]
+[PlanAgent] Step 2: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 2: Received 1 function calls: [ 'chotKeHoach' ]
+[PlanAgent] Step 1: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 1: Received 1 function calls: [ 'timPhuongTien' ]
+[PlanAgent] Step 2: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 2: Received 1 function calls: [ 'timPhuongTien' ]
+[PlanAgent] Step 3: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 3: Received 1 function calls: [ 'timPhuongTien' ]
+[PlanAgent] Step 4: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 4: Received 1 function calls: [ 'timPhuongTien' ]
+[PlanAgent] Step 5: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 5: Received 1 function calls: [ 'timPhuongTien' ]
+[PlanAgent] Step 6: Sending request to Gemini (gemini-3.5-flash-lite)...
+[PlanAgent] Step 6: Received 1 function calls: [ 'chotKeHoach' ]
+ -> Kết quả: quy_tac (vuot_so_luot_goi_ai) | 7.124.000 đ (76.6%) | Ô: 2/2 (tối đa 4) | Di chuyển: 86.6% | Lượt AI: 9 | 14644ms
+node.exe :  -> Gặp lỗi 429 / hết lượt AI. Dừng lại theo yêu cầu.
+At C:\Program Files\nodejs\npm.ps1:29 char:3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( -> Gặp lỗi 429...i theo yêu cầu.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+================================================================================
+⚠️ GẶP 429: Dừng ngay. Đã xong 2/8, còn lại: 6.
+================================================================================
+
+================================================================================
+Kết quả cũ, không dùng:
+================================================================================
+┌─────────┬─────┬───────────┬────────┬──────────────┬─────────────┬─────────────────┬─────────┬─────────────┬─────────┬──────────────────┬───────────┬──────────┬────────┬───────┬───────┐
+│ (index) │ STT │ Điểm đến  │ Hệ     │ Ngân sách    │ Phương thức │ Lý do           │ Lượt AI │ Tổng VND    │ % NS    │ Ô                │ Di chuyển │ Tỉ lệ DC │ CB nhẹ │ Nguồn │ ms    │
+├─────────┼─────┼───────────┼────────┼──────────────┼─────────────┼─────────────────┼─────────┼─────────────┼─────────┼──────────────────┼───────────┼──────────┼────────┼───────┼───────┤
+│ 0       │ 2   │ 'Đà Nẵng' │ '2.0x' │ '10.000.000' │ 'quy_tac'   │ 'qua_thoi_gian' │ 0       │ '8.379.160' │ '83.8%' │ '4/4 (tối đa 4)' │ '278p'    │ '6.4%'   │ 1      │ 'mới' │ 20011 │
+└─────────┴─────┴───────────┴────────┴──────────────┴─────────────┴─────────────────┴─────────┴─────────────┴─────────┴──────────────────┴───────────┴──────────┴────────┴───────┴───────┘
+
+================================================================================
+BẢNG KẾT QUẢ KỊCH BẢN (2/8 kịch bản hợp lệ với quy tắc hiện tại (bỏ qua 2 kịch bản Phú Quốc: không có snapshot)):
+================================================================================
+┌─────────┬─────┬───────────┬────────┬─────────────┬─────────────┬───────────────────────┬─────────┬─────────────┬─────────┬──────────────────┬───────────┬──────────┬────────┬───────┬───────┐
+│ (index) │ STT │ Điểm đến  │ Hệ     │ Ngân sách   │ Phương thức │ Lý do                 │ Lượt AI │ Tổng VND    │ % NS    │ Ô                │ Di chuyển │ Tỉ lệ DC │ CB nhẹ │ Nguồn │ ms    │
+├─────────┼─────┼───────────┼────────┼─────────────┼─────────────┼───────────────────────┼─────────┼─────────────┼─────────┼──────────────────┼───────────┼──────────┼────────┼───────┼───────┤
+│ 0       │ 1   │ 'Đà Nẵng' │ '1.3x' │ '6.500.000' │ 'ai'        │ '-'                   │ 7       │ '6.035.600' │ '92.9%' │ '3/3 (tối đa 4)' │ '1992p'   │ '46.1%'  │ 2      │ 'mới' │ 10075 │
+│ 1       │ 3   │ 'Hà Nội'  │ '1.3x' │ '9.300.000' │ 'quy_tac'   │ 'vuot_so_luot_goi_ai' │ 9       │ '7.124.000' │ '76.6%' │ '2/2 (tối đa 4)' │ '3742p'   │ '86.6%'  │ 3      │ 'mới' │ 14644 │
+└─────────┴─────┴───────────┴────────┴─────────────┴─────────────┴───────────────────────┴─────────┴─────────────┴─────────┴──────────────────┴───────────┴──────────┴────────┴───────┴───────┘
+
+================================================================================
+TỔNG HỢP (2/8 kịch bản hợp lệ với quy tắc hiện tại (bỏ qua 2 kịch bản Phú Quốc: không có snapshot)):
+⚠️ CHƯA ĐỦ MẪU, không dùng làm kết luận
+- Số ca AI lập hợp lệ ngay lần đầu: 0/2
+- Số ca AI lập hợp lệ sau sửa: 1/2
+- Số ca phải dự phòng: 1/2 (vuot_so_luot_goi_ai)
+- Trung bình số lượt Gemini: 8
+- Tổng số lượt Gemini đã dùng: 16
+- ms trung bình: 12360 ms
+- Tiến trình đã lưu tại: D:\Trip_Vibes\eval\results\ai-rate-progress.json
+- Báo cáo kết quả tại: D:\Trip_Vibes\eval\results\ai-rate-2026-10-22.json
+================================================================================
+
