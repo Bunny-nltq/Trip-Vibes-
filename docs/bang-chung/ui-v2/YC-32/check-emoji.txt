@@ -1,0 +1,16 @@
+
+> trip-vibes@0.1.0 check:emoji
+> tsx scripts/check-emoji.ts
+
+================================================================================
+             KIß╗éM TRA EMOJI TRONG GIAO DIß╗åN (CHECK:EMOJI)                       
+================================================================================
+
+=== Kß║╛T QUß║ó QU├ëT EMOJI TRONG src/ui ===
+Γ£à Kh├┤ng c├│ emoji n├áo trong src/ui. (0 vi phß║ím)
+
+=== Kß║╛T QUß║ó QU├ëT EMOJI TRONG src/app ===
+Γ£à Kh├┤ng c├│ emoji n├áo trong src/app. (0 vi phß║ím)
+
+Γ£à ─Éß║áT: To├án bß╗Ö src/ui sß║ích emoji, chß╗ë sß╗¡ dß╗Ñng icon SVG theo AGENTS.md!
+

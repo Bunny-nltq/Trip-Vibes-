@@ -48,6 +48,8 @@ export interface KhachSanDiemDenItem {
   giaDemUocTinh: number;
 }
 
+import { type HinhAnhGhiCong } from "@/ui/components/site/ThuDiemDen";
+
 export interface DiemDenChiTietScreenProps {
   slug: string;
   ten: string;
@@ -58,6 +60,7 @@ export interface DiemDenChiTietScreenProps {
   quanAns: QuanAnItem[];
   cafes: CafeItem[];
   khachSans: KhachSanDiemDenItem[];
+  hinhAnh?: HinhAnhGhiCong;
 }
 
 export function DiemDenChiTietScreen({
@@ -70,6 +73,7 @@ export function DiemDenChiTietScreen({
   quanAns,
   cafes,
   khachSans,
+  hinhAnh,
 }: DiemDenChiTietScreenProps) {
   const [activeTabAmThuc, setActiveTabAmThuc] = useState<"quan_an" | "cafe">("quan_an");
 
@@ -198,6 +202,79 @@ export function DiemDenChiTietScreen({
                 </Link>
               </div>
             </div>
+
+            {/* Ảnh Hero minh họa từ Wikimedia Commons có ghi công bản quyền */}
+            {hinhAnh && (
+              <div
+                style={{
+                  marginTop: 28,
+                  borderRadius: "var(--r-xl)",
+                  overflow: "hidden",
+                  position: "relative",
+                  maxHeight: 420,
+                  border: "1px solid var(--color-border)",
+                  background: "var(--color-surface)",
+                  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.06)",
+                }}
+              >
+                <img
+                  src={hinhAnh.url}
+                  alt={hinhAnh.alt || ten}
+                  loading="lazy"
+                  style={{
+                    width: "100%",
+                    maxHeight: 420,
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: 12,
+                    right: 12,
+                    padding: "6px 12px",
+                    borderRadius: "var(--r-md)",
+                    background: "rgba(0, 0, 0, 0.72)",
+                    color: "var(--color-primary-text)",
+                    fontSize: 12,
+                    lineHeight: 1.4,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    backdropFilter: "blur(4px)",
+                  }}
+                >
+                  <span>
+                    Ảnh:{" "}
+                    <a
+                      href={hinhAnh.linkGoc}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "inherit", textDecoration: "underline" }}
+                    >
+                      {hinhAnh.tacGia}
+                    </a>{" "}
+                    ({hinhAnh.giayPhep})
+                  </span>
+                  <a
+                    href={hinhAnh.linkGoc}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: "inherit",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 3,
+                    }}
+                    title="Xem trang gốc trên Wikimedia Commons"
+                  >
+                    <span>Commons</span>
+                    <ExternalLink size={12} />
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </section>
 

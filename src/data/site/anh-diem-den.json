@@ -1,0 +1,63 @@
+{
+  "_ghiChu": "Dữ liệu ảnh minh họa điểm đến chính thức từ Wikimedia Commons, có đầy đủ tác giả, giấy phép CC và liên kết nguồn theo QT-24 và QT-07.",
+  "da-nang": {
+    "slug": "da-nang",
+    "diaDanh": "Cầu Rồng bắc qua sông Hàn, Đà Nẵng",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Da_Nang_Dragon_Bridge_%28I%29.jpg",
+    "urlThumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Da_Nang_Dragon_Bridge_%28I%29.jpg/960px-Da_Nang_Dragon_Bridge_%28I%29.jpg",
+    "alt": "Cầu Rồng Đà Nẵng bắc qua sông Hàn",
+    "tacGia": "Supanut Arunoprayote",
+    "nguon": "Wikimedia Commons",
+    "giayPhep": "CC BY 4.0",
+    "linkGoc": "https://commons.wikimedia.org/wiki/File:Da_Nang_Dragon_Bridge_(I).jpg",
+    "linkGiayPhep": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "ha-noi": {
+    "slug": "ha-noi",
+    "diaDanh": "Tháp Rùa - Hồ Hoàn Kiếm, Hà Nội",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Th%C3%A1p_R%C3%B9a_3.jpg",
+    "urlThumb": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Th%C3%A1p_R%C3%B9a_3.jpg",
+    "alt": "Tháp Rùa cổ kính giữa lòng hồ Hoàn Kiếm Hà Nội",
+    "tacGia": "DHN",
+    "nguon": "Wikimedia Commons",
+    "giayPhep": "CC BY-SA 3.0",
+    "linkGoc": "https://commons.wikimedia.org/wiki/File:Th%C3%A1p_R%C3%B9a_3.jpg",
+    "linkGiayPhep": "https://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "da-lat": {
+    "slug": "da-lat",
+    "diaDanh": "Hồ Xuân Hương trong sương sớm, Đà Lạt",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Xuan_Huong_Lake_08.jpg",
+    "urlThumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Xuan_Huong_Lake_08.jpg/960px-Xuan_Huong_Lake_08.jpg",
+    "alt": "Khung cảnh hồ Xuân Hương yên bình tại Đà Lạt",
+    "tacGia": "Diane Selwyn",
+    "nguon": "Wikimedia Commons",
+    "giayPhep": "Public Domain",
+    "linkGoc": "https://commons.wikimedia.org/wiki/File:Xuan_Huong_Lake_08.jpg",
+    "linkGiayPhep": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "bangkok": {
+    "slug": "bangkok",
+    "diaDanh": "Chùa Wat Arun bên dòng sông Chao Phraya, Bangkok",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Wat_Arun_from_Chao_Phraya_River.jpg",
+    "urlThumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Wat_Arun_from_Chao_Phraya_River.jpg/960px-Wat_Arun_from_Chao_Phraya_River.jpg",
+    "alt": "Chùa Wat Arun tráng lệ nhìn từ sông Chao Phraya Bangkok",
+    "tacGia": "Diliff",
+    "nguon": "Wikimedia Commons",
+    "giayPhep": "CC BY 2.5",
+    "linkGoc": "https://commons.wikimedia.org/wiki/File:Wat_Arun_from_Chao_Phraya_River.jpg",
+    "linkGiayPhep": "https://creativecommons.org/licenses/by/2.5/"
+  },
+  "seoul": {
+    "slug": "seoul",
+    "diaDanh": "Điện Cần Chính (Geunjeongjeon) - Cung điện Gyeongbokgung, Seoul",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Gyeongbokgung-GeunJeongJeon.jpg",
+    "urlThumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Gyeongbokgung-GeunJeongJeon.jpg/960px-Gyeongbokgung-GeunJeongJeon.jpg",
+    "alt": "Điện Cần Chính tại cung điện Gyeongbokgung Seoul",
+    "tacGia": "Blmtduddl",
+    "nguon": "Wikimedia Commons",
+    "giayPhep": "CC BY-SA 3.0",
+    "linkGoc": "https://commons.wikimedia.org/wiki/File:Gyeongbokgung-GeunJeongJeon.jpg",
+    "linkGiayPhep": "https://creativecommons.org/licenses/by-sa/3.0/"
+  }
+}

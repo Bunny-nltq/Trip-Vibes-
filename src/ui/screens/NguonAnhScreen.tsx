@@ -11,46 +11,55 @@ import {
 import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";
 
-const ANH_MAU = [
+export interface HinhAnhGhiCongRow {
+  diemDen: string;
+  nguon: string;
+  tacGia: string;
+  giayPhep: string;
+  url: string;
+  ghiChu: string;
+}
+
+const ANH_MAU: HinhAnhGhiCongRow[] = [
   {
     diemDen: "Đà Nẵng",
     nguon: "Wikimedia Commons",
-    tacGia: "Wikimedia Contributors",
-    giayPhep: "CC-BY-SA 4.0",
-    url: "https://commons.wikimedia.org/",
-    ghiChu: "Ảnh danh lam cầu Rồng, bãi biển Mỹ Khê, bán đảo Sơn Trà",
+    tacGia: "Supanut Arunoprayote",
+    giayPhep: "CC BY 4.0",
+    url: "https://commons.wikimedia.org/wiki/File:Da_Nang_Dragon_Bridge_(I).jpg",
+    ghiChu: "Cầu Rồng Đà Nẵng về đêm (File:Da Nang Dragon Bridge (I).jpg)",
   },
   {
     diemDen: "Hà Nội",
     nguon: "Wikimedia Commons",
-    tacGia: "Wikimedia Contributors",
-    giayPhep: "CC-BY-SA 4.0",
-    url: "https://commons.wikimedia.org/",
-    ghiChu: "Ảnh hồ Hoàn Kiếm, phố cổ Hà Nội, chùa Trấn Quốc",
+    tacGia: "DHN",
+    giayPhep: "CC BY-SA 3.0",
+    url: "https://commons.wikimedia.org/wiki/File:Th%C3%A1p_R%C3%B9a_3.jpg",
+    ghiChu: "Tháp Rùa Hồ Gươm (File:Tháp Rùa 3.jpg)",
   },
   {
     diemDen: "Đà Lạt",
     nguon: "Wikimedia Commons",
-    tacGia: "Wikimedia Contributors",
-    giayPhep: "CC-BY-SA 4.0",
-    url: "https://commons.wikimedia.org/",
-    ghiChu: "Ảnh hồ Xuân Hương, ga xe lửa cổ, đồi chè Cầu Đất",
+    tacGia: "Diane Selwyn",
+    giayPhep: "Public Domain (CC0)",
+    url: "https://commons.wikimedia.org/wiki/File:Xuan_Huong_Lake_08.jpg",
+    ghiChu: "Hồ Xuân Hương Đà Lạt (File:Xuan Huong Lake 08.jpg)",
   },
   {
     diemDen: "Bangkok",
     nguon: "Wikimedia Commons",
-    tacGia: "Wikimedia Contributors",
-    giayPhep: "CC-BY-SA 4.0",
-    url: "https://commons.wikimedia.org/",
-    ghiChu: "Ảnh chùa Wat Arun, Grand Palace Bangkok",
+    tacGia: "Diliff",
+    giayPhep: "CC BY-SA 2.5",
+    url: "https://commons.wikimedia.org/wiki/File:Wat_Arun_from_Chao_Phraya_River.jpg",
+    ghiChu: "Chùa Wat Arun bên sông Chao Phraya (File:Wat Arun from Chao Phraya River.jpg)",
   },
   {
     diemDen: "Seoul",
     nguon: "Wikimedia Commons",
-    tacGia: "Wikimedia Contributors",
-    giayPhep: "CC-BY-SA 4.0",
-    url: "https://commons.wikimedia.org/",
-    ghiChu: "Ảnh cung điện Gyeongbokgung, tháp Namsan Seoul",
+    tacGia: "Blmtduddl",
+    giayPhep: "CC BY-SA 3.0",
+    url: "https://commons.wikimedia.org/wiki/File:Gyeongbokgung-GeunJeongJeon.jpg",
+    ghiChu: "Điện Cần Chính Cung điện Gyeongbokgung (File:Gyeongbokgung-GeunJeongJeon.jpg)",
   },
 ];
 
@@ -169,6 +178,7 @@ export function NguonAnhScreen() {
             <thead>
               <tr style={{ borderBottom: "2px solid var(--color-border)", textAlign: "left" }}>
                 <th style={{ padding: "12px 14px", color: "var(--color-text)" }}>Điểm đến</th>
+                <th style={{ padding: "12px 14px", color: "var(--color-text)" }}>Tác giả</th>
                 <th style={{ padding: "12px 14px", color: "var(--color-text)" }}>Nguồn lưu trữ</th>
                 <th style={{ padding: "12px 14px", color: "var(--color-text)" }}>Giấy phép</th>
                 <th style={{ padding: "12px 14px", color: "var(--color-text)" }}>Nội dung đại diện</th>
@@ -178,6 +188,7 @@ export function NguonAnhScreen() {
               {ANH_MAU.map((row, idx) => (
                 <tr key={idx} style={{ borderBottom: "1px solid var(--color-border)" }}>
                   <td style={{ padding: "14px", fontWeight: 700, color: "var(--color-text)" }}>{row.diemDen}</td>
+                  <td style={{ padding: "14px", color: "var(--color-text)" }}>{row.tacGia}</td>
                   <td style={{ padding: "14px", color: "var(--color-text-sub)" }}>
                     <a
                       href={row.url}

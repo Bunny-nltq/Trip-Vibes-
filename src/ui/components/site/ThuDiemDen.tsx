@@ -3,6 +3,18 @@ import React from "react";
 import Link from "next/link";
 import { MapPin, ArrowRight } from "lucide-react";
 
+export interface HinhAnhGhiCong {
+  url: string;
+  urlThumb?: string;
+  alt?: string;
+  diaDanh?: string;
+  tacGia: string;
+  nguon: string;
+  giayPhep: string;
+  linkGoc: string;
+  linkGiayPhep?: string;
+}
+
 export interface DiemDenThe {
   id: string;
   slug: string;
@@ -10,6 +22,7 @@ export interface DiemDenThe {
   quocGia: string;
   ngayDuLieuFormatted: string; // dd/mm/yyyy
   moTaNgan?: string;
+  hinhAnh?: HinhAnhGhiCong;
 }
 
 export interface ThuDiemDenProps {
@@ -51,7 +64,7 @@ export function ThuDiemDen({ diemDens }: ThuDiemDenProps) {
           }}
         >
           <div>
-            {/* Khung ảnh tỉ lệ cố định 16:10, nền gradient token và icon placeholder */}
+            {/* Khung ảnh tỉ lệ cố định 16:10, có ảnh thật hoặc nền gradient thay thế */}
             <div
               style={{
                 position: "relative",
@@ -62,29 +75,76 @@ export function ThuDiemDen({ diemDens }: ThuDiemDenProps) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderBottom: "1px solid var(--color-border)",
+                overflow: "hidden",
               }}
             >
-              <div
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: "var(--r-full)",
-                  background: "var(--color-surface)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-                }}
-              >
-                <MapPin size={28} color="var(--color-primary-main)" />
-              </div>
+              {d.hinhAnh ? (
+                <img
+                  src={d.hinhAnh.urlThumb || d.hinhAnh.url}
+                  alt={d.hinhAnh.alt || d.ten}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: "var(--r-full)",
+                    background: "var(--color-surface)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+                  }}
+                >
+                  <MapPin size={28} color="var(--color-primary-main)" />
+                </div>
+              )}
+
+              {/* Dòng ghi công bản quyền ảnh góc dưới */}
+              {d.hinhAnh && (
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: 6,
+                    left: 8,
+                    fontSize: 10,
+                    fontWeight: 500,
+                    color: "var(--color-primary-text)",
+                    background: "rgba(0, 0, 0, 0.65)",
+                    padding: "2px 8px",
+                    borderRadius: "var(--r-sm)",
+                    zIndex: 2,
+                    maxWidth: "calc(100% - 16px)",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>
+                    Ảnh:{" "}
+                    <a
+                      href={d.hinhAnh.linkGoc}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "inherit", textDecoration: "underline" }}
+                    >
+                      {d.hinhAnh.tacGia}
+                    </a>{" "}
+                    ({d.hinhAnh.giayPhep})
+                  </span>
+                </div>
+              )}
 
               {/* Huy hiệu quốc gia */}
               <div
                 style={{
                   position: "absolute",
-                  top: 14,
-                  right: 14,
+                  top: 12,
+                  right: 12,
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 4,
@@ -94,7 +154,8 @@ export function ThuDiemDen({ diemDens }: ThuDiemDenProps) {
                   background: "var(--color-surface)",
                   padding: "4px 10px",
                   borderRadius: "var(--r-full)",
-                  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.08)",
+                  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.12)",
+                  zIndex: 2,
                 }}
               >
                 <span>{d.quocGia}</span>

@@ -46,11 +46,21 @@ function loadSnapshotData(slug: string) {
 
   const dir = path.join(process.cwd(), "src/data/snapshots");
   const moTaPath = path.join(process.cwd(), "src/data/site/mo-ta-diem-den.json");
+  const anhPath = path.join(process.cwd(), "src/data/site/anh-diem-den.json");
 
   let moTaMap: Record<string, any> = {};
   if (fs.existsSync(moTaPath)) {
     try {
       moTaMap = JSON.parse(fs.readFileSync(moTaPath, "utf-8"));
+    } catch {
+      // bỏ qua nếu lỗi
+    }
+  }
+
+  let anhMap: Record<string, any> = {};
+  if (fs.existsSync(anhPath)) {
+    try {
+      anhMap = JSON.parse(fs.readFileSync(anhPath, "utf-8"));
     } catch {
       // bỏ qua nếu lỗi
     }
@@ -138,6 +148,7 @@ function loadSnapshotData(slug: string) {
       quanAns,
       cafes,
       khachSans,
+      hinhAnh: anhMap[slug] || undefined,
     };
   } catch {
     return null;

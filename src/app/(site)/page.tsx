@@ -21,11 +21,21 @@ function docDanhSachDiemDenVaKhachSan(): {
 } {
   const dir = path.join(process.cwd(), "src/data/snapshots");
   const moTaPath = path.join(process.cwd(), "src/data/site/mo-ta-diem-den.json");
+  const anhPath = path.join(process.cwd(), "src/data/site/anh-diem-den.json");
 
   let moTaMap: Record<string, any> = {};
   if (fs.existsSync(moTaPath)) {
     try {
       moTaMap = JSON.parse(fs.readFileSync(moTaPath, "utf-8"));
+    } catch {
+      // bỏ qua nếu file lỗi
+    }
+  }
+
+  let anhMap: Record<string, any> = {};
+  if (fs.existsSync(anhPath)) {
+    try {
+      anhMap = JSON.parse(fs.readFileSync(anhPath, "utf-8"));
     } catch {
       // bỏ qua nếu file lỗi
     }
@@ -68,6 +78,7 @@ function docDanhSachDiemDenVaKhachSan(): {
           quocGia,
           ngayDuLieuFormatted: formatted,
           moTaNgan: moTa,
+          hinhAnh: anhMap[item.slug] || undefined,
         });
 
         // Lấy 1 khách sạn từ mỗi điểm đến (tối đa 4 khách sạn từ 4 điểm đến khác nhau)
