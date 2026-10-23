@@ -173,7 +173,7 @@ export function GioiHanScreen() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, lineHeight: 1.6, color: "var(--color-text-sub)" }}>
               <p style={{ margin: 0 }}>
-                Để tập trung tối ưu năng lực thuật toán phân bổ ngân sách thông minh, ứng dụng KHÔNG bao gồm các nghiệp vụ thương mại sau:
+                Để tập trung tối ưu năng lực thuật toán phân bổ và cân đối ngân sách, ứng dụng KHÔNG bao gồm các nghiệp vụ thương mại sau:
               </p>
               <ul style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: 8 }}>
                 <li><strong>Không đặt vé thật hay phòng khách sạn thật:</strong> Ứng dụng cung cấp kế hoạch tham khảo, không tích hợp cổng đặt phòng trực tiếp.</li>

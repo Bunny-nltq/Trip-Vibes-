@@ -166,13 +166,13 @@ export function B7XacNhanScreen() {
         detail: it.noiDung,
         amount:
           it.thanhTien === 0
-            ? "Miễn phí"
+            ? (it.hangMuc === "Vui chơi" ? "Chưa có giá" : "Miễn phí")
             : `${it.thanhTien.toLocaleString("vi-VN")} đ`,
       }))
     : [
         { label: "Chiều đi", detail: "Di chuyển chiều đi · Đã lên lịch", amount: "1.960.000 đ" },
         { label: "Chỗ ở", detail: "Khách sạn trung tâm · 2 đêm · buffet sáng · hồ bơi", amount: "2.200.000 đ" },
-        { label: "Ngày 1", detail: "Điểm tham quan trung tâm", amount: "Miễn phí" },
+        { label: "Ngày 1", detail: "Điểm tham quan trung tâm", amount: "Chưa có giá" },
         { label: "Ngày 2", detail: "Khu danh thắng, Di sản văn hóa", amount: "320.000 đ" },
         { label: "Ngày 3", detail: "Khu du lịch sinh thái", amount: "1.300.000 đ" },
         { label: "Ăn uống", detail: "Ước tính các bữa ăn cho 2 người", amount: "1.800.000 đ" },
@@ -215,6 +215,8 @@ export function B7XacNhanScreen() {
                       color:
                         r.amount === "Miễn phí"
                           ? "var(--success)"
+                          : r.amount === "Chưa có giá"
+                          ? "var(--g500)"
                           : "var(--navy)",
                       whiteSpace: "nowrap",
                     }}

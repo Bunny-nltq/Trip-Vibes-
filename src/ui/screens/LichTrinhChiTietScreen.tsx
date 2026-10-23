@@ -429,7 +429,11 @@ export function LichTrinhChiTietScreen({
                   {/* Cột giá */}
                   <div style={{ textAlign: "right", minWidth: 120 }}>
                     <div style={{ fontSize: 15, fontWeight: 700, color: "var(--color-text)" }}>
-                      {item.thanhTien > 0 ? `${item.thanhTien.toLocaleString("vi-VN")} đ` : "Miễn phí"}
+                      {item.thanhTien > 0
+                        ? `${item.thanhTien.toLocaleString("vi-VN")} đ`
+                        : item.hangMuc === "Vui chơi"
+                        ? "Chưa có giá"
+                        : "Miễn phí"}
                     </div>
                     <div style={{ fontSize: 11, color: "var(--color-text-sub)", marginTop: 2 }}>
                       Giá ước tính

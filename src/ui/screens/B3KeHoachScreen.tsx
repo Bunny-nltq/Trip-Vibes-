@@ -71,25 +71,25 @@ function getTagClass(hangMuc: string): string {
 function getLyDoDuPhongText(lyDo?: string): string {
   switch (lyDo) {
     case "het_luot_ai":
-      return "hệ thống đã hết hạn mức lượt xử lý";
+      return "hệ thống đã đạt giới hạn lượt xử lý AI";
     case "qua_thoi_gian":
-      return "thời gian xử lý vượt quá giới hạn";
+      return "thời gian xử lý AI vượt quá giới hạn";
     case "loi_mang_ai":
-      return "lỗi kết nối mạng tới dịch vụ phân tích";
+      return "lỗi kết nối mạng tới dịch vụ AI";
     case "ai_khong_sua_duoc_ngan_sach":
-      return "chưa cân đối được chi phí trong ngân sách";
+      return "AI chưa cân đối được chi phí trong ngân sách";
     case "vuot_so_luot_goi_ai":
-      return "đã đạt số lượt tương tác tối đa cho phép";
+      return "đã đạt số lượt tương tác AI tối đa cho phép";
     case "gioi_han_luot_ai":
-      return "đã đạt giới hạn lượt dùng trong ngày; kế hoạch được lập bằng quy tắc tự động";
+      return "đã đạt giới hạn lượt dùng AI trong ngày";
     case "gioi_han_ip":
-      return "Đã đạt giới hạn lượt dùng trong giờ này; kế hoạch được lập bằng quy tắc tự động";
+      return "đã đạt giới hạn lượt dùng trong giờ này";
     case "gioi_han_ngay":
-      return "Đã đạt giới hạn lượt dùng trong ngày; kế hoạch được lập bằng quy tắc tự động";
+      return "đã đạt giới hạn lượt dùng trong ngày";
     case "live_ai_tat":
-      return "kế hoạch được lập theo quy tắc tự động";
+      return "tính năng AI đang tắt";
     default:
-      return "kế hoạch được lập theo quy tắc tự động";
+      return "tính năng AI đang tắt";
   }
 }
 
@@ -348,37 +348,35 @@ export function B3KeHoachScreen() {
                 {(() => {
                   const currentLyDo =
                     lyDoDuPhong ?? planResult?.lyDoDuPhong ?? (plan as any)?.lyDoDuPhong;
-                  if (currentLyDo === "gioi_han_ip" || currentLyDo === "gioi_han_ngay") {
-                    return `${getLyDoDuPhongText(currentLyDo)}. Bạn vẫn có thể đổi từng mục.`;
-                  }
-                  return `Kế hoạch này được lập bằng quy tắc tự động (phương án rẻ nhất phù hợp yêu cầu) vì ${getLyDoDuPhongText(
-                    currentLyDo
-                  )}. Bạn vẫn có thể đổi từng mục.`;
+                  const lyDoText = getLyDoDuPhongText(currentLyDo);
+                  return `Kế hoạch này được lập bằng thuật toán quy tắc tự động (tối ưu thời gian di chuyển trong ngân sách) do ${lyDoText}. Bạn vẫn có thể chủ động đổi từng mục.`;
                 })()}
               </div>
-              <div style={{ marginTop: 8 }}>
-                <button
-                  type="button"
-                  onClick={() => retryPlan()}
-                  className="btn"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "4px 10px",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    borderRadius: "var(--r-sm)",
-                    background: "var(--color-surface)",
-                    border: "1px solid var(--color-border)",
-                    color: "var(--color-success-text)",
-                    cursor: "pointer",
-                  }}
-                >
-                  <RefreshCw size={13} />
-                  Thử lại
-                </button>
-              </div>
+              {aiBat && (
+                <div style={{ marginTop: 8 }}>
+                  <button
+                    type="button"
+                    onClick={() => retryPlan()}
+                    className="btn"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: "4px 10px",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      borderRadius: "var(--r-sm)",
+                      background: "var(--color-surface)",
+                      border: "1px solid var(--color-border)",
+                      color: "var(--color-success-text)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <RefreshCw size={13} />
+                    <span>Thử lại bằng AI</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -492,7 +490,15 @@ export function B3KeHoachScreen() {
                         <div className="item-sub" style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 4 }}>
                           {item.soLuong > 1 && (
                             <span>
-                              {item.soLuong} vé/phần × {item.donGia.toLocaleString("vi-VN")} đ
+                              {item.soLuong}{" "}
+                              {item.hangMuc === "Ăn uống"
+                                ? "suất"
+                                : item.hangMuc === "Di chuyển" || item.hangMuc === "Vui chơi"
+                                ? "vé"
+                                : item.hangMuc === "Chỗ ở"
+                                ? "phòng"
+                                : "phần"}{" "}
+                              × {item.donGia.toLocaleString("vi-VN")} đ
                             </span>
                           )}
 
@@ -594,7 +600,11 @@ export function B3KeHoachScreen() {
 
                       <div className="item-amount" style={{ textAlign: "right", minWidth: 120 }}>
                         {item.thanhTien === 0 ? (
-                          <span style={{ color: "var(--success)" }}>Miễn phí</span>
+                          item.hangMuc === "Vui chơi" ? (
+                            <span style={{ color: "var(--color-text-sub)", fontSize: 13 }}>Chưa có giá vé</span>
+                          ) : (
+                            <span style={{ color: "var(--success)" }}>Miễn phí</span>
+                          )
                         ) : item.giaGoc && item.giaGoc.tienTe !== "VND" ? (
                           <div>
                             <div style={{ fontWeight: 700, fontSize: 13, color: "var(--navy)" }}>

@@ -61,10 +61,20 @@ export async function POST(req: Request) {
     } else if (payload.request && typeof payload.request === "object") {
       const parsed = TripRequestSchema.safeParse(payload.request);
       if (!parsed.success) {
+        const issues = parsed.error.issues;
+        const soNgayIssue = issues.find((iss) => iss.path.includes("soNgay"));
+        let thongBaoLoi = "Dữ liệu yêu cầu chưa đúng định dạng hợp lệ.";
+        if (soNgayIssue) {
+          thongBaoLoi = "Số ngày chuyến đi phải từ 2 đến 7 ngày.";
+        } else if (issues.length > 0) {
+          const first = issues[0];
+          thongBaoLoi = `Thông tin '${first.path.join(".")}' không hợp lệ: ${first.message}.`;
+        }
         return NextResponse.json(
           {
             ok: false,
-            error: "Dữ liệu request không đúng định dạng schema: " + parsed.error.message,
+            maLoi: "du_lieu_khong_hop_le",
+            error: thongBaoLoi,
           },
           { status: 400 }
         );

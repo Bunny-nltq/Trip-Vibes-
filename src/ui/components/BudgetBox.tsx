@@ -108,7 +108,13 @@ export function BudgetBox({
           <div key={c.label} className="cat-row">
             <div className="cat-head">
               <span style={{ color: "var(--g700)" }}>{c.label}</span>
-              <span style={{ fontWeight: 600 }}>{fmt(c.amount)}</span>
+              <span style={{ fontWeight: 600 }}>
+                {c.amount > 0
+                  ? fmt(c.amount)
+                  : c.label === "Vui chơi"
+                  ? "Chưa có giá"
+                  : fmt(0)}
+              </span>
             </div>
             <div className="cat-bar">
               <div

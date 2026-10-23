@@ -285,5 +285,34 @@ describe("Kiểm tra API Lập kế hoạch bằng Quy tắc & Ca biên (Không 
       const data = await res.json();
       expect(data.ok).toBe(false);
     });
+
+    it("Ca biên 5: Gửi 8 ngày (ngoài phạm vi 2-7 ngày) -> trả HTTP 400 kèm thông báo tiếng Việt thân thiện, không lộ mã zod", async () => {
+      const req = new Request("http://localhost:3000/api/plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          request: {
+            diemDen: "Hà Nội",
+            soNgay: 8,
+            soNguoi: 2,
+            ngansachTongVND: 15000000,
+            sothich: [],
+            tranh: [],
+            ghiChu: [],
+            thieu: [],
+            cauHoiLamRo: [],
+            canhBao: [],
+          },
+        }),
+      });
+
+      const res = await planPost(req);
+      expect(res.status).toBe(400);
+      const data = await res.json();
+      expect(data.ok).toBe(false);
+      expect(data.error).toBe("Số ngày chuyến đi phải từ 2 đến 7 ngày.");
+      expect(data.error).not.toContain("too_big");
+      expect(data.error).not.toContain("maximum");
+    });
   });
 });

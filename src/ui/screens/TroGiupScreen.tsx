@@ -83,7 +83,7 @@ export function TroGiupScreen() {
             Trung Tâm Hỗ Trợ & Hướng Dẫn
           </h1>
           <p style={{ fontSize: 16, color: "var(--color-text-sub)", margin: 0, lineHeight: 1.6 }}>
-            Tìm hiểu quy trình lập kế hoạch du lịch thông minh, cách theo dõi chi tiêu và giải thích chi tiết các cờ cảnh báo rủi ro.
+            Tìm hiểu quy trình lập kế hoạch du lịch, cách theo dõi chi tiêu và giải thích chi tiết các cờ cảnh báo rủi ro.
           </p>
         </div>
 
