@@ -1,6 +1,8 @@
 {
-  "ghiChu": "Danh sách thành phố có ga tàu khách liên tỉnh. ỨNG VIÊN do người dùng đưa, CHƯA đối chiếu với dsvn.vn",
-  "trangThai": "chua_doi_chieu",
+  "ghiChu": "Danh sách thành phố có ga tàu khách liên tỉnh đã đối chiếu theo mạng lưới đường sắt dsvn.vn (Tổng công ty Đường sắt Việt Nam). TP Hà Tĩnh không có ga trực tiếp (ga gần nhất là Yên Trung/Hương Phố) nên đã loại bỏ để tránh gây hiểu nhầm.",
+  "trangThai": "da_doi_chieu",
+  "ngayDoiChieu": "2026-10-23",
+  "nguon": "dsvn.vn",
   "thanhPho": [
     "Hà Nội",
     "Hải Phòng",
@@ -10,7 +12,6 @@
     "Nam Định",
     "Thanh Hóa",
     "Vinh",
-    "Hà Tĩnh",
     "Đồng Hới",
     "Đông Hà",
     "Huế",

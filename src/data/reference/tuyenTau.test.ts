@@ -41,4 +41,8 @@ describe("tuyenTau – coTuyenTau (đáp án người dùng B3b)", () => {
   it("coTuyenTau('TP.HCM', 'Vũng Tàu') -> false", () => {
     expect(coTuyenTau("TP.HCM", "Vũng Tàu")).toBe(false);
   });
+
+  it("coTuyenTau('TP.HCM', 'Hà Tĩnh') -> false (đã đối chiếu dsvn.vn: TP Hà Tĩnh không có ga trực tiếp)", () => {
+    expect(coTuyenTau("TP.HCM", "Hà Tĩnh")).toBe(false);
+  });
 });

@@ -1,0 +1,568 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90mD:/Trip_Vibes[39m
+
+ [32mΓ£ô[39m src/core/gioiHanAI.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32mΓ£ô[39m src/data/live/geocodeClient.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32mΓ£ô[39m src/core/normalizeRequest.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32mΓ£ô[39m src/core/lapOTrong.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32mΓ£ô[39m src/core/validatePlan.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32mΓ£ô[39m src/core/buildPlan.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32mΓ£ô[39m src/core/lapKeHoachTuDong.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32mΓ£ô[39m src/core/b1a.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32mΓ£ô[39m src/core/diffPlan.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+node.exe : [90mstderr[2m | src/data/live/LiveDataSource.test.ts[2m > [22m[2mLiveDataSource & Data Pipeline Tests 
+(B╞░ß╗¢c 19)[2m > [22m[2mY├¬u cß║ºu 4: Kiß╗âm thß╗¡ LiveDataSource v├á ch├¡nh s├ích dß╗» liß╗çu[2m > 
+[22m[2mthß╗⌐ tß╗▒ dß╗▒ ph├▓ng: live (hoß║╖c cache), rß╗ôi snapshot ─É├ÜNG ─æiß╗âm ─æß║┐n; KH├öNG c├│ mock v├á KH├öNG 
+d├╣ng snapshot cß╗ºa ─æiß╗âm ─æß║┐n kh├íc; hß║┐t cß║ú hai trß║ú khong_du_du_lieu n├¬u loß║íi thiß║┐u
+At C:\Program Files\nodejs\npx.ps1:29 char:3
++   & $NODE_EXE $NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([90mstderr[2m... loß║íi thiß║┐u:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[22m[39m[LiveDataSource] getKhachSans lß╗ùi: Network Error
+
+[90mstderr[2m | src/data/live/LiveDataSource.test.ts[2m > [22m[2mLiveDataSource & Data Pipeline Tests (B╞░ß╗¢c 
+19)[2m > [22m[2mY├¬u cß║ºu 4: Kiß╗âm thß╗¡ LiveDataSource v├á ch├¡nh s├ích dß╗» liß╗çu[2m > [22m[2mthß╗⌐ tß╗▒ 
+dß╗▒ ph├▓ng: live (hoß║╖c cache), rß╗ôi snapshot ─É├ÜNG ─æiß╗âm ─æß║┐n; KH├öNG c├│ mock v├á KH├öNG d├╣ng snapshot 
+cß╗ºa ─æiß╗âm ─æß║┐n kh├íc; hß║┐t cß║ú hai trß║ú khong_du_du_lieu n├¬u loß║íi thiß║┐u
+[22m[39m[LiveDataSource] getQuanAns lß╗ùi: Network Error
+
+ [32mΓ£ô[39m src/core/mealTimes.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+[90mstderr[2m | src/data/live/LiveDataSource.test.ts[2m > [22m[2mLiveDataSource & Data Pipeline Tests (B╞░ß╗¢c 
+19)[2m > [22m[2mY├¬u cß║ºu 4: Kiß╗âm thß╗¡ LiveDataSource v├á ch├¡nh s├ích dß╗» liß╗çu[2m > [22m[2mthß╗⌐ tß╗▒ 
+dß╗▒ ph├▓ng: live (hoß║╖c cache), rß╗ôi snapshot ─É├ÜNG ─æiß╗âm ─æß║┐n; KH├öNG c├│ mock v├á KH├öNG d├╣ng snapshot 
+cß╗ºa ─æiß╗âm ─æß║┐n kh├íc; hß║┐t cß║ú hai trß║ú khong_du_du_lieu n├¬u loß║íi thiß║┐u
+[22m[39m[LiveDataSource] getHoatDongs lß╗ùi: Network Error
+
+ [32mΓ£ô[39m src/data/snapshots/snapshotAudit.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32mΓ£ô[39m src/data/live/LiveDataSource.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 64[2mms[22m[39m
+ [32mΓ£ô[39m src/core/formB1.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32mΓ£ô[39m src/core/bill/checkBill.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m src/core/confirmExpense.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m src/core/locUngVienTheoNganSach.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m src/core/soSanhThucTe.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32mΓ£ô[39m src/core/donOKhongKhaDung.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m src/core/tripProgress.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32mΓ£ô[39m src/core/uocLuongPhuongTien.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m eval/tonghopRules.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2ma) provider trß║ú 429 mß╗ìi lß║ºn: phuongThucLap 'quy_tac', lyDoDuPhong 'het_luot_ai', soLanGoiAI nhß╗Å h╞ín hoß║╖c bß║▒ng 2, tß╗òng thß╗¥i gian giß║ú lß║¡p d╞░ß╗¢i 10 gi├óy
+[22m[39m[planWithRepair] Initializing LiveDataSource for: ─É├á Lß║ít
+[planWithRepair] Fetching all data via Promise.all...
+
+ [32mΓ£ô[39m eval/lib/meta.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(a) resume bß╗Å qua kß╗ïch bß║ún ─æ├ú xong v├á kh├┤ng gß╗ìi provider/planFn
+[22m[39m================================================================================
+EVAL: RUN-AI-RATE (B╞░ß╗¢c 15: Chß║íy tiß║┐p ─æ╞░ß╗úc, l╞░u tiß║┐n tr├¼nh tß╗½ng kß╗ïch bß║ún)
+================================================================================
+
+[Cß╗¥ --toi-da=1]: Tß╗æi ─æa 1 kß╗ïch bß║ún Mß╗ÜI mß╗ùi lß║ºn chß║íy.
+
+[Tiß║┐n tr├¼nh]: ─É├ú nß║íp 1 kß╗ïch bß║ún ─æ├ú xong tß╗½ D:\Trip_Vibes\eval\results\test-temp\progress-resume.json.
+
+[1/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (1.3x)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2ma) provider trß║ú 429 mß╗ìi lß║ºn: phuongThucLap 'quy_tac', lyDoDuPhong 'het_luot_ai', soLanGoiAI nhß╗Å h╞ín hoß║╖c bß║▒ng 2, tß╗òng thß╗¥i gian giß║ú lß║¡p d╞░ß╗¢i 10 gi├óy
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(a) resume bß╗Å qua kß╗ïch bß║ún ─æ├ú xong v├á kh├┤ng gß╗ìi provider/planFn
+[22m[39m -> [─Éß╗îC Lß║áI]: Kß╗ïch bß║ún ─æ├ú xong tß╗½ lß║ºn chß║íy ng├áy 2026-10-20 (0 l╞░ß╗út Gemini).
+[2/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (2.0x)...
+
+[90mstdout[2m | eval/lib/phanLoai.test.ts[2m > [22m[2meval/lib/phanLoai[2m > [22m[2mIntegration: runAiRate vß╗¢i ph├ón loß║íi v├á dß╗½ng sß╗¢m[2m > [22m[2mkß╗ïch bß║ún mß╗¢i 'khong_do_duoc' kh├┤ng l╞░u v├áo tiß║┐n tr├¼nh v├á dß╗½ng sß╗¢m khi 2 lß║ºn li├¬n tiß║┐p
+[22m[39m================================================================================
+EVAL: RUN-AI-RATE (B╞░ß╗¢c 15: Chß║íy tiß║┐p ─æ╞░ß╗úc, l╞░u tiß║┐n tr├¼nh tß╗½ng kß╗ïch bß║ún)
+================================================================================
+
+[Cß╗¥ --toi-da=5]: Tß╗æi ─æa 5 kß╗ïch bß║ún Mß╗ÜI mß╗ùi lß║ºn chß║íy.
+
+[1/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (1.3x)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mb) provider treo v├┤ hß║ín: sau PLAN_TIME_BUDGET_MS (giß║ú lß║¡p 50.000 ms) trß║ú 'quy_tac', lyDoDuPhong 'qua_thoi_gian'
+[22m[39m[planWithRepair] Initializing LiveDataSource for: ─É├á Lß║ít
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mb) provider treo v├┤ hß║ín: sau PLAN_TIME_BUDGET_MS (giß║ú lß║¡p 50.000 ms) trß║ú 'quy_tac', lyDoDuPhong 'qua_thoi_gian'
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+ [32mΓ£ô[39m src/core/oKhaDung.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[planWithRepair] Initializing LiveDataSource for: ─É├á Lß║ít
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(a) resume bß╗Å qua kß╗ïch bß║ún ─æ├ú xong v├á kh├┤ng gß╗ìi provider/planFn
+[22m[39m -> Ng├ón s├ích: 10.000.000 ─æ (tß╗æi thiß╗âu: 4.985.600 ─æ). ─Éang chß║íy planWithRepair (kß╗ïch bß║ún mß╗¢i #1)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+ [32mΓ£ô[39m scripts/lib/smokeRules.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[PlanAgent] Step 1: Received 3 function calls: [ [32m'timPhuongTien'[39m, [32m'timPhuongTien'[39m, [32m'timKhachSan'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[PlanAgent] Step 2: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[PlanAgent] Step 2: Received 1 function calls: [ [32m'chotKeHoach'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[PlanAgent] Step 1: Received 3 function calls: [ [32m'timPhuongTien'[39m, [32m'timPhuongTien'[39m, [32m'timKhachSan'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[PlanAgent] Step 2: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[PlanAgent] Step 2: Received 1 function calls: [ [32m'chotKeHoach'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[PlanAgent] Step 1: Received 3 function calls: [ [32m'timPhuongTien'[39m, [32m'timPhuongTien'[39m, [32m'timKhachSan'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[PlanAgent] Step 2: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | eval/lib/phanLoai.test.ts[2m > [22m[2meval/lib/phanLoai[2m > [22m[2mIntegration: runAiRate vß╗¢i ph├ón loß║íi v├á dß╗½ng sß╗¢m[2m > [22m[2mkß╗ïch bß║ún mß╗¢i 'khong_do_duoc' kh├┤ng l╞░u v├áo tiß║┐n tr├¼nh v├á dß╗½ng sß╗¢m khi 2 lß║ºn li├¬n tiß║┐p
+[22m[39m -> Ng├ón s├ích: 6.500.000 ─æ (tß╗æi thiß╗âu: 4.985.600 ─æ). ─Éang chß║íy planWithRepair (kß╗ïch bß║ún mß╗¢i #1)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(a) resume bß╗Å qua kß╗ïch bß║ún ─æ├ú xong v├á kh├┤ng gß╗ìi provider/planFn
+[22m[39m -> Kß║┐t quß║ú: ai  | 5.000.000 ─æ (50.0%) | ├ö: 1/4 (tß╗æi ─æa 4) | Di chuyß╗ân: 4.6% | L╞░ß╗út AI: 1 | 1ms
+[3/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: H├á Nß╗Öi (1.3x)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mc) provider trß║ú kß║┐ hoß║ích v╞░ß╗út ng├ón s├ích 3 lß║ºn li├¬n tiß║┐p v├á toiThieuVND <= ng├ón s├ích: 'quy_tac', lyDoDuPhong 'ai_khong_sua_duoc_ngan_sach', tongVND <= ng├ón s├ích
+[22m[39m[PlanAgent] Step 2: Received 1 function calls: [ [32m'chotKeHoach'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2md) provider trß║ú kß║┐ hoß║ích hß╗úp lß╗ç: phuongThucLap 'ai', kh├┤ng gß╗ìi dß╗▒ ph├▓ng
+[22m[39m[planWithRepair] Initializing LiveDataSource for: ─É├á Lß║ít
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2md) provider trß║ú kß║┐ hoß║ích hß╗úp lß╗ç: phuongThucLap 'ai', kh├┤ng gß╗ìi dß╗▒ ph├▓ng
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2md) provider trß║ú kß║┐ hoß║ích hß╗úp lß╗ç: phuongThucLap 'ai', kh├┤ng gß╗ìi dß╗▒ ph├▓ng
+[22m[39m[PlanAgent] Step 1: Received 3 function calls: [ [32m'timPhuongTien'[39m, [32m'timPhuongTien'[39m, [32m'timKhachSan'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2md) provider trß║ú kß║┐ hoß║ích hß╗úp lß╗ç: phuongThucLap 'ai', kh├┤ng gß╗ìi dß╗▒ ph├▓ng
+[22m[39m[PlanAgent] Step 2: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(a) resume bß╗Å qua kß╗ïch bß║ún ─æ├ú xong v├á kh├┤ng gß╗ìi provider/planFn
+[22m[39m -> ─É├ú ─æß║ít giß╗¢i hß║ín tß╗æi ─æa 1 kß╗ïch bß║ún Mß╗ÜI. Dß╗½ng tß║íi kß╗ïch bß║ún n├áy.
+
+================================================================================
+Bß║óNG Kß║╛T QUß║ó Kß╗èCH Bß║óN (2/8 kß╗ïch bß║ún hß╗úp lß╗ç vß╗¢i quy tß║»c hiß╗çn tß║íi (bß╗Å qua 2 kß╗ïch bß║ún Ph├║ Quß╗æc: kh├┤ng c├│ snapshot)):
+================================================================================
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé (index) Γöé STT Γöé ─Éiß╗âm ─æß║┐n  Γöé Hß╗ç     Γöé Ng├ón s├ích    Γöé Ph╞░╞íng thß╗⌐c Γöé L├╜ do Γöé L╞░ß╗út AI Γöé Tß╗òng VND    Γöé % NS    Γöé ├ö                Γöé Di chuyß╗ân Γöé Tß╗ë lß╗ç DC Γöé CB nhß║╣ Γöé Nguß╗ôn                         Γöé ms   Γöé
+Γö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ
+Γöé 0       Γöé [33m1[39m   Γöé [32m'─É├á Nß║╡ng'[39m Γöé [32m'1.3x'[39m Γöé [32m'7.500.000'[39m  Γöé [32m'ai'[39m        Γöé [32m'-'[39m   Γöé [33m8[39m       Γöé [32m'6.044.000'[39m Γöé [32m'80.6%'[39m Γöé [32m'3/3 (tß╗æi ─æa 4)'[39m Γöé [32m'1334p'[39m   Γöé [32m'30.9%'[39m  Γöé [33m0[39m      Γöé [32m'tß╗½ lß║ºn chß║íy ng├áy 2026-10-20'[39m Γöé [33m5000[39m Γöé
+Γöé 1       Γöé [33m2[39m   Γöé [32m'─É├á Nß║╡ng'[39m Γöé [32m'2.0x'[39m Γöé [32m'10.000.000'[39m Γöé [32m'ai'[39m        Γöé [32m'-'[39m   Γöé [33m1[39m       Γöé [32m'5.000.000'[39m Γöé [32m'50.0%'[39m Γöé [32m'1/4 (tß╗æi ─æa 4)'[39m Γöé [32m'200p'[39m    Γöé [32m'4.6%'[39m   Γöé [33m0[39m      Γöé [32m'mß╗¢i'[39m                         Γöé [33m1[39m    Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+
+================================================================================
+Tß╗öNG Hß╗óP (2/8 kß╗ïch bß║ún hß╗úp lß╗ç vß╗¢i quy tß║»c hiß╗çn tß║íi (bß╗Å qua 2 kß╗ïch bß║ún Ph├║ Quß╗æc: kh├┤ng c├│ snapshot)):
+ΓÜá∩╕Å CH╞»A ─Éß╗ª Mß║¬U, kh├┤ng d├╣ng l├ám kß║┐t luß║¡n
+- Sß╗æ ca AI lß║¡p hß╗úp lß╗ç ngay lß║ºn ─æß║ºu: 1/2
+- Sß╗æ ca AI lß║¡p hß╗úp lß╗ç sau sß╗¡a: 1/2
+- Sß╗æ ca phß║úi dß╗▒ ph├▓ng: 0/2 (kh├┤ng c├│)
+- Trung b├¼nh sß╗æ l╞░ß╗út Gemini: 4.5
+- Tß╗òng sß╗æ l╞░ß╗út Gemini ─æ├ú d├╣ng: 9
+- ms trung b├¼nh: 2501 ms
+- Tiß║┐n tr├¼nh ─æ├ú l╞░u tß║íi: D:\Trip_Vibes\eval\results\test-temp\progress-resume.json
+- B├ío c├ío kß║┐t quß║ú tß║íi: D:\Trip_Vibes\eval\results\test-temp\result-resume.json
+================================================================================
+
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2md) provider trß║ú kß║┐ hoß║ích hß╗úp lß╗ç: phuongThucLap 'ai', kh├┤ng gß╗ìi dß╗▒ ph├▓ng
+[22m[39m[PlanAgent] Step 2: Received 1 function calls: [ [32m'chotKeHoach'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2me) ng├ón s├ích nhß╗Å h╞ín mß╗⌐c tß╗æi thiß╗âu: khong_the_dat_ngan_sach, soLanGoiAI = 0
+[22m[39m[planWithRepair] Initializing LiveDataSource for: ─É├á Lß║ít
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2me) ng├ón s├ích nhß╗Å h╞ín mß╗⌐c tß╗æi thiß╗âu: khong_the_dat_ngan_sach, soLanGoiAI = 0
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[planWithRepair] Initializing LiveDataSource for: ─É├á Lß║ít
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+[PlanAgent] Step 1: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 1: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 2: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 2: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 3: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 3: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 4: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 4: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 5: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 5: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 6: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 6: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 7: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 7: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 8: Sending request to Gemini (test-model)...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (a) provider lu├┤n trß║ú lß╗çnh c├┤ng cß╗Ñ v├á kh├┤ng bao giß╗¥ chß╗æt: dß╗½ng sau ─æ├║ng 8 l╞░ß╗út, phuongThucLap 'quy_tac', lyDoDuPhong 'vuot_so_luot_goi_ai', soLanGoiAI = 8
+[22m[39m[PlanAgent] Step 8: Received 1 function calls: [ [32m'timPhuongTien'[39m ]
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (c) khaThi false th├¼ KH├öNG gß╗ìi provider (soLanGoiAI = 0) v├á trß║ú khong_the_dat_ngan_sach
+[22m[39m[planWithRepair] Initializing LiveDataSource for: ─É├á Lß║ít
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/ai/planWithRepair.test.ts[2m > [22m[2mplanWithRepair - T├¡ch hß╗úp giß╗¢i hß║ín thß╗¥i gian & dß╗▒ ph├▓ng quy tß║»c (Mß╗Ñc 4)[2m > [22m[2mB╞░ß╗¢c 14 (c) khaThi false th├¼ KH├öNG gß╗ìi provider (soLanGoiAI = 0) v├á trß║ú khong_the_dat_ngan_sach
+[22m[39m[planWithRepair] Data ready: 4 transports, 3 hotels, 2 food, 3 activities
+
+[90mstdout[2m | eval/lib/phanLoai.test.ts[2m > [22m[2meval/lib/phanLoai[2m > [22m[2mIntegration: runAiRate vß╗¢i ph├ón loß║íi v├á dß╗½ng sß╗¢m[2m > [22m[2mkß╗ïch bß║ún mß╗¢i 'khong_do_duoc' kh├┤ng l╞░u v├áo tiß║┐n tr├¼nh v├á dß╗½ng sß╗¢m khi 2 lß║ºn li├¬n tiß║┐p
+[22m[39m -> [KH├öNG L╞»U TIß║╛N TR├îNH]: Kß╗ïch bß║ún ph├ón loß║íi l├á "khong_do_duoc" (qua_thoi_gian), KH├öNG l╞░u v├áo tiß║┐n tr├¼nh nh╞░ ho├án tß║Ñt.
+ -> Kß║┐t quß║ú: quy_tac (qua_thoi_gian) | 0 ─æ (0.0%) | ├ö: 0/4 (tß╗æi ─æa 4) | Di chuyß╗ân: 0.0% | L╞░ß╗út AI: 0 | 0ms
+[2/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (2.0x)...
+
+[90mstdout[2m | eval/lib/phanLoai.test.ts[2m > [22m[2meval/lib/phanLoai[2m > [22m[2mIntegration: runAiRate vß╗¢i ph├ón loß║íi v├á dß╗½ng sß╗¢m[2m > [22m[2mkß╗ïch bß║ún mß╗¢i 'khong_do_duoc' kh├┤ng l╞░u v├áo tiß║┐n tr├¼nh v├á dß╗½ng sß╗¢m khi 2 lß║ºn li├¬n tiß║┐p
+[22m[39m -> Ng├ón s├ích: 10.000.000 ─æ (tß╗æi thiß╗âu: 4.985.600 ─æ). ─Éang chß║íy planWithRepair (kß╗ïch bß║ún mß╗¢i #2)...
+
+ [32mΓ£ô[39m src/ai/planWithRepair.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+[90mstdout[2m | eval/lib/phanLoai.test.ts[2m > [22m[2meval/lib/phanLoai[2m > [22m[2mIntegration: runAiRate vß╗¢i ph├ón loß║íi v├á dß╗½ng sß╗¢m[2m > [22m[2mkß╗ïch bß║ún mß╗¢i 'khong_do_duoc' kh├┤ng l╞░u v├áo tiß║┐n tr├¼nh v├á dß╗½ng sß╗¢m khi 2 lß║ºn li├¬n tiß║┐p
+[22m[39m -> [KH├öNG L╞»U TIß║╛N TR├îNH]: Kß╗ïch bß║ún ph├ón loß║íi l├á "khong_do_duoc" (qua_thoi_gian), KH├öNG l╞░u v├áo tiß║┐n tr├¼nh nh╞░ ho├án tß║Ñt.
+ -> Kß║┐t quß║ú: quy_tac (qua_thoi_gian) | 0 ─æ (0.0%) | ├ö: 0/4 (tß╗æi ─æa 4) | Di chuyß╗ân: 0.0% | L╞░ß╗út AI: 0 | 0ms
+Dß╗¬NG: AI kh├┤ng phß║ún hß╗ôi 2 lß║ºn li├¬n tiß║┐p. Kiß╗âm tra GEMINI_MODEL, mß║íng v├á hß║ín mß╗⌐c.
+
+================================================================================
+Kß║┐t quß║ú c┼⌐, kh├┤ng d├╣ng:
+================================================================================
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé (index) Γöé STT Γöé ─Éiß╗âm ─æß║┐n  Γöé Hß╗ç     Γöé Ng├ón s├ích    Γöé Ph╞░╞íng thß╗⌐c Γöé L├╜ do           Γöé L╞░ß╗út AI Γöé Tß╗òng VND Γöé % NS   Γöé ├ö                Γöé Di chuyß╗ân Γöé Tß╗ë lß╗ç DC Γöé CB nhß║╣ Γöé Nguß╗ôn Γöé ms Γöé
+Γö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöñ
+Γöé 0       Γöé [33m1[39m   Γöé [32m'─É├á Nß║╡ng'[39m Γöé [32m'1.3x'[39m Γöé [32m'6.500.000'[39m  Γöé [32m'quy_tac'[39m   Γöé [32m'qua_thoi_gian'[39m Γöé [33m0[39m       Γöé [32m'0'[39m      Γöé [32m'0.0%'[39m Γöé [32m'0/4 (tß╗æi ─æa 4)'[39m Γöé [32m'0p'[39m      Γöé [32m'0.0%'[39m   Γöé [33m0[39m      Γöé [32m'mß╗¢i'[39m Γöé [33m0[39m  Γöé
+Γöé 1       Γöé [33m2[39m   Γöé [32m'─É├á Nß║╡ng'[39m Γöé [32m'2.0x'[39m Γöé [32m'10.000.000'[39m Γöé [32m'quy_tac'[39m   Γöé [32m'qua_thoi_gian'[39m Γöé [33m0[39m       Γöé [32m'0'[39m      Γöé [32m'0.0%'[39m Γöé [32m'0/4 (tß╗æi ─æa 4)'[39m Γöé [32m'0p'[39m      Γöé [32m'0.0%'[39m   Γöé [33m0[39m      Γöé [32m'mß╗¢i'[39m Γöé [33m0[39m  Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÿ
+
+================================================================================
+0/8 kß╗ïch bß║ún hß╗úp lß╗ç vß╗¢i quy tß║»c hiß╗çn tß║íi (bß╗Å qua 2 kß╗ïch bß║ún Ph├║ Quß╗æc: kh├┤ng c├│ snapshot). CH╞»A C├ô Kß║╛T QUß║ó
+- Tiß║┐n tr├¼nh ─æ├ú l╞░u tß║íi: D:\Trip_Vibes\eval\results\test-temp-phanloai\progress-early-stop.json
+- B├ío c├ío kß║┐t quß║ú tß║íi: D:\Trip_Vibes\eval\results\test-temp-phanloai\result-early-stop.json
+================================================================================
+
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(b) gß║╖p 429 ß╗ƒ kß╗ïch bß║ún thß╗⌐ 3 th├¼ l╞░u 2 kß╗ïch bß║ún ─æß║ºu v├á dß╗½ng
+[22m[39m================================================================================
+EVAL: RUN-AI-RATE (B╞░ß╗¢c 15: Chß║íy tiß║┐p ─æ╞░ß╗úc, l╞░u tiß║┐n tr├¼nh tß╗½ng kß╗ïch bß║ún)
+================================================================================
+
+[1/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (1.3x)...
+
+ [32mΓ£ô[39m eval/lib/phanLoai.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 67[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(b) gß║╖p 429 ß╗ƒ kß╗ïch bß║ún thß╗⌐ 3 th├¼ l╞░u 2 kß╗ïch bß║ún ─æß║ºu v├á dß╗½ng
+[22m[39m -> Ng├ón s├ích: 6.500.000 ─æ (tß╗æi thiß╗âu: 4.985.600 ─æ). ─Éang chß║íy planWithRepair (kß╗ïch bß║ún mß╗¢i #1)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(b) gß║╖p 429 ß╗ƒ kß╗ïch bß║ún thß╗⌐ 3 th├¼ l╞░u 2 kß╗ïch bß║ún ─æß║ºu v├á dß╗½ng
+[22m[39m -> Kß║┐t quß║ú: ai  | 5.000.000 ─æ (76.9%) | ├ö: 1/4 (tß╗æi ─æa 4) | Di chuyß╗ân: 4.6% | L╞░ß╗út AI: 1 | 1ms
+[2/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (2.0x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(b) gß║╖p 429 ß╗ƒ kß╗ïch bß║ún thß╗⌐ 3 th├¼ l╞░u 2 kß╗ïch bß║ún ─æß║ºu v├á dß╗½ng
+[22m[39m -> Ng├ón s├ích: 10.000.000 ─æ (tß╗æi thiß╗âu: 4.985.600 ─æ). ─Éang chß║íy planWithRepair (kß╗ïch bß║ún mß╗¢i #2)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(b) gß║╖p 429 ß╗ƒ kß╗ïch bß║ún thß╗⌐ 3 th├¼ l╞░u 2 kß╗ïch bß║ún ─æß║ºu v├á dß╗½ng
+[22m[39m -> Kß║┐t quß║ú: ai  | 5.000.000 ─æ (50.0%) | ├ö: 1/4 (tß╗æi ─æa 4) | Di chuyß╗ân: 4.6% | L╞░ß╗út AI: 1 | 0ms
+[3/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: H├á Nß╗Öi (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(b) gß║╖p 429 ß╗ƒ kß╗ïch bß║ún thß╗⌐ 3 th├¼ l╞░u 2 kß╗ïch bß║ún ─æß║ºu v├á dß╗½ng
+[22m[39m -> Ng├ón s├ích: 9.300.000 ─æ (tß╗æi thiß╗âu: 7.124.000 ─æ). ─Éang chß║íy planWithRepair (kß╗ïch bß║ún mß╗¢i #3)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(b) gß║╖p 429 ß╗ƒ kß╗ïch bß║ún thß╗⌐ 3 th├¼ l╞░u 2 kß╗ïch bß║ún ─æß║ºu v├á dß╗½ng
+[22m[39m
+================================================================================
+ΓÜá∩╕Å Gß║╢P 429: Dß╗½ng ngay. ─É├ú xong 2/8, c├▓n lß║íi: 6.
+================================================================================
+
+================================================================================
+Bß║óNG Kß║╛T QUß║ó Kß╗èCH Bß║óN (2/8 kß╗ïch bß║ún hß╗úp lß╗ç vß╗¢i quy tß║»c hiß╗çn tß║íi (bß╗Å qua 2 kß╗ïch bß║ún Ph├║ Quß╗æc: kh├┤ng c├│ snapshot)):
+================================================================================
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé (index) Γöé STT Γöé ─Éiß╗âm ─æß║┐n  Γöé Hß╗ç     Γöé Ng├ón s├ích    Γöé Ph╞░╞íng thß╗⌐c Γöé L├╜ do Γöé L╞░ß╗út AI Γöé Tß╗òng VND    Γöé % NS    Γöé ├ö                Γöé Di chuyß╗ân Γöé Tß╗ë lß╗ç DC Γöé CB nhß║╣ Γöé Nguß╗ôn Γöé ms Γöé
+Γö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöñ
+Γöé 0       Γöé [33m1[39m   Γöé [32m'─É├á Nß║╡ng'[39m Γöé [32m'1.3x'[39m Γöé [32m'6.500.000'[39m  Γöé [32m'ai'[39m        Γöé [32m'-'[39m   Γöé [33m1[39m       Γöé [32m'5.000.000'[39m Γöé [32m'76.9%'[39m Γöé [32m'1/4 (tß╗æi ─æa 4)'[39m Γöé [32m'200p'[39m    Γöé [32m'4.6%'[39m   Γöé [33m0[39m      Γöé [32m'mß╗¢i'[39m Γöé [33m1[39m  Γöé
+Γöé 1       Γöé [33m2[39m   Γöé [32m'─É├á Nß║╡ng'[39m Γöé [32m'2.0x'[39m Γöé [32m'10.000.000'[39m Γöé [32m'ai'[39m        Γöé [32m'-'[39m   Γöé [33m1[39m       Γöé [32m'5.000.000'[39m Γöé [32m'50.0%'[39m Γöé [32m'1/4 (tß╗æi ─æa 4)'[39m Γöé [32m'200p'[39m    Γöé [32m'4.6%'[39m   Γöé [33m0[39m      Γöé [32m'mß╗¢i'[39m Γöé [33m0[39m  Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÿ
+
+================================================================================
+Tß╗öNG Hß╗óP (2/8 kß╗ïch bß║ún hß╗úp lß╗ç vß╗¢i quy tß║»c hiß╗çn tß║íi (bß╗Å qua 2 kß╗ïch bß║ún Ph├║ Quß╗æc: kh├┤ng c├│ snapshot)):
+ΓÜá∩╕Å CH╞»A ─Éß╗ª Mß║¬U, kh├┤ng d├╣ng l├ám kß║┐t luß║¡n
+- Sß╗æ ca AI lß║¡p hß╗úp lß╗ç ngay lß║ºn ─æß║ºu: 2/2
+- Sß╗æ ca AI lß║¡p hß╗úp lß╗ç sau sß╗¡a: 0/2
+- Sß╗æ ca phß║úi dß╗▒ ph├▓ng: 0/2 (kh├┤ng c├│)
+- Trung b├¼nh sß╗æ l╞░ß╗út Gemini: 1
+- Tß╗òng sß╗æ l╞░ß╗út Gemini ─æ├ú d├╣ng: 2
+- ms trung b├¼nh: 1 ms
+- Tiß║┐n tr├¼nh ─æ├ú l╞░u tß║íi: D:\Trip_Vibes\eval\results\test-temp\progress-429.json
+- B├ío c├ío kß║┐t quß║ú tß║íi: D:\Trip_Vibes\eval\results\test-temp\result-429.json
+================================================================================
+
+
+[90mstderr[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(b) 
+gß║╖p 429 ß╗ƒ kß╗ïch bß║ún thß╗⌐ 3 th├¼ l╞░u 2 kß╗ïch bß║ún ─æß║ºu v├á dß╗½ng
+[22m[39m -> Lß╗ùi khi chß║íy kß╗ïch bß║ún: 429 RESOURCE_EXHAUSTED: Quota exceeded for model
+ -> Ph├ít hiß╗çn lß╗ùi 429 Quota Exceeded. Dß╗½ng chß║íy kß╗ïch bß║ún tiß║┐p theo.
+
+ [32mΓ£ô[39m src/ui/hooks/useSessionLog.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chß╗ë chß║íy ─æ├║ng 2 kß╗ïch bß║ún mß╗¢i
+[22m[39m================================================================================
+EVAL: RUN-AI-RATE (B╞░ß╗¢c 15: Chß║íy tiß║┐p ─æ╞░ß╗úc, l╞░u tiß║┐n tr├¼nh tß╗½ng kß╗ïch bß║ún)
+================================================================================
+
+[Cß╗¥ --toi-da=2]: Tß╗æi ─æa 2 kß╗ïch bß║ún Mß╗ÜI mß╗ùi lß║ºn chß║íy.
+
+[1/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chß╗ë chß║íy ─æ├║ng 2 kß╗ïch bß║ún mß╗¢i
+[22m[39m -> Ng├ón s├ích: 6.500.000 ─æ (tß╗æi thiß╗âu: 4.985.600 ─æ). ─Éang chß║íy planWithRepair (kß╗ïch bß║ún mß╗¢i #1)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chß╗ë chß║íy ─æ├║ng 2 kß╗ïch bß║ún mß╗¢i
+[22m[39m -> Kß║┐t quß║ú: ai  | 5.000.000 ─æ (76.9%) | ├ö: 1/4 (tß╗æi ─æa 4) | Di chuyß╗ân: 4.6% | L╞░ß╗út AI: 1 | 0ms
+[2/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (2.0x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chß╗ë chß║íy ─æ├║ng 2 kß╗ïch bß║ún mß╗¢i
+[22m[39m -> Ng├ón s├ích: 10.000.000 ─æ (tß╗æi thiß╗âu: 4.985.600 ─æ). ─Éang chß║íy planWithRepair (kß╗ïch bß║ún mß╗¢i #2)...
+
+ [32mΓ£ô[39m scripts/lib/quetMau.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chß╗ë chß║íy ─æ├║ng 2 kß╗ïch bß║ún mß╗¢i
+[22m[39m -> Kß║┐t quß║ú: ai  | 5.000.000 ─æ (50.0%) | ├ö: 1/4 (tß╗æi ─æa 4) | Di chuyß╗ân: 4.6% | L╞░ß╗út AI: 1 | 0ms
+[3/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: H├á Nß╗Öi (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(c) --toi-da=2 chß╗ë chß║íy ─æ├║ng 2 kß╗ïch bß║ún mß╗¢i
+[22m[39m -> ─É├ú ─æß║ít giß╗¢i hß║ín tß╗æi ─æa 2 kß╗ïch bß║ún Mß╗ÜI. Dß╗½ng tß║íi kß╗ïch bß║ún n├áy.
+
+================================================================================
+Bß║óNG Kß║╛T QUß║ó Kß╗èCH Bß║óN (2/8 kß╗ïch bß║ún hß╗úp lß╗ç vß╗¢i quy tß║»c hiß╗çn tß║íi (bß╗Å qua 2 kß╗ïch bß║ún Ph├║ Quß╗æc: kh├┤ng c├│ snapshot)):
+================================================================================
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé (index) Γöé STT Γöé ─Éiß╗âm ─æß║┐n  Γöé Hß╗ç     Γöé Ng├ón s├ích    Γöé Ph╞░╞íng thß╗⌐c Γöé L├╜ do Γöé L╞░ß╗út AI Γöé Tß╗òng VND    Γöé % NS    Γöé ├ö                Γöé Di chuyß╗ân Γöé Tß╗ë lß╗ç DC Γöé CB nhß║╣ Γöé Nguß╗ôn Γöé ms Γöé
+Γö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöñ
+Γöé 0       Γöé [33m1[39m   Γöé [32m'─É├á Nß║╡ng'[39m Γöé [32m'1.3x'[39m Γöé [32m'6.500.000'[39m  Γöé [32m'ai'[39m        Γöé [32m'-'[39m   Γöé [33m1[39m       Γöé [32m'5.000.000'[39m Γöé [32m'76.9%'[39m Γöé [32m'1/4 (tß╗æi ─æa 4)'[39m Γöé [32m'200p'[39m    Γöé [32m'4.6%'[39m   Γöé [33m0[39m      Γöé [32m'mß╗¢i'[39m Γöé [33m0[39m  Γöé
+Γöé 1       Γöé [33m2[39m   Γöé [32m'─É├á Nß║╡ng'[39m Γöé [32m'2.0x'[39m Γöé [32m'10.000.000'[39m Γöé [32m'ai'[39m        Γöé [32m'-'[39m   Γöé [33m1[39m       Γöé [32m'5.000.000'[39m Γöé [32m'50.0%'[39m Γöé [32m'1/4 (tß╗æi ─æa 4)'[39m Γöé [32m'200p'[39m    Γöé [32m'4.6%'[39m   Γöé [33m0[39m      Γöé [32m'mß╗¢i'[39m Γöé [33m0[39m  Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÿ
+
+================================================================================
+Tß╗öNG Hß╗óP (2/8 kß╗ïch bß║ún hß╗úp lß╗ç vß╗¢i quy tß║»c hiß╗çn tß║íi (bß╗Å qua 2 kß╗ïch bß║ún Ph├║ Quß╗æc: kh├┤ng c├│ snapshot)):
+ΓÜá∩╕Å CH╞»A ─Éß╗ª Mß║¬U, kh├┤ng d├╣ng l├ám kß║┐t luß║¡n
+- Sß╗æ ca AI lß║¡p hß╗úp lß╗ç ngay lß║ºn ─æß║ºu: 2/2
+- Sß╗æ ca AI lß║¡p hß╗úp lß╗ç sau sß╗¡a: 0/2
+- Sß╗æ ca phß║úi dß╗▒ ph├▓ng: 0/2 (kh├┤ng c├│)
+- Trung b├¼nh sß╗æ l╞░ß╗út Gemini: 1
+- Tß╗òng sß╗æ l╞░ß╗út Gemini ─æ├ú d├╣ng: 2
+- ms trung b├¼nh: 0 ms
+- Tiß║┐n tr├¼nh ─æ├ú l╞░u tß║íi: D:\Trip_Vibes\eval\results\test-temp\progress-max2.json
+- B├ío c├ío kß║┐t quß║ú tß║íi: D:\Trip_Vibes\eval\results\test-temp\result-max2.json
+================================================================================
+
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(d) c├│ ─æß╗º 0 kß╗ïch bß║ún phi├¬n bß║ún '3': in '0/10 kß╗ïch bß║ún ─æ├ú chß║íy vß╗¢i quy tß║»c hiß╗çn tß║íi. CH╞»A C├ô Kß║╛T QUß║ó'
+[22m[39m================================================================================
+EVAL: RUN-AI-RATE (B╞░ß╗¢c 15: Chß║íy tiß║┐p ─æ╞░ß╗úc, l╞░u tiß║┐n tr├¼nh tß╗½ng kß╗ïch bß║ún)
+================================================================================
+
+[Cß╗¥ --toi-da=0]: Tß╗æi ─æa 0 kß╗ïch bß║ún Mß╗ÜI mß╗ùi lß║ºn chß║íy.
+
+[Tiß║┐n tr├¼nh]: ─É├ú nß║íp 1 kß╗ïch bß║ún ─æ├ú xong tß╗½ D:\Trip_Vibes\eval\results\test-temp\progress-only-legacy.json.
+
+[1/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(d) c├│ ─æß╗º 0 kß╗ïch bß║ún phi├¬n bß║ún '3': in '0/10 kß╗ïch bß║ún ─æ├ú chß║íy vß╗¢i quy tß║»c hiß╗çn tß║íi. CH╞»A C├ô Kß║╛T QUß║ó'
+[22m[39m -> [CU]: Kß╗ïch bß║ún 1 (─É├á Nß║╡ng 1.3x) - quy tß║»c v2 kh├íc hiß╗çn tß║íi (5). KH├öNG d├╣ng lß║íi; sß║╜ chß║íy lß║íi nh╞░ kß╗ïch bß║ún mß╗¢i.
+[2/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (2.0x)...
+
+ [32mΓ£ô[39m src/core/tiLeDiChuyen.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(d) c├│ ─æß╗º 0 kß╗ïch bß║ún phi├¬n bß║ún '3': in '0/10 kß╗ïch bß║ún ─æ├ú chß║íy vß╗¢i quy tß║»c hiß╗çn tß║íi. CH╞»A C├ô Kß║╛T QUß║ó'
+[22m[39m -> ─É├ú ─æß║ít giß╗¢i hß║ín tß╗æi ─æa 0 kß╗ïch bß║ún Mß╗ÜI. Dß╗½ng tß║íi kß╗ïch bß║ún n├áy.
+
+================================================================================
+Kß║┐t quß║ú c┼⌐, kh├┤ng d├╣ng:
+================================================================================
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé (index) Γöé STT Γöé ─Éiß╗âm ─æß║┐n  Γöé Hß╗ç     Γöé Ng├ón s├ích   Γöé Ph╞░╞íng thß╗⌐c Γöé L├╜ do           Γöé L╞░ß╗út AI Γöé Tß╗òng VND    Γöé % NS    Γöé ├ö           Γöé Di chuyß╗ân Γöé Tß╗ë lß╗ç DC Γöé CB nhß║╣ Γöé Nguß╗ôn             Γöé ms   Γöé
+Γö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ
+Γöé 0       Γöé [33m1[39m   Γöé [32m'─É├á Nß║╡ng'[39m Γöé [32m'1.3x'[39m Γöé [32m'7.500.000'[39m Γöé [32m'ai'[39m        Γöé [32m'Kh├┤ng ─æo ─æ╞░ß╗úc'[39m Γöé [33m8[39m       Γöé [32m'6.044.000'[39m Γöé [32m'80.6%'[39m Γöé [32m'(luß║¡t c┼⌐)'[39m Γöé [32m'1334p'[39m   Γöé [32m'30.9%'[39m  Γöé [33m0[39m      Γöé [32m'C┼¿ (quy tß║»c v2)'[39m Γöé [33m5000[39m Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+
+================================================================================
+0/8 kß╗ïch bß║ún hß╗úp lß╗ç vß╗¢i quy tß║»c hiß╗çn tß║íi (bß╗Å qua 2 kß╗ïch bß║ún Ph├║ Quß╗æc: kh├┤ng c├│ snapshot). CH╞»A C├ô Kß║╛T QUß║ó
+- Tiß║┐n tr├¼nh ─æ├ú l╞░u tß║íi: D:\Trip_Vibes\eval\results\test-temp\progress-only-legacy.json
+- B├ío c├ío kß║┐t quß║ú tß║íi: D:\Trip_Vibes\eval\results\test-temp\result-only-legacy.json
+================================================================================
+
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(e) tiß║┐n tr├¼nh c├│ 2 kß╗ïch bß║ún phi├¬n bß║ún '3' v├á 3 kß╗ïch bß║ún phi├¬n bß║ún '2': tß╗òng hß╗úp t├¡nh tr├¬n 2 kß╗ïch bß║ún
+[22m[39m================================================================================
+EVAL: RUN-AI-RATE (B╞░ß╗¢c 15: Chß║íy tiß║┐p ─æ╞░ß╗úc, l╞░u tiß║┐n tr├¼nh tß╗½ng kß╗ïch bß║ún)
+================================================================================
+
+[Cß╗¥ --toi-da=0]: Tß╗æi ─æa 0 kß╗ïch bß║ún Mß╗ÜI mß╗ùi lß║ºn chß║íy.
+
+[Tiß║┐n tr├¼nh]: ─É├ú nß║íp 5 kß╗ïch bß║ún ─æ├ú xong tß╗½ D:\Trip_Vibes\eval\results\test-temp\progress-v3-and-v2.json.
+
+[1/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(e) tiß║┐n tr├¼nh c├│ 2 kß╗ïch bß║ún phi├¬n bß║ún '3' v├á 3 kß╗ïch bß║ún phi├¬n bß║ún '2': tß╗òng hß╗úp t├¡nh tr├¬n 2 kß╗ïch bß║ún
+[22m[39m -> [─Éß╗îC Lß║áI]: Kß╗ïch bß║ún ─æ├ú xong tß╗½ lß║ºn chß║íy ng├áy 2026-10-20 (0 l╞░ß╗út Gemini).
+[2/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Nß║╡ng (2.0x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(e) tiß║┐n tr├¼nh c├│ 2 kß╗ïch bß║ún phi├¬n bß║ún '3' v├á 3 kß╗ïch bß║ún phi├¬n bß║ún '2': tß╗òng hß╗úp t├¡nh tr├¬n 2 kß╗ïch bß║ún
+[22m[39m -> [─Éß╗îC Lß║áI]: Kß╗ïch bß║ún ─æ├ú xong tß╗½ lß║ºn chß║íy ng├áy 2026-10-20 (0 l╞░ß╗út Gemini).
+[3/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: H├á Nß╗Öi (1.3x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(e) tiß║┐n tr├¼nh c├│ 2 kß╗ïch bß║ún phi├¬n bß║ún '3' v├á 3 kß╗ïch bß║ún phi├¬n bß║ún '2': tß╗òng hß╗úp t├¡nh tr├¬n 2 kß╗ïch bß║ún
+[22m[39m -> [CU]: Kß╗ïch bß║ún 3 (H├á Nß╗Öi 1.3x) - quy tß║»c v2 kh├íc hiß╗çn tß║íi (3). KH├öNG d├╣ng lß║íi; sß║╜ chß║íy lß║íi nh╞░ kß╗ïch bß║ún mß╗¢i.
+[4/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: H├á Nß╗Öi (2.0x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(e) tiß║┐n tr├¼nh c├│ 2 kß╗ïch bß║ún phi├¬n bß║ún '3' v├á 3 kß╗ïch bß║ún phi├¬n bß║ún '2': tß╗òng hß╗úp t├¡nh tr├¬n 2 kß╗ïch bß║ún
+[22m[39m -> [CU]: Kß╗ïch bß║ún 4 (H├á Nß╗Öi 2.0x) - quy tß║»c v2 kh├íc hiß╗çn tß║íi (3). KH├öNG d├╣ng lß║íi; sß║╜ chß║íy lß║íi nh╞░ kß╗ïch bß║ún mß╗¢i.
+[5/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Lß║ít (1.3x)...
+
+ [32mΓ£ô[39m src/core/soThich.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32mΓ£ô[39m src/ui/lib/chuyenB1.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(e) tiß║┐n tr├¼nh c├│ 2 kß╗ïch bß║ún phi├¬n bß║ún '3' v├á 3 kß╗ïch bß║ún phi├¬n bß║ún '2': tß╗òng hß╗úp t├¡nh tr├¬n 2 kß╗ïch bß║ún
+[22m[39m -> [CU]: Kß╗ïch bß║ún 5 (─É├á Lß║ít 1.3x) - quy tß║»c v2 kh├íc hiß╗çn tß║íi (3). KH├öNG d├╣ng lß║íi; sß║╜ chß║íy lß║íi nh╞░ kß╗ïch bß║ún mß╗¢i.
+[6/10] Chuß║⌐n bß╗ï kß╗ïch bß║ún: ─É├á Lß║ít (2.0x)...
+
+[90mstdout[2m | eval/run-ai-rate.test.ts[2m > [22m[2mEval chß║íy tiß║┐p ─æ╞░ß╗úc (run-ai-rate)[2m > [22m[2m(e) tiß║┐n tr├¼nh c├│ 2 kß╗ïch bß║ún phi├¬n bß║ún '3' v├á 3 kß╗ïch bß║ún phi├¬n bß║ún '2': tß╗òng hß╗úp t├¡nh tr├¬n 2 kß╗ïch bß║ún
+[22m[39m -> ─É├ú ─æß║ít giß╗¢i hß║ín tß╗æi ─æa 0 kß╗ïch bß║ún Mß╗ÜI. Dß╗½ng tß║íi kß╗ïch bß║ún n├áy.
+
+================================================================================
+Kß║┐t quß║ú c┼⌐, kh├┤ng d├╣ng:
+================================================================================
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé (index) Γöé STT Γöé ─Éiß╗âm ─æß║┐n Γöé Hß╗ç     Γöé Ng├ón s├ích   Γöé Ph╞░╞íng thß╗⌐c Γöé L├╜ do           Γöé L╞░ß╗út AI Γöé Tß╗òng VND    Γöé % NS    Γöé ├ö           Γöé Di chuyß╗ân Γöé Tß╗ë lß╗ç DC Γöé CB nhß║╣ Γöé Nguß╗ôn             Γöé ms   Γöé
+Γö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ
+Γöé 0       Γöé [33m3[39m   Γöé [32m'H├á Nß╗Öi'[39m Γöé [32m'1.3x'[39m Γöé [32m'7.500.000'[39m Γöé [32m'ai'[39m        Γöé [32m'Kh├┤ng ─æo ─æ╞░ß╗úc'[39m Γöé [33m3[39m       Γöé [32m'6.044.000'[39m Γöé [32m'80.6%'[39m Γöé [32m'(luß║¡t c┼⌐)'[39m Γöé [32m'1334p'[39m   Γöé [32m'30.9%'[39m  Γöé [33m0[39m      Γöé [32m'C┼¿ (quy tß║»c v2)'[39m Γöé [33m5000[39m Γöé
+Γöé 1       Γöé [33m4[39m   Γöé [32m'─É├á Lß║ít'[39m Γöé [32m'1.3x'[39m Γöé [32m'7.500.000'[39m Γöé [32m'ai'[39m        Γöé [32m'Kh├┤ng ─æo ─æ╞░ß╗úc'[39m Γöé [33m3[39m       Γöé [32m'6.044.000'[39m Γöé [32m'80.6%'[39m Γöé [32m'(luß║¡t c┼⌐)'[39m Γöé [32m'1334p'[39m   Γöé [32m'30.9%'[39m  Γöé [33m0[39m      Γöé [32m'C┼¿ (quy tß║»c v2)'[39m Γöé [33m5000[39m Γöé
+Γöé 2       Γöé [33m5[39m   Γöé [32m'─É├á Lß║ít'[39m Γöé [32m'1.3x'[39m Γöé [32m'7.500.000'[39m Γöé [32m'ai'[39m        Γöé [32m'Kh├┤ng ─æo ─æ╞░ß╗úc'[39m Γöé [33m3[39m       Γöé [32m'6.044.000'[39m Γöé [32m'80.6%'[39m Γöé [32m'(luß║¡t c┼⌐)'[39m Γöé [32m'1334p'[39m   Γöé [32m'30.9%'[39m  Γöé [33m0[39m      Γöé [32m'C┼¿ (quy tß║»c v2)'[39m Γöé [33m5000[39m Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+
+================================================================================
+Bß║óNG Kß║╛T QUß║ó Kß╗èCH Bß║óN (2/8 kß╗ïch bß║ún hß╗úp lß╗ç vß╗¢i quy tß║»c hiß╗çn tß║íi (bß╗Å qua 2 kß╗ïch bß║ún Ph├║ Quß╗æc: kh├┤ng c├│ snapshot)):
+================================================================================
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé (index) Γöé STT Γöé ─Éiß╗âm ─æß║┐n  Γöé Hß╗ç     Γöé Ng├ón s├ích   Γöé Ph╞░╞íng thß╗⌐c Γöé L├╜ do Γöé L╞░ß╗út AI Γöé Tß╗òng VND    Γöé % NS    Γöé ├ö                Γöé Di chuyß╗ân Γöé Tß╗ë lß╗ç DC Γöé CB nhß║╣ Γöé Nguß╗ôn                         Γöé ms  Γöé
+Γö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ
+Γöé 0       Γöé [33m1[39m   Γöé [32m'─É├á Nß║╡ng'[39m Γöé [32m'1.3x'[39m Γöé [32m'7.500.000'[39m Γöé [32m'ai'[39m        Γöé [32m'-'[39m   Γöé [33m1[39m       Γöé [32m'5.000.000'[39m Γöé [32m'66.7%'[39m Γöé [32m'1/4 (tß╗æi ─æa 4)'[39m Γöé [32m'200p'[39m    Γöé [32m'4.6%'[39m   Γöé [33m0[39m      Γöé [32m'tß╗½ lß║ºn chß║íy ng├áy 2026-10-20'[39m Γöé [33m100[39m Γöé
+Γöé 1       Γöé [33m2[39m   Γöé [32m'─É├á Nß║╡ng'[39m Γöé [32m'2.0x'[39m Γöé [32m'7.500.000'[39m Γöé [32m'ai'[39m        Γöé [32m'-'[39m   Γöé [33m1[39m       Γöé [32m'5.000.000'[39m Γöé [32m'66.7%'[39m Γöé [32m'1/4 (tß╗æi ─æa 4)'[39m Γöé [32m'200p'[39m    Γöé [32m'4.6%'[39m   Γöé [33m0[39m      Γöé [32m'tß╗½ lß║ºn chß║íy ng├áy 2026-10-20'[39m Γöé [33m100[39m Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+
+================================================================================
+Tß╗öNG Hß╗óP (2/8 kß╗ïch bß║ún hß╗úp lß╗ç vß╗¢i quy tß║»c hiß╗çn tß║íi (bß╗Å qua 2 kß╗ïch bß║ún Ph├║ Quß╗æc: kh├┤ng c├│ snapshot)):
+ΓÜá∩╕Å CH╞»A ─Éß╗ª Mß║¬U, kh├┤ng d├╣ng l├ám kß║┐t luß║¡n
+- Sß╗æ ca AI lß║¡p hß╗úp lß╗ç ngay lß║ºn ─æß║ºu: 2/2
+- Sß╗æ ca AI lß║¡p hß╗úp lß╗ç sau sß╗¡a: 0/2
+- Sß╗æ ca phß║úi dß╗▒ ph├▓ng: 0/2 (kh├┤ng c├│)
+- Trung b├¼nh sß╗æ l╞░ß╗út Gemini: 1
+- Tß╗òng sß╗æ l╞░ß╗út Gemini ─æ├ú d├╣ng: 2
+- ms trung b├¼nh: 100 ms
+- Tiß║┐n tr├¼nh ─æ├ú l╞░u tß║íi: D:\Trip_Vibes\eval\results\test-temp\progress-v3-and-v2.json
+- B├ío c├ío kß║┐t quß║ú tß║íi: D:\Trip_Vibes\eval\results\test-temp\result-v3-and-v2.json
+================================================================================
+
+
+ [32mΓ£ô[39m eval/run-ai-rate.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 234[2mms[22m[39m
+ [32mΓ£ô[39m src/core/gioONgayDau.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m src/core/minBudget.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32mΓ£ô[39m src/data/live/tyGiaClient.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m src/core/chiSoTest.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m src/core/flags.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m scripts/build-tokens.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m scripts/lib/chuoiCam.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m src/core/productionMode.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m src/core/nhanNguon.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m scripts/lib/envScan.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m src/data/reference/tuyenTau.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m src/ui/messages/canhBao.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m src/core/quyDoiTien.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m src/core/ledger.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m scripts/lib/quetEmoji.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m src/core/haversine.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m src/core/soDem.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m src/data/live/overpassClient.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/diem-chon/route.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/options/route.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/noKeyLeak.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32mΓ£ô[39m eval/cham-bill.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/plan/route.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32mΓ£ô[39m src/data/prepareDestination.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32mΓ£ô[39m eval/run-parse.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/h1AiRules.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+[90mstdout[2m | src/app/api/plan/planRulesAndEdgeCases.test.ts[2m > [22m[2mKiß╗âm tra API Lß║¡p kß║┐ hoß║ích bß║▒ng Quy tß║»c & Ca bi├¬n (Kh├┤ng gß╗ìi Gemini)[2m > [22m[2mQuy tß║»c lß║¡p kß║┐ hoß║ích: Thiß║┐u GEMINI_API_KEY & LIVE_AI_ENABLED=false[2m > [22m[2m/api/plan chß║íy quy tß║»c th├ánh c├┤ng khi KH├öNG C├ô GEMINI_API_KEY (kh├┤ng lß╗ùi 500)
+[22m[39m[planWithRepair] Initializing LiveDataSource for: H├á Nß╗Öi
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/app/api/plan/planRulesAndEdgeCases.test.ts[2m > [22m[2mKiß╗âm tra API Lß║¡p kß║┐ hoß║ích bß║▒ng Quy tß║»c & Ca bi├¬n (Kh├┤ng gß╗ìi Gemini)[2m > [22m[2mQuy tß║»c lß║¡p kß║┐ hoß║ích: Thiß║┐u GEMINI_API_KEY & LIVE_AI_ENABLED=false[2m > [22m[2m/api/plan chß║íy quy tß║»c th├ánh c├┤ng khi KH├öNG C├ô GEMINI_API_KEY (kh├┤ng lß╗ùi 500)
+[22m[39m[planWithRepair] Data ready: 6 transports, 15 hotels, 15 food, 15 activities
+
+[90mstdout[2m | src/app/api/plan/planRulesAndEdgeCases.test.ts[2m > [22m[2mKiß╗âm tra API Lß║¡p kß║┐ hoß║ích bß║▒ng Quy tß║»c & Ca bi├¬n (Kh├┤ng gß╗ìi Gemini)[2m > [22m[2mQuy tß║»c lß║¡p kß║┐ hoß║ích: Thiß║┐u GEMINI_API_KEY & LIVE_AI_ENABLED=false[2m > [22m[2m/api/plan hoß║ít ─æß╗Öng vß╗¢i diemDen l├á chuß╗ùi 'H├á Nß╗Öi' c├│ trong snapshot
+[22m[39m[planWithRepair] Initializing LiveDataSource for: H├á Nß╗Öi
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/app/api/plan/planRulesAndEdgeCases.test.ts[2m > [22m[2mKiß╗âm tra API Lß║¡p kß║┐ hoß║ích bß║▒ng Quy tß║»c & Ca bi├¬n (Kh├┤ng gß╗ìi Gemini)[2m > [22m[2mQuy tß║»c lß║¡p kß║┐ hoß║ích: Thiß║┐u GEMINI_API_KEY & LIVE_AI_ENABLED=false[2m > [22m[2m/api/plan hoß║ít ─æß╗Öng vß╗¢i diemDen l├á chuß╗ùi 'H├á Nß╗Öi' c├│ trong snapshot
+[22m[39m[planWithRepair] Data ready: 6 transports, 15 hotels, 15 food, 15 activities
+
+[90mstdout[2m | src/app/api/plan/planRulesAndEdgeCases.test.ts[2m > [22m[2mKiß╗âm tra API Lß║¡p kß║┐ hoß║ích bß║▒ng Quy tß║»c & Ca bi├¬n (Kh├┤ng gß╗ìi Gemini)[2m > [22m[2mQuy tß║»c lß║¡p kß║┐ hoß║ích: Thiß║┐u GEMINI_API_KEY & LIVE_AI_ENABLED=false[2m > [22m[2m/api/plan hoß║ít ─æß╗Öng vß╗¢i diemDen l├á chuß╗ùi '─É├á Nß║╡ng' c├│ trong snapshot
+[22m[39m[planWithRepair] Initializing LiveDataSource for: Th├ánh phß╗æ ─É├á Nß║╡ng
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/app/api/plan/planRulesAndEdgeCases.test.ts[2m > [22m[2mKiß╗âm tra API Lß║¡p kß║┐ hoß║ích bß║▒ng Quy tß║»c & Ca bi├¬n (Kh├┤ng gß╗ìi Gemini)[2m > [22m[2mQuy tß║»c lß║¡p kß║┐ hoß║ích: Thiß║┐u GEMINI_API_KEY & LIVE_AI_ENABLED=false[2m > [22m[2m/api/plan hoß║ít ─æß╗Öng vß╗¢i diemDen l├á chuß╗ùi '─É├á Nß║╡ng' c├│ trong snapshot
+[22m[39m[planWithRepair] Data ready: 6 transports, 15 hotels, 15 food, 15 activities
+
+[90mstdout[2m | src/app/api/plan/planRulesAndEdgeCases.test.ts[2m > [22m[2mKiß╗âm tra API Lß║¡p kß║┐ hoß║ích bß║▒ng Quy tß║»c & Ca bi├¬n (Kh├┤ng gß╗ìi Gemini)[2m > [22m[2mC├íc ca bi├¬n (Edge cases)[2m > [22m[2mCa bi├¬n 1: Ng├ón s├ích qu├í thß║Ñp -> trß║ú vß╗ü khong_the_dat_ngan_sach v├á toiThieuVND
+[22m[39m[planWithRepair] Initializing LiveDataSource for: H├á Nß╗Öi
+[planWithRepair] Fetching all data via Promise.all...
+
+[90mstdout[2m | src/app/api/plan/planRulesAndEdgeCases.test.ts[2m > [22m[2mKiß╗âm tra API Lß║¡p kß║┐ hoß║ích bß║▒ng Quy tß║»c & Ca bi├¬n (Kh├┤ng gß╗ìi Gemini)[2m > [22m[2mC├íc ca bi├¬n (Edge cases)[2m > [22m[2mCa bi├¬n 1: Ng├ón s├ích qu├í thß║Ñp -> trß║ú vß╗ü khong_the_dat_ngan_sach v├á toiThieuVND
+[22m[39m[planWithRepair] Data ready: 6 transports, 15 hotels, 15 food, 15 activities
+
+ [32mΓ£ô[39m src/app/api/plan/planRulesAndEdgeCases.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 100[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m59 passed[39m[22m[90m (59)[39m
+[2m      Tests [22m [1m[32m389 passed[39m[22m[90m (389)[39m
+[2m   Start at [22m 16:57:53
+[2m   Duration [22m 2.32s[2m (import 63%, transform 30%, tests 5%, worker 2%)[22m
+
+[2m  Transform [22m [33mtransforming modules took 7.27s[39m[2m ┬╖ 30% of tracked time, re-done on every run[22m
+[2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+

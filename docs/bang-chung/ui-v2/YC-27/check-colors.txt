@@ -1,0 +1,10 @@
+
+> trip-vibes@0.1.0 check:colors
+> tsx scripts/check-colors.ts
+
+================================================================================
+KIß╗éM TRA M├â M├ÇU V├Ç FONT Cß╗¿NG TRONG SRC/UI V├Ç SRC/APP (CHECK:COLORS)
+================================================================================
+
+Γ£à TUYß╗åT Vß╗£I: src/ui ho├án to├án sß║ích m├ú hex v├á font cß╗⌐ng! To├án bß╗Ö d├╣ng biß║┐n CSS tß╗½ tokens.
+

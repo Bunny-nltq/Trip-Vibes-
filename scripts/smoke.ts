@@ -1,5 +1,6 @@
 import { loadEnvConfig } from "@next/env";
 import { danhGiaHealth, danhGiaPlan, chuaChuoi } from "./lib/smokeRules";
+import { schemaVersion } from "../src/contracts";
 
 // Nạp cấu hình môi trường từ .env.local
 loadEnvConfig(process.cwd());
@@ -130,7 +131,7 @@ async function runSmoke() {
   // 5. POST /api/plan
   const planPayload = {
     request: {
-      schemaVersion: 9,
+      schemaVersion,
       diemDi: {
         ten: "TP.HCM",
         quocGia: "Việt Nam",
