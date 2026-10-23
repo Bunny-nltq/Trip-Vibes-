@@ -151,13 +151,22 @@ export async function planWithRepair(
     !request.soNgay ||
     !request.ngansachTongVND ||
     request.soNgay < 2 ||
-    request.soNgay > 5 ||
+    request.soNgay > 7 ||
     request.thieu.length > 0
   ) {
-    emptyResult.lyDo =
-      request.soNgay && (request.soNgay < 2 || request.soNgay > 5)
-        ? "ngoai_pham_vi_so_ngay"
-        : "thieu_thong_tin";
+    if (request.soNgay && (request.soNgay < 2 || request.soNgay > 7)) {
+      emptyResult.lyDo = "ngoai_pham_vi_so_ngay";
+      if (!request.thieu.includes("soNgay")) {
+        request.thieu.push("soNgay");
+      }
+      if (!request.cauHoiLamRo.some((q) => q.includes("ngày"))) {
+        request.cauHoiLamRo.push(
+          "Trip Vibes hiện hỗ trợ lịch trình từ 2 đến 7 ngày. Bạn muốn đi trong mấy ngày?"
+        );
+      }
+    } else {
+      emptyResult.lyDo = "thieu_thong_tin";
+    }
     emptyResult.ms = Date.now() - startMs;
     return emptyResult;
   }

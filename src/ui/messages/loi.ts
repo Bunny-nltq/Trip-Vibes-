@@ -50,7 +50,7 @@ export const BANG_MA_LOI: Record<string, ThongBaoLoi> = {
   },
   so_ngay_ngoai_pham_vi: {
     tieuDe: "Số ngày nằm ngoài phạm vi",
-    noiDung: "Chuyến đi hỗ trợ từ 2 đến 5 ngày (tương ứng 1 đến 4 đêm).",
+    noiDung: "Chuyến đi hỗ trợ từ 2 đến 7 ngày (tương ứng 1 đến 6 đêm).",
     hanhDong: { nhan: "Chọn lại thời gian", loai: "sua_yeu_cau" },
   },
   ghi_chu_qua_dai: {

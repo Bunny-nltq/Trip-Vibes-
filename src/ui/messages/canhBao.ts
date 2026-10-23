@@ -23,7 +23,7 @@ export const BANG_ANH_XA_CANH_BAO: Record<string, string> = {
   hoat_dong_chong_len: "Hoạt động bị trùng hoặc sát giờ nhau",
   ngay_cuoi_khong_kip: "Hoạt động ngày cuối sát giờ khởi hành chuyến về",
   so_nguoi_khong_hop_le: "Số người không hợp lệ",
-  ngoai_pham_vi_so_ngay: "Số ngày nằm ngoài phạm vi 2 đến 5 ngày",
+  ngoai_pham_vi_so_ngay: "Số ngày nằm ngoài phạm vi 2 đến 7 ngày",
   so_ngay_khong_hop_le: "Số ngày không hợp lệ",
   ngan_sach_khong_hop_le: "Ngân sách không hợp lệ",
   diem_den_mac_dinh: "Chưa rõ điểm đến",

@@ -280,7 +280,7 @@ export function B3KeHoachScreen() {
 
   plan.request.canhBao.forEach((cb) => {
     if (cb === "diem_den_mac_dinh") warningList.push("Chưa rõ điểm đến.");
-    else if (cb === "ngoai_pham_vi_so_ngay") warningList.push("Số ngày nằm ngoài phạm vi 2 đến 5 ngày.");
+    else if (cb === "ngoai_pham_vi_so_ngay") warningList.push("Số ngày nằm ngoài phạm vi 2 đến 7 ngày.");
     else warningList.push(cb);
   });
   softViolations.forEach((sv) => {

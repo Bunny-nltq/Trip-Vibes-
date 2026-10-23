@@ -87,7 +87,7 @@ export function GioiHanScreen() {
               <strong style={{ fontSize: 15, color: "var(--color-text)" }}>Thời lượng hỗ trợ</strong>
             </div>
             <p style={{ margin: 0, fontSize: 14, color: "var(--color-text-sub)", lineHeight: 1.5 }}>
-              Hỗ trợ lập kế hoạch từ <strong>2 đến 5 ngày</strong> (tương ứng 1 đến 4 đêm lưu trú).
+              Hỗ trợ lập kế hoạch từ <strong>2 đến 7 ngày</strong> (tương ứng 1 đến 6 đêm lưu trú).
             </p>
           </div>
 

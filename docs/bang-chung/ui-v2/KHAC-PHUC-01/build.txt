@@ -1,0 +1,94 @@
+
+> trip-vibes@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.3.8 (Turbopack)
+- Environments: .env.local
+Γ£ô Running next.config.ts took 28ms
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 2.0s
+  Running TypeScript ...
+  Finished TypeScript in 2.2s ...
+  Collecting page data using 19 workers ...
+  Generating static pages using 19 workers (0/67) ...
+  Generating static pages using 19 workers (16/67) 
+  Generating static pages using 19 workers (33/67) 
+  Generating static pages using 19 workers (50/67) 
+Γ£ô Generating static pages using 19 workers (67/67) in 904ms
+  Finalizing page optimization ...
+
+Route (app)
+Γöî Γùï /
+Γö£ Γùï /_not-found
+Γö£ ╞Æ /api/ai-ping
+Γö£ ╞Æ /api/data/status
+Γö£ ╞Æ /api/destination
+Γö£ ╞Æ /api/destination/prepare
+Γö£ ╞Æ /api/destination/status
+Γö£ ╞Æ /api/diem-chon
+Γö£ ╞Æ /api/expenses/confirm
+Γö£ ╞Æ /api/extract-bill
+Γö£ ╞Æ /api/health
+Γö£ ╞Æ /api/options
+Γö£ ╞Æ /api/parse-request
+Γö£ ╞Æ /api/plan
+Γö£ ╞Æ /api/plan/preview
+Γö£ ╞Æ /api/plan/regenerate
+Γö£ Γùï /demo
+Γö£ Γùï /demo/01-b1-chon-nhanh
+Γö£ Γùï /demo/02-b2-agent-dang-chay
+Γö£ Γùï /demo/03-b3-ke-hoach
+Γö£ Γùï /demo/04-b4-chon-phuong-tien
+Γö£ Γùï /demo/05-b5-chon-khach-san
+Γö£ Γùï /demo/06-b6-xem-truoc-thay-doi
+Γö£ Γùï /demo/07-b7-xac-nhan
+Γö£ Γùï /demo/08-b8-chuyen-di
+Γö£ Γùï /demo/09-b9-chi-duong
+Γö£ Γùï /demo/10-b10a-chon-nguon
+Γö£ Γùï /demo/11-b10b-xac-nhan-ket-qua
+Γö£ Γùï /demo/12-b10c-nhap-tay
+Γö£ Γùï /demo/13-b11-ngan-sach-thuc-te
+Γö£ Γùï /demo/14-b1-can-lam-ro
+Γö£ Γùï /demo/15-b1-ngan-sach-khong-du
+Γö£ Γùï /demo/16-b3-co-vi-pham
+Γö£ Γùï /demo/17-b6-vi-pham-nang
+Γö£ Γùï /demo/18-b7-da-chot
+Γö£ Γùï /demo/19-b10-khong-doc-duoc
+Γö£ Γùï /demo/20-b11-lech-ngan-sach
+Γö£ Γùï /demo/21-a1-chat
+Γö£ Γùï /demo/22-a2-ket-qua-van-ban
+Γö£ Γùï /demo/23-a3-chat-tiep
+Γö£ Γùï /demo/24-w0-man-chao
+Γö£ Γùï /demo/25-l1-dang-nhap
+Γö£ Γùï /demo/26-l2-dang-ky
+Γö£ Γùï /demo/27-l3-quen-mat-khau
+Γö£ Γùï /demo/28-ve-trip-vibes
+Γö£ Γùï /diem-den
+Γö£   /diem-den/[slug]
+Γöé Γö£ ΓùÅ /diem-den/da-nang
+Γöé Γö£ ΓùÅ /diem-den/ha-noi
+Γöé Γö£ ΓùÅ /diem-den/da-lat
+Γöé Γöö ΓùÅ [+2 more paths]
+Γö£ Γùï /dieu-khoan
+Γö£ Γùï /gioi-han
+Γö£ ╞Æ /khach-san
+Γö£ Γùï /lap-ke-hoach
+Γö£ Γùï /lich-trinh
+Γö£   /lich-trinh/[slug]
+Γöé Γö£ ΓùÅ /lich-trinh/da-nang
+Γöé Γö£ ΓùÅ /lich-trinh/ha-noi
+Γöé Γö£ ΓùÅ /lich-trinh/da-lat
+Γöé Γöö ΓùÅ [+2 more paths]
+Γö£ Γùï /manifest.webmanifest
+Γö£ Γùï /nguon-anh
+Γö£ Γùï /quyen-rieng-tu
+Γö£ Γùï /robots.txt
+Γö£ Γùï /sitemap.xml
+Γöö Γùï /tro-giup
+
+
+Γùï  (Static)   prerendered as static content
+ΓùÅ  (SSG)      prerendered as static HTML (uses generateStaticParams)
+╞Æ  (Dynamic)  server-rendered on demand
+

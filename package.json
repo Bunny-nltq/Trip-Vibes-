@@ -11,6 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "smoke": "tsx scripts/smoke.ts",
+    "kich-ban": "tsx scripts/kich-ban.ts",
     "check:data": "npx tsx scripts/check-data.ts",
     "test": "vitest run",
     "test:core": "vitest run src/core",
