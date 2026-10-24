@@ -73,12 +73,10 @@ async function main() {
   const cacheFile = path.join(cacheDir, `plan-${cacheKey}.json`);
 
   let result: PlanRepairResult | null = null;
-  let fromCache = false;
 
   if (!noCache && fs.existsSync(cacheFile)) {
     try {
       result = JSON.parse(fs.readFileSync(cacheFile, "utf-8"));
-      fromCache = true;
       console.log("   ⚡ Tải kết quả từ cache!");
     } catch {
       // cache hỏng thì chạy lại

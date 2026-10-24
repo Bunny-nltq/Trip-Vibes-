@@ -1,26 +1,11 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useApp } from "@/ui/context/AppContext";
-import { SideNav } from "@/ui/components/SideNav";
 import { soSanhKeHoachThucTe } from "@/core/soSanhThucTe";
 import { gomDiaDiemTheoNgay } from "@/core/tripProgress";
 import type { Expense, ExpenseCategory } from "@/contracts";
 import { NhatKyTabBar } from "@/ui/components/NhatKyTabBar";
-import {
-  Wallet,
-  Plus,
-  Edit2,
-  Trash2,
-  AlertTriangle,
-  CheckCircle,
-  Receipt,
-  Calendar,
-  Lock,
-  ArrowRight,
-  TrendingDown,
-  TrendingUp,
-  BookOpen,
-} from "lucide-react";
+import { Plus, Edit2, Trash2, AlertTriangle, CheckCircle, Receipt, BookOpen } from "lucide-react";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
 
@@ -101,10 +86,12 @@ export function B11NganSachScreen() {
 
   const [denHetNgay, setDenHetNgay] = useState<number>(initialDenHetNgay);
 
-  // Sync state if mock changes initialDenHetNgay
-  useEffect(() => {
+  // Đồng bộ lại khi giá trị khởi tạo đổi (điều chỉnh state lúc render, không dùng effect)
+  const [denHetNgayTruoc, setDenHetNgayTruoc] = useState(initialDenHetNgay);
+  if (initialDenHetNgay !== denHetNgayTruoc) {
+    setDenHetNgayTruoc(initialDenHetNgay);
     setDenHetNgay(initialDenHetNgay);
-  }, [initialDenHetNgay]);
+  }
 
   // Modal Xóa
   const [deletingExpense, setDeletingExpense] = useState<Expense | null>(null);

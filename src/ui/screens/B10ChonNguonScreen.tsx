@@ -4,13 +4,7 @@ import { useApp } from "@/ui/context/AppContext";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import type { ExpenseCategory, BillExtraction } from "@/contracts";
 import { B8ChuyenDiScreen } from "./B8ChuyenDiScreen";
-import {
-  Upload,
-  AlertTriangle,
-  AlertCircle,
-  RefreshCw,
-  Lock,
-} from "lucide-react";
+import { RefreshCw } from "lucide-react";
 
 const CANH_BAO_TEXT_MAP: Record<string, string> = {
   tong_khong_khop_cac_dong: "Tổng tiền không khớp với cộng các dòng chi tiết",
@@ -31,23 +25,16 @@ const HANG_MUC_OPTIONS: Array<{ value: ExpenseCategory; label: string }> = [
 ];
 
 export function B10ChonNguonScreen() {
-  const { nav, confirmed, plan, ledger, addExpenseToLedger, b10Prefill, setB10Prefill } = useApp();
+  const { nav, addExpenseToLedger, b10Prefill, setB10Prefill } = useApp();
   const { aiBat } = useTrangThaiAI();
 
-  const [activeTab, setActiveTab] = useState<"bill" | "manual">(() => {
+  const [activeTabChon, setActiveTab] = useState<"bill" | "manual">(() => {
     if (typeof window !== "undefined") {
       const q = new URLSearchParams(window.location.search).get("state");
       if (q === "nhap_tay") return "manual";
     }
     return "manual"; // Safe default, switched to bill if aiBat
   });
-
-  useEffect(() => {
-    if (!aiBat) {
-      setActiveTab("manual");
-    }
-  }, [aiBat]);
-  const soNgay = plan?.request.soNgay || 3;
 
   // Form state
   const [tenCuaHang, setTenCuaHang] = useState<string>(() => {
@@ -77,7 +64,7 @@ export function B10ChonNguonScreen() {
     }
     return "";
   });
-  const [ghiChu, setGhiChu] = useState<string>("");
+  const [ghiChu] = useState<string>("");
 
   // AI & Bill state
   const [giaTriAIDoc, setGiaTriAIDoc] = useState<number | null>(() => {
@@ -120,9 +107,13 @@ export function B10ChonNguonScreen() {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Khi AI tắt luôn dùng nhập tay (suy ra từ aiBat & activeTabChon, không cần useEffect)
+  const activeTab = aiBat ? activeTabChon : "manual";
+
   // Apply prefill when opened from B8 toast or B11
   useEffect(() => {
     if (b10Prefill) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- đồng bộ với hệ thống bên ngoài React (URL, sessionStorage, mạng) chỉ làm được sau khi dựng
       if (b10Prefill.tenCuaHang) setTenCuaHang(b10Prefill.tenCuaHang);
       if (b10Prefill.ngayTrongChuyen) setNgayTrongChuyen(b10Prefill.ngayTrongChuyen);
       if (b10Prefill.hangMuc) setHangMuc(b10Prefill.hangMuc);
@@ -135,6 +126,7 @@ export function B10ChonNguonScreen() {
     const params = new URLSearchParams(window.location.search);
     const mockState = params.get("state");
     if (mockState === "nhap_tay") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- đồng bộ với hệ thống bên ngoài React (URL, sessionStorage, mạng) chỉ làm được sau khi dựng
       setActiveTab("manual");
       setTenCuaHang("Bánh xèo Bà Dưỡng");
       setSoTienVND("180000");
@@ -509,6 +501,7 @@ export function B10ChonNguonScreen() {
                   border: "1px solid var(--color-border)",
                 }}
               >
+                {/* eslint-disable-next-line @next/next/no-img-element -- ảnh xem trước dạng blob: URL cục bộ, không tối ưu hóa được */}
                 <img
                   src={imagePreviewUrl}
                   alt="Ảnh bill"

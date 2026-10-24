@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { GET as getHealth } from "./health/route";
 import { GET as getDataStatus } from "./data/status/route";
 

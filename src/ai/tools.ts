@@ -1,7 +1,7 @@
 import { Type } from "@google/genai";
 import type { DataSource } from "@/data/DataSource";
 import type { LiveDataSource } from "@/data/live/LiveDataSource";
-import type { Selection, Preference, QuanAn, Cafe, KhachSan } from "@/contracts";
+import type { Selection, Preference, QuanAn, Cafe } from "@/contracts";
 import { calculateTransportFlags } from "@/core/flags";
 import { removeVietnameseDiacritics } from "@/core/normalizeRequest";
 import { buildMapsUrls } from "@/core/maps";

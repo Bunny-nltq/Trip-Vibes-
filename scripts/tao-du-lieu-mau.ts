@@ -10,7 +10,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { DEFAULT_DIEM_DI, type TripRequest, type DiemDen } from "../src/contracts";
+import { DEFAULT_DIEM_DI, type TripRequest } from "../src/contracts";
 import { getSnapshotDiemDen } from "../src/data/prepareDestination";
 import { taoPhuongTienUocLuong } from "../src/data/live/researchTransport";
 import { tinhNganSachToiThieu } from "../src/core/minBudget";

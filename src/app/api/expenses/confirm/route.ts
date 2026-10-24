@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     } else {
       return NextResponse.json({ ok: false, loi: res.loi }, { status: 400 });
     }
-  } catch (err: any) {
+  } catch {
     return NextResponse.json({ ok: false, error: "Dữ liệu không hợp lệ" }, { status: 400 });
   }
 }

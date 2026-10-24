@@ -37,7 +37,7 @@ export type PlanStatus =
   | "co_vi_pham"
   | "error";
 
-import { getDiemDenTen, type DiemDen } from "@/contracts";
+import { type DiemDen } from "@/contracts";
 
 export interface PlanStructuredInput {
   people?: number;
@@ -320,7 +320,7 @@ export function usePlan() {
     } finally {
       abortControllerRef.current = null;
     }
-  }, []);
+  }, [aiBat]);
 
   const retry = useCallback(() => {
     if (lastInputRef.current) {

@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import { mealTimeOrNull, hhmm2min, min2hhmm } from "./mealTimes";
-import { BUFFER_SAU_KHI_DEN_PHUT } from "./assumptions";
 
 // BUFFER_SAU_KHI_DEN_PHUT = 60 phút
 

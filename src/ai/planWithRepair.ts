@@ -1,11 +1,10 @@
 import type { TripRequest, Plan, DiemDen } from "@/contracts";
-import { DEFAULT_DIEM_DI, getDiemDenTen } from "@/contracts";
+import { DEFAULT_DIEM_DI } from "@/contracts";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
 import { buildPlan } from "@/core/buildPlan";
 import { validatePlan, type Violation } from "@/core/validatePlan";
 import { donOKhongKhaDung } from "@/core/donOKhongKhaDung";
 import { lapOTrong } from "@/core/lapOTrong";
-import { tinhNganSachToiThieu } from "@/core/minBudget";
 import { runPlanAgent, type AgentTraceItem } from "./planAgent";
 import { GeminiProvider } from "./provider";
 import { lapKeHoachTuDong } from "@/core/lapKeHoachTuDong";
@@ -15,6 +14,7 @@ import { geocodeDestination, type GeocodeCandidate } from "@/data/live/geocodeCl
 import { getSnapshotDiemDen } from "@/data/prepareDestination";
 
 import { getLastOverpassStatsSummary } from "@/data/live/overpassClient";
+import { logger } from "@/lib/logger";
 
 export interface PlanRepairResult {
   status:
@@ -171,7 +171,7 @@ export async function planWithRepair(
     return emptyResult;
   }
 
-  console.log("[planWithRepair] Initializing LiveDataSource for:", resolvedDiemDen.ten);
+  logger.debug("[planWithRepair] Initializing LiveDataSource for:", resolvedDiemDen.ten);
   const liveDataSource = new LiveDataSource(
     undefined,
     undefined,
@@ -183,7 +183,7 @@ export async function planWithRepair(
   const mode = liveDataSource.getMode();
   emptyResult.dataSourceUsed = mode;
 
-  console.log("[planWithRepair] Fetching all data via Promise.all...");
+  logger.debug("[planWithRepair] Fetching all data via Promise.all...");
   // Lấy dữ liệu song song
   const [transports, hotels, activities, khachSans, quanAns, cafes, hoatDongs] =
     await Promise.all([
@@ -195,7 +195,7 @@ export async function planWithRepair(
       liveDataSource.getCafes(),
       liveDataSource.getHoatDongs(),
     ]);
-  console.log(`[planWithRepair] Data ready: ${transports.length} transports, ${khachSans.length} hotels, ${quanAns.length} food, ${hoatDongs.length} activities`);
+  logger.debug(`[planWithRepair] Data ready: ${transports.length} transports, ${khachSans.length} hotels, ${quanAns.length} food, ${hoatDongs.length} activities`);
 
   const dsUsedInfo = liveDataSource.getDataSourceUsed();
   emptyResult.dataSourceUsed = dsUsedInfo.source;
@@ -227,7 +227,7 @@ export async function planWithRepair(
     if (thieuQA) lyDoThieu.push(`quán ăn (${quanAns.length}/2)`);
 
     const overpassStats = getLastOverpassStatsSummary();
-    console.warn(
+    logger.warn(
       `[planWithRepair] Kho dữ liệu không đủ: thiếu ${lyDoThieu.join(", ")}. Dừng trước khi gọi Gemini.`
     );
 

@@ -15,7 +15,6 @@
 import { loadEnvConfig } from "@next/env";
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { LiveDataSource } from "../src/data/live/LiveDataSource";
 import { getTavilyUsageToday } from "../src/data/live/searchClient";
 import { getGeminiCallCount } from "../src/data/live/researchTransport";

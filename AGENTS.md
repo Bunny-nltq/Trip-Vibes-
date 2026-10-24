@@ -7,10 +7,10 @@ Cấu trúc: `src/contracts`, `src/core`, `src/ai`, `src/data`, `src/app/api`, `
 
 ## 1. Phạm vi sản phẩm
 - **Điểm đến**: Hỗ trợ bất kỳ điểm đến du lịch nào. Bộ dữ liệu snapshot chính thức hỗ trợ 5 điểm đến: Đà Nẵng, Hà Nội, Đà Lạt, Bangkok, Seoul. (Phú Quốc chưa hỗ trợ do Overpass không truy vấn được).
-- **Độ dài chuyến đi**: Từ 2 đến 5 ngày.
-- **Mô hình người dùng**: Sử dụng ở chế độ khách (Guest mode), không yêu cầu tài khoản hay đăng nhập (các nút Đăng nhập, Đăng ký hiển thị nhãn "Sắp có").
+- **Độ dài chuyến đi**: Từ 2 đến 7 ngày.
+- **Mô hình người dùng**: Sử dụng ở chế độ khách (Guest mode), không yêu cầu tài khoản hay đăng nhập (không có nút Đăng nhập hay Đăng ký).
 - **Khu vực website**: Gồm 2 khu vực chính:
-  1. Khu vực trang công khai: Trang chủ (`/`), Khám phá điểm đến (`/kham-pha`), Lịch trình mẫu (`/lich-trinh`), Trợ giúp / Giới hạn / Nguồn ảnh. Không có trang "Cách hoạt động" riêng (tính năng được giới thiệu trực tiếp trên Home).
+  1. Khu vực trang công khai: Trang chủ (`/`), Điểm đến (`/diem-den`, `/diem-den/[slug]`), Khách sạn (`/khach-san`), Lịch trình mẫu (`/lich-trinh`), Trợ giúp / Giới hạn / Nguồn ảnh / Điều khoản. Không có trang "Cách hoạt động" riêng (tính năng được giới thiệu trực tiếp trên Home).
   2. Khu vực ứng dụng lập kế hoạch: `/lap-ke-hoach`.
 - **Phạm vi không thực hiện**: Không đặt vé thật, không tư vấn visa, không thanh toán thật, không đồng bộ đa thiết bị thời gian thực, không nhúng bản đồ tương tác khi chưa có thỏa thuận cấp phép ô bản đồ.
 
@@ -49,7 +49,7 @@ Cấu trúc: `src/contracts`, `src/core`, `src/ai`, `src/data`, `src/app/api`, `
 - Số tiền đọc từ bill luôn cần người dùng xác nhận trước khi ghi vào sổ chi tiêu.
 - Ảnh bill chỉ xử lý trong bộ nhớ: không lưu đĩa, không log.
 - Dữ liệu động luôn có nguồn và ngày lấy; giá ước tính phải gắn nhãn; không tự điền sao Google.
-- Phạm vi: điểm đến bất kỳ, 2 đến 5 ngày; giá ước tính và tỷ giá phải gắn nhãn và nguồn; Nominatim tối đa 1 yêu cầu mỗi giây.
+- Phạm vi: điểm đến bất kỳ, 2 đến 7 ngày; giá ước tính và tỷ giá phải gắn nhãn và nguồn; Nominatim tối đa 1 yêu cầu mỗi giây.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

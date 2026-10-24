@@ -19,6 +19,7 @@ import crypto from "node:crypto";
 import type { KhachSan, QuanAn, Cafe, HoatDong, Preference } from "@/contracts";
 import { buildMapsUrls } from "@/core/maps";
 import { CAFE_MAC_DINH_MOI_NGUOI } from "@/core/assumptions";
+import { logger } from "@/lib/logger";
 
 const USER_AGENT =
   process.env.NOMINATIM_USER_AGENT ||
@@ -218,19 +219,7 @@ function readCacheWithInfo<T>(
   }
 
   return null;
-}
-
-function readCache<T>(
-  key: string,
-  loaiKey?: string,
-  lat?: number,
-  lng?: number
-): T | null {
-  const res = readCacheWithInfo<T>(key, loaiKey, lat, lng);
-  return res ? res.data : null;
-}
-
-function writeCache(
+}function writeCache(
   key: string,
   data: unknown,
   mayChu: string = "unknown"
@@ -284,7 +273,7 @@ async function queryOverpass(
   const cachedHit = readCacheWithInfo<OsmElement[]>(cacheKey, loaiKey, toaDo?.lat, toaDo?.lng);
   if (cachedHit) {
     const originInfo = cachedHit.metadata?.mayChu ? ` từ ${cachedHit.metadata.mayChu}` : "";
-    console.log(`[Overpass] [${loai}] Lấy từ cache (${cachedHit.data.length} phần tử, tuổi: ${cachedHit.ageHours.toFixed(1)}h${originInfo}).`);
+    logger.debug(`[Overpass] [${loai}] Lấy từ cache (${cachedHit.data.length} phần tử, tuổi: ${cachedHit.ageHours.toFixed(1)}h${originInfo}).`);
     lastOverpassStats.push({
       server: cachedHit.metadata?.mayChu || "cache",
       attempts: 0,
@@ -321,11 +310,7 @@ async function queryOverpass(
     const bestElements: OsmElement[] = [];
 
     for (const endpoint of endpoints) {
-      let serverAttempts = 0;
-      const retryDelays = [2000, 5000];
-
       for (let attempt = 1; attempt <= 3; attempt++) {
-        serverAttempts = attempt;
         const startTime = Date.now();
         try {
           // Giãn cách nhẹ giữa các cuộc gọi mạng
@@ -350,7 +335,7 @@ async function queryOverpass(
             response.status === 503 ||
             response.status === 504
           ) {
-            console.log(
+            logger.debug(
               `[Overpass] [${loai}] ${endpoint} | ${durationMs}ms | 0 phần tử | status: ${response.status} (lần ${attempt})`
             );
             if (attempt <= 1) {
@@ -368,13 +353,13 @@ async function queryOverpass(
           const elements = json.elements ?? [];
 
           // Log mỗi truy vấn: máy chủ, thời gian ms, số phần tử, status
-          console.log(
+          logger.debug(
             `[Overpass] [${loai}] ${endpoint} | ${durationMs}ms | ${elements.length} phần tử | status: ${response.status}`
           );
 
           // Nếu máy chủ trả 0 phần tử, thử máy chủ kế tiếp trước khi kết luận là 0
           if (elements.length === 0 && endpoints.indexOf(endpoint) < endpoints.length - 1) {
-            console.warn(
+            logger.warn(
               `[Overpass] [${loai}] ${endpoint} trả 0 phần tử, đang thử máy chủ kế tiếp...`
             );
             lastOverpassStats.push({
@@ -402,7 +387,7 @@ async function queryOverpass(
         } catch (err: unknown) {
           const durationMs = Date.now() - startTime;
           const errorMsg = err instanceof Error ? err.message : String(err);
-          console.log(
+          logger.debug(
             `[Overpass] [${loai}] ${endpoint} | ${durationMs}ms | 0 phần tử | status: ERR | lỗi: ${errorMsg} (lần ${attempt})`
           );
 
@@ -499,7 +484,7 @@ export async function fetchKhachSansOSM(
     cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "hotels");
     elements = await queryOverpass(ql, cacheKey, "khach_san_half", "hotels", toaDo);
     if (elements.length === 0) {
-      console.warn(`[Overpass] [khach_san] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
+      logger.warn(`[Overpass] [khach_san] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
     }
   }
 
@@ -546,7 +531,7 @@ export async function fetchKhachSansOSM(
 
 export async function fetchQuanAnsOSM(
   toaDo: { lat: number; lng: number },
-  tenDiemDen: string = ""
+  _tenDiemDen: string = ""
 ): Promise<QuanAn[]> {
   let nuaCanhVi = 0.03;
   let b = boundingBox(toaDo, nuaCanhVi);
@@ -573,7 +558,7 @@ export async function fetchQuanAnsOSM(
     cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "restaurants");
     elements = await queryOverpass(ql, cacheKey, "quan_an_half", "restaurants", toaDo);
     if (elements.length === 0) {
-      console.warn(`[Overpass] [quan_an] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
+      logger.warn(`[Overpass] [quan_an] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
     }
   }
 
@@ -615,7 +600,7 @@ export async function fetchQuanAnsOSM(
 
 export async function fetchCafesOSM(
   toaDo: { lat: number; lng: number },
-  tenDiemDen: string = ""
+  _tenDiemDen: string = ""
 ): Promise<Cafe[]> {
   let nuaCanhVi = 0.03;
   let b = boundingBox(toaDo, nuaCanhVi);
@@ -640,7 +625,7 @@ export async function fetchCafesOSM(
     cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "cafes");
     elements = await queryOverpass(ql, cacheKey, "cafe_half", "cafes", toaDo);
     if (elements.length === 0) {
-      console.warn(`[Overpass] [cafe] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
+      logger.warn(`[Overpass] [cafe] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
     }
   }
 
@@ -719,7 +704,7 @@ export async function fetchHoatDongsOSM(
     cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "attractions");
     elements = await queryOverpass(ql, cacheKey, "hoat_dong_half", "attractions", toaDo);
     if (elements.length === 0) {
-      console.warn(`[Overpass] [hoat_dong] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
+      logger.warn(`[Overpass] [hoat_dong] Thiếu dữ liệu sau khi thử cả hộp nhỏ hơn một nửa.`);
     }
   }
 

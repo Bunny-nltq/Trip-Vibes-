@@ -4,7 +4,7 @@ import { executeTimKhachSan } from "./tools";
 import { locUngVienTheoNganSach } from "@/core/locUngVienTheoNganSach";
 import { validatePlan } from "@/core/validatePlan";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
-import type { TripRequest, Transport, Hotel, Activity, KhachSan, QuanAn, Cafe, HoatDong } from "@/contracts";
+import type { TripRequest, Hotel } from "@/contracts";
 
 describe("planWithRepair - Tích hợp giới hạn thời gian & dự phòng quy tắc (Mục 4)", () => {
   const transports: any[] = [

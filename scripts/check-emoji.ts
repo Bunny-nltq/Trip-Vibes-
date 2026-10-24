@@ -40,7 +40,6 @@ export function runCheckEmoji(): boolean {
 
   const uiFiles = scanDirectory(UI_DIR);
   const appFiles = scanDirectory(APP_DIR);
-  const allFiles = [...uiFiles, ...appFiles];
 
   const violationsUI: ViPhamEmoji[] = [];
   const violationsApp: ViPhamEmoji[] = [];

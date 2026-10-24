@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useApp, extractSelectionFromPlan } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
@@ -65,6 +65,9 @@ export function B5KhachSanScreen() {
     loai: "khach_san",
     enabled: mode === "khach_san",
     soNguoi,
+    diemDen: plan?.request.diemDen,
+    diemDi: plan?.request.diemDi,
+    soNgay: plan?.request.soNgay ?? undefined,
   });
 
   // Fetch activities
@@ -76,15 +79,18 @@ export function B5KhachSanScreen() {
     loai: "hoat_dong",
     enabled: mode === "hoat_dong",
     soNguoi,
+    diemDen: plan?.request.diemDen,
+    diemDi: plan?.request.diemDi,
+    soNgay: plan?.request.soNgay ?? undefined,
   });
 
   const { preview, loading: loadingPreview, error: errorPreview } = usePlanPreview();
 
-  useEffect(() => {
-    if (editContext?.currentId) {
-      setSelectedId(editContext.currentId);
-    }
-  }, [editContext]);
+  const [editContextTruoc, setEditContextTruoc] = useState(editContext);
+  if (editContext !== editContextTruoc) {
+    setEditContextTruoc(editContext);
+    if (editContext?.currentId) setSelectedId(editContext.currentId);
+  }
 
   // Current hotel cost for reference comparison
   const currentHotelItem = plan?.items.find((i) => i.hangMuc === "Chỗ ở");

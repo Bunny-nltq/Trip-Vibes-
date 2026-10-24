@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { TripRequest, Selection } from "@/contracts";
-import { LiveDataSource } from "@/data/live/LiveDataSource";
+import { taoDataSourceTuRequest } from "../_dataSource";
 import { GeminiProvider } from "@/ai/provider";
 import { planRegenerate } from "@/ai/planRegenerate";
 
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const liveDataSource = new LiveDataSource();
+    const liveDataSource = taoDataSourceTuRequest(request);
 
     // Lấy dữ liệu song song từ LiveDataSource (theo DATA_MODE, có cache)
     const [transports, hotels, activities, khachSans, quanAns, cafes, hoatDongs] =

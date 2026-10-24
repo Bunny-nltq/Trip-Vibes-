@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { coTuyenTau, chuanHoaTen } from "./tuyenTau";
+import { coTuyenTau } from "./tuyenTau";
 
 describe("tuyenTau – coTuyenTau (đáp án người dùng B3b)", () => {
   it("coTuyenTau('TP.HCM', 'Hà Nội') -> true", () => {

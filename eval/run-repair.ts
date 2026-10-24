@@ -80,11 +80,9 @@ async function main() {
     const cacheFile = path.join(cacheDir, `eval-repair-${cacheKey}.json`);
 
     let res: any = null;
-    let fromCache = false;
     if (fs.existsSync(cacheFile)) {
       try {
         res = JSON.parse(fs.readFileSync(cacheFile, "utf-8"));
-        fromCache = true;
       } catch {}
     }
 

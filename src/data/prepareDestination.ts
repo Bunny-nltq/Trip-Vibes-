@@ -12,19 +12,7 @@
 
 import path from "node:path";
 import fs from "node:fs";
-import type {
-  DiemDen,
-  KhachSan,
-  QuanAn,
-  Cafe,
-  HoatDong,
-  Transport,
-  CategoryKey,
-  CategoryStatus,
-  CategoryProgress,
-  JobStatus,
-  DestinationJob,
-} from "@/contracts";
+import type { DiemDen, CategoryKey, CategoryStatus, CategoryProgress, JobStatus, DestinationJob } from "@/contracts";
 import { DEFAULT_DIEM_DI } from "@/contracts";
 import {
   fetchKhachSansOSM,
@@ -114,7 +102,7 @@ export function hasSnapshotForDestination(diemDen: DiemDen | string): boolean {
 
 import crypto from "node:crypto";
 
-function hasSpecificCacheForDestination(diemDen: DiemDen, diemDi: DiemDen = DEFAULT_DIEM_DI): boolean {
+function hasSpecificCacheForDestination(diemDen: DiemDen, _diemDi: DiemDen = DEFAULT_DIEM_DI): boolean {
   const cacheDir = path.join(process.cwd(), ".cache", "data");
   if (!fs.existsSync(cacheDir)) return false;
 
@@ -240,7 +228,7 @@ export function getSnapshotDiemDen(diemDen: DiemDen | string): DiemDen | null {
 export function isDataReadyForDestination(
   diemDen: DiemDen | string,
   diemDi: DiemDen = DEFAULT_DIEM_DI,
-  soNgay: number = 3
+  _soNgay: number = 3
 ): boolean {
   // 1. Nếu có snapshot thì luôn sẵn sàng
   if (hasSnapshotForDestination(diemDen)) {

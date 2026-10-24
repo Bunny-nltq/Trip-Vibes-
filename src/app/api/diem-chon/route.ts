@@ -104,7 +104,7 @@ export async function GET() {
       diemDi,
       diemDen,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Không thể lấy danh sách điểm chọn." },
       { status: 500 }

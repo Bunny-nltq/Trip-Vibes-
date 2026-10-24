@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { lapKeHoachTuDong } from "./lapKeHoachTuDong";
-import type { TripRequest, Transport, Hotel, Activity } from "@/contracts";
+import type { TripRequest, Hotel, Activity } from "@/contracts";
 
 const baseRequest: TripRequest = {
   schemaVersion: 9,

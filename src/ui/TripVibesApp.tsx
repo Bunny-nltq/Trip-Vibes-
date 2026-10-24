@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useSyncExternalStore } from "react";
 import { AppProvider, useApp } from "@/ui/context/AppContext";
 import { TopBar } from "@/ui/components/TopBar";
 import { WelcomeScreen } from "@/ui/screens/WelcomeScreen";
@@ -23,17 +23,14 @@ import { useSessionLog } from "@/ui/hooks/useSessionLog";
  */
 function DevTools() {
   const { nav, screen } = useApp();
-  const [hasDevParam, setHasDevParam] = useState(false);
+  const hasDevParam = useSyncExternalStore(
+    () => () => {},
+    () =>
+      process.env.NODE_ENV === "development" &&
+      new URLSearchParams(window.location.search).get("dev") === "1",
+    () => false
+  );
   const [isOpen, setIsOpen] = useState(true);
-
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
-      const sp = new URLSearchParams(window.location.search);
-      if (sp.get("dev") === "1") {
-        setHasDevParam(true);
-      }
-    }
-  }, []);
 
   if (!hasDevParam) {
     return null;

@@ -5,39 +5,12 @@ import {
   getDiemDenTen,
   type DiemDen,
 } from "@/contracts";
-import {
-  FormB1,
-  FormB1ErrorCode,
-  kiemTraFormB1,
-  taoYeuCauTuForm,
-  dinhDangTien,
-  docTien,
-} from "@/core/formB1";
-import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
+import { FormB1, kiemTraFormB1, taoYeuCauTuForm, dinhDangTien, docTien } from "@/core/formB1";
 import { docGoiChuyenTuSession } from "@/ui/lib/chuyenB1";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import { ChonDiem } from "@/ui/components/ChonDiem";
 import { useDiemChon } from "@/ui/hooks/useDiemChon";
-import {
-  MapPin,
-  Search,
-  Calendar,
-  Wallet,
-  Check,
-  Plane,
-  Paperclip,
-  Moon,
-  Sunrise,
-  Timer,
-  Users,
-  Footprints,
-  RefreshCw,
-  AlertCircle,
-  AlertTriangle,
-  Minus,
-  Plus,
-  Loader2,
-} from "lucide-react";
+import { MapPin, Check, Plane, Moon, Sunrise, Timer, Users, Footprints, AlertCircle, Minus, Plus } from "lucide-react";
 
 const PRESETS = [
   {
@@ -70,35 +43,18 @@ const PRESETS = [
   },
 ];
 
-const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000];
-const QUICK_ORIGINS = ["TP.HCM", "Hà Nội", "Đà Nẵng", "Cần Thơ"];
-const QUICK_DESTINATIONS = [
-  "Đà Nẵng",
-  "Hà Nội",
-  "Đà Lạt",
-  "Phú Quốc",
-  "Nha Trang",
-  "Bangkok",
-  "Seoul",
-  "Tokyo",
-];
-
-const AVOID_ITEMS = [
+const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000];const AVOID_ITEMS = [
   { label: "Không dậy sớm", icon: Sunrise },
   { label: "Không đi đêm", icon: Moon },
   { label: "Tránh đi lâu", icon: Timer },
   { label: "Tránh chỗ đông", icon: Users },
   { label: "Tránh đi bộ nhiều", icon: Footprints },
-];
-const DURATION_DAYS = [2, 3, 4, 5, 6, 7];
-
-export function B1ChonNhanhScreen() {
+];export function B1ChonNhanhScreen() {
   const {
     nav,
     tripConfig,
     setTripConfig,
     executePlan,
-    planResult,
   } = useApp();
   const { aiBat } = useTrangThaiAI();
   const { data: diemChonData } = useDiemChon();
@@ -139,6 +95,7 @@ export function B1ChonNhanhScreen() {
     const pkg = docGoiChuyenTuSession();
     if (pkg) {
       if (pkg.diemDiTen) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- đồng bộ với hệ thống bên ngoài React (URL, sessionStorage, mạng) chỉ làm được sau khi dựng
         setDiemDi({
           ten: pkg.diemDiTen,
           quocGia: "Việt Nam",

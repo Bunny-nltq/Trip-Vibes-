@@ -1,18 +1,8 @@
 import type { TripRequest, Plan } from "@/contracts";
 import type { PlanData } from "./buildPlan";
 import { calculateTransportFlags } from "./flags";
-import {
-  GIO_HOAT_DONG_1,
-  GIO_HOAT_DONG_2,
-  GIO_NHAN_PHONG,
-  BUFFER_SAU_KHI_DEN_PHUT,
-  BUFFER_RA_BEN_PHUT,
-  BUFFER_GIUA_HOAT_DONG_PHUT,
-  NGUONG_GAN_HET_NGAN_SACH_PHAN_TRAM,
-  DANH_SACH_MA_CANH_BAO,
-} from "./assumptions";
+import { GIO_HOAT_DONG_1, GIO_HOAT_DONG_2, GIO_NHAN_PHONG, BUFFER_RA_BEN_PHUT, BUFFER_GIUA_HOAT_DONG_PHUT, NGUONG_GAN_HET_NGAN_SACH_PHAN_TRAM, DANH_SACH_MA_CANH_BAO } from "./assumptions";
 import { coCanhBaoDiChuyen, tiLeThoiGianDiChuyen } from "./tiLeDiChuyen";
-import { gioOHoatDongNgayDau } from "./gioONgayDau";
 import { tinhOKhaDungTheoNgay } from "./oKhaDung";
 import { soDemOKhachSan } from "./soDem";
 import { min2hhmm } from "./mealTimes";

@@ -282,7 +282,7 @@ export async function researchTransports(
 async function doResearchTransports(
   diemDi: DiemDen,
   diemDen: DiemDen,
-  soNgay: number = 3,
+  _soNgay: number = 3,
   giaVeNhapTay?: { chieuDiVND: number; chieuVeVND: number }
 ): Promise<ResearchTransportResult> {
   // 1. Nếu người dùng tự nhập giá tay

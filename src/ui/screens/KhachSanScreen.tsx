@@ -59,6 +59,7 @@ export function KhachSanScreen({
       const sp = new URLSearchParams(window.location.search);
       const querySlug = sp.get("diem-den");
       if (querySlug && danhSachDiemDen.some((d) => d.slug === querySlug)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- đồng bộ với hệ thống bên ngoài React (URL, sessionStorage, mạng) chỉ làm được sau khi dựng
         setSelectedSlug(querySlug);
       }
     }

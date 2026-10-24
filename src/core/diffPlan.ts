@@ -11,7 +11,7 @@
  * - canhBaoMoi: mã vi phạm (hard+soft) có trong "sau" mà không có trong "truoc".
  */
 
-import type { Plan, TripRequest } from "@/contracts";
+import type { Plan } from "@/contracts";
 import { validatePlan } from "./validatePlan";
 import type { PlanData } from "./buildPlan";
 
@@ -91,37 +91,7 @@ function itemsChanged(truoc: Plan, sau: Plan, ngay: number): boolean {
     }
   }
   return false;
-}
-
-/**
- * Tính phút đến nơi của chiều về (tính từ 00:00 ngày về).
- * Nếu >= 1440 → đến nơi sang ngày hôm sau.
- */
-function tinhPhutDenVe(sau: Plan): number {
-  const tVeItem = sau.items.find(
-    (i) => i.hangMuc === "Di chuyển" && i.ngay === sau.request.soNgay
-  );
-  if (!tVeItem || !tVeItem.gio) return 0;
-
-  // Phút khởi hành theo gio của item (danh nghĩa)
-  const [h, m] = tVeItem.gio.split(":").map(Number);
-  const phutKhoiHanh = h * 60 + m;
-
-  // Lấy durationMinutes từ noiDung hoặc để 0 (không có thông tin)
-  // Thực tế cần data, nhưng hàm này chỉ dùng để kiểm tra "đến nơi sang ngày sau"
-  // → dùng thoiGianDiChuyenPhut của tongKet (tổng = di + ve)
-  // Thay vào đó ta dùng tongThoiGianDiChuyenPhut của SAU trừ TRUOC để lấy tVe.duration
-  // Không có trực tiếp. Ta dùng logic khác:
-  // Chiều về sang ngày sau khi: phutKhoiHanh + durationVe >= 1440
-  // Vì không có duration riêng của ve trong Plan, ta dùng conservative approach:
-  // Nếu thoiGianDiChuyenPhut > 720 phút (12h) thì rất có thể sang ngày sau.
-  // NHƯNG mô tả yêu cầu: "nếu giờ đến của chiều về sang ngày sau" → cần duration
-  // → Ta khai thác thông tin từ noiDung bằng cách kiểm tra tVe.gio + diff của tongThoiGianDiChuyenPhut
-
-  return phutKhoiHanh; // placeholder, xem bên dưới
-}
-
-// ─── Main export ─────────────────────────────────────────────────────────────
+}// ─── Main export ─────────────────────────────────────────────────────────────
 
 /**
  * diffPlan(truoc, sau, request, data) → PlanDiff

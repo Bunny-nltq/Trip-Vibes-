@@ -21,7 +21,6 @@ process.env.LIVE_AI_ENABLED = "false";
 process.env.DATA_MODE = "snapshot";
 
 import { planWithRepair } from "../src/ai/planWithRepair";
-import { validatePlan } from "../src/core/validatePlan";
 import { getSnapshotDiemDen } from "../src/data/prepareDestination";
 import type { TripRequest, Plan } from "../src/contracts";
 import { DEFAULT_DIEM_DI, schemaVersion } from "../src/contracts";
@@ -188,7 +187,7 @@ async function main() {
     let hotelOk = true;
     for (const h of hotelItems) {
       if (h.gio) {
-        const [hh, mm] = h.gio.split(":").map(Number);
+        const [hh] = h.gio.split(":").map(Number);
         if (hh < 14) {
           hotelOk = false;
           console.error(`  ❌ LỖI Bất biến 3: Giờ nhận phòng sớm hơn 14:00 (${h.gio})`);

@@ -28,13 +28,7 @@ type Screen =
   | "b10-chon-nguon"
   | "b11-ngan-sach";
 
-import {
-  POPULAR_DESTINATIONS,
-  POPULAR_ORIGINS,
-  toDiemDen,
-  type DiemDen,
-  getDiemDenTen,
-} from "@/contracts";
+import { POPULAR_DESTINATIONS, POPULAR_ORIGINS, toDiemDen, type DiemDen } from "@/contracts";
 
 export interface TripConfig {
   diemDi: DiemDen | string | null;
@@ -615,13 +609,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setEditContext(null);
       setScreen("b3-ke-hoach");
     }
-  }, [previewData, history]);
+  }, [previewData, history, setPreviewData]);
 
   const cancelPreview = useCallback(() => {
     setPreviewData(null);
     setEditContext(null);
     setScreen("b3-ke-hoach");
-  }, []);
+  }, [setPreviewData]);
 
   return (
     <Ctx.Provider

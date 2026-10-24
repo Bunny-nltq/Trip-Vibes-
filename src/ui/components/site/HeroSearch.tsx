@@ -27,20 +27,15 @@ export function HeroSearch({ onSuccess }: HeroSearchProps) {
   const router = useRouter();
   const { data: diemChonData } = useDiemChon();
 
-  const [diemDi, setDiemDi] = useState<DiemDen | null>(null);
+  const [diemDiChon, setDiemDi] = useState<DiemDen | null>(null);
+  // Mặc định là điểm đi đầu tiên trong danh sách khi người dùng chưa chọn
+  const diemDi = diemDiChon ?? diemChonData.diemDi[0] ?? null;
   const [diemDen, setDiemDen] = useState<DiemDen | null>(null);
   const [soNgay, setSoNgay] = useState<number>(3);
   const [soNguoi, setSoNguoi] = useState<number>(2);
   const [nganSachStr, setNganSachStr] = useState<string>("10.000.000");
   const [nganSachTheo, setNganSachTheo] = useState<"tong" | "moi_nguoi">("tong");
   const [loi, setLoi] = useState<string | null>(null);
-
-  // Mặc định chọn điểm đi đầu tiên khi có data nếu chưa chọn
-  React.useEffect(() => {
-    if (!diemDi && diemChonData.diemDi.length > 0) {
-      setDiemDi(diemChonData.diemDi[0]);
-    }
-  }, [diemChonData.diemDi, diemDi]);
 
   const handleNganSachChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;

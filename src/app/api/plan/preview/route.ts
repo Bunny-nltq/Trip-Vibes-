@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { LiveDataSource } from "@/data/live/LiveDataSource";
+import { taoDataSourceTuRequest } from "../_dataSource";
 import { buildPlan } from "@/core/buildPlan";
 import { validatePlan } from "@/core/validatePlan";
 import { diffPlan } from "@/core/diffPlan";
 import {
   TripRequestSchema,
   SelectionSchema,
+  schemaVersion,
   type TripRequest,
   type Selection,
 } from "@/contracts";
@@ -46,12 +47,11 @@ export async function POST(req: Request) {
     // Normalize and validate request
     const rawReq = (payload.request && typeof payload.request === "object") ? { ...(payload.request as object) } : {};
     const filledReq = {
-      schemaVersion: 1,
-      diemDi: "TP.HCM",
-      diemDen: "Đà Nẵng",
-      soNgay: 3,
-      soNguoi: 2,
-      ngansachTongVND: 10_000_000,
+      schemaVersion,
+      diemDen: null,
+      soNgay: null,
+      soNguoi: null,
+      ngansachTongVND: null,
       sothich: [],
       tranh: [],
       ghiChu: [],
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
     }
 
     // Load data
-    const ds = new LiveDataSource();
+    const ds = taoDataSourceTuRequest(tripRequest);
     const [transports, hotels, activities, khachSans, quanAns, cafes, hoatDongs] =
       await Promise.all([
         ds.getTransports(),

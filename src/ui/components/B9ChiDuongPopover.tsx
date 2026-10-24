@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import type { ProgressPlace } from "@/core/tripProgress";
-import { Check, Copy, ExternalLink, X } from "lucide-react";
+import { X } from "lucide-react";
 
 interface B9ChiDuongPopoverProps {
   place: ProgressPlace | null;

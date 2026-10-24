@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, afterEach } from "vitest";
 
 describe("Production mode parameter ignore", () => {
   const originalEnv = process.env.NODE_ENV;

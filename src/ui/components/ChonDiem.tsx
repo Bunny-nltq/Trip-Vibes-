@@ -65,10 +65,12 @@ export function ChonDiem({
   const inputRef = useRef<HTMLInputElement>(null);
   const listboxRef = useRef<HTMLUListElement>(null);
 
-  // Đồng bộ searchTerm khi value từ ngoài thay đổi
-  useEffect(() => {
+  // Đồng bộ searchTerm khi value từ ngoài thay đổi (điều chỉnh state lúc render, không dùng effect)
+  const [giaTriTruoc, setGiaTriTruoc] = useState(value);
+  if (value !== giaTriTruoc) {
+    setGiaTriTruoc(value);
     setSearchTerm(value?.ten || "");
-  }, [value]);
+  }
 
   // Lọc danh sách theo từ khoá
   const filteredOptions = options.filter((opt) => {

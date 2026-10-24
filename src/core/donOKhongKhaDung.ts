@@ -8,18 +8,9 @@
  */
 
 import type { Selection, Plan, Transport } from "@/contracts";
-import {
-  BUFFER_SAU_KHI_DEN_PHUT,
-  BUFFER_RA_BEN_PHUT,
-  THOI_LUONG_TOI_THIEU_HOAT_DONG,
-} from "./assumptions";
 import { gioOHoatDongNgayDau } from "./gioONgayDau";
 import { tinhOKhaDungTheoNgay } from "./oKhaDung";
 import { min2hhmm } from "./mealTimes";
-
-const GIO_HOAT_DONG_1_PHUT = 9 * 60 + 30; // 570 phút ("09:30")
-const NGUONG_VE_PHUT =
-  GIO_HOAT_DONG_1_PHUT + THOI_LUONG_TOI_THIEU_HOAT_DONG + BUFFER_RA_BEN_PHUT; // 750 phút
 
 function parseMinutes(val: unknown): number | null {
   if (typeof val === "number" && !isNaN(val)) return val;

@@ -2,24 +2,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useApp } from "@/ui/context/AppContext";
 import { getDiemDenTen, type DiemDen } from "@/contracts";
-import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import type { CategoryKey, CategoryProgress } from "@/contracts";
-import {
-  Check,
-  AlertCircle,
-  AlertTriangle,
-  Loader2,
-  Hotel,
-  Utensils,
-  Coffee,
-  Compass,
-  Bus,
-  Tag,
-  RefreshCw,
-  ArrowLeft,
-  X,
-} from "lucide-react";
+import { Check, AlertCircle, Loader2, Hotel, Utensils, Coffee, Compass, Bus, Tag, RefreshCw } from "lucide-react";
 
 const AI_STEPS = [
   { label: "Tìm phương tiện", sub: "Đang chọn phương tiện chiều đi và chiều về..." },
@@ -53,9 +38,7 @@ export function B2AgentScreen() {
     nav,
     tripConfig,
     planStatus,
-    planRequest,
     planError,
-    planResult,
     loadingStep,
     executePlan,
     retryPlan,
@@ -85,7 +68,7 @@ export function B2AgentScreen() {
   } | null>(null);
 
   const pollTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const startTimeRef = useRef<number>(Date.now());
+  const startTimeRef = useRef<number>(0);
   const hasExecutedPlanRef = useRef(false);
 
   const diemDen = tripConfig.diemDen as DiemDen | null;
@@ -155,6 +138,7 @@ export function B2AgentScreen() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- đồng bộ với hệ thống bên ngoài React (URL, sessionStorage, mạng) chỉ làm được sau khi dựng
     startPrepare();
 
     return () => {
@@ -162,6 +146,7 @@ export function B2AgentScreen() {
         clearInterval(pollTimerRef.current);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- chủ ý chỉ chạy một lần khi màn hình mở
   }, []);
 
   // 2. Poll trạng thái mỗi 2 giây nếu đang chạy công việc chuẩn bị
