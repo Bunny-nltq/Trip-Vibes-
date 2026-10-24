@@ -186,7 +186,7 @@ export function LichTrinhChiTietScreen({
               {/* Nút hành động đầu trang */}
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <Link
-                  href={`/lap-ke-hoach?diemDen=${encodeURIComponent(data.tenDiemDen)}&ngansach=${data.ngansachTongVND}&soNgay=3&soNguoi=2`}
+                  href={`/lap-ke-hoach?mau=${data.slug}`}
                   style={{
                     textDecoration: "none",
                     display: "inline-flex",
@@ -494,7 +494,7 @@ export function LichTrinhChiTietScreen({
               </Link>
 
               <Link
-                href={`/lap-ke-hoach?diemDen=${encodeURIComponent(data.tenDiemDen)}&ngansach=${data.ngansachTongVND}&soNgay=3&soNguoi=2`}
+                href={`/lap-ke-hoach?mau=${data.slug}`}
                 style={{
                   textDecoration: "none",
                   display: "inline-flex",

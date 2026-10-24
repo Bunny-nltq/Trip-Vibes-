@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { useApp } from "@/ui/context/AppContext";
-import { Compass, Send, BookOpen } from "lucide-react";
+import { Compass, Send, BookOpen, Receipt } from "lucide-react";
 
 export const SidebarContext = React.createContext<boolean>(false);
 
@@ -11,6 +11,9 @@ export function SideNav() {
 
   // Xác định mục nào sáng duy nhất theo màn hình hiện tại
   const activeItem = (() => {
+    if (screen === "b10-chon-nguon") {
+      return "doc-bill";
+    }
     if (
       [
         "b1-chon-nhanh",
@@ -24,17 +27,19 @@ export function SideNav() {
     ) {
       return "ke-hoach";
     }
-    if (["b8-chuyen-di", "b9-chi-duong", "b10-chon-nguon", "b11-ngan-sach"].includes(screen)) {
+    if (["b8-chuyen-di", "b9-chi-duong", "b11-ngan-sach"].includes(screen)) {
       return "nhat-ky";
     }
     return "ke-hoach";
   })();
 
-  const handleNavClick = (target: "ke-hoach" | "nhat-ky") => {
+  const handleNavClick = (target: "ke-hoach" | "nhat-ky" | "doc-bill") => {
     if (target === "ke-hoach") {
       nav("b1-chon-nhanh");
     } else if (target === "nhat-ky") {
       nav("b8-chuyen-di");
+    } else if (target === "doc-bill") {
+      nav("b10-chon-nguon");
     }
   };
 
@@ -65,7 +70,7 @@ export function SideNav() {
         </div>
       </Link>
 
-      {/* Navigation: CHỈ còn 2 mục "Lên kế hoạch" và "Nhật ký chuyến đi" */}
+      {/* Navigation: Lên kế hoạch, Nhật ký chuyến đi, Đọc hóa đơn */}
       <nav className="Nav" style={{ marginTop: 28 }}>
         {/* Lên kế hoạch */}
         <div
@@ -87,6 +92,17 @@ export function SideNav() {
         >
           <BookOpen size={18} />
           <span>Nhật ký chuyến đi</span>
+        </div>
+
+        {/* Đọc hóa đơn */}
+        <div
+          className={`NavItem ${activeItem === "doc-bill" ? "NavActive" : "NavOn"}`}
+          onClick={() => handleNavClick("doc-bill")}
+          role="button"
+          tabIndex={0}
+        >
+          <Receipt size={18} />
+          <span>Đọc hóa đơn</span>
         </div>
       </nav>
     </aside>

@@ -207,6 +207,20 @@ export interface AppCtx extends AppState {
 const Ctx = createContext<AppCtx | null>(null);
 
 const sampleDest = toDiemDen(POPULAR_DESTINATIONS[0]);
+import daNangMau from "@/data/mau/da-nang-3ngay.json";
+import haNoiMau from "@/data/mau/ha-noi-3ngay.json";
+import daLatMau from "@/data/mau/da-lat-3ngay.json";
+import bangkokMau from "@/data/mau/bangkok-3ngay.json";
+import seoulMau from "@/data/mau/seoul-3ngay.json";
+
+export const MAU_MAP: Record<string, Plan> = {
+  "da-nang": daNangMau.plan as unknown as Plan,
+  "ha-noi": haNoiMau.plan as unknown as Plan,
+  "da-lat": daLatMau.plan as unknown as Plan,
+  "bangkok": bangkokMau.plan as unknown as Plan,
+  "seoul": seoulMau.plan as unknown as Plan,
+};
+
 const sampleOrigin = POPULAR_ORIGINS[0];
 
 export const DEFAULT_SAMPLE_PLAN: Plan = {
@@ -416,8 +430,11 @@ export const BANGKOK_SAMPLE_PLAN: Plan = {
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [screen, setScreen] = useState<Screen>(() => {
     if (typeof window !== "undefined") {
-      const q = new URLSearchParams(window.location.search).get("screen");
+      const sp = new URLSearchParams(window.location.search);
+      const q = sp.get("screen");
       if (q) return q as Screen;
+      const mau = sp.get("mau");
+      if (mau && MAU_MAP[mau]) return "b3-ke-hoach";
     }
     return "b1-chon-nhanh";
   });
@@ -433,9 +450,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [activeTab, setActiveTab] = useState("b8-list");
   const isDev = process.env.NODE_ENV === "development";
   const [tripConfig, setTripConfigState] = useState<TripConfig>(() => {
-    if (isDev && typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
       const sp = new URLSearchParams(window.location.search);
-      if (sp.get("dest") === "bangkok") {
+      const mau = sp.get("mau");
+      if (mau && MAU_MAP[mau]) {
+        const p = MAU_MAP[mau];
+        return {
+          diemDi: p.request.diemDi,
+          diemDen: p.request.diemDen,
+          soNgay: p.request.soNgay ?? 3,
+          people: p.request.soNguoi ?? 2,
+          budget: p.request.ngansachTongVND ?? 10_000_000,
+          avoids: p.request.tranh ?? [],
+          note: (p.request.ghiChu || []).join(", "),
+        };
+      }
+      if (isDev && sp.get("dest") === "bangkok") {
         return {
           diemDi: sampleOrigin.ten,
           diemDen: BANGKOK_SAMPLE_PLAN.request.diemDen,
@@ -594,10 +624,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     typeof window !== "undefined" &&
     (new URLSearchParams(window.location.search).get("previewMoHo") === "1" ||
       new URLSearchParams(window.location.search).get("previewNhapGiaTay") === "1");
-  const fallbackPlan = isBangkokParam ? BANGKOK_SAMPLE_PLAN : DEFAULT_SAMPLE_PLAN;
+  const mauParam =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get("mau")
+      : null;
+  const mauPlan = mauParam && MAU_MAP[mauParam] ? MAU_MAP[mauParam] : null;
+  const fallbackPlan = mauPlan || (isBangkokParam ? BANGKOK_SAMPLE_PLAN : DEFAULT_SAMPLE_PLAN);
   const isUsingFallbackPlan = !history.current && !planState.plan;
   const isSampleDataActive =
     (isDev && (isBangkokParam || isPreviewParam || isUsingFallbackPlan)) ||
+    Boolean(mauPlan) ||
     planState.dataSourceUsed === "mock" ||
     history.current?.dataSourceUsed === "mock";
   const activePlan = history.current ?? planState.plan ?? fallbackPlan;

@@ -294,8 +294,7 @@ const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000
       return;
     }
     const yeuCau = taoYeuCauTuForm(currentForm);
-    nav("b2-dang-chay");
-    executePlan({
+    setTripConfig({
       diemDi: yeuCau.diemDi,
       diemDen: yeuCau.diemDen,
       soNgay: yeuCau.soNgay,
@@ -304,6 +303,7 @@ const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000
       avoids: yeuCau.tranh,
       note: yeuCau.ghiChu,
     });
+    nav("b2-dang-chay");
   };
 
   // Chú thích lý do vì sao nút "Lập kế hoạch" đang tắt

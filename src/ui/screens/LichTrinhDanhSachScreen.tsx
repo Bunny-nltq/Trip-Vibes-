@@ -323,7 +323,7 @@ export function LichTrinhDanhSachScreen({
                   </Link>
 
                   <Link
-                    href={`/lap-ke-hoach?diemDen=${encodeURIComponent(item.tenDiemDen)}&ngansach=${item.ngansachTongVND}&soNgay=3&soNguoi=2`}
+                    href={`/lap-ke-hoach?mau=${item.slug}`}
                     style={{
                       flex: 1.2,
                       textDecoration: "none",
