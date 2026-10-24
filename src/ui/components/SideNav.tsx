@@ -48,7 +48,7 @@ export function SideNav() {
               width: 38,
               height: 38,
               borderRadius: "var(--r-md)",
-              background: "linear-gradient(135deg, var(--color-primary-main), var(--color-primary-sky))",
+              background: "var(--color-primary-main)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -56,11 +56,11 @@ export function SideNav() {
               flexShrink: 0,
             }}
           >
-            <Compass size={22} />
+            <Compass size={20} strokeWidth={2.2} />
           </div>
           <div>
-            <div className="LogoName" style={{ fontSize: 20, fontWeight: 800 }}>Trip Vibes</div>
-            <div className="LogoSub">Kế hoạch theo ngân sách</div>
+            <div className="LogoName" style={{ fontSize: 18, fontWeight: 800, color: "var(--color-text)", letterSpacing: "-0.3px" }}>Trip Vibes</div>
+            <div className="LogoSub" style={{ fontSize: 11, color: "var(--color-text-sub)" }}>Hệ thống lập kế hoạch</div>
           </div>
         </div>
       </Link>

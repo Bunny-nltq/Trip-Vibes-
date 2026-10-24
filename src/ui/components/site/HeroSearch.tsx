@@ -320,14 +320,14 @@ export function HeroSearch({ onSuccess }: HeroSearchProps) {
         </div>
       )}
 
-      {/* Nút Submit */}
+      {/* Nút Submit Chuẩn Doanh Nghiệp */}
       <button
         type="submit"
         style={{
           height: 48,
           borderRadius: "var(--r-md)",
           border: "none",
-          background: "linear-gradient(135deg, var(--color-primary-main), var(--color-primary-sky))",
+          background: "var(--color-primary-main)",
           color: "var(--color-primary-text)",
           fontSize: 15,
           fontWeight: 700,
@@ -336,7 +336,8 @@ export function HeroSearch({ onSuccess }: HeroSearchProps) {
           alignItems: "center",
           justifyContent: "center",
           gap: 10,
-          boxShadow: "0 4px 14px rgba(43, 85, 214, 0.25)",
+          boxShadow: "0 2px 8px rgba(43, 85, 214, 0.2)",
+          transition: "background 0.15s ease",
         }}
       >
         <Send size={18} />

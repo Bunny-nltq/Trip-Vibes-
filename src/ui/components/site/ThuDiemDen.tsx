@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { MapPin, ArrowRight } from "lucide-react";
+import { MapPin, ArrowRight, Plane } from "lucide-react";
 
 export interface HinhAnhGhiCong {
   url: string;
@@ -191,10 +191,13 @@ export function ThuDiemDen({ diemDens }: ThuDiemDenProps) {
             </div>
           </div>
 
-          {/* Nút Xem điểm đến dẫn /diem-den/<slug> */}
+          {/* Nút thao tác: Xem chi tiết & Lên kế hoạch ngay */}
           <div
             style={{
               padding: "16px 20px 20px",
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 10,
             }}
           >
             <Link
@@ -203,21 +206,42 @@ export function ThuDiemDen({ diemDens }: ThuDiemDenProps) {
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 8,
-                width: "100%",
-                height: 42,
+                gap: 6,
+                height: 40,
+                borderRadius: "var(--r-md)",
+                background: "var(--color-surface-sub)",
+                color: "var(--color-text)",
+                border: "1px solid var(--color-border)",
+                fontSize: 13,
+                fontWeight: 600,
+                textDecoration: "none",
+                transition: "all 0.15s ease",
+              }}
+            >
+              <span>Chi tiết</span>
+              <ArrowRight size={14} />
+            </Link>
+
+            <Link
+              href={`/lap-ke-hoach?den=${encodeURIComponent(d.ten)}`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                height: 40,
                 borderRadius: "var(--r-md)",
                 background: "var(--color-primary-main)",
                 color: "var(--color-primary-text)",
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: 700,
                 textDecoration: "none",
                 boxShadow: "0 2px 8px rgba(43, 85, 214, 0.2)",
                 transition: "all 0.15s ease",
               }}
             >
-              <span>Xem điểm đến</span>
-              <ArrowRight size={16} />
+              <Plane size={14} />
+              <span>Lập kế hoạch</span>
             </Link>
           </div>
         </article>

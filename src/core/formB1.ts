@@ -152,3 +152,36 @@ export function docTien(s: string): number | null {
 
   return val;
 }
+
+export interface PhanBoNganSachGoiY {
+  diChuyen: number;
+  choO: number;
+  anUong: number;
+  vuiChoiVaDuPhong: number;
+  tiLe: {
+    diChuyen: number; // 35%
+    choO: number;     // 30%
+    anUong: number;   // 20%
+    vuiChoi: number;  // 15%
+  };
+}
+
+/**
+ * Hàm thuần tính gợi ý phân bổ ngân sách lý tưởng theo chuẩn du lịch
+ * Tỉ lệ vàng: 35% Di chuyển, 30% Chỗ ở, 20% Ăn uống, 15% Vui chơi & dự phòng
+ */
+export function goiYPhanBoNganSach(tongVND: number): PhanBoNganSachGoiY {
+  const safeTotal = Math.max(0, Math.round(tongVND));
+  return {
+    diChuyen: Math.round(safeTotal * 0.35),
+    choO: Math.round(safeTotal * 0.30),
+    anUong: Math.round(safeTotal * 0.20),
+    vuiChoiVaDuPhong: Math.round(safeTotal * 0.15),
+    tiLe: {
+      diChuyen: 35,
+      choO: 30,
+      anUong: 20,
+      vuiChoi: 15,
+    },
+  };
+}

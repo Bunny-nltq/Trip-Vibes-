@@ -22,6 +22,8 @@ import {
   AlertCircle,
   Info,
   RefreshCw,
+  Plane,
+  Hotel,
 } from "lucide-react";
 
 const VIBES: { label: string; key: Preference }[] = [
@@ -703,9 +705,10 @@ export function B3KeHoachScreen() {
           </div>
         )}
 
-        {/* Action bar dưới cùng */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 24 }}>
+        {/* Action bar dưới cùng: Cho phép điều hướng liền mạch */}
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 12, marginTop: 24, padding: "16px 0", borderTop: "1px solid var(--color-border)" }}>
           <button
+            type="button"
             className="btn btn-outline"
             onClick={() => nav("b1-chon-nhanh")}
             style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
@@ -713,14 +716,38 @@ export function B3KeHoachScreen() {
             <ArrowLeft size={16} />
             Chọn lại nhu cầu
           </button>
-          <button
-            className="btn btn-primary"
-            onClick={() => nav("b7-xac-nhan")}
-            style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-          >
-            <Check size={16} />
-            Xác nhận kế hoạch
-          </button>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={() => nav("b4-phuong-tien")}
+              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+              title="Đổi phương tiện chiều đi hoặc chiều về"
+            >
+              <Plane size={15} />
+              Đổi phương tiện
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={() => nav("b5-khach-san")}
+              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+              title="Đổi khách sạn hoặc khu vực lưu trú"
+            >
+              <Hotel size={15} />
+              Đổi nơi ở
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => nav("b7-xac-nhan")}
+              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+            >
+              <Check size={16} />
+              Xác nhận kế hoạch
+            </button>
+          </div>
         </div>
       </div>
 

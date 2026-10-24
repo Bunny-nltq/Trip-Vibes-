@@ -12,6 +12,7 @@ import {
   taoYeuCauTuForm,
   dinhDangTien,
   docTien,
+  goiYPhanBoNganSach,
 } from "@/core/formB1";
 import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
 import { docGoiChuyenTuSession } from "@/ui/lib/chuyenB1";
@@ -37,6 +38,10 @@ import {
   Minus,
   Plus,
   Loader2,
+  Sparkles,
+  Compass,
+  Coffee,
+  Briefcase,
 } from "lucide-react";
 
 const PRESETS = [
@@ -336,21 +341,22 @@ export function B1ChonNhanhScreen() {
     <div className="HomeRow">
       {/* CỘT CHÍNH: HomeCard */}
       <div className="HomeCard">
-        {/* HERO BANNER - NỀN GRADIENT TỪ TOKEN (PRIMARY SANG SKY) */}
+        {/* HERO BANNER - CHUẨN DOANH NGHIỆP CLEAN & PHẲNG */}
         <div
           className="HeroGradientBanner"
           style={{
             position: "relative",
-            height: 120,
+            height: 110,
             margin: "8px 8px 0",
             borderRadius: "var(--r-xl)",
             overflow: "hidden",
             flex: "none",
-            background: "linear-gradient(135deg, var(--color-primary-main), var(--color-primary-sky))",
+            background: "var(--color-primary-main)",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            padding: "0 36px",
+            padding: "0 32px",
+            boxShadow: "0 2px 10px rgba(43, 85, 214, 0.15)",
           }}
         >
           <div
@@ -699,6 +705,7 @@ export function B1ChonNhanhScreen() {
                 padding: "6px 12px",
                 borderRadius: 6,
                 display: "inline-block",
+                marginBottom: 12,
               }}
             >
               Tổng cả nhóm: {tongNganSachQuyDoiVND > 0 ? `${dinhDangTien(tongNganSachQuyDoiVND)} đ` : "0 đ"}
@@ -708,6 +715,72 @@ export function B1ChonNhanhScreen() {
                 </span>
               )}
             </div>
+
+            {/* Ý TƯỞNG 2: GỢI Ý PHÂN BỔ NGÂN SÁCH THÔNG MINH (Chuẩn du lịch) */}
+            {tongNganSachQuyDoiVND > 0 && (() => {
+              const allocation = goiYPhanBoNganSach(tongNganSachQuyDoiVND);
+              return (
+                <div
+                  style={{
+                    background: "var(--color-surface)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: "var(--r-md)",
+                    padding: "12px 14px",
+                    marginTop: 4,
+                    maxWidth: 580,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: "var(--color-text)",
+                      marginBottom: 8,
+                    }}
+                  >
+                    <Sparkles size={14} color="var(--color-primary-main)" />
+                    <span>Gợi ý phân bổ chi phí lý tưởng (Tham khảo):</span>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                      gap: 8,
+                      fontSize: 11,
+                    }}
+                  >
+                    <div style={{ padding: "6px 8px", background: "var(--color-surface-sub)", borderRadius: 6 }}>
+                      <div style={{ color: "var(--color-text-sub)" }}>Di chuyển (35%)</div>
+                      <div style={{ fontWeight: 700, color: "var(--color-hangMuc-diChuyen)", marginTop: 2 }}>
+                        {dinhDangTien(allocation.diChuyen)} đ
+                      </div>
+                    </div>
+                    <div style={{ padding: "6px 8px", background: "var(--color-surface-sub)", borderRadius: 6 }}>
+                      <div style={{ color: "var(--color-text-sub)" }}>Lưu trú (30%)</div>
+                      <div style={{ fontWeight: 700, color: "var(--color-hangMuc-choO)", marginTop: 2 }}>
+                        {dinhDangTien(allocation.choO)} đ
+                      </div>
+                    </div>
+                    <div style={{ padding: "6px 8px", background: "var(--color-surface-sub)", borderRadius: 6 }}>
+                      <div style={{ color: "var(--color-text-sub)" }}>Ăn uống (20%)</div>
+                      <div style={{ fontWeight: 700, color: "var(--color-hangMuc-anUong)", marginTop: 2 }}>
+                        {dinhDangTien(allocation.anUong)} đ
+                      </div>
+                    </div>
+                    <div style={{ padding: "6px 8px", background: "var(--color-surface-sub)", borderRadius: 6 }}>
+                      <div style={{ color: "var(--color-text-sub)" }}>Vui chơi (15%)</div>
+                      <div style={{ fontWeight: 700, color: "var(--color-hangMuc-vuiChoi)", marginTop: 2 }}>
+                        {dinhDangTien(allocation.vuiChoiVaDuPhong)} đ
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Lỗi ở ô ngân sách */}
             {hasNganSachError && (
@@ -803,6 +876,102 @@ export function B1ChonNhanhScreen() {
               </div>
             </div>
 
+            {/* Ý TƯỞNG 3: BỘ LỌC PHONG CÁCH CHUYẾN ĐI NHANH (Quick Travel Persona) */}
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--color-text)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+                <Sparkles size={14} color="var(--color-primary-main)" />
+                <span>Chọn nhanh phong cách chuyến đi:</span>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 8 }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTranh(["Tránh đi bộ nhiều"]);
+                    setGhiChu("Ưu tiên tối ưu chi phí, ăn uống quán bình dân địa phương, trải nghiệm thực tế.");
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "8px 12px",
+                    borderRadius: "var(--r-md)",
+                    border: "1px solid var(--color-border)",
+                    background: "var(--color-surface)",
+                    color: "var(--color-text)",
+                    cursor: "pointer",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    textAlign: "left",
+                  }}
+                >
+                  <Briefcase size={15} color="var(--color-primary-main)" />
+                  <div>
+                    <div style={{ fontWeight: 700 }}>Tiết kiệm</div>
+                    <div style={{ fontSize: 10, color: "var(--color-text-sub)" }}>Tối ưu ngân sách</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTranh(["Không dậy sớm", "Tránh đi bộ nhiều"]);
+                    setGhiChu("Nghỉ ngơi thư giãn, thức dậy thong thả, chọn quán cà phê view đẹp và không gian yên tĩnh.");
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "8px 12px",
+                    borderRadius: "var(--r-md)",
+                    border: "1px solid var(--color-border)",
+                    background: "var(--color-surface)",
+                    color: "var(--color-text)",
+                    cursor: "pointer",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    textAlign: "left",
+                  }}
+                >
+                  <Coffee size={15} color="var(--color-primary-main)" />
+                  <div>
+                    <div style={{ fontWeight: 700 }}>Nghỉ dưỡng & Chill</div>
+                    <div style={{ fontSize: 10, color: "var(--color-text-sub)" }}>Không dậy sớm, thong thả</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTranh(["Tránh đi lâu"]);
+                    setGhiChu("Khám phá nhiều điểm đặc sắc, chụp ảnh check-in và trải nghiệm văn hóa trọn vẹn.");
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "8px 12px",
+                    borderRadius: "var(--r-md)",
+                    border: "1px solid var(--color-border)",
+                    background: "var(--color-surface)",
+                    color: "var(--color-text)",
+                    cursor: "pointer",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    textAlign: "left",
+                  }}
+                >
+                  <Compass size={15} color="var(--color-primary-main)" />
+                  <div>
+                    <div style={{ fontWeight: 700 }}>Khám phá & Check-in</div>
+                    <div style={{ fontSize: 10, color: "var(--color-text-sub)" }}>Lịch trình năng động</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--color-text-sub)", marginBottom: 6 }}>
+              Hoặc chọn riêng từng tiêu chí:
+            </div>
             <div className="ChipsWrap" style={{ marginBottom: 16 }}>
               {AVOID_ITEMS.map((item) => {
                 const IconComponent = item.icon;

@@ -25,37 +25,41 @@ export function SiteHeader({ onNavigatePlan }: SiteHeaderProps) {
         boxShadow: "0 1px 8px rgba(43, 85, 214, 0.05)",
       }}
     >
-      {/* Logo "Trip Vibes" (bỏ phụ đề) */}
-      <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
+      {/* Logo "Trip Vibes" (Clean Enterprise) */}
+      <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 12 }}>
         <div
           style={{
-            width: 36,
-            height: 36,
+            width: 38,
+            height: 38,
             borderRadius: "var(--r-md)",
-            background: "linear-gradient(135deg, var(--color-primary-main), var(--color-secondary-500))",
+            background: "var(--color-primary-main)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             color: "var(--color-primary-text)",
           }}
         >
-          <Compass size={22} />
+          <Compass size={20} strokeWidth={2.2} />
         </div>
-        <span
-          style={{
-            fontSize: 22,
-            fontWeight: 800,
-            letterSpacing: "-0.5px",
-            background: "linear-gradient(135deg, var(--color-primary-main), var(--color-secondary-500))",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
-        >
-          Trip Vibes
-        </span>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <span
+            style={{
+              fontSize: 20,
+              fontWeight: 800,
+              letterSpacing: "-0.4px",
+              color: "var(--color-text)",
+              lineHeight: 1.1,
+            }}
+          >
+            Trip Vibes
+          </span>
+          <span style={{ fontSize: 11, fontWeight: 500, color: "var(--color-text-sub)" }}>
+            Hệ thống lập kế hoạch du lịch
+          </span>
+        </div>
       </Link>
 
-      {/* Liên kết: Trang chủ, Điểm đến, Khách sạn */}
+      {/* Liên kết: Trang chủ, Điểm đến, Lịch trình mẫu, Khách sạn */}
       <nav style={{ display: "flex", alignItems: "center", gap: 28 }}>
         <Link
           href="/"
@@ -80,6 +84,18 @@ export function SiteHeader({ onNavigatePlan }: SiteHeaderProps) {
           }}
         >
           Điểm đến
+        </Link>
+        <Link
+          href="/lich-trinh"
+          style={{
+            textDecoration: "none",
+            fontSize: 15,
+            fontWeight: 600,
+            color: "var(--color-text-sub)",
+            transition: "color 0.15s",
+          }}
+        >
+          Lịch trình mẫu
         </Link>
         <Link
           href="/khach-san"
