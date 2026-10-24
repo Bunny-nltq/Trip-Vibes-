@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { LiveDataSource } from "@/data/live/LiveDataSource";
 import { taoDataSourceTuRequest } from "../_dataSource";
 import { buildPlan } from "@/core/buildPlan";
 import { validatePlan } from "@/core/validatePlan";
@@ -132,14 +133,14 @@ export async function POST(req: Request) {
 
     switch (thayDoi.loai) {
       case "phuong_tien_di": {
-        const t = transports.find((x) => x.id === thayDoi.idMoi);
+        const t = transports.find((x: any) => x.id === thayDoi.idMoi);
         if (!t) return NextResponse.json({ ok: false, error: `ID phương tiện '${thayDoi.idMoi}' không tồn tại.` }, { status: 400 });
         if (t.huong !== "di") return NextResponse.json({ ok: false, error: `Phương tiện '${thayDoi.idMoi}' không phải chiều đi.` }, { status: 400 });
         newSelection.transportDiId = thayDoi.idMoi;
         break;
       }
       case "phuong_tien_ve": {
-        const t = transports.find((x) => x.id === thayDoi.idMoi);
+        const t = transports.find((x: any) => x.id === thayDoi.idMoi);
         if (!t) return NextResponse.json({ ok: false, error: `ID phương tiện '${thayDoi.idMoi}' không tồn tại.` }, { status: 400 });
         if (t.huong !== "ve") return NextResponse.json({ ok: false, error: `Phương tiện '${thayDoi.idMoi}' không phải chiều về.` }, { status: 400 });
         newSelection.transportVeId = thayDoi.idMoi;
@@ -147,8 +148,8 @@ export async function POST(req: Request) {
         break;
       }
       case "khach_san": {
-        const kLive = khachSans.find((x) => x.id === thayDoi.idMoi);
-        const kMock = hotels.find((x) => x.id === thayDoi.idMoi);
+        const kLive = khachSans.find((x: any) => x.id === thayDoi.idMoi);
+        const kMock = hotels.find((x: any) => x.id === thayDoi.idMoi);
         if (!kLive && !kMock) return NextResponse.json({ ok: false, error: `ID khách sạn '${thayDoi.idMoi}' không tồn tại.` }, { status: 400 });
         newSelection.hotelId = thayDoi.idMoi;
         break;
