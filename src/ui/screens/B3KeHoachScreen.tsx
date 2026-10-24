@@ -8,6 +8,7 @@ import { getDiemDenTen } from "@/contracts";
 import { nhanNguonDuLieu } from "@/core/nhanNguon";
 import { tiLeThoiGianDiChuyen, coCanhBaoDiChuyen } from "@/core/tiLeDiChuyen";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
+import { usePlanRegenerate } from "@/ui/hooks/usePlanRegenerate";
 import {
   Map as MapIcon,
   Send,
@@ -24,7 +25,9 @@ import {
   RefreshCw,
   Plane,
   Hotel,
+  Sparkles,
 } from "lucide-react";
+import anhDiemDenData from "@/data/site/anh-diem-den.json";
 
 const VIBES: { label: string; key: Preference }[] = [
   { label: "Biển", key: "bien" },
@@ -120,8 +123,12 @@ export function B3KeHoachScreen() {
     (plan?.request.sothich as Preference[]) ?? []
   );
   const [vibeNote, setVibeNote] = useState<string>("");
-  const [isRegenerating, setIsRegenerating] = useState<boolean>(false);
-  const [regenError, setRegenError] = useState<string | null>(null);
+  const {
+    loading: isRegenerating,
+    error: regenError,
+    regenerate: callRegenerate,
+    clearError: clearRegenError,
+  } = usePlanRegenerate();
 
   const toggleVibe = (vibe: Preference) => {
     setSelectedVibes((prev) =>
@@ -133,67 +140,31 @@ export function B3KeHoachScreen() {
     if (!plan) return;
     if (selectedVibes.length === 0 && !vibeNote.trim()) return;
 
-    setIsRegenerating(true);
-    setRegenError(null);
+    clearRegenError();
 
-    try {
-      const currentSelection = extractSelectionFromPlan(plan);
-      const res = await fetch("/api/plan/regenerate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          request: {
-            ...plan.request,
-            sothich: selectedVibes,
-            ghiChu: vibeNote.trim()
-              ? [...(plan.request.ghiChu || []).filter((g) => g !== vibeNote.trim()), vibeNote.trim()]
-              : (plan.request.ghiChu || []),
-          },
-          selection: currentSelection,
-        }),
-      });
+    const currentSelection = extractSelectionFromPlan(plan);
+    const result = await callRegenerate({
+      request: {
+        ...plan.request,
+        sothich: selectedVibes,
+        ghiChu: vibeNote.trim()
+          ? [...(plan.request.ghiChu || []).filter((g) => g !== vibeNote.trim()), vibeNote.trim()]
+          : (plan.request.ghiChu || []),
+      },
+      selection: currentSelection,
+    });
 
-      if (res.status === 429) {
-        setRegenError(
-          "Đã đạt giới hạn gợi ý lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\" ở từng mục."
-        );
-        setIsRegenerating(false);
-        return;
-      }
-
-      const data = await res.json().catch(() => null);
-      if (!res.ok || !data) {
-        if (data?.error?.includes("429") || data?.message?.includes("429")) {
-          setRegenError(
-            "Đã đạt giới hạn gợi ý lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\" ở từng mục."
-          );
-        } else {
-          setRegenError(
-            data?.message || data?.error || "Không thể gợi ý lại lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\"."
-          );
-        }
-        setIsRegenerating(false);
-        return;
-      }
-
-      // data: { planSau, diff, hard, soft, diemKhopTruoc, diemKhopSau, soLanGoiAI }
+    if (result.ok && result.planSau && result.diff) {
       setPreviewData({
-        planSau: data.planSau,
-        selection: extractSelectionFromPlan(data.planSau),
-        diff: data.diff,
-        hard: data.hard || [],
-        soft: data.soft || [],
-        diemKhopTruoc: data.diemKhopTruoc,
-        diemKhopSau: data.diemKhopSau,
+        planSau: result.planSau,
+        selection: result.selection || extractSelectionFromPlan(result.planSau),
+        diff: result.diff,
+        hard: result.hard || [],
+        soft: result.soft || [],
+        diemKhopTruoc: result.diemKhopTruoc,
+        diemKhopSau: result.diemKhopSau,
       });
-
-      setIsRegenerating(false);
       nav("b6-xem-truoc");
-    } catch {
-      setRegenError(
-        "Có lỗi kết nối khi gợi ý lại. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\"."
-      );
-      setIsRegenerating(false);
     }
   };
 
@@ -415,6 +386,127 @@ export function B3KeHoachScreen() {
             </div>
           </div>
         )}
+
+        {/* Banner ảnh minh họa điểm đến trực quan từ Wikimedia Commons */}
+        {(() => {
+          const tenDiemDenHienThi = getDiemDenTen(plan.request.diemDen);
+          const norm = tenDiemDenHienThi.toLowerCase().trim();
+          const slugLookup: Record<string, string> = {
+            "đà nẵng": "da-nang",
+            "da nang": "da-nang",
+            "hà nội": "ha-noi",
+            "ha noi": "ha-noi",
+            "đà lạt": "da-lat",
+            "da lat": "da-lat",
+            "bangkok": "bangkok",
+            "seoul": "seoul",
+          };
+          const slug = slugLookup[norm];
+          const anhInfo = slug ? (anhDiemDenData as Record<string, any>)[slug] : undefined;
+          const quocGia =
+            typeof plan.request.diemDen === "object" && plan.request.diemDen?.quocGia
+              ? plan.request.diemDen.quocGia
+              : "Việt Nam";
+
+          if (!anhInfo) return null;
+
+          return (
+            <div
+              style={{
+                position: "relative",
+                borderRadius: "var(--r-xl)",
+                overflow: "hidden",
+                marginBottom: 20,
+                height: 220,
+                border: "1px solid var(--color-border)",
+                boxShadow: "0 4px 16px rgba(43, 85, 214, 0.08)",
+                background: "var(--color-surface)",
+              }}
+            >
+              <img
+                src={anhInfo.urlThumb || anhInfo.url}
+                alt={anhInfo.alt || tenDiemDenHienThi}
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(15, 23, 42, 0.88) 100%)",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-end",
+                  padding: "18px 24px",
+                  color: "var(--color-primary-text)",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      padding: "2px 8px",
+                      borderRadius: "var(--r-full)",
+                      background: "rgba(255, 255, 255, 0.2)",
+                      backdropFilter: "blur(4px)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.5px",
+                    }}
+                  >
+                    {quocGia}
+                  </span>
+                  <span style={{ fontSize: 13, opacity: 0.9 }}>
+                    {soNgay} ngày {Math.max(1, soNgay - 1)} đêm · {plan.request.soNguoi || 2} người
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    fontSize: 24,
+                    fontWeight: 800,
+                    lineHeight: 1.2,
+                    marginBottom: 6,
+                    color: "var(--color-primary-text)",
+                  }}
+                >
+                  Chuyến đi {tenDiemDenHienThi}
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    fontSize: 11,
+                    opacity: 0.85,
+                    flexWrap: "wrap",
+                    gap: 8,
+                  }}
+                >
+                  <span>{anhInfo.diaDanh}</span>
+                  <span>
+                    Ảnh: {anhInfo.tacGia} ·{" "}
+                    <a
+                      href={anhInfo.linkGiayPhep}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "var(--color-primary-text)", textDecoration: "underline" }}
+                    >
+                      {anhInfo.giayPhep}
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         <div style={{ marginBottom: 20 }}>
           <h1 className="section-title" style={{ fontSize: 20, fontWeight: 800, margin: 0, color: "var(--navy)" }}>

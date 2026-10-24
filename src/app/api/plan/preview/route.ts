@@ -6,9 +6,11 @@ import { diffPlan } from "@/core/diffPlan";
 import {
   TripRequestSchema,
   SelectionSchema,
+  schemaVersion,
   type TripRequest,
   type Selection,
 } from "@/contracts";
+import { getSnapshotDiemDen } from "@/data/prepareDestination";
 
 /**
  * POST /api/plan/preview
@@ -46,7 +48,7 @@ export async function POST(req: Request) {
     // Normalize and validate request
     const rawReq = (payload.request && typeof payload.request === "object") ? { ...(payload.request as object) } : {};
     const filledReq = {
-      schemaVersion: 1,
+      schemaVersion,
       diemDi: "TP.HCM",
       diemDen: "Đà Nẵng",
       soNgay: 3,
@@ -88,8 +90,19 @@ export async function POST(req: Request) {
       );
     }
 
+    // Phân giải điểm đến và điểm đi cho LiveDataSource
+    const resolvedDiemDen = tripRequest.diemDen ? (getSnapshotDiemDen(tripRequest.diemDen) || undefined) : undefined;
+    const resolvedDiemDi = tripRequest.diemDi ? (getSnapshotDiemDen(tripRequest.diemDi) || undefined) : undefined;
+
     // Load data
-    const ds = new LiveDataSource();
+    const ds = new LiveDataSource(
+      undefined,
+      undefined,
+      resolvedDiemDen,
+      resolvedDiemDi,
+      tripRequest.soNgay ?? 3,
+      tripRequest.giaVeTuNhap
+    );
     const [transports, hotels, activities, khachSans, quanAns, cafes, hoatDongs] =
       await Promise.all([
         ds.getTransports(),

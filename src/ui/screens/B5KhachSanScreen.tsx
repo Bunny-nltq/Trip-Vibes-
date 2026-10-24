@@ -65,6 +65,9 @@ export function B5KhachSanScreen() {
     loai: "khach_san",
     enabled: mode === "khach_san",
     soNguoi,
+    soNgay,
+    diemDen: plan?.request.diemDen,
+    diemDi: plan?.request.diemDi,
   });
 
   // Fetch activities
@@ -76,6 +79,9 @@ export function B5KhachSanScreen() {
     loai: "hoat_dong",
     enabled: mode === "hoat_dong",
     soNguoi,
+    soNgay,
+    diemDen: plan?.request.diemDen,
+    diemDi: plan?.request.diemDi,
   });
 
   const { preview, loading: loadingPreview, error: errorPreview } = usePlanPreview();

@@ -2,6 +2,8 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useApp } from "@/ui/context/AppContext";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
+import { useExtractBill } from "@/ui/hooks/useExtractBill";
+import { useExpenseConfirm } from "@/ui/hooks/useExpenseConfirm";
 import type { ExpenseCategory, BillExtraction } from "@/contracts";
 import { B8ChuyenDiScreen } from "./B8ChuyenDiScreen";
 import {
@@ -33,6 +35,8 @@ const HANG_MUC_OPTIONS: Array<{ value: ExpenseCategory; label: string }> = [
 export function B10ChonNguonScreen() {
   const { nav, confirmed, plan, ledger, addExpenseToLedger, b10Prefill, setB10Prefill } = useApp();
   const { aiBat } = useTrangThaiAI();
+  const { extract: runExtractBill } = useExtractBill();
+  const { confirm: runConfirmExpense } = useExpenseConfirm();
 
   const [activeTab, setActiveTab] = useState<"bill" | "manual">(() => {
     if (typeof window !== "undefined") {
@@ -204,43 +208,21 @@ export function B10ChonNguonScreen() {
     setIsReading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const res = await fetch("/api/extract-bill", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (res.status === 429) {
-        setSpecialStatus("429");
-        setIsReading(false);
-        return;
-      }
-
-      if (!res.ok) {
-        setSpecialStatus("network_error");
-        setIsReading(false);
-        return;
-      }
-
-      const data = await res.json();
+      const result = await runExtractBill(file);
       setIsReading(false);
 
-      if (!data.ok) {
-        if (data.status === "khong_phai_chung_tu") {
-          setSpecialStatus("khong_phai_chung_tu");
-        } else if (data.status === "khong_doc_duoc_so_tien") {
-          setSpecialStatus("khong_doc_duoc_so_tien");
+      if (!result.ok) {
+        if (result.is429) {
+          setSpecialStatus("429");
         } else {
           setSpecialStatus("network_error");
         }
         return;
       }
 
-      const extraction: BillExtraction = data.extraction;
+      const extraction: BillExtraction | undefined = result.extraction;
 
-      if (!extraction.laChungTu || extraction.status === "khong_phai_chung_tu") {
+      if (!extraction || !extraction.laChungTu || extraction.status === "khong_phai_chung_tu") {
         setSpecialStatus("khong_phai_chung_tu");
         return;
       }
@@ -287,7 +269,7 @@ export function B10ChonNguonScreen() {
     setSpecialStatus(null);
   };
 
-  const handleConfirmAndSave = (e: React.FormEvent) => {
+  const handleConfirmAndSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
 
@@ -305,18 +287,33 @@ export function B10ChonNguonScreen() {
     setIsSubmitting(true);
 
     try {
-      addExpenseToLedger({
-        id: `exp-${Date.now()}`,
+      const confirmRes = await runConfirmExpense({
+        nguon: activeTab === "bill" ? "anh_bill" : "nhap_tay",
+        tenCuaHang: tenCuaHang.trim() || null,
+        ngay: ngay || null,
         ngayTrongChuyen,
-        ngay,
-        tenCuaHang: tenCuaHang.trim(),
         hangMuc,
         soTienVND: amount,
-        nguon: activeTab === "bill" ? "anh_bill" : "nhap_tay",
         giaTriAIDoc: activeTab === "bill" ? giaTriAIDoc : null,
-        daSuaTay: activeTab === "bill" ? daSuaSo : false,
         ghiChu: ghiChu.trim() || null,
       });
+
+      if (confirmRes.ok && confirmRes.expense) {
+        addExpenseToLedger(confirmRes.expense);
+      } else {
+        addExpenseToLedger({
+          id: `exp-${Date.now()}`,
+          ngayTrongChuyen,
+          ngay,
+          tenCuaHang: tenCuaHang.trim(),
+          hangMuc,
+          soTienVND: amount,
+          nguon: activeTab === "bill" ? "anh_bill" : "nhap_tay",
+          giaTriAIDoc: activeTab === "bill" ? giaTriAIDoc : null,
+          daSuaTay: activeTab === "bill" ? daSuaSo : false,
+          ghiChu: ghiChu.trim() || null,
+        });
+      }
 
       setIsSubmitting(false);
       setB10Prefill(null);

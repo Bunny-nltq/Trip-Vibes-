@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useApp } from "@/ui/context/AppContext";
 import { getDiemDenTen, type DiemDen } from "@/contracts";
 import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
+import { useDestinationPrepare } from "@/ui/hooks/useDestinationPrepare";
 import type { CategoryKey, CategoryProgress } from "@/contracts";
 import {
   Check,
@@ -65,167 +66,60 @@ export function B2AgentScreen() {
 
   // Pha thực thi: "chuan_bi" (Bước A) | "lap_ke_hoach" (Bước B)
   const [phase, setPhase] = useState<"chuan_bi" | "lap_ke_hoach">("chuan_bi");
-  const [jobId, setJobId] = useState<string | null>(null);
-
-  // Tiến trình từng hạng mục Bước A
-  const [tienTrinh, setTienTrinh] = useState<Record<CategoryKey, CategoryProgress>>({
-    khach_san: { trangThai: "cho" },
-    quan_an: { trangThai: "cho" },
-    cafe: { trangThai: "cho" },
-    hoat_dong: { trangThai: "cho" },
-    phuong_tien: { trangThai: "cho" },
-    gia_diem_den: { trangThai: "cho" },
-  });
-
-  const [dataPrepError, setDataPrepError] = useState<{
-    maLoi: string;
-    tieuDe: string;
-    noiDung: string;
-    thieuChiTiet?: string[];
-  } | null>(null);
-
-  const pollTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const startTimeRef = useRef<number>(Date.now());
   const hasExecutedPlanRef = useRef(false);
+
+  const {
+    trangThai: prepStatus,
+    tienTrinh: prepTienTrinh,
+    loi: prepError,
+    startPrepare: triggerPrepare,
+    cancel: cancelPrepare,
+  } = useDestinationPrepare();
 
   const diemDen = tripConfig.diemDen as DiemDen | null;
   const tenDiemDen = diemDen ? getDiemDenTen(diemDen) : "Điểm đến";
   const diemDi = tripConfig.diemDi as DiemDen | null;
   const tenDiemDi = diemDi ? (typeof diemDi === "string" ? diemDi : diemDi.ten) : "";
 
-  // 1. Kích hoạt Bước A: Gọi /api/destination/prepare
-  const startPrepare = async () => {
+  // Kết hợp tiến trình từ hook với state hiển thị
+  const tienTrinh = {
+    khach_san: prepTienTrinh.khach_san || { trangThai: "cho" as const },
+    quan_an: prepTienTrinh.quan_an || { trangThai: "cho" as const },
+    cafe: prepTienTrinh.cafe || { trangThai: "cho" as const },
+    hoat_dong: prepTienTrinh.hoat_dong || { trangThai: "cho" as const },
+    phuong_tien: prepTienTrinh.phuong_tien || { trangThai: "cho" as const },
+    gia_diem_den: prepTienTrinh.gia_diem_den || { trangThai: "cho" as const },
+  };
+
+  const dataPrepError = prepError;
+
+  // 1. Kích hoạt Bước A chuẩn bị dữ liệu qua hook
+  const startPrepare = useCallback(() => {
     if (!diemDen) {
       nav("b1-chon-nhanh");
       return;
     }
 
-    setDataPrepError(null);
-    startTimeRef.current = Date.now();
-
-    try {
-      const res = await fetch("/api/destination/prepare", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          diemDen,
-          diemDi: diemDi ?? undefined,
-          soNgay: tripConfig.soNgay ?? 3,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data.ok) {
-        if (data.maLoi === "khong_co_du_lieu_luu_san") {
-          setDataPrepError({
-            maLoi: "khong_co_du_lieu_luu_san",
-            tieuDe: "Chưa có dữ liệu lưu sẵn",
-            noiDung:
-              data.thongBao ||
-              "Điểm đến này chưa có dữ liệu đã lưu. Hãy chạy chương trình trên máy để chuẩn bị dữ liệu.",
-          });
-        } else {
-          setDataPrepError({
-            maLoi: "loi_khong_ro",
-            tieuDe: "Lỗi chuẩn bị dữ liệu",
-            noiDung: data.error || "Không thể chuẩn bị dữ liệu cho điểm đến này.",
-          });
-        }
-        return;
-      }
-
-      if (data.trangThai === "san_sang") {
-        // Dữ liệu đã sẵn sàng ngay (từ snapshot hoặc cache) -> Chuyển sang Bước B Lập kế hoạch
+    triggerPrepare({
+      diemDen,
+      diemDi: diemDi ?? undefined,
+      soNgay: tripConfig.soNgay ?? 3,
+      onReady: () => {
         setPhase("lap_ke_hoach");
         if (!hasExecutedPlanRef.current) {
           hasExecutedPlanRef.current = true;
           executePlan();
         }
-      } else if (data.trangThai === "dang_chay" && data.jobId) {
-        setJobId(data.jobId);
-      }
-    } catch {
-      setDataPrepError({
-        maLoi: "mang_loi",
-        tieuDe: "Lỗi kết nối mạng",
-        noiDung: "Không thể kết nối đến máy chủ để chuẩn bị dữ liệu.",
-      });
-    }
-  };
+      },
+    });
+  }, [diemDen, diemDi, tripConfig.soNgay, nav, triggerPrepare, executePlan]);
 
   useEffect(() => {
     startPrepare();
-
     return () => {
-      if (pollTimerRef.current) {
-        clearInterval(pollTimerRef.current);
-      }
+      cancelPrepare();
     };
-  }, []);
-
-  // 2. Poll trạng thái mỗi 2 giây nếu đang chạy công việc chuẩn bị
-  useEffect(() => {
-    if (!jobId || phase !== "chuan_bi") return;
-
-    const pollStatus = async () => {
-      // Giới hạn tối đa 10 phút (600,000 ms)
-      if (Date.now() - startTimeRef.current > 600_000) {
-        if (pollTimerRef.current) clearInterval(pollTimerRef.current);
-        setDataPrepError({
-          maLoi: "loi_khong_ro",
-          tieuDe: "Quá thời gian chuẩn bị dữ liệu",
-          noiDung: "Quá trình thu thập dữ liệu đã vượt quá 10 phút. Vui lòng thử lại sau.",
-        });
-        return;
-      }
-
-      try {
-        const res = await fetch(`/api/destination/status?jobId=${encodeURIComponent(jobId)}`);
-        if (!res.ok) return;
-
-        const data = await res.json();
-        if (data.tienTrinh) {
-          setTienTrinh(data.tienTrinh);
-        }
-
-        if (data.trangThai === "san_sang") {
-          if (pollTimerRef.current) clearInterval(pollTimerRef.current);
-          setPhase("lap_ke_hoach");
-          if (!hasExecutedPlanRef.current) {
-            hasExecutedPlanRef.current = true;
-            executePlan();
-          }
-        } else if (data.trangThai === "thieu") {
-          if (pollTimerRef.current) clearInterval(pollTimerRef.current);
-          setDataPrepError({
-            maLoi: "khong_du_du_lieu",
-            tieuDe: "Thiếu dữ liệu điểm đến",
-            noiDung: `Hệ thống chưa đủ dữ liệu cho ${tenDiemDen}: ${
-              data.thieuChiTiet ? data.thieuChiTiet.join(", ") : data.lyDoLoi || "một số hạng mục bị thiếu"
-            }.`,
-            thieuChiTiet: data.thieuChiTiet,
-          });
-        } else if (data.trangThai === "loi") {
-          if (pollTimerRef.current) clearInterval(pollTimerRef.current);
-          setDataPrepError({
-            maLoi: "loi_khong_ro",
-            tieuDe: "Gặp sự cố chuẩn bị dữ liệu",
-            noiDung: data.lyDoLoi || "Đã xảy ra lỗi khi thu thập dữ liệu điểm đến.",
-          });
-        }
-      } catch {
-        // Bỏ qua lỗi mạng chập chờn khi polling
-      }
-    };
-
-    pollTimerRef.current = setInterval(pollStatus, 2000);
-    pollStatus(); // Chạy ngay lần đầu
-
-    return () => {
-      if (pollTimerRef.current) clearInterval(pollTimerRef.current);
-    };
-  }, [jobId, phase, tenDiemDen, executePlan]);
+  }, [startPrepare, cancelPrepare]);
 
   // 3. Tự động chuyển trang khi Bước B hoàn tất
   useEffect(() => {
@@ -246,7 +140,7 @@ export function B2AgentScreen() {
   }, [phase, planStatus, nav]);
 
   const handleCancel = () => {
-    if (pollTimerRef.current) clearInterval(pollTimerRef.current);
+    cancelPrepare();
     abortPlan();
     nav("b1-chon-nhanh");
   };
@@ -359,7 +253,6 @@ export function B2AgentScreen() {
                 type="button"
                 className="Btn BtnPrimary BtnSmall"
                 onClick={() => {
-                  setDataPrepError(null);
                   startPrepare();
                 }}
               >

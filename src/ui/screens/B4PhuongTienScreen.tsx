@@ -29,6 +29,9 @@ export function B4PhuongTienScreen() {
       loai: "phuong_tien",
       huong: tab,
       soNguoi,
+      soNgay: plan?.request.soNgay ?? 3,
+      diemDen: plan?.request.diemDen,
+      diemDi: plan?.request.diemDi,
     });
 
   const { preview, loading: loadingPreview, error: errorPreview } = usePlanPreview();

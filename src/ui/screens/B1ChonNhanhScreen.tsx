@@ -4,6 +4,9 @@ import { useApp } from "@/ui/context/AppContext";
 import {
   getDiemDenTen,
   type DiemDen,
+  POPULAR_DESTINATIONS,
+  POPULAR_ORIGINS,
+  toDiemDen,
 } from "@/contracts";
 import {
   FormB1,
@@ -43,6 +46,39 @@ import {
   Coffee,
   Briefcase,
 } from "lucide-react";
+
+export interface PopularDestPreset {
+  ten: string;
+  moTa: string;
+  nganSachGoiY: number;
+  diemDiMacDinh: string;
+  soNgay: number;
+}
+
+export const POPULAR_DEST_PRESETS: PopularDestPreset[] = [
+  { ten: "Đà Nẵng", moTa: "Biển Mỹ Khê & Cầu Rồng", nganSachGoiY: 10_000_000, diemDiMacDinh: "TP.HCM", soNgay: 3 },
+  { ten: "Hà Nội", moTa: "Phố cổ & Hồ Hoàn Kiếm", nganSachGoiY: 10_000_000, diemDiMacDinh: "TP.HCM", soNgay: 3 },
+  { ten: "Đà Lạt", moTa: "Ngàn hoa & Sương sớm", nganSachGoiY: 8_000_000, diemDiMacDinh: "TP.HCM", soNgay: 3 },
+  { ten: "Bangkok", moTa: "Chùa Vàng & Ẩm thực", nganSachGoiY: 25_000_000, diemDiMacDinh: "TP.HCM", soNgay: 3 },
+  { ten: "Seoul", moTa: "Cung điện & Mua sắm", nganSachGoiY: 35_000_000, diemDiMacDinh: "TP.HCM", soNgay: 3 },
+];
+
+function timDiemDen(ten: string): DiemDen {
+  const norm = ten.trim().toLowerCase();
+  const matched = POPULAR_DESTINATIONS.find((d) => d.ten.toLowerCase() === norm);
+  if (matched) return toDiemDen(matched);
+  const matchedOrigin = POPULAR_ORIGINS.find((o) => o.ten.toLowerCase() === norm);
+  if (matchedOrigin) return toDiemDen(matchedOrigin);
+  return {
+    ten,
+    quocGia: "Việt Nam",
+    maQuocGia: "VN",
+    toaDo: { lat: 16.0544, lng: 108.2022 },
+    tienTe: "VND",
+    nguon: "nominatim",
+    ngayLay: new Date().toISOString(),
+  };
+}
 
 const PRESETS = [
   {
@@ -144,26 +180,10 @@ export function B1ChonNhanhScreen() {
     const pkg = docGoiChuyenTuSession();
     if (pkg) {
       if (pkg.diemDiTen) {
-        setDiemDi({
-          ten: pkg.diemDiTen,
-          quocGia: "Việt Nam",
-          maQuocGia: "VN",
-          toaDo: { lat: 10.7769, lng: 106.7009 },
-          tienTe: "VND",
-          nguon: "nominatim",
-          ngayLay: new Date().toISOString(),
-        });
+        setDiemDi(timDiemDen(pkg.diemDiTen));
       }
       if (pkg.diemDenTen) {
-        setDiemDen({
-          ten: pkg.diemDenTen,
-          quocGia: "Việt Nam",
-          maQuocGia: "VN",
-          toaDo: { lat: 16.0544, lng: 108.2022 },
-          tienTe: "VND",
-          nguon: "nominatim",
-          ngayLay: new Date().toISOString(),
-        });
+        setDiemDen(timDiemDen(pkg.diemDenTen));
       }
       if (pkg.soNguoi) setSoNguoi(pkg.soNguoi);
       if (pkg.soNgay) setSoNgay(pkg.soNgay);
@@ -176,33 +196,17 @@ export function B1ChonNhanhScreen() {
 
     if (typeof window !== "undefined") {
       const sp = new URLSearchParams(window.location.search);
-      // 2. Fallback tham số URL
-      const tu = sp.get("tu");
-      const den = sp.get("den");
-      const ngay = parseInt(sp.get("ngay") || "0", 10);
-      const nguoi = parseInt(sp.get("nguoi") || "0", 10);
-      const ns = parseInt(sp.get("ngansach") || "0", 10);
+      // 2. Fallback tham số URL (hỗ trợ cả tu/diemDi, den/diemDen, ngay/soNgay, nguoi/soNguoi, ngansach/budget)
+      const tu = sp.get("tu") || sp.get("diemDi");
+      const den = sp.get("den") || sp.get("diemDen");
+      const ngay = parseInt(sp.get("ngay") || sp.get("soNgay") || "0", 10);
+      const nguoi = parseInt(sp.get("nguoi") || sp.get("soNguoi") || "0", 10);
+      const ns = parseInt(sp.get("ngansach") || sp.get("budget") || "0", 10);
       if (den && !pkg) {
-        setDiemDen({
-          ten: den,
-          quocGia: "Việt Nam",
-          maQuocGia: "VN",
-          toaDo: { lat: 16.0544, lng: 108.2022 },
-          tienTe: "VND",
-          nguon: "nominatim",
-          ngayLay: new Date().toISOString(),
-        });
+        setDiemDen(timDiemDen(den));
       }
       if (tu && !pkg) {
-        setDiemDi({
-          ten: tu,
-          quocGia: "Việt Nam",
-          maQuocGia: "VN",
-          toaDo: { lat: 10.7769, lng: 106.7009 },
-          tienTe: "VND",
-          nguon: "nominatim",
-          ngayLay: new Date().toISOString(),
-        });
+        setDiemDi(timDiemDen(tu));
       }
       if (nguoi >= 1 && nguoi <= 10 && !pkg) setSoNguoi(nguoi);
       if (ngay >= 2 && ngay <= 7 && !pkg) setSoNgay(ngay);
@@ -264,6 +268,21 @@ export function B1ChonNhanhScreen() {
       setNganSachSoTien(num);
       setNganSachInputStr(dinhDangTien(num));
     }
+  };
+
+  // Chọn nhanh điểm đến phổ biến có sẵn dữ liệu
+  const handleSelectPreset = (p: PopularDestPreset) => {
+    const targetDen = timDiemDen(p.ten);
+    setDiemDen(targetDen);
+    if (!diemDi || diemDi.ten.toLowerCase() === p.ten.toLowerCase()) {
+      setDiemDi(timDiemDen(p.diemDiMacDinh));
+    }
+    setSoNgay(p.soNgay);
+    setSoNguoi(2);
+    setNganSachSoTien(p.nganSachGoiY);
+    setNganSachInputStr(dinhDangTien(p.nganSachGoiY));
+    setNganSachTheo("tong");
+    setHasInteracted(false);
   };
 
   // Bấm nút gợi ý ngân sách (5, 8, 10, 15, 20 triệu)
@@ -427,6 +446,72 @@ export function B1ChonNhanhScreen() {
                     : "Vui lòng chọn điểm đến trong danh sách."
                 }
               />
+            </div>
+
+            {/* Gợi ý điểm đến thịnh hành có sẵn dữ liệu */}
+            <div style={{ marginTop: 14 }}>
+              <div
+                style={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: "var(--color-text-sub)",
+                  marginBottom: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                }}
+              >
+                <Sparkles size={13} color="var(--color-primary-main)" />
+                <span>Gợi ý điểm đến có sẵn dữ liệu đầy đủ:</span>
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {POPULAR_DEST_PRESETS.map((p) => {
+                  const isSelected = diemDen?.ten.toLowerCase() === p.ten.toLowerCase();
+                  return (
+                    <button
+                      key={p.ten}
+                      type="button"
+                      onClick={() => handleSelectPreset(p)}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 8,
+                        padding: "6px 12px",
+                        borderRadius: "var(--r-md)",
+                        border: isSelected
+                          ? "1.5px solid var(--color-primary-main)"
+                          : "1px solid var(--color-border)",
+                        background: isSelected
+                          ? "var(--color-primary-tint)"
+                          : "var(--color-surface)",
+                        color: isSelected
+                          ? "var(--color-primary-main)"
+                          : "var(--color-text)",
+                        cursor: "pointer",
+                        fontSize: 13,
+                        fontWeight: isSelected ? 700 : 500,
+                        transition: "all 0.15s ease",
+                      }}
+                      title={`${p.ten} - ${p.moTa} (Gợi ý: ${dinhDangTien(p.nganSachGoiY)} đ)`}
+                    >
+                      <MapPin size={13} color={isSelected ? "var(--color-primary-main)" : "var(--color-text-sub)"} />
+                      <span>{p.ten}</span>
+                      <span
+                        style={{
+                          fontSize: 11,
+                          padding: "1px 6px",
+                          borderRadius: "var(--r-full)",
+                          background: isSelected ? "var(--color-surface)" : "var(--color-surface-sub)",
+                          color: "var(--color-text-sub)",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {dinhDangTien(p.nganSachGoiY)} đ
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 

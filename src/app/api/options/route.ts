@@ -4,6 +4,8 @@ import { calculateTransportFlags } from "@/core/flags";
 import { geocodeDestination } from "@/data/live/geocodeClient";
 import type { DiemDen } from "@/contracts";
 
+import { getSnapshotDiemDen } from "@/data/prepareDestination";
+
 import { memoryCache, CACHE_TTL_MS } from "./cache";
 
 /**
@@ -41,35 +43,51 @@ export async function GET(req: Request) {
   try {
     let diemDen: DiemDen | undefined;
     if (diemDenParam) {
-      try {
-        const parsed = JSON.parse(diemDenParam);
-        if (parsed && typeof parsed === "object" && parsed.ten) {
-          diemDen = parsed;
+      const snap = getSnapshotDiemDen(diemDenParam);
+      if (snap) {
+        diemDen = snap;
+      } else {
+        try {
+          const parsed = JSON.parse(diemDenParam);
+          if (parsed && typeof parsed === "object" && parsed.ten) {
+            diemDen = parsed;
+          }
+        } catch {
+          // Không phải JSON
         }
-      } catch {
-        const geo = await geocodeDestination(diemDenParam);
-        if (geo.status === "thanh_cong") {
-          diemDen = geo.diemDen;
+        if (!diemDen) {
+          const geo = await geocodeDestination(diemDenParam);
+          if (geo.status === "thanh_cong") {
+            diemDen = geo.diemDen;
+          }
         }
       }
     }
 
     let diemDi: DiemDen | undefined;
     if (diemDiParam) {
-      try {
-        const parsed = JSON.parse(diemDiParam);
-        if (parsed && typeof parsed === "object" && parsed.ten) {
-          diemDi = parsed;
+      const snap = getSnapshotDiemDen(diemDiParam);
+      if (snap) {
+        diemDi = snap;
+      } else {
+        try {
+          const parsed = JSON.parse(diemDiParam);
+          if (parsed && typeof parsed === "object" && parsed.ten) {
+            diemDi = parsed;
+          }
+        } catch {
+          // Không phải JSON
         }
-      } catch {
-        const geo = await geocodeDestination(diemDiParam);
-        if (geo.status === "thanh_cong") {
-          diemDi = geo.diemDen;
+        if (!diemDi) {
+          const geo = await geocodeDestination(diemDiParam);
+          if (geo.status === "thanh_cong") {
+            diemDi = geo.diemDen;
+          }
         }
       }
     }
 
-    const ds = new LiveDataSource(undefined, undefined, diemDen, diemDi);
+    const ds = new LiveDataSource(undefined, undefined, diemDen, diemDi, soNgay);
 
     if (loai === "phuong_tien") {
       if (!huong || !["di", "ve"].includes(huong)) {

@@ -10,6 +10,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 
+import type { DiemDen } from "@/contracts";
+
 export interface TransportOption {
   id: string;
   type: string;
@@ -67,11 +69,14 @@ export interface UseOptionsParams {
   loai: "phuong_tien" | "khach_san" | "hoat_dong" | "quan_an" | "cafe";
   huong?: "di" | "ve";
   soNguoi?: number;
+  soNgay?: number;
+  diemDen?: string | DiemDen | null;
+  diemDi?: string | DiemDen | null;
   enabled?: boolean;
 }
 
 export function useOptions<T = OptionItem>(params: UseOptionsParams) {
-  const { loai, huong, soNguoi = 2, enabled = true } = params;
+  const { loai, huong, soNguoi = 2, soNgay = 3, diemDen, diemDi, enabled = true } = params;
   const [items, setItems] = useState<T[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,8 +89,15 @@ export function useOptions<T = OptionItem>(params: UseOptionsParams) {
       const q = new URLSearchParams({
         loai,
         soNguoi: String(soNguoi),
+        soNgay: String(soNgay),
       });
       if (huong) q.set("huong", huong);
+      if (diemDen) {
+        q.set("diemDen", typeof diemDen === "string" ? diemDen : JSON.stringify(diemDen));
+      }
+      if (diemDi) {
+        q.set("diemDi", typeof diemDi === "string" ? diemDi : JSON.stringify(diemDi));
+      }
 
       const res = await fetch(`/api/options?${q.toString()}`);
       const data = await res.json();
@@ -99,7 +111,7 @@ export function useOptions<T = OptionItem>(params: UseOptionsParams) {
     } finally {
       setLoading(false);
     }
-  }, [loai, huong, soNguoi, enabled]);
+  }, [loai, huong, soNguoi, soNgay, diemDen, diemDi, enabled]);
 
   useEffect(() => {
     fetchOptions();

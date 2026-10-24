@@ -20,6 +20,7 @@ import {
   TrendingDown,
   TrendingUp,
   BookOpen,
+  Sparkles,
 } from "lucide-react";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
@@ -38,6 +39,7 @@ export function B11NganSachScreen() {
     confirmed,
     plan,
     ledger,
+    addExpenseToLedger,
     deleteExpenseFromLedger,
     updateExpenseInLedger,
     openB10,
@@ -158,6 +160,63 @@ export function B11NganSachScreen() {
     if (deletingExpense) {
       deleteExpenseFromLedger(deletingExpense.id);
       setDeletingExpense(null);
+    }
+  };
+
+  const handleNapChiTieuMau = () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const sampleExpenses: Expense[] = [
+      {
+        id: `exp_mau_${Date.now()}_1`,
+        nguon: "anh_bill",
+        tenCuaHang: "Cơm gà & Ẩm thực truyền thống",
+        ngay: today,
+        ngayTrongChuyen: 1,
+        hangMuc: "an_uong",
+        soTienVND: 420_000,
+        giaTriAIDoc: 420_000,
+        daSuaTay: false,
+        ghiChu: "Bữa trưa ngày 1 bóc tách từ hóa đơn",
+      },
+      {
+        id: `exp_mau_${Date.now()}_2`,
+        nguon: "nhap_tay",
+        tenCuaHang: "Vé tham quan danh lam thắng cảnh",
+        ngay: today,
+        ngayTrongChuyen: 1,
+        hangMuc: "vui_choi",
+        soTienVND: 160_000,
+        giaTriAIDoc: null,
+        daSuaTay: false,
+        ghiChu: "2 vé vào cổng",
+      },
+      {
+        id: `exp_mau_${Date.now()}_3`,
+        nguon: "anh_bill",
+        tenCuaHang: "Cà phê & Trà ngắm phố",
+        ngay: today,
+        ngayTrongChuyen: 2,
+        hangMuc: "an_uong",
+        soTienVND: 95_000,
+        giaTriAIDoc: 95_000,
+        daSuaTay: false,
+        ghiChu: null,
+      },
+      {
+        id: `exp_mau_${Date.now()}_4`,
+        nguon: "anh_bill",
+        tenCuaHang: "Hải sản / Bữa tối",
+        ngay: today,
+        ngayTrongChuyen: 2,
+        hangMuc: "an_uong",
+        soTienVND: 650_000,
+        giaTriAIDoc: 600_000,
+        daSuaTay: true,
+        ghiChu: "Đã sửa số tiền sau khi đối chiếu hóa đơn",
+      },
+    ];
+    for (const exp of sampleExpenses) {
+      addExpenseToLedger(exp);
     }
   };
 
@@ -454,10 +513,21 @@ export function B11NganSachScreen() {
             <p className="page-sub" style={{ maxWidth: 440, margin: "8px auto 20px" }}>
               Chụp ảnh bill hoặc nhập tay các khoản chi trong chuyến đi để theo dõi và đối chiếu chi phí thực tế.
             </p>
-            <button className="btn btn-primary" onClick={() => openB10()}>
-              <Plus size={16} />
-              Thêm chi tiêu đầu tiên
-            </button>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <button className="btn btn-primary" onClick={() => openB10()}>
+                <Plus size={16} />
+                Thêm chi tiêu đầu tiên
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={handleNapChiTieuMau}
+                style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+              >
+                <Sparkles size={16} />
+                Nạp chi tiêu mẫu để xem đối chiếu
+              </button>
+            </div>
           </div>
         ) : (
           <div className="card" style={{ overflow: "hidden" }}>
