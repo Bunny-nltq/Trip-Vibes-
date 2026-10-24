@@ -1,7 +1,6 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useApp } from "@/ui/context/AppContext";
-import { SideNav } from "@/ui/components/SideNav";
 import { soSanhKeHoachThucTe } from "@/core/soSanhThucTe";
 import { gomDiaDiemTheoNgay } from "@/core/tripProgress";
 import type { Expense, ExpenseCategory } from "@/contracts";
@@ -103,10 +102,12 @@ export function B11NganSachScreen() {
 
   const [denHetNgay, setDenHetNgay] = useState<number>(initialDenHetNgay);
 
-  // Sync state if mock changes initialDenHetNgay
-  useEffect(() => {
+  // Đồng bộ lại khi giá trị khởi tạo đổi (điều chỉnh state lúc render, không dùng effect)
+  const [denHetNgayTruoc, setDenHetNgayTruoc] = useState(initialDenHetNgay);
+  if (initialDenHetNgay !== denHetNgayTruoc) {
+    setDenHetNgayTruoc(initialDenHetNgay);
     setDenHetNgay(initialDenHetNgay);
-  }, [initialDenHetNgay]);
+  }
 
   // Modal Xóa
   const [deletingExpense, setDeletingExpense] = useState<Expense | null>(null);

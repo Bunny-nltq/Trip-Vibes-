@@ -12,12 +12,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import type { DiemDen } from "@/contracts";
-import {
-  prepareDestinationJob,
-  getDestinationJobStatus,
-  clearJobsForTest,
-  isDataReadyForDestination,
-} from "./prepareDestination";
+import { prepareDestinationJob, getDestinationJobStatus, clearJobsForTest } from "./prepareDestination";
 import { POST as planRouteHandler } from "@/app/api/plan/route";
 
 const DA_NANG: DiemDen = {

@@ -63,7 +63,7 @@ export function quetNoiDung(noiDung: string, tenFile: string): ViPhamMau[] {
     // 1. Kiểm tra mã HEX
     const hexMatches = lineWithoutHref.match(HEX_COLOR_REGEX);
     if (hexMatches) {
-      for (const match of hexMatches) {
+      for (let i = 0; i < hexMatches.length; i++) {
         violations.push({
           file: tenFile,
           line: idx + 1,

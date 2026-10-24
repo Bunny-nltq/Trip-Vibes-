@@ -29,6 +29,7 @@ import {
   QUY_TAC_VERSION,
 } from "@/core/assumptions";
 import { locUngVienTheoNganSach } from "@/core/locUngVienTheoNganSach";
+import { logger } from "@/lib/logger";
 
 export const AGENT_PROMPT_VERSION = "v4";
 export const AGENT_MAX_STEPS = 10;
@@ -252,7 +253,7 @@ export async function runPlanAgent(
             fs.readFileSync(cacheFilePath, "utf-8")
           ) as PlanAgentResult;
           if (cached?.selection) {
-            console.log(
+            logger.debug(
               `[AgentCache] Sử dụng lựa chọn agent từ cache (${cacheKey.slice(0, 8)}).`
             );
             return cached;
@@ -337,7 +338,7 @@ Chỉ thị:
     }
 
     steps++;
-    console.log(`[PlanAgent] Step ${steps}: Sending request to Gemini (${provider.modelName})...`);
+    logger.debug(`[PlanAgent] Step ${steps}: Sending request to Gemini (${provider.modelName})...`);
 
     let response;
     let attempts = 0;
@@ -427,7 +428,7 @@ Chỉ thị:
 
     const modelContent = candidate.content;
     const functionCalls = response.functionCalls;
-    console.log(`[PlanAgent] Step ${steps}: Received ${functionCalls?.length ?? 0} function calls:`, functionCalls?.map(f => f.name));
+    logger.debug(`[PlanAgent] Step ${steps}: Received ${functionCalls?.length ?? 0} function calls:`, functionCalls?.map(f => f.name));
 
     if (!functionCalls || functionCalls.length === 0) {
       if (selection) break;

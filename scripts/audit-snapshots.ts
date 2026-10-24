@@ -15,7 +15,7 @@ async function main() {
   console.log("              KIỂM TOÁN DỮ LIỆU SNAPSHOT (AUDIT:SNAPSHOTS)                     ");
   console.log("================================================================================\n");
 
-  const { results, allPassed } = auditAllSnapshots();
+  const { results } = auditAllSnapshots();
 
   if (results.length === 0) {
     console.log("ℹ️ Không tìm thấy file snapshot nào trong src/data/snapshots.");

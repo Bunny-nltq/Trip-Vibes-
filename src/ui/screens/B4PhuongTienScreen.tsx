@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useApp, extractSelectionFromPlan } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
@@ -17,7 +17,8 @@ export function B4PhuongTienScreen() {
     editContext?.huong === "ve" || editContext?.type === "phuong_tien_ve" ? "ve" : "di";
 
   const [tab, setTab] = useState<"di" | "ve">(initialTab);
-  const [selectedId, setSelectedId] = useState<string>(editContext?.currentId || "");
+  const [selectedIdState, setSelectedIdState] = useState<string>(editContext?.currentId || "");
+  const setSelectedId = setSelectedIdState;
   const [filterType, setFilterType] = useState<string>("all");
   const [filterTime, setFilterTime] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"price" | "time" | "duration">("price");
@@ -36,13 +37,13 @@ export function B4PhuongTienScreen() {
 
   const { preview, loading: loadingPreview, error: errorPreview } = usePlanPreview();
 
-  useEffect(() => {
-    if (editContext?.currentId) {
-      setSelectedId(editContext.currentId);
-    } else if (transports.length > 0 && !selectedId) {
-      setSelectedId(transports[0].id);
-    }
-  }, [editContext, transports, selectedId]);
+  const [editContextTruoc, setEditContextTruoc] = useState(editContext);
+  if (editContext !== editContextTruoc) {
+    setEditContextTruoc(editContext);
+    if (editContext?.currentId) setSelectedIdState(editContext.currentId);
+  }
+  // Chưa chọn thì mặc định là phương tiện đầu tiên
+  const selectedId = selectedIdState || transports[0]?.id || "";
 
   // Bộ lọc & sắp xếp
   const filtered = useMemo(() => {

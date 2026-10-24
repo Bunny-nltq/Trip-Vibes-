@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { MapPin, ArrowRight, Plane } from "lucide-react";
 
@@ -79,14 +80,16 @@ export function ThuDiemDen({ diemDens }: ThuDiemDenProps) {
               }}
             >
               {d.hinhAnh ? (
-                <img
+                // unoptimized: ảnh Wikimedia Commons được trình duyệt tải trực tiếp (máy chủ Next không nhúng
+                // lại được vì Wikimedia chặn tải tự động); vẫn có lazy-load và kích thước cố định.
+                <Image
                   src={d.hinhAnh.urlThumb || d.hinhAnh.url}
                   alt={d.hinhAnh.alt || d.ten}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  unoptimized
                   style={{
-                    width: "100%",
-                    height: "100%",
                     objectFit: "cover",
-                    display: "block",
                   }}
                 />
               ) : (

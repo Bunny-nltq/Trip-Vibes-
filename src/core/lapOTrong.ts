@@ -18,12 +18,7 @@ import type {
   Activity,
   Transport,
 } from "@/contracts";
-import {
-  BUFFER_SAU_KHI_DEN_PHUT,
-  BUFFER_RA_BEN_PHUT,
-  THOI_LUONG_TOI_THIEU_HOAT_DONG,
-} from "./assumptions";
-import { gioOHoatDongNgayDau } from "./gioONgayDau";
+import { BUFFER_RA_BEN_PHUT } from "./assumptions";
 import { tinhOKhaDungTheoNgay } from "./oKhaDung";
 
 const GIO_HOAT_DONG_1_PHUT = 570; // 09:30

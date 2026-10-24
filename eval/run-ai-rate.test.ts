@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { runAiRate, type ScenarioResult, type ProgressRecord } from "./run-ai-rate";
+import { runAiRate, type ProgressRecord } from "./run-ai-rate";
 import type { PlanRepairResult } from "../src/ai/planWithRepair";
 
 const testTempDir = path.resolve(process.cwd(), "eval/results/test-temp");
@@ -22,7 +22,7 @@ describe("Eval chạy tiếp được (run-ai-rate)", () => {
     vi.restoreAllMocks();
   });
 
-  const createMockPlanResult = (stt: number): PlanRepairResult => ({
+  const createMockPlanResult = (_stt: number): PlanRepairResult => ({
     status: "ok",
     request: {} as any,
     hard: [],

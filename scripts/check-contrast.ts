@@ -100,7 +100,7 @@ export function runContrastAudit() {
   });
 
   console.table(
-    results.map(({ passed, ...rest }) => rest)
+    results.map(({ passed: _passed, ...rest }) => rest)
   );
 
   const allPassed = results.every((r) => r.passed);

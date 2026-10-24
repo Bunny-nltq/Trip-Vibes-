@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   MapPin,
@@ -217,13 +218,18 @@ export function DiemDenChiTietScreen({
                   boxShadow: "0 4px 20px rgba(0, 0, 0, 0.06)",
                 }}
               >
-                <img
+                {/* unoptimized: ảnh Wikimedia Commons được trình duyệt tải trực tiếp (Wikimedia chặn tải tự động từ máy chủ) */}
+                <Image
                   src={hinhAnh.url}
                   alt={hinhAnh.alt || ten}
-                  loading="lazy"
+                  width={1200}
+                  height={420}
+                  sizes="(max-width: 1200px) 100vw, 1200px"
+                  unoptimized
                   style={{
                     width: "100%",
                     maxHeight: 420,
+                    height: "auto",
                     objectFit: "cover",
                     display: "block",
                   }}

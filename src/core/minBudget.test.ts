@@ -1,8 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { tinhNganSachToiThieu } from "./minBudget";
-import { validatePlan } from "./validatePlan";
-import { buildPlan } from "./buildPlan";
-import type { TripRequest, Selection } from "@/contracts";
+import type { TripRequest } from "@/contracts";
 
 function createFixtureM() {
   return {

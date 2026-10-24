@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { locUngVienTheoNganSach } from "./locUngVienTheoNganSach";
-import type { TripRequest, Transport, Hotel } from "@/contracts";
+import type { TripRequest } from "@/contracts";
 
 describe("locUngVienTheoNganSach (Mục 1 - Bước 14)", () => {
   const transports: any[] = [

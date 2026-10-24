@@ -4,7 +4,7 @@ import { buildPlan, type PlanData } from "./buildPlan";
 import { validatePlan } from "./validatePlan";
 import { donOKhongKhaDung } from "./donOKhongKhaDung";
 import { lapOTrong } from "./lapOTrong";
-import type { TripRequest, Selection, Transport, Hotel } from "@/contracts";
+import type { TripRequest, Selection } from "@/contracts";
 
 describe("B1a - Test tiền: số đêm theo giờ đến", () => {
   const reqBase: TripRequest = {

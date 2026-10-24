@@ -111,35 +111,18 @@ const PRESETS = [
   },
 ];
 
-const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000];
-const QUICK_ORIGINS = ["TP.HCM", "Hà Nội", "Đà Nẵng", "Cần Thơ"];
-const QUICK_DESTINATIONS = [
-  "Đà Nẵng",
-  "Hà Nội",
-  "Đà Lạt",
-  "Phú Quốc",
-  "Nha Trang",
-  "Bangkok",
-  "Seoul",
-  "Tokyo",
-];
-
-const AVOID_ITEMS = [
+const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000];const AVOID_ITEMS = [
   { label: "Không dậy sớm", icon: Sunrise },
   { label: "Không đi đêm", icon: Moon },
   { label: "Tránh đi lâu", icon: Timer },
   { label: "Tránh chỗ đông", icon: Users },
   { label: "Tránh đi bộ nhiều", icon: Footprints },
-];
-const DURATION_DAYS = [2, 3, 4, 5, 6, 7];
-
-export function B1ChonNhanhScreen() {
+];export function B1ChonNhanhScreen() {
   const {
     nav,
     tripConfig,
     setTripConfig,
     executePlan,
-    planResult,
   } = useApp();
   const { aiBat } = useTrangThaiAI();
   const { data: diemChonData } = useDiemChon();

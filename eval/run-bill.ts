@@ -5,7 +5,7 @@ import { loadEnvConfig } from "@next/env";
 import { extractBill, BILL_PROMPT_VERSION } from "../src/ai/extractBill";
 import { checkBill } from "../src/core/bill/checkBill";
 import { GeminiProvider } from "../src/ai/provider";
-import type { BillExtractionRaw, BillExtraction } from "../src/contracts";
+import type { BillExtractionRaw } from "../src/contracts";
 import { taoMetaEval } from "./lib/meta";
 import { QUY_TAC_VERSION } from "../src/core/assumptions";
 import { AGENT_PROMPT_VERSION } from "../src/ai/planAgent";

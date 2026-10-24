@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
 import fs from "node:fs";
-import path from "node:path";
 import { taoMetaEval } from "./meta";
 import { danhGiaDoMoiTuFile } from "../run-tonghop";
 import { QUY_TAC_VERSION } from "../../src/core/assumptions";

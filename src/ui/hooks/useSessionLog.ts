@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { tinhChiSoTest, type SessionEvent } from "@/core/chiSoTest";
+import { logger } from "@/lib/logger";
 
 export const STORAGE_KEY = "tv_session_events";
 export const START_TIME_KEY = "tv_session_start_time";
@@ -129,7 +130,7 @@ export class SessionLogger {
       try {
         this.storage.setItem(STORAGE_KEY, JSON.stringify(this.events));
       } catch (err) {
-        console.warn("Lỗi ghi sessionStorage:", err);
+        logger.debug("Lỗi ghi sessionStorage:", err);
       }
     }
   }
@@ -222,6 +223,7 @@ export function useSessionLog(options?: SessionLogOptions) {
         isTest = sp.get("test") === "1";
       }
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- đồng bộ với hệ thống bên ngoài React (URL, sessionStorage, mạng) chỉ làm được sau khi dựng
       setIsTestMode(isTest);
       isTestModeRef.current = isTest;
 
@@ -259,7 +261,7 @@ export function useSessionLog(options?: SessionLogOptions) {
         }
       }
     } catch (e) {
-      console.warn("Lỗi khởi tạo session log:", e);
+      logger.debug("Lỗi khởi tạo session log:", e);
     }
   }, [initialTestMode, getStorage, options?.isTestMode, options?.search]);
 
@@ -286,13 +288,13 @@ export function useSessionLog(options?: SessionLogOptions) {
             try {
               storage.setItem(STORAGE_KEY, JSON.stringify(next));
             } catch (err) {
-              console.warn("Lỗi ghi sessionStorage:", err);
+              logger.debug("Lỗi ghi sessionStorage:", err);
             }
           }
           return next;
         });
       } catch (e) {
-        console.warn("Lỗi ghi event:", e);
+        logger.debug("Lỗi ghi event:", e);
       }
     },
     [getStorage]

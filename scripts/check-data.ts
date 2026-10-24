@@ -17,7 +17,7 @@ interface CheckResult {
   errors: string[];
 }
 
-function checkFile<T>(
+function checkFile(
   filename: string,
   schemaName: string,
   schema: ZodTypeAny

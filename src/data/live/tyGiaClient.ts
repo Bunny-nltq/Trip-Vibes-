@@ -68,7 +68,6 @@ export async function layTyGiaSangVND(
 
   // Kiểm tra cache còn hạn
   if (cache && !options?.forceRefresh && cache.timeNextUpdateUnix > nowSec) {
-    const rateUSD = cache.rates["USD"] ?? 1;
     const rateVND = cache.rates["VND"];
     const rateTarget = cache.rates[code];
 
@@ -120,7 +119,7 @@ export async function layTyGiaSangVND(
       };
     }
     throw new Error(`Không tìm thấy mã tiền tệ ${code}`);
-  } catch (err) {
+  } catch {
     // Khi lỗi mạng hoặc 429: fallback sang cache gần nhất nếu có
     if (cache && cache.rates["VND"] && cache.rates[code]) {
       const tyGia = cache.rates["VND"] / cache.rates[code];

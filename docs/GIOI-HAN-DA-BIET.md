@@ -54,6 +54,6 @@ Tài liệu này ghi nhận trung thực và minh bạch toàn bộ các giới 
 - Phương tiện là ước tính theo quãng đường chim bay (tàu và xe khách nhân hệ số đường bộ 1,5); giá và thời gian không phải số liệu của hãng.
 - Hạn mức Gemini miễn phí đã quan sát: khoảng 20 lượt gọi mỗi ngày; các bộ eval phải chạy rải nhiều ngày.
 - Trên bản triển khai mặc định AI tắt; kế hoạch lập bằng quy tắc (phuongThucLap quy_tac).
-- Trang chủ có 6 khối; ảnh địa điểm, trang điểm đến và lịch trình mẫu chưa làm.
+- Ảnh minh họa đã có cho 5 điểm đến (Wikimedia Commons, có ghi công, xem `/nguon-anh`); chưa có ảnh cho khách sạn và từng địa điểm nhỏ. Trang `/lich-trinh` (lịch trình mẫu) đã có; trang chủ chưa có khối lịch trình mẫu.
 
 

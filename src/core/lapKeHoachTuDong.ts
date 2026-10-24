@@ -24,13 +24,7 @@ import {
   NGUOI_MOI_PHONG,
 } from "./assumptions";
 import { soDemOKhachSan } from "./soDem";
-import {
-  tinhNganSachToiThieu,
-  isTransportValidForAvoidance,
-  findCheapestHotel,
-  getHotelPricePerNight,
-  parseTimeToMinutes,
-} from "./minBudget";
+import { tinhNganSachToiThieu, isTransportValidForAvoidance, getHotelPricePerNight, parseTimeToMinutes } from "./minBudget";
 
 export type LapKeHoachTuDongSuccess = Selection & {
   status: "ok";

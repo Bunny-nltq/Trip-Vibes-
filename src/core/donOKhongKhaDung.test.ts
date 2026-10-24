@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { donOKhongKhaDung } from "./donOKhongKhaDung";
-import type { Selection, Plan } from "@/contracts";
+import type { Selection } from "@/contracts";
 
 describe("donOKhongKhaDung", () => {
   it("chiều đi đến 10:19, ngày 1 có [A1] -> sau dọn, ngày 1 vẫn là [A1], không có cảnh báo bo_hoat_dong_do_gio_giac", () => {

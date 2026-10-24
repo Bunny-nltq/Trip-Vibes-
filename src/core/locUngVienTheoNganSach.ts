@@ -9,7 +9,7 @@
  * - Giữ nguyên thứ tự đầu vào.
  */
 
-import type { TripRequest, Transport, Hotel } from "@/contracts";
+import type { TripRequest, Transport } from "@/contracts";
 import {
   isTransportValidForAvoidance,
   getHotelPricePerNight,

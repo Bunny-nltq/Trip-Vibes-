@@ -8,7 +8,7 @@ export interface SiteFooterProps {
   onOpenGioiHan?: () => void;
 }
 
-export function SiteFooter({ ngayDuLieu = "20/10/2026", onOpenGioiHan }: SiteFooterProps) {
+export function SiteFooter({ ngayDuLieu = "20/10/2026" }: SiteFooterProps) {
   return (
     <footer
       style={{

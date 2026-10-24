@@ -5,8 +5,6 @@ import {
   scheduleRateLimited,
   resetGeocodeRateLimiter,
 } from "./geocodeClient";
-import fs from "node:fs";
-import path from "node:path";
 
 describe("geocodeClient", () => {
   const originalUserAgent = process.env.NOMINATIM_USER_AGENT;
