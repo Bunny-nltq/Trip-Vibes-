@@ -222,15 +222,20 @@ export function B11NganSachScreen() {
   };
 
   if (!confirmed) {
+    const hasExistingPlan = plan && plan.items && plan.items.length > 0;
+    const destName = plan?.request.diemDen
+      ? (typeof plan.request.diemDen === "string" ? plan.request.diemDen : plan.request.diemDen.ten)
+      : null;
+
     return (
       <div className="Row2" style={{ padding: "0 0 40px" }}>
         <div className="MainWide">
           <div
             className="DayCard"
             style={{
-              padding: "56px 32px",
+              padding: "48px 32px",
               textAlign: "center",
-              maxWidth: 560,
+              maxWidth: 580,
               margin: "60px auto",
             }}
           >
@@ -239,7 +244,7 @@ export function B11NganSachScreen() {
                 width: 56,
                 height: 56,
                 borderRadius: "var(--r-full)",
-                background: "var(--color-surface-sub)",
+                background: "var(--color-primary-tint)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -247,22 +252,53 @@ export function B11NganSachScreen() {
                 color: "var(--color-primary-main)",
               }}
             >
-              <BookOpen size={28} />
+              <Wallet size={28} />
             </div>
-            <h1 className="H1" style={{ fontSize: 24, marginBottom: 8, color: "var(--color-text)" }}>
-              Chưa có chuyến nào
-            </h1>
-            <div className="Sub" style={{ marginBottom: 24, color: "var(--color-text-sub)", lineHeight: 1.6 }}>
-              Bạn chưa có chuyến đi nào được xác nhận. Hãy bắt đầu lập kế hoạch ngay để theo dõi hành trình và chi tiêu.
-            </div>
-            <button
-              type="button"
-              className="Btn BtnPrimary"
-              style={{ margin: "0 auto" }}
-              onClick={() => nav("b1-chon-nhanh")}
-            >
-              Lập kế hoạch
-            </button>
+
+            {hasExistingPlan ? (
+              <>
+                <h1 className="H1" style={{ fontSize: 24, marginBottom: 8, color: "var(--color-text)" }}>
+                  Sổ chi tiêu chuyến đi {destName || ""}
+                </h1>
+                <div className="Sub" style={{ marginBottom: 24, color: "var(--color-text-sub)", lineHeight: 1.6 }}>
+                  Kế hoạch dự kiến: {fmt(plan?.tongKet.tongVND || 0)}. Chốt chuyến đi để mở đầy đủ sổ ngân sách theo dõi chi tiêu thực tế, hoặc đọc hóa đơn ghi nhận chi phí.
+                </div>
+                <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    className="Btn BtnPrimary"
+                    onClick={() => nav("b7-xac-nhan")}
+                    style={{ minWidth: 180 }}
+                  >
+                    Xem & Chốt chuyến đi
+                  </button>
+                  <button
+                    type="button"
+                    className="Btn BtnGhost"
+                    onClick={() => openB10()}
+                  >
+                    Thêm khoản chi / Đọc hóa đơn
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h1 className="H1" style={{ fontSize: 24, marginBottom: 8, color: "var(--color-text)" }}>
+                  Chưa có chuyến nào
+                </h1>
+                <div className="Sub" style={{ marginBottom: 24, color: "var(--color-text-sub)", lineHeight: 1.6 }}>
+                  Bạn chưa có chuyến đi nào được tạo. Hãy bắt đầu lập kế hoạch ngay để theo dõi hành trình và chi tiêu.
+                </div>
+                <button
+                  type="button"
+                  className="Btn BtnPrimary"
+                  style={{ margin: "0 auto" }}
+                  onClick={() => nav("b1-chon-nhanh")}
+                >
+                  Lập kế hoạch
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

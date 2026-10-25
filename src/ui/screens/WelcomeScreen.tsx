@@ -1,9 +1,21 @@
 "use client";
 import React from "react";
 import { useApp } from "@/ui/context/AppContext";
+import { getDestinationImage } from "@/ui/lib/imageMap";
 
 export function WelcomeScreen() {
   const { nav } = useApp();
+
+  const featuredDestinations = [
+    { slug: "da-nang", ten: "Đà Nẵng", quocGia: "Việt Nam" },
+    { slug: "ha-noi", ten: "Hà Nội", quocGia: "Việt Nam" },
+    { slug: "da-lat", ten: "Đà Lạt", quocGia: "Việt Nam" },
+    { slug: "bangkok", ten: "Bangkok", quocGia: "Thái Lan" },
+    { slug: "seoul", ten: "Seoul", quocGia: "Hàn Quốc" },
+  ].map((d) => ({
+    ...d,
+    img: getDestinationImage(d.slug),
+  }));
 
   const features = [
     {
@@ -55,13 +67,20 @@ export function WelcomeScreen() {
           </div>
         </div>
 
-        <div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <button
             type="button"
             className="Btn BtnSmall"
             onClick={() => nav("login")}
           >
             Đăng nhập
+          </button>
+          <button
+            type="button"
+            className="Btn BtnSmall BtnPrimary"
+            onClick={() => nav("register")}
+          >
+            Đăng ký
           </button>
         </div>
       </header>
@@ -117,6 +136,69 @@ export function WelcomeScreen() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Featured Destinations with Real Photos */}
+        <div style={{ maxWidth: 860, margin: "0 auto 44px", textAlign: "left" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+            <div style={{ fontWeight: 800, fontSize: 16, color: "var(--color-text)" }}>
+              Các điểm đến thịnh hành có sẵn dữ liệu chuẩn xác
+            </div>
+            <div style={{ fontSize: 12, color: "var(--color-text-sub)" }}>
+              Nguồn ảnh: Wikimedia Commons (CC License)
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+              gap: 12,
+            }}
+          >
+            {featuredDestinations.map((d) => (
+              <div
+                key={d.slug}
+                onClick={() => nav("b1-chon-nhanh")}
+                style={{
+                  background: "var(--color-surface)",
+                  borderRadius: "var(--r-lg)",
+                  border: "1px solid var(--color-border)",
+                  overflow: "hidden",
+                  cursor: "pointer",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                  transition: "transform 0.15s ease",
+                }}
+              >
+                <div style={{ position: "relative", height: 105, background: "var(--color-surface-sub)" }}>
+                  <img
+                    src={d.img.urlThumb || d.img.url}
+                    alt={d.img.alt}
+                    loading="lazy"
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: 4,
+                      right: 6,
+                      background: "rgba(0,0,0,0.65)",
+                      color: "var(--color-primary-text)",
+                      padding: "1px 6px",
+                      borderRadius: "var(--r-full)",
+                      fontSize: 9,
+                    }}
+                  >
+                    {d.img.giayPhep}
+                  </div>
+                </div>
+                <div style={{ padding: "8px 10px" }}>
+                  <div style={{ fontWeight: 700, fontSize: 13, color: "var(--color-text)" }}>{d.ten}</div>
+                  <div style={{ fontSize: 11, color: "var(--color-text-sub)" }}>{d.quocGia}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Call to action */}

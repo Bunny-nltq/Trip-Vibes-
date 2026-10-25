@@ -15,6 +15,7 @@ import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";
 import { ChonDiem } from "@/ui/components/ChonDiem";
 import { dinhDangTien } from "@/core/formB1";
+import { getHotelImage } from "@/ui/lib/imageMap";
 import type { DiemDen } from "@/contracts";
 
 export interface KhachSanItem {
@@ -444,72 +445,88 @@ export function KhachSanScreen({
                 gap: 24,
               }}
             >
-              {filteredAndSortedHotels.map((ks) => (
-                <article
-                  key={ks.id}
-                  style={{
-                    background: "var(--color-surface)",
-                    borderRadius: "var(--r-xl)",
-                    border: "1px solid var(--color-border)",
-                    overflow: "hidden",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    boxShadow: "0 4px 16px rgba(0, 0, 0, 0.04)",
-                    transition: "all 0.2s ease",
-                  }}
-                >
-                  <div>
-                    {/* Khung ảnh có nền thay thế như H5 */}
-                    <div
-                      style={{
-                        position: "relative",
-                        width: "100%",
-                        aspectRatio: "16 / 10",
-                        background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderBottom: "1px solid var(--color-border)",
-                      }}
-                    >
+              {filteredAndSortedHotels.map((ks) => {
+                const hotelImg = getHotelImage(ks.soSao, ks.ten, activeDiemDen?.ten);
+                return (
+                  <article
+                    key={ks.id}
+                    style={{
+                      background: "var(--color-surface)",
+                      borderRadius: "var(--r-xl)",
+                      border: "1px solid var(--color-border)",
+                      overflow: "hidden",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      boxShadow: "0 4px 16px rgba(0, 0, 0, 0.04)",
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    <div>
+                      {/* Khung ảnh khách sạn thật tỉ lệ 16:10 */}
                       <div
                         style={{
-                          width: 48,
-                          height: 48,
-                          borderRadius: "var(--r-full)",
-                          background: "var(--color-surface)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.06)",
+                          position: "relative",
+                          width: "100%",
+                          aspectRatio: "16 / 10",
+                          background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
+                          overflow: "hidden",
+                          borderBottom: "1px solid var(--color-border)",
                         }}
                       >
-                        <Building2 size={24} color="var(--color-primary-main)" />
-                      </div>
+                        <img
+                          src={hotelImg.urlThumb || hotelImg.url}
+                          alt={hotelImg.alt || ks.ten}
+                          loading="lazy"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            display: "block",
+                          }}
+                        />
 
-                      {/* Huy hiệu điểm đến */}
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: 12,
-                          right: 12,
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 4,
-                          fontSize: 12,
-                          fontWeight: 700,
-                          color: "var(--color-primary-main)",
-                          background: "var(--color-surface)",
-                          padding: "3px 8px",
-                          borderRadius: "var(--r-full)",
-                          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.08)",
-                        }}
-                      >
-                        <MapPin size={11} />
-                        <span>{activeDiemDen?.ten}</span>
+                        {/* Ghi công tác giả & giấy phép CC */}
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: 8,
+                            left: 8,
+                            padding: "3px 8px",
+                            borderRadius: "var(--r-sm)",
+                            background: "rgba(0, 0, 0, 0.68)",
+                            color: "var(--color-primary-text)",
+                            fontSize: 10,
+                            fontWeight: 600,
+                            backdropFilter: "blur(4px)",
+                            pointerEvents: "none",
+                          }}
+                        >
+                          {hotelImg.tacGia} · {hotelImg.giayPhep}
+                        </div>
+
+                        {/* Huy hiệu điểm đến */}
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: 12,
+                            right: 12,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 4,
+                            fontSize: 12,
+                            fontWeight: 700,
+                            color: "var(--color-primary-main)",
+                            background: "var(--color-surface)",
+                            padding: "3px 8px",
+                            borderRadius: "var(--r-full)",
+                            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.08)",
+                          }}
+                        >
+                          <MapPin size={11} />
+                          <span>{activeDiemDen?.ten}</span>
+                        </div>
                       </div>
-                    </div>
 
                     {/* Nội dung thông tin khách sạn */}
                     <div style={{ padding: "18px 20px 12px" }}>
@@ -632,7 +649,8 @@ export function KhachSanScreen({
                     </a>
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>

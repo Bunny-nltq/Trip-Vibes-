@@ -27,7 +27,13 @@ import {
   Hotel,
   Sparkles,
 } from "lucide-react";
-import anhDiemDenData from "@/data/site/anh-diem-den.json";
+import {
+  getDestinationImage,
+  getHotelImage,
+  getRestaurantImage,
+  getCafeImage,
+  getActivityImage,
+} from "@/ui/lib/imageMap";
 
 const VIBES: { label: string; key: Preference }[] = [
   { label: "Biển", key: "bien" },
@@ -390,25 +396,11 @@ export function B3KeHoachScreen() {
         {/* Banner ảnh minh họa điểm đến trực quan từ Wikimedia Commons */}
         {(() => {
           const tenDiemDenHienThi = getDiemDenTen(plan.request.diemDen);
-          const norm = tenDiemDenHienThi.toLowerCase().trim();
-          const slugLookup: Record<string, string> = {
-            "đà nẵng": "da-nang",
-            "da nang": "da-nang",
-            "hà nội": "ha-noi",
-            "ha noi": "ha-noi",
-            "đà lạt": "da-lat",
-            "da lat": "da-lat",
-            "bangkok": "bangkok",
-            "seoul": "seoul",
-          };
-          const slug = slugLookup[norm];
-          const anhInfo = slug ? (anhDiemDenData as Record<string, any>)[slug] : undefined;
+          const anhInfo = getDestinationImage(tenDiemDenHienThi);
           const quocGia =
             typeof plan.request.diemDen === "object" && plan.request.diemDen?.quocGia
               ? plan.request.diemDen.quocGia
               : "Việt Nam";
-
-          if (!anhInfo) return null;
 
           return (
             <div
@@ -493,14 +485,18 @@ export function B3KeHoachScreen() {
                   <span>{anhInfo.diaDanh}</span>
                   <span>
                     Ảnh: {anhInfo.tacGia} ·{" "}
-                    <a
-                      href={anhInfo.linkGiayPhep}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: "var(--color-primary-text)", textDecoration: "underline" }}
-                    >
-                      {anhInfo.giayPhep}
-                    </a>
+                    {anhInfo.linkGiayPhep ? (
+                      <a
+                        href={anhInfo.linkGiayPhep}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "var(--color-primary-text)", textDecoration: "underline" }}
+                      >
+                        {anhInfo.giayPhep}
+                      </a>
+                    ) : (
+                      <span>{anhInfo.giayPhep}</span>
+                    )}
                   </span>
                 </div>
               </div>
@@ -570,6 +566,22 @@ export function B3KeHoachScreen() {
                   item.hangMuc === "Chỗ ở" ||
                   item.hangMuc === "Vui chơi";
 
+                const itemImg = (() => {
+                  if (item.hangMuc === "Chỗ ở") {
+                    return getHotelImage(undefined, cleanName, currentDestName);
+                  }
+                  if (item.hangMuc === "Ăn uống") {
+                    if (cleanName.toLowerCase().includes("cà phê") || cleanName.toLowerCase().includes("cafe")) {
+                      return getCafeImage(cleanName);
+                    }
+                    return getRestaurantImage(cleanName);
+                  }
+                  if (item.hangMuc === "Vui chơi") {
+                    return getActivityImage(undefined, cleanName);
+                  }
+                  return null;
+                })();
+
                 return (
                   <div key={i} className="item" style={{ flexDirection: "column", alignItems: "stretch" }}>
                     <div style={{ display: "flex", alignItems: "flex-start", width: "100%" }}>
@@ -577,6 +589,34 @@ export function B3KeHoachScreen() {
                       <span className={`tag ${getTagClass(item.hangMuc)}`}>
                         {item.hangMuc}
                       </span>
+
+                      {itemImg && (
+                        <div
+                          style={{
+                            width: 44,
+                            height: 44,
+                            borderRadius: "var(--r-md)",
+                            overflow: "hidden",
+                            flexShrink: 0,
+                            marginRight: 10,
+                            marginLeft: 4,
+                            border: "1px solid var(--color-border)",
+                            background: "var(--color-surface-sub)",
+                          }}
+                        >
+                          <img
+                            src={itemImg.urlThumb || itemImg.url}
+                            alt={itemImg.alt || cleanName}
+                            loading="lazy"
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              display: "block",
+                            }}
+                          />
+                        </div>
+                      )}
 
                       <div className="item-info" style={{ flex: 1, paddingRight: 12 }}>
                         <div className="item-title">{item.noiDung}</div>

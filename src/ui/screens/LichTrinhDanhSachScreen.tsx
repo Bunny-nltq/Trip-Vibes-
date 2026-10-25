@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";
+import { getDestinationImage } from "@/ui/lib/imageMap";
 
 export interface LichTrinhMauThe {
   slug: string;
@@ -146,28 +147,70 @@ export function LichTrinhDanhSachScreen({
               gap: 28,
             }}
           >
-            {danhSach.map((item) => (
-              <article
-                key={item.slug}
-                style={{
-                  background: "var(--color-surface)",
-                  borderRadius: "var(--r-lg)",
-                  border: "1px solid var(--color-border)",
-                  display: "flex",
-                  flexDirection: "column",
-                  overflow: "hidden",
-                  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.04)",
-                  transition: "transform 0.2s, box-shadow 0.2s",
-                }}
-              >
-                {/* Phần đầu thẻ */}
-                <div
+            {danhSach.map((item) => {
+              const destImg = getDestinationImage(item.tenDiemDen);
+              return (
+                <article
+                  key={item.slug}
                   style={{
-                    padding: "24px 24px 16px",
-                    borderBottom: "1px solid var(--color-border)",
-                    background: "linear-gradient(135deg, var(--color-surface-subtle) 0%, var(--color-surface) 100%)",
+                    background: "var(--color-surface)",
+                    borderRadius: "var(--r-lg)",
+                    border: "1px solid var(--color-border)",
+                    display: "flex",
+                    flexDirection: "column",
+                    overflow: "hidden",
+                    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.04)",
+                    transition: "transform 0.2s, box-shadow 0.2s",
                   }}
                 >
+                  {/* Ảnh thật bìa điểm đến */}
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      height: 160,
+                      overflow: "hidden",
+                      borderBottom: "1px solid var(--color-border)",
+                      background: "var(--color-surface-sub)",
+                    }}
+                  >
+                    <img
+                      src={destImg.urlThumb || destImg.url}
+                      alt={destImg.alt || item.tieuDe}
+                      loading="lazy"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        display: "block",
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: 8,
+                        left: 8,
+                        padding: "3px 8px",
+                        borderRadius: "var(--r-sm)",
+                        background: "rgba(0, 0, 0, 0.68)",
+                        color: "var(--color-primary-text)",
+                        fontSize: 10,
+                        fontWeight: 600,
+                        backdropFilter: "blur(4px)",
+                      }}
+                    >
+                      {destImg.tacGia} · {destImg.giayPhep}
+                    </div>
+                  </div>
+
+                  {/* Phần đầu thẻ */}
+                  <div
+                    style={{
+                      padding: "20px 24px 16px",
+                      borderBottom: "1px solid var(--color-border)",
+                      background: "linear-gradient(135deg, var(--color-surface-subtle) 0%, var(--color-surface) 100%)",
+                    }}
+                  >
                   <div
                     style={{
                       display: "flex",
@@ -346,7 +389,8 @@ export function LichTrinhDanhSachScreen({
                   </Link>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         </section>
       </main>

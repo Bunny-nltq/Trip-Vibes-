@@ -8,7 +8,7 @@ Cấu trúc: `src/contracts`, `src/core`, `src/ai`, `src/data`, `src/app/api`, `
 ## 1. Phạm vi sản phẩm
 - **Điểm đến**: Hỗ trợ bất kỳ điểm đến du lịch nào. Bộ dữ liệu snapshot chính thức hỗ trợ 5 điểm đến: Đà Nẵng, Hà Nội, Đà Lạt, Bangkok, Seoul. (Phú Quốc chưa hỗ trợ do Overpass không truy vấn được).
 - **Độ dài chuyến đi**: Từ 2 đến 7 ngày.
-- **Mô hình người dùng**: Sử dụng ở chế độ khách (Guest mode), không yêu cầu tài khoản hay đăng nhập (không có nút Đăng nhập hay Đăng ký).
+- **Mô hình người dùng**: Sử dụng ở chế độ khách (Guest mode mặc định, không bắt buộc tài khoản); hỗ trợ đăng nhập/đăng ký để lưu trữ nhật ký chuyến đi cá nhân và xem lại trên thiết bị.
 - **Khu vực website**: Gồm 2 khu vực chính:
   1. Khu vực trang công khai: Trang chủ (`/`), Điểm đến (`/diem-den`, `/diem-den/[slug]`), Khách sạn (`/khach-san`), Lịch trình mẫu (`/lich-trinh`), Trợ giúp / Giới hạn / Nguồn ảnh / Điều khoản. Không có trang "Cách hoạt động" riêng (tính năng được giới thiệu trực tiếp trên Home).
   2. Khu vực ứng dụng lập kế hoạch: `/lap-ke-hoach`.

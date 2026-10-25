@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";
+import { getDestinationImage } from "@/ui/lib/imageMap";
 import type { Plan } from "@/contracts";
 
 export interface LichTrinhChiTietData {
@@ -208,6 +209,54 @@ export function LichTrinhChiTietScreen({
                 </Link>
               </div>
             </div>
+
+            {/* Ảnh Hero thật của điểm đến */}
+            {(() => {
+              const destImg = getDestinationImage(data.tenDiemDen);
+              return (
+                <div
+                  style={{
+                    marginTop: 24,
+                    borderRadius: "var(--r-xl)",
+                    overflow: "hidden",
+                    position: "relative",
+                    maxHeight: 280,
+                    height: 280,
+                    border: "1px solid var(--color-border)",
+                    background: "var(--color-surface)",
+                    boxShadow: "0 4px 16px rgba(0, 0, 0, 0.06)",
+                  }}
+                >
+                  <img
+                    src={destImg.urlThumb || destImg.url}
+                    alt={destImg.alt || data.tieuDe}
+                    loading="lazy"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: 12,
+                      left: 12,
+                      padding: "4px 12px",
+                      borderRadius: "var(--r-full)",
+                      background: "rgba(0, 0, 0, 0.7)",
+                      color: "var(--color-primary-text)",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      backdropFilter: "blur(4px)",
+                    }}
+                  >
+                    {destImg.diaDanh} · {destImg.tacGia} ({destImg.giayPhep})
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Bảng tóm tắt tài chính 4 hạng mục */}
             <div

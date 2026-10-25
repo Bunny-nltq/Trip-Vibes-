@@ -10,6 +10,7 @@ import { soSanhKeHoachThucTe } from "@/core/soSanhThucTe";
 import { B9ChiDuongPopover } from "@/ui/components/B9ChiDuongPopover";
 import { NhatKyTabBar } from "@/ui/components/NhatKyTabBar";
 import { BookOpen } from "lucide-react";
+import { getDestinationImage, getActivityImage } from "@/ui/lib/imageMap";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
 
@@ -85,17 +86,22 @@ export function B8ChuyenDiScreen() {
     };
   }, [plan, ledger, activeDay, tripConfig.budget]);
 
-  // Nếu chưa xác nhận kế hoạch: màn trống "Chưa có chuyến nào" kèm nút "Lập kế hoạch"
+  // Nếu chưa xác nhận kế hoạch:
   if (!confirmed) {
+    const hasExistingPlan = plan && plan.items && plan.items.length > 0;
+    const destName = plan?.request.diemDen
+      ? (typeof plan.request.diemDen === "string" ? plan.request.diemDen : plan.request.diemDen.ten)
+      : null;
+
     return (
       <div className="Row2" style={{ padding: "0 0 40px" }}>
         <div className="MainWide">
           <div
             className="DayCard"
             style={{
-              padding: "56px 32px",
+              padding: "48px 32px",
               textAlign: "center",
-              maxWidth: 560,
+              maxWidth: 580,
               margin: "60px auto",
             }}
           >
@@ -104,7 +110,7 @@ export function B8ChuyenDiScreen() {
                 width: 56,
                 height: 56,
                 borderRadius: "var(--r-full)",
-                background: "var(--color-surface-sub)",
+                background: "var(--color-primary-tint)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -114,20 +120,51 @@ export function B8ChuyenDiScreen() {
             >
               <BookOpen size={28} />
             </div>
-            <h1 className="H1" style={{ fontSize: 24, marginBottom: 8, color: "var(--color-text)" }}>
-              Chưa có chuyến nào
-            </h1>
-            <div className="Sub" style={{ marginBottom: 24, color: "var(--color-text-sub)", lineHeight: 1.6 }}>
-              Bạn chưa có chuyến đi nào được xác nhận. Hãy bắt đầu lập kế hoạch ngay để theo dõi hành trình và chi tiêu.
-            </div>
-            <button
-              type="button"
-              className="Btn BtnPrimary"
-              style={{ margin: "0 auto" }}
-              onClick={() => nav("b1-chon-nhanh")}
-            >
-              Lập kế hoạch
-            </button>
+
+            {hasExistingPlan ? (
+              <>
+                <h1 className="H1" style={{ fontSize: 24, marginBottom: 8, color: "var(--color-text)" }}>
+                  Kế hoạch {destName ? `chuyến đi ${destName}` : "chưa được chốt"}
+                </h1>
+                <div className="Sub" style={{ marginBottom: 24, color: "var(--color-text-sub)", lineHeight: 1.6 }}>
+                  Bạn đang có kế hoạch {destName || "du lịch"} ({soNgay} ngày) gồm {plan?.items.length} hạng mục lịch trình. Chốt chuyến đi để bắt đầu theo dõi thời gian thực, đánh dấu điểm đến và ghi chép chi tiêu.
+                </div>
+                <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    className="Btn BtnPrimary"
+                    onClick={() => nav("b7-xac-nhan")}
+                    style={{ minWidth: 180 }}
+                  >
+                    Xem & Chốt chuyến đi
+                  </button>
+                  <button
+                    type="button"
+                    className="Btn BtnGhost"
+                    onClick={() => nav("b3-ke-hoach")}
+                  >
+                    Xem lại lịch trình
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h1 className="H1" style={{ fontSize: 24, marginBottom: 8, color: "var(--color-text)" }}>
+                  Chưa có chuyến nào
+                </h1>
+                <div className="Sub" style={{ marginBottom: 24, color: "var(--color-text-sub)", lineHeight: 1.6 }}>
+                  Bạn chưa có chuyến đi nào được tạo. Hãy bắt đầu lập kế hoạch ngay để theo dõi hành trình và chi tiêu.
+                </div>
+                <button
+                  type="button"
+                  className="Btn BtnPrimary"
+                  style={{ margin: "0 auto" }}
+                  onClick={() => nav("b1-chon-nhanh")}
+                >
+                  Lập kế hoạch
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -195,6 +232,60 @@ export function B8ChuyenDiScreen() {
         {/* Ba tab Nhật ký chuyến đi: Hành trình, Chi tiêu, Ngân sách */}
         <NhatKyTabBar activeTab="hanh-trinh" />
 
+        {/* Banner điểm đến thật */}
+        {(() => {
+          const destName = plan?.request.diemDen
+            ? typeof plan.request.diemDen === "string"
+              ? plan.request.diemDen
+              : plan.request.diemDen.ten
+            : "Đà Nẵng";
+          const destImg = getDestinationImage(destName);
+          return (
+            <div
+              style={{
+                position: "relative",
+                borderRadius: "var(--r-xl)",
+                overflow: "hidden",
+                height: 140,
+                marginTop: 16,
+                marginBottom: 16,
+                border: "1px solid var(--color-border)",
+                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.05)",
+              }}
+            >
+              <img
+                src={destImg.urlThumb || destImg.url}
+                alt={destImg.alt || destName}
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(15, 23, 42, 0.78) 100%)",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-end",
+                  padding: "14px 18px",
+                  color: "var(--color-primary-text)",
+                }}
+              >
+                <div style={{ fontSize: 18, fontWeight: 800 }}>{destName}</div>
+                <div style={{ fontSize: 11, opacity: 0.9 }}>
+                  {destImg.diaDanh} · {destImg.tacGia} ({destImg.giayPhep})
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         <h1 className="H1">Chuyến đi</h1>
         <div className="Sub">
           {progress.tong > 0
@@ -254,6 +345,7 @@ export function B8ChuyenDiScreen() {
             const hasRealAddress =
               Boolean(place.diaChi) &&
               place.diaChi!.trim().toLowerCase() !== place.ten.trim().toLowerCase();
+            const placeImg = getActivityImage("Vui chơi", place.ten);
 
             return (
               <div key={place.id} className={`Item ${isLast ? "NoLine" : ""}`}>
@@ -265,6 +357,21 @@ export function B8ChuyenDiScreen() {
                 >
                   {isDone ? "✓" : ""}
                 </div>
+
+                {/* Ảnh địa điểm thật */}
+                <img
+                  src={placeImg.urlThumb || placeImg.url}
+                  alt={place.ten}
+                  loading="lazy"
+                  style={{
+                    width: 38,
+                    height: 38,
+                    borderRadius: "var(--r-md)",
+                    objectFit: "cover",
+                    flexShrink: 0,
+                    border: "1px solid var(--color-border)",
+                  }}
+                />
 
                 {/* Giờ */}
                 <div className="Time">{place.gio || "—"}</div>

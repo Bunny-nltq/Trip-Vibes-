@@ -14,6 +14,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { moTaCanhBao } from "@/ui/messages/canhBao";
+import { getHotelImage, getActivityImage } from "@/ui/lib/imageMap";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
 
@@ -166,28 +167,46 @@ export function B6XemTruocScreen() {
                 Trước khi đổi
               </div>
               <div className="card" style={{ padding: 20, opacity: 0.75, height: "100%" }}>
-                {diff.doiMuc.map((m, idx) => (
-                  <div key={idx}>
-                    <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6, color: "var(--navy)" }}>
-                      {m.truoc}
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
-                      <span style={{ fontSize: 12, color: "var(--g500)" }}>Lựa chọn ban đầu</span>
-                      <span
+                {diff.doiMuc.map((m, idx) => {
+                  const img = m.loai === "khach_san" ? getHotelImage(null, m.truoc) : getActivityImage(m.loai, m.truoc);
+                  return (
+                    <div key={idx} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                      <img
+                        src={img.urlThumb || img.url}
+                        alt={m.truoc}
+                        loading="lazy"
                         style={{
-                          fontSize: 10,
-                          fontWeight: 600,
-                          padding: "1px 6px",
-                          background: "var(--g100)",
-                          color: "var(--g700)",
-                          borderRadius: "var(--r-full)",
+                          width: 44,
+                          height: 44,
+                          borderRadius: "var(--r-md)",
+                          objectFit: "cover",
+                          flexShrink: 0,
+                          border: "1px solid var(--color-border)",
                         }}
-                      >
-                        Tham khảo
-                      </span>
+                      />
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4, color: "var(--navy)" }}>
+                          {m.truoc}
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          <span style={{ fontSize: 12, color: "var(--g500)" }}>Lựa chọn ban đầu</span>
+                          <span
+                            style={{
+                              fontSize: 10,
+                              fontWeight: 600,
+                              padding: "1px 6px",
+                              background: "var(--g100)",
+                              color: "var(--g700)",
+                              borderRadius: "var(--r-full)",
+                            }}
+                          >
+                            Tham khảo
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
@@ -206,28 +225,46 @@ export function B6XemTruocScreen() {
                 Sau khi đổi
               </div>
               <div className="card" style={{ padding: 20, border: "2px solid var(--p500)", height: "100%" }}>
-                {diff.doiMuc.map((m, idx) => (
-                  <div key={idx}>
-                    <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6, color: "var(--navy)" }}>
-                      {m.sau}
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
-                      <span style={{ fontSize: 12, color: "var(--p500)", fontWeight: 600 }}>Lựa chọn mới</span>
-                      <span
+                {diff.doiMuc.map((m, idx) => {
+                  const img = m.loai === "khach_san" ? getHotelImage(null, m.sau) : getActivityImage(m.loai, m.sau);
+                  return (
+                    <div key={idx} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                      <img
+                        src={img.urlThumb || img.url}
+                        alt={m.sau}
+                        loading="lazy"
                         style={{
-                          fontSize: 10,
-                          fontWeight: 600,
-                          padding: "1px 6px",
-                          background: "var(--p100)",
-                          color: "var(--p500)",
-                          borderRadius: "var(--r-full)",
+                          width: 44,
+                          height: 44,
+                          borderRadius: "var(--r-md)",
+                          objectFit: "cover",
+                          flexShrink: 0,
+                          border: "1px solid var(--color-border)",
                         }}
-                      >
-                        Giá ước tính
-                      </span>
+                      />
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4, color: "var(--navy)" }}>
+                          {m.sau}
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          <span style={{ fontSize: 12, color: "var(--p500)", fontWeight: 600 }}>Lựa chọn mới</span>
+                          <span
+                            style={{
+                              fontSize: 10,
+                              fontWeight: 600,
+                              padding: "1px 6px",
+                              background: "var(--p100)",
+                              color: "var(--p500)",
+                              borderRadius: "var(--r-full)",
+                            }}
+                          >
+                            Giá ước tính
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 {isCostDecrease && (
                   <div
                     style={{

@@ -8,14 +8,25 @@ import {
   type Violation,
 } from "@/ui/hooks/usePlan";
 import { usePlanHistory } from "@/ui/hooks/usePlanHistory";
-import type { Plan, TripRequest, Selection, Expense, Ledger, ExpenseCategory } from "@/contracts";
+import type {
+  Plan,
+  TripRequest,
+  Selection,
+  Expense,
+  Ledger,
+  ExpenseCategory,
+  User,
+  SavedTrip,
+} from "@/contracts";
 import type { PlanDiff } from "@/core/diffPlan";
 import type { ProgressPlace } from "@/core/tripProgress";
 import { createLedger, addExpense, deleteExpense, updateExpense } from "@/core/ledger";
 
-type Screen =
+export type Screen =
   | "welcome"
   | "login"
+  | "register"
+  | "saved-trips"
   | "b1-chon-nhanh"
   | "b2-dang-chay"
   | "b3-ke-hoach"
@@ -27,6 +38,24 @@ type Screen =
   | "b9-chi-duong"
   | "b10-chon-nguon"
   | "b11-ngan-sach";
+
+export const ALL_SCREENS: Screen[] = [
+  "welcome",
+  "login",
+  "register",
+  "saved-trips",
+  "b1-chon-nhanh",
+  "b2-dang-chay",
+  "b3-ke-hoach",
+  "b4-phuong-tien",
+  "b5-khach-san",
+  "b6-xem-truoc",
+  "b7-xac-nhan",
+  "b8-chuyen-di",
+  "b9-chi-duong",
+  "b10-chon-nguon",
+  "b11-ngan-sach",
+];
 
 import { POPULAR_DESTINATIONS, POPULAR_ORIGINS, toDiemDen, type DiemDen } from "@/contracts";
 
@@ -77,7 +106,7 @@ interface AppState {
 function loadSession<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
   try {
-    const raw = window.sessionStorage.getItem(key);
+    const raw = window.sessionStorage.getItem(key) || window.localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : fallback;
   } catch {
     return fallback;
@@ -87,7 +116,16 @@ function loadSession<T>(key: string, fallback: T): T {
 function saveSession<T>(key: string, value: T): void {
   if (typeof window === "undefined") return;
   try {
-    window.sessionStorage.setItem(key, JSON.stringify(value));
+    if (value === null || value === undefined) {
+      window.sessionStorage.removeItem(key);
+      window.localStorage.removeItem(key);
+    } else {
+      const json = JSON.stringify(value);
+      window.sessionStorage.setItem(key, json);
+      if (key.startsWith("tripvibes_")) {
+        window.localStorage.setItem(key, json);
+      }
+    }
   } catch {
     // ignore
   }
@@ -202,11 +240,57 @@ export interface AppCtx extends AppState {
   setB10Prefill: (prefill: { tenCuaHang?: string; ngayTrongChuyen?: number; hangMuc?: ExpenseCategory } | null) => void;
   openB10: (prefill?: { tenCuaHang?: string; ngayTrongChuyen?: number; hangMuc?: ExpenseCategory }) => void;
   isSampleDataActive: boolean;
+
+  // Auth & Saved Trips
+  user: User | null;
+  savedTrips: SavedTrip[];
+  isLoadingTrips: boolean;
+  loginUser: (email: string, pass: string) => Promise<{ ok: boolean; message?: string }>;
+  registerUser: (name: string, email: string, pass: string) => Promise<{ ok: boolean; message?: string }>;
+  logoutUser: () => void;
+  refreshSavedTrips: () => Promise<void>;
+  returnScreen: Screen | null;
+  setReturnScreen: (s: Screen | null) => void;
+  pendingSaveTrip: boolean;
+  setPendingSaveTrip: (b: boolean) => void;
+  saveCurrentTripToAccount: (customTitle?: string) => Promise<{ ok: boolean; id?: string; message?: string }>;
+  loadSavedTrip: (savedTrip: SavedTrip, targetScreen?: Screen) => void;
+  deleteSavedTrip: (tripId: string) => Promise<{ ok: boolean; message?: string }>;
 }
 
 const Ctx = createContext<AppCtx | null>(null);
 
 const sampleDest = toDiemDen(POPULAR_DESTINATIONS[0]);
+
+function normalizeStr(s: string) {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/[^a-z0-9]/g, "");
+}
+
+function timDiemDenGoiY(ten?: string | null): DiemDen | null {
+  if (!ten) return null;
+  const norm = normalizeStr(ten);
+  const matched = POPULAR_DESTINATIONS.find(
+    (d) => normalizeStr(d.ten) === norm
+  );
+  if (matched) return toDiemDen(matched);
+  const matchedOrigin = POPULAR_ORIGINS.find((o) => normalizeStr(o.ten) === norm);
+  if (matchedOrigin) return toDiemDen(matchedOrigin);
+  return {
+    ten,
+    quocGia: "Việt Nam",
+    maQuocGia: "VN",
+    toaDo: { lat: 16.0544, lng: 108.2022 },
+    tienTe: "VND",
+    nguon: "nominatim",
+    ngayLay: new Date().toISOString(),
+  };
+}
+
 import daNangMau from "@/data/mau/da-nang-3ngay.json";
 import haNoiMau from "@/data/mau/ha-noi-3ngay.json";
 import daLatMau from "@/data/mau/da-lat-3ngay.json";
@@ -224,9 +308,9 @@ export const MAU_MAP: Record<string, Plan> = {
 const sampleOrigin = POPULAR_ORIGINS[0];
 
 export const DEFAULT_SAMPLE_PLAN: Plan = {
-  schemaVersion: 7,
+  schemaVersion: 15,
   request: {
-    schemaVersion: 7,
+    schemaVersion: 15,
     diemDi: sampleOrigin.ten,
     diemDen: sampleDest,
     soNguoi: 2,
@@ -427,12 +511,28 @@ export const BANGKOK_SAMPLE_PLAN: Plan = {
   }),
 };
 
-export function AppProvider({ children }: { children: React.ReactNode }) {
+export interface AppProviderProps {
+  children: React.ReactNode;
+  initialScreen?: string;
+  initialMau?: string;
+  initialDest?: string;
+}
+
+export function AppProvider({
+  children,
+  initialScreen,
+  initialMau,
+  initialDest,
+}: AppProviderProps) {
   const [screen, setScreen] = useState<Screen>(() => {
+    if (initialScreen && ALL_SCREENS.includes(initialScreen as Screen)) {
+      return initialScreen as Screen;
+    }
+    if (initialMau && MAU_MAP[initialMau]) return "b3-ke-hoach";
     if (typeof window !== "undefined") {
       const sp = new URLSearchParams(window.location.search);
       const q = sp.get("screen");
-      if (q) return q as Screen;
+      if (q && ALL_SCREENS.includes(q as Screen)) return q as Screen;
       const mau = sp.get("mau");
       if (mau && MAU_MAP[mau]) return "b3-ke-hoach";
     }
@@ -449,37 +549,58 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [activeDay, setActiveDay] = useState(1);
   const [activeTab, setActiveTab] = useState("b8-list");
   const isDev = process.env.NODE_ENV === "development";
+  const [returnScreen, setReturnScreen] = useState<Screen | null>(null);
+  const [pendingSaveTrip, setPendingSaveTrip] = useState<boolean>(false);
+
   const [tripConfig, setTripConfigState] = useState<TripConfig>(() => {
-    if (typeof window !== "undefined") {
-      const sp = new URLSearchParams(window.location.search);
-      const mau = sp.get("mau");
-      if (mau && MAU_MAP[mau]) {
-        const p = MAU_MAP[mau];
-        return {
-          diemDi: p.request.diemDi,
-          diemDen: p.request.diemDen,
-          soNgay: p.request.soNgay ?? 3,
-          people: p.request.soNguoi ?? 2,
-          budget: p.request.ngansachTongVND ?? 10_000_000,
-          avoids: p.request.tranh ?? [],
-          note: (p.request.ghiChu || []).join(", "),
-        };
-      }
-      if (isDev && sp.get("dest") === "bangkok") {
-        return {
-          diemDi: sampleOrigin.ten,
-          diemDen: BANGKOK_SAMPLE_PLAN.request.diemDen,
-          soNgay: 3,
-          people: 2,
-          budget: 25_000_000,
-          avoids: ["Không dậy sớm"],
-          note: "",
-        };
-      }
+    const effectiveMau =
+      initialMau ||
+      (typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("mau")
+        : null);
+
+    if (effectiveMau && MAU_MAP[effectiveMau]) {
+      const p = MAU_MAP[effectiveMau];
+      return {
+        diemDi: p.request.diemDi,
+        diemDen: p.request.diemDen,
+        soNgay: p.request.soNgay ?? 3,
+        people: p.request.soNguoi ?? 2,
+        budget: p.request.ngansachTongVND ?? 10_000_000,
+        avoids: p.request.tranh ?? [],
+        note: (p.request.ghiChu || []).join(", "),
+      };
     }
+
+    if (
+      isDev &&
+      typeof window !== "undefined" &&
+      new URLSearchParams(window.location.search).get("dest") === "bangkok"
+    ) {
+      return {
+        diemDi: sampleOrigin.ten,
+        diemDen: BANGKOK_SAMPLE_PLAN.request.diemDen,
+        soNgay: 3,
+        people: 2,
+        budget: 25_000_000,
+        avoids: ["Không dậy sớm"],
+        note: "",
+      };
+    }
+
+    const effectiveDestStr =
+      initialDest ||
+      (typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("den") ||
+          new URLSearchParams(window.location.search).get("dest") ||
+          new URLSearchParams(window.location.search).get("diemDen")
+        : null);
+
+    const initialDiemDen = effectiveDestStr ? timDiemDenGoiY(effectiveDestStr) : null;
+
     return {
       diemDi: null,
-      diemDen: null,
+      diemDen: initialDiemDen,
       soNgay: 3,
       people: 2,
       budget: 0,
@@ -564,7 +685,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, [planState.plan, history]);
 
-  const nav = useCallback((s: Screen) => setScreen(s), []);
+  const nav = useCallback((s: Screen) => {
+    setScreen(s);
+    if (typeof window !== "undefined") {
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set("screen", s);
+        window.history.replaceState({}, "", url.toString());
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
 
   const setConfirmed = useCallback((v: boolean) => {
     setConfirmedState(v);
@@ -625,9 +757,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     (new URLSearchParams(window.location.search).get("previewMoHo") === "1" ||
       new URLSearchParams(window.location.search).get("previewNhapGiaTay") === "1");
   const mauParam =
-    typeof window !== "undefined"
+    initialMau ||
+    (typeof window !== "undefined"
       ? new URLSearchParams(window.location.search).get("mau")
-      : null;
+      : null);
   const mauPlan = mauParam && MAU_MAP[mauParam] ? MAU_MAP[mauParam] : null;
   const fallbackPlan = mauPlan || (isBangkokParam ? BANGKOK_SAMPLE_PLAN : DEFAULT_SAMPLE_PLAN);
   const isUsingFallbackPlan = !history.current && !planState.plan;
@@ -653,6 +786,207 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setScreen("b3-ke-hoach");
   }, [setPreviewData]);
 
+  // User Authentication & Saved Trips state
+  const [user, setUser] = useState<User | null>(null);
+  const [savedTrips, setSavedTrips] = useState<SavedTrip[]>([]);
+  const [isLoadingTrips, setIsLoadingTrips] = useState(false);
+
+  // Hydrate user and saved trips safely on client mount
+  useEffect(() => {
+    const cachedUser = loadSession<User | null>("tripvibes_user", null);
+    if (cachedUser) {
+      setUser(cachedUser);
+    }
+    const cachedTrips = loadSession<SavedTrip[]>("tripvibes_saved_trips", []);
+    if (cachedTrips && cachedTrips.length > 0) {
+      setSavedTrips(cachedTrips);
+    }
+  }, []);
+
+  const refreshSavedTrips = useCallback(async () => {
+    if (!user) {
+      setSavedTrips([]);
+      return;
+    }
+    setIsLoadingTrips(true);
+    try {
+      const res = await fetch(`/api/user/trips?userId=${encodeURIComponent(user.id)}`);
+      const data = await res.json();
+      if (res.ok && data.thanhCong && Array.isArray(data.trips)) {
+        setSavedTrips(data.trips);
+        saveSession("tripvibes_saved_trips", data.trips);
+      }
+    } catch {
+      // ignore network errors
+    } finally {
+      setIsLoadingTrips(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      refreshSavedTrips();
+    }
+  }, [user, refreshSavedTrips]);
+
+  const loginUser = useCallback(async (email: string, pass: string) => {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, matKhau: pass }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.thanhCong) {
+        return { ok: false, message: data.thongDiep || "Đăng nhập không thành công" };
+      }
+      setUser(data.user);
+      saveSession("tripvibes_user", data.user);
+      return { ok: true };
+    } catch (err: any) {
+      return { ok: false, message: err?.message || "Lỗi kết nối máy chủ" };
+    }
+  }, []);
+
+  const registerUser = useCallback(async (name: string, email: string, pass: string) => {
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ten: name, email, matKhau: pass }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.thanhCong) {
+        return { ok: false, message: data.thongDiep || "Đăng ký không thành công" };
+      }
+      setUser(data.user);
+      saveSession("tripvibes_user", data.user);
+      return { ok: true };
+    } catch (err: any) {
+      return { ok: false, message: err?.message || "Lỗi kết nối máy chủ" };
+    }
+  }, []);
+
+  const logoutUser = useCallback(() => {
+    setUser(null);
+    saveSession("tripvibes_user", null);
+    setSavedTrips([]);
+    saveSession("tripvibes_saved_trips", []);
+  }, []);
+
+  const saveCurrentTripToAccount = useCallback(
+    async (customTitle?: string) => {
+      if (!user) {
+        setReturnScreen(screen);
+        setPendingSaveTrip(true);
+        setScreen("login");
+        return { ok: false, message: "Vui lòng đăng nhập hoặc tạo tài khoản để lưu chuyến đi." };
+      }
+      const currentPlan = activePlan;
+      if (!currentPlan) {
+        return { ok: false, message: "Chưa có kế hoạch chuyến đi để lưu" };
+      }
+
+      const diemDiStr =
+        typeof currentPlan.request.diemDi === "string"
+          ? currentPlan.request.diemDi
+          : "Hà Nội";
+      const diemDenStr =
+        typeof currentPlan.request.diemDen === "string"
+          ? currentPlan.request.diemDen
+          : currentPlan.request.diemDen?.ten || "Điểm đến";
+      const title =
+        customTitle ||
+        `${diemDiStr} → ${diemDenStr} (${currentPlan.request.soNgay || 3} ngày)`;
+
+      try {
+        const res = await fetch("/api/user/trips", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            trip: {
+              userId: user.id,
+              title,
+              diemDi: diemDiStr,
+              diemDen: diemDenStr,
+              soNgay: currentPlan.request.soNgay || 3,
+              soNguoi: currentPlan.request.soNguoi || 2,
+              nganSachDuKienVND: currentPlan.request.ngansachTongVND || 0,
+              tongChiPhiKeHoachVND: currentPlan.tongKet.tongVND,
+              tongChiTieuThucTeVND: ledger.expenses.reduce((s, e) => s + e.soTienVND, 0),
+              plan: currentPlan,
+              ledger,
+              tickedPlaces,
+            },
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.thanhCong) {
+          return { ok: false, message: data.thongDiep || "Không thể lưu chuyến đi" };
+        }
+        setSavedTrips((prev) => {
+          const next = [data.trip, ...prev.filter((t) => t.id !== data.trip.id)];
+          saveSession("tripvibes_saved_trips", next);
+          return next;
+        });
+        return { ok: true, id: data.trip.id };
+      } catch (err: any) {
+        return { ok: false, message: err?.message || "Lỗi mạng khi lưu chuyến đi" };
+      }
+    },
+    [user, activePlan, ledger, tickedPlaces, screen]
+  );
+
+  const loadSavedTrip = useCallback(
+    (savedTrip: SavedTrip, targetScreen: Screen = "b8-chuyen-di") => {
+      history.init(savedTrip.plan);
+      setLedger(savedTrip.ledger);
+      saveSession("trip_ledger", savedTrip.ledger);
+      setTickedPlaces(savedTrip.tickedPlaces || {});
+      saveSession("trip_ticked_places", savedTrip.tickedPlaces || {});
+      setTripConfigState({
+        diemDi: savedTrip.plan.request.diemDi,
+        diemDen: savedTrip.plan.request.diemDen,
+        soNgay: savedTrip.plan.request.soNgay ?? 3,
+        people: savedTrip.plan.request.soNguoi ?? 2,
+        budget: savedTrip.plan.request.ngansachTongVND ?? 10_000_000,
+        avoids: savedTrip.plan.request.tranh ?? [],
+        note: (savedTrip.plan.request.ghiChu || []).join(", "),
+      });
+      setConfirmedState(true);
+      saveSession("trip_confirmed", true);
+      setScreen(targetScreen);
+    },
+    [history]
+  );
+
+  const deleteSavedTrip = useCallback(
+    async (tripId: string) => {
+      if (!user) return { ok: false, message: "Chưa đăng nhập" };
+      try {
+        const res = await fetch(
+          `/api/user/trips?id=${encodeURIComponent(tripId)}&userId=${encodeURIComponent(user.id)}`,
+          {
+            method: "DELETE",
+          }
+        );
+        const data = await res.json();
+        if (!res.ok || !data.thanhCong) {
+          return { ok: false, message: data.thongDiep || "Xóa không thành công" };
+        }
+        setSavedTrips((prev) => {
+          const next = prev.filter((t) => t.id !== tripId);
+          saveSession("tripvibes_saved_trips", next);
+          return next;
+        });
+        return { ok: true };
+      } catch (err: any) {
+        return { ok: false, message: err?.message || "Lỗi mạng khi xóa" };
+      }
+    },
+    [user]
+  );
+
   return (
     <Ctx.Provider
       value={{
@@ -667,6 +1001,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         activeTab,
         setActiveTab,
         isSampleDataActive,
+
+        // Auth & Saved Trips
+        user,
+        savedTrips,
+        isLoadingTrips,
+        returnScreen,
+        setReturnScreen,
+        pendingSaveTrip,
+        setPendingSaveTrip,
+        loginUser,
+        registerUser,
+        logoutUser,
+        refreshSavedTrips,
+        saveCurrentTripToAccount,
+        loadSavedTrip,
+        deleteSavedTrip,
 
         // Plan fields
         plan: activePlan,

@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { Building2, MapPin, Star, ArrowRight } from "lucide-react";
 import { dinhDangTien } from "@/core/formB1";
+import { getHotelImage } from "@/ui/lib/imageMap";
 
 export interface KhachSanThe {
   id: string;
@@ -33,56 +34,71 @@ export function KhachSanThamKhao({ khachSans }: KhachSanThamKhaoProps) {
         maxWidth: 1200,
       }}
     >
-      {khachSans.map((ks) => (
-        <article
-          key={ks.id}
-          style={{
-            background: "var(--color-surface)",
-            borderRadius: "var(--r-xl)",
-            border: "1px solid var(--color-border)",
-            overflow: "hidden",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            boxShadow: "0 4px 16px rgba(0, 0, 0, 0.04)",
-            transition: "all 0.2s ease",
-          }}
-        >
-          <div>
-            {/* Khung ảnh tỉ lệ cố định 16:10, nền gradient token và icon placeholder */}
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                aspectRatio: "16 / 10",
-                background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderBottom: "1px solid var(--color-border)",
-              }}
-            >
+      {khachSans.map((ks) => {
+        const hotelImg = getHotelImage(ks.soSao, ks.ten, ks.diemDenTen);
+        return (
+          <article
+            key={ks.id}
+            style={{
+              background: "var(--color-surface)",
+              borderRadius: "var(--r-xl)",
+              border: "1px solid var(--color-border)",
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              boxShadow: "0 4px 16px rgba(0, 0, 0, 0.04)",
+              transition: "all 0.2s ease",
+            }}
+          >
+            <div>
+              {/* Khung ảnh khách sạn thật tỉ lệ 16:10 */}
               <div
                 style={{
-                  width: 52,
-                  height: 52,
-                  borderRadius: "var(--r-full)",
-                  background: "var(--color-surface)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+                  position: "relative",
+                  width: "100%",
+                  aspectRatio: "16 / 10",
+                  background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
+                  overflow: "hidden",
+                  borderBottom: "1px solid var(--color-border)",
                 }}
               >
-                <Building2 size={26} color="var(--color-primary-main)" />
-              </div>
+                <img
+                  src={hotelImg.urlThumb || hotelImg.url}
+                  alt={hotelImg.alt || ks.ten}
+                  loading="lazy"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
 
-              {/* Huy hiệu điểm đến */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: 12,
-                  right: 12,
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: 8,
+                    left: 8,
+                    padding: "3px 8px",
+                    borderRadius: "var(--r-sm)",
+                    background: "rgba(0, 0, 0, 0.68)",
+                    color: "var(--color-primary-text)",
+                    fontSize: 10,
+                    fontWeight: 600,
+                    backdropFilter: "blur(4px)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  {hotelImg.tacGia} · {hotelImg.giayPhep}
+                </div>
+
+                {/* Huy hiệu điểm đến */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 12,
+                    right: 12,
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 4,
@@ -209,7 +225,8 @@ export function KhachSanThamKhao({ khachSans }: KhachSanThamKhaoProps) {
             </Link>
           </div>
         </article>
-      ))}
+        );
+      })}
     </div>
   );
 }

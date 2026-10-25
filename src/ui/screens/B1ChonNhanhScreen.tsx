@@ -22,6 +22,7 @@ import { docGoiChuyenTuSession } from "@/ui/lib/chuyenB1";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import { ChonDiem } from "@/ui/components/ChonDiem";
 import { useDiemChon } from "@/ui/hooks/useDiemChon";
+import { getDestinationImage } from "@/ui/lib/imageMap";
 import {
   MapPin,
   Search,
@@ -344,46 +345,75 @@ const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000
       {/* CỘT CHÍNH: HomeCard */}
       <div className="HomeCard">
         {/* HERO BANNER - CHUẨN DOANH NGHIỆP CLEAN & PHẲNG */}
-        <div
-          className="HeroGradientBanner"
-          style={{
-            position: "relative",
-            height: 110,
-            margin: "8px 8px 0",
-            borderRadius: "var(--r-xl)",
-            overflow: "hidden",
-            flex: "none",
-            background: "var(--color-primary-main)",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: "0 32px",
-            boxShadow: "0 2px 10px rgba(43, 85, 214, 0.15)",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 26,
-              lineHeight: "32px",
-              fontWeight: 800,
-              color: "var(--color-primary-text)",
-              marginBottom: 4,
-            }}
-          >
-            {tenDiemDen ? `Chuyến đi ${tenDiemDen} của bạn` : "Bạn muốn đi đâu?"}
-          </div>
-          <div
-            style={{
-              fontSize: 13,
-              lineHeight: "18px",
-              color: "var(--color-primary-tint)",
-            }}
-          >
-            {tenDiemDi
-              ? `${soNgay} ngày ${soDem} đêm từ ${tenDiemDi}`
-              : "Chọn điểm đi và điểm đến để bắt đầu"}
-          </div>
-        </div>
+        {(() => {
+          const heroImg = getDestinationImage(tenDiemDen);
+          return (
+            <div
+              className="HeroGradientBanner"
+              style={{
+                position: "relative",
+                height: 120,
+                margin: "8px 8px 0",
+                borderRadius: "var(--r-xl)",
+                overflow: "hidden",
+                flex: "none",
+                background: "var(--color-primary-main)",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                padding: "0 32px",
+                boxShadow: "0 2px 10px rgba(43, 85, 214, 0.15)",
+              }}
+            >
+              <img
+                src={heroImg.urlThumb || heroImg.url}
+                alt={heroImg.alt}
+                loading="lazy"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  opacity: 0.32,
+                  pointerEvents: "none",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "linear-gradient(90deg, rgba(31, 42, 68, 0.85) 0%, rgba(43, 85, 214, 0.65) 100%)",
+                  pointerEvents: "none",
+                }}
+              />
+              <div style={{ position: "relative", zIndex: 1 }}>
+                <div
+                  style={{
+                    fontSize: 26,
+                    lineHeight: "32px",
+                    fontWeight: 800,
+                    color: "var(--color-primary-text)",
+                    marginBottom: 4,
+                  }}
+                >
+                  {tenDiemDen ? `Chuyến đi ${tenDiemDen} của bạn` : "Bạn muốn đi đâu?"}
+                </div>
+                <div
+                  style={{
+                    fontSize: 13,
+                    lineHeight: "18px",
+                    color: "var(--color-primary-tint)",
+                  }}
+                >
+                  {tenDiemDi
+                    ? `${soNgay} ngày ${soDem} đêm từ ${tenDiemDi}`
+                    : "Chọn điểm đi và điểm đến để bắt đầu"}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* BODY NỘI DUNG FORM (Theo đúng 5 mục đánh số) */}
         <div className="Body">
@@ -450,6 +480,7 @@ const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                 {POPULAR_DEST_PRESETS.map((p) => {
                   const isSelected = diemDen?.ten.toLowerCase() === p.ten.toLowerCase();
+                  const pImg = getDestinationImage(p.ten);
                   return (
                     <button
                       key={p.ten}
@@ -459,7 +490,7 @@ const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 8,
-                        padding: "6px 12px",
+                        padding: "5px 12px 5px 6px",
                         borderRadius: "var(--r-md)",
                         border: isSelected
                           ? "1.5px solid var(--color-primary-main)"
@@ -477,7 +508,19 @@ const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000
                       }}
                       title={`${p.ten} - ${p.moTa} (Gợi ý: ${dinhDangTien(p.nganSachGoiY)} đ)`}
                     >
-                      <MapPin size={13} color={isSelected ? "var(--color-primary-main)" : "var(--color-text-sub)"} />
+                      <img
+                        src={pImg.urlThumb || pImg.url}
+                        alt={p.ten}
+                        loading="lazy"
+                        style={{
+                          width: 24,
+                          height: 24,
+                          borderRadius: "var(--r-full)",
+                          objectFit: "cover",
+                          flexShrink: 0,
+                          border: isSelected ? "1.5px solid var(--color-primary-main)" : "1px solid var(--color-border)",
+                        }}
+                      />
                       <span>{p.ten}</span>
                       <span
                         style={{

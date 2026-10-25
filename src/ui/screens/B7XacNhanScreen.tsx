@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import { useApp } from "@/ui/context/AppContext";
-import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
 import { getDiemDenTen } from "@/contracts";
+import { getDestinationImage } from "@/ui/lib/imageMap";
 import {
   ArrowLeft,
   Check,
@@ -12,10 +12,20 @@ import {
   Compass,
   RotateCcw,
   Info,
+  BookmarkCheck,
 } from "lucide-react";
 
 export function B7XacNhanScreen() {
-  const { nav, confirmed, setConfirmed, plan, softViolations } = useApp();
+  const {
+    nav,
+    confirmed,
+    setConfirmed,
+    plan,
+    softViolations,
+    saveCurrentTripToAccount,
+    user,
+  } = useApp();
+  const [saveStatus, setSaveStatus] = React.useState<string | null>(null);
 
   const handleConfirm = () => {
     setConfirmed(true);
@@ -25,11 +35,21 @@ export function B7XacNhanScreen() {
     setConfirmed(false);
   };
 
+  const handleSaveTrip = async () => {
+    const res = await saveCurrentTripToAccount();
+    if (res.ok) {
+      setSaveStatus("Đã lưu vào nhật ký!");
+      setTimeout(() => setSaveStatus(null), 3000);
+    } else {
+      setSaveStatus(res.message || "Lỗi lưu");
+      setTimeout(() => setSaveStatus(null), 3000);
+    }
+  };
+
   // Trang khi ĐÃ CHỐT
   if (confirmed) {
     return (
       <div className="tv-layout">
-        <SideNav />
         <div className="tv-main animate-in" style={{ padding: "40px 20px", maxWidth: 700, margin: "0 auto" }}>
           <div
             className="card"
@@ -41,6 +61,52 @@ export function B7XacNhanScreen() {
               background: "var(--surface)",
             }}
           >
+            {/* Ảnh thật của điểm đến chuyến đi */}
+            {(() => {
+              const destName = plan?.request.diemDen ? getDiemDenTen(plan.request.diemDen) : "Đà Nẵng";
+              const destImg = getDestinationImage(destName);
+              return (
+                <div
+                  style={{
+                    position: "relative",
+                    borderRadius: "var(--r-lg)",
+                    overflow: "hidden",
+                    height: 160,
+                    marginBottom: 20,
+                    border: "1px solid var(--color-border)",
+                  }}
+                >
+                  <img
+                    src={destImg.urlThumb || destImg.url}
+                    alt={destImg.alt || destName}
+                    loading="lazy"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: 8,
+                      left: 8,
+                      padding: "3px 8px",
+                      borderRadius: "var(--r-sm)",
+                      background: "rgba(0, 0, 0, 0.68)",
+                      color: "var(--color-primary-text)",
+                      fontSize: 10,
+                      fontWeight: 600,
+                      backdropFilter: "blur(4px)",
+                    }}
+                  >
+                    {destImg.diaDanh} · {destImg.tacGia} ({destImg.giayPhep})
+                  </div>
+                </div>
+              );
+            })()}
+
             <div
               style={{
                 display: "inline-flex",
@@ -132,7 +198,7 @@ export function B7XacNhanScreen() {
             </div>
 
             {/* Hành động */}
-            <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
               <button
                 className="btn btn-outline"
                 onClick={handleReopen}
@@ -142,9 +208,24 @@ export function B7XacNhanScreen() {
                 Mở lại để sửa
               </button>
               <button
+                className="btn btn-outline"
+                onClick={handleSaveTrip}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  borderColor: "var(--color-primary-main)",
+                  color: "var(--color-primary-main)",
+                  fontWeight: 600,
+                }}
+              >
+                <BookmarkCheck size={16} />
+                {saveStatus || (user ? "Lưu vào nhật ký" : "Đăng nhập & Lưu nhật ký")}
+              </button>
+              <button
                 className="btn btn-primary"
                 onClick={() => nav("b8-chuyen-di")}
-                style={{ display: "inline-flex", alignItems: "center", gap: 6, minWidth: 180 }}
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, minWidth: 170 }}
               >
                 <Compass size={16} />
                 Bắt đầu chuyến đi
@@ -181,7 +262,6 @@ export function B7XacNhanScreen() {
 
   return (
     <div className="tv-layout">
-      <SideNav />
       <div className="tv-main animate-in" style={{ overflowY: "auto" }}>
         <span
           className="text-link"

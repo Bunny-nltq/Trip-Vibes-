@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useApp } from "@/ui/context/AppContext";
-import { Undo2, Redo2, Printer, Share2, Check } from "lucide-react";
+import { Undo2, Redo2, Printer, Share2, Check, Bookmark, BookmarkCheck } from "lucide-react";
 
 export function TopBar() {
   const {
@@ -10,7 +10,21 @@ export function TopBar() {
     canRedo,
     undoPlan,
     redoPlan,
+    saveCurrentTripToAccount,
   } = useApp();
+
+  const [savedStatus, setSavedStatus] = React.useState<string | null>(null);
+
+  const handleSaveTrip = async () => {
+    const res = await saveCurrentTripToAccount();
+    if (res.ok) {
+      setSavedStatus("Đã lưu!");
+      setTimeout(() => setSavedStatus(null), 3000);
+    } else {
+      setSavedStatus(res.message || "Lỗi lưu");
+      setTimeout(() => setSavedStatus(null), 3000);
+    }
+  };
 
   const showUndoRedo = [
     "b3-ke-hoach",
@@ -29,6 +43,8 @@ export function TopBar() {
   // Xác định bước hiện tại trong quy trình Lập kế hoạch
   const stepInfo = (() => {
     switch (screen) {
+      case "saved-trips":
+        return { step: 0, title: "Nhật ký các chuyến đi" };
       case "b1-chon-nhanh":
         return { step: 1, title: "Chọn nhu cầu" };
       case "b2-dang-chay":
@@ -93,8 +109,12 @@ export function TopBar() {
               fontSize: 13,
             }}
           >
-            <span>Bước {stepInfo.step}/11</span>
-            <span style={{ opacity: 0.5 }}>•</span>
+            {stepInfo.step > 0 ? (
+              <>
+                <span>Bước {stepInfo.step}/11</span>
+                <span style={{ opacity: 0.5 }}>•</span>
+              </>
+            ) : null}
             <span style={{ color: "var(--color-text)" }}>{stepInfo.title}</span>
           </div>
         </div>
@@ -126,6 +146,29 @@ export function TopBar() {
               <Redo2 size={14} />
             </button>
           </div>
+        )}
+
+        {/* Save Trip to Account */}
+        {showPrint && (
+          <button
+            type="button"
+            className="Btn BtnSmall BtnGhost"
+            onClick={handleSaveTrip}
+            title="Lưu nhật ký chuyến đi vào tài khoản"
+            style={{ display: "inline-flex", alignItems: "center", gap: 6, marginRight: 8 }}
+          >
+            {savedStatus ? (
+              <>
+                <BookmarkCheck size={15} color="var(--color-status-successText)" />
+                <span style={{ fontSize: 12, color: "var(--color-status-successText)" }}>{savedStatus}</span>
+              </>
+            ) : (
+              <>
+                <Bookmark size={15} />
+                <span style={{ fontSize: 12 }}>Lưu nhật ký</span>
+              </>
+            )}
+          </button>
         )}
 
         {/* Share Link */}

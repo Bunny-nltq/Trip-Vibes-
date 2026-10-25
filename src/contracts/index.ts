@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const schemaVersion = 14;
+export const schemaVersion = 15;
 
 // ─── Destination Job & Category Progress ──────────────────────────────────────
 
@@ -480,5 +480,36 @@ export const LedgerSchema = z.object({
 });
 export type Ledger = z.infer<typeof LedgerSchema>;
 
+// ─── Người dùng & Nhật ký Chuyến đi đã lưu ──────────────────────────────────
+
+export const UserSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1),
+  email: z.string().email(),
+  createdAt: z.string(),
+});
+export type User = z.infer<typeof UserSchema>;
+
+export const SavedTripSchema = z.object({
+  schemaVersion: z.number().int().default(schemaVersion),
+  id: z.string(),
+  userId: z.string(),
+  title: z.string(),
+  diemDi: z.string(),
+  diemDen: z.string(),
+  soNgay: z.number().int(),
+  soNguoi: z.number().int(),
+  nganSachDuKienVND: z.number().int(),
+  tongChiPhiKeHoachVND: z.number().int(),
+  tongChiTieuThucTeVND: z.number().int(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  plan: PlanSchema,
+  ledger: LedgerSchema,
+  tickedPlaces: z.record(z.boolean()).default({}),
+});
+export type SavedTrip = z.infer<typeof SavedTripSchema>;
+
 export * from "./destinations";
+
 

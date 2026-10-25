@@ -1,0 +1,516 @@
+{
+  "meta": {
+    "quyTacVersion": "5",
+    "agentPromptVersion": "v4",
+    "model": "gemini-3-flash-preview",
+    "ngayChay": "2026-10-25T06:59:09.488Z",
+    "tenBo": "parse"
+  },
+  "date": "2026-10-25",
+  "model": "gemini-3-flash-preview",
+  "promptVersion": "v1",
+  "totalPassed": 10,
+  "totalCases": 10,
+  "accuracyRate": 1,
+  "averageDurationMs": 3480,
+  "firstCallSchemaErrors": 0,
+  "schemaRetries": 0,
+  "fieldAccuracy": {
+    "soNguoi": 1,
+    "soNgay": 1,
+    "ngansachTongVND": 1,
+    "diemDen": 1,
+    "sothich": 1,
+    "tranh": 1,
+    "thieu": 1,
+    "canhBao": 1,
+    "cauHoiLamRo": 1
+  },
+  "results": [
+    {
+      "id": "c01",
+      "passed": true,
+      "mismatches": [],
+      "ms": 4183,
+      "fromCache": true,
+      "retried": false,
+      "request": {
+        "schemaVersion": 14,
+        "diemDi": "TP.HCM",
+        "diemDen": "Đà Nẵng",
+        "soNgay": 3,
+        "soNguoi": 2,
+        "ngansachTongVND": 10000000,
+        "sothich": [
+          "bien",
+          "hai_san"
+        ],
+        "tranh": [
+          "khong_day_som"
+        ],
+        "ghiChu": [],
+        "thieu": [],
+        "cauHoiLamRo": [],
+        "canhBao": []
+      },
+      "raw": {
+        "schemaVersion": 14,
+        "diemDi": null,
+        "diemDen": "Đà Nẵng",
+        "soNgay": 3,
+        "soNguoi": 2,
+        "ngansach": {
+          "soTien": 10000000,
+          "theo": "tong"
+        },
+        "sothich": [
+          "bien",
+          "hai_san"
+        ],
+        "tranh": [
+          "khong_day_som"
+        ],
+        "ghiChu": [],
+        "thieu": [],
+        "cauHoiLamRo": []
+      }
+    },
+    {
+      "id": "c02",
+      "passed": true,
+      "mismatches": [],
+      "ms": 3819,
+      "fromCache": true,
+      "retried": false,
+      "request": {
+        "schemaVersion": 14,
+        "diemDi": "TP.HCM",
+        "diemDen": "Đà Nẵng",
+        "soNgay": 4,
+        "soNguoi": 2,
+        "ngansachTongVND": 12000000,
+        "sothich": [
+          "check_in_chup_anh",
+          "thu_gian_spa"
+        ],
+        "tranh": [],
+        "ghiChu": [],
+        "thieu": [],
+        "cauHoiLamRo": [],
+        "canhBao": []
+      },
+      "raw": {
+        "schemaVersion": 14,
+        "diemDi": null,
+        "diemDen": "Đà Nẵng",
+        "soNgay": 4,
+        "soNguoi": 2,
+        "ngansach": {
+          "soTien": 12000000,
+          "theo": "tong"
+        },
+        "sothich": [
+          "check_in_chup_anh",
+          "thu_gian_spa"
+        ],
+        "tranh": [],
+        "ghiChu": [],
+        "thieu": [],
+        "cauHoiLamRo": []
+      }
+    },
+    {
+      "id": "c03",
+      "passed": true,
+      "mismatches": [],
+      "ms": 3655,
+      "fromCache": true,
+      "retried": false,
+      "request": {
+        "schemaVersion": 14,
+        "diemDi": "TP.HCM",
+        "diemDen": null,
+        "soNgay": 3,
+        "soNguoi": 1,
+        "ngansachTongVND": null,
+        "sothich": [],
+        "tranh": [],
+        "ghiChu": [
+          "tiết kiệm nhất có thể"
+        ],
+        "thieu": [
+          "ngansach",
+          "diemDen"
+        ],
+        "cauHoiLamRo": [
+          "Bạn dự định chi tối đa khoảng bao nhiêu tiền cho chuyến đi này?",
+          "Bạn muốn đi du lịch ở đâu?"
+        ],
+        "canhBao": []
+      },
+      "raw": {
+        "schemaVersion": 14,
+        "diemDi": null,
+        "diemDen": null,
+        "soNgay": 3,
+        "soNguoi": 1,
+        "ngansach": {
+          "soTien": null,
+          "theo": null
+        },
+        "sothich": [],
+        "tranh": [],
+        "ghiChu": [
+          "tiết kiệm nhất có thể"
+        ],
+        "thieu": [
+          "ngansach",
+          "diemDen"
+        ],
+        "cauHoiLamRo": [
+          "Bạn dự định chi tối đa khoảng bao nhiêu tiền cho chuyến đi này?",
+          "Bạn muốn đi du lịch ở đâu?"
+        ]
+      }
+    },
+    {
+      "id": "c04",
+      "passed": true,
+      "mismatches": [],
+      "ms": 2872,
+      "fromCache": true,
+      "retried": false,
+      "request": {
+        "schemaVersion": 14,
+        "diemDi": "TP.HCM",
+        "diemDen": null,
+        "soNgay": 3,
+        "soNguoi": 3,
+        "ngansachTongVND": 12000000,
+        "sothich": [],
+        "tranh": [
+          "tranh_dong_nguoi"
+        ],
+        "ghiChu": [],
+        "thieu": [
+          "diemDen"
+        ],
+        "cauHoiLamRo": [
+          "Bạn dự định đi du lịch ở địa điểm nào?",
+          "Bạn muốn đi du lịch ở đâu?"
+        ],
+        "canhBao": []
+      },
+      "raw": {
+        "schemaVersion": 14,
+        "diemDi": null,
+        "diemDen": null,
+        "soNgay": 3,
+        "soNguoi": 3,
+        "ngansach": {
+          "soTien": 4000000,
+          "theo": "moi_nguoi"
+        },
+        "sothich": [],
+        "tranh": [
+          "tranh_dong_nguoi"
+        ],
+        "ghiChu": [],
+        "thieu": [
+          "diemDen"
+        ],
+        "cauHoiLamRo": [
+          "Bạn dự định đi du lịch ở địa điểm nào?"
+        ]
+      }
+    },
+    {
+      "id": "c05",
+      "passed": true,
+      "mismatches": [],
+      "ms": 3962,
+      "fromCache": true,
+      "retried": false,
+      "request": {
+        "schemaVersion": 14,
+        "diemDi": "TP.HCM",
+        "diemDen": "Đà Nẵng",
+        "soNgay": null,
+        "soNguoi": 2,
+        "ngansachTongVND": 6000000,
+        "sothich": [],
+        "tranh": [],
+        "ghiChu": [
+          "Đi vào cuối tuần này"
+        ],
+        "thieu": [
+          "soNgay"
+        ],
+        "cauHoiLamRo": [
+          "Bạn dự định đi du lịch trong mấy ngày ạ?"
+        ],
+        "canhBao": []
+      },
+      "raw": {
+        "schemaVersion": 14,
+        "diemDi": null,
+        "diemDen": "Đà Nẵng",
+        "soNgay": null,
+        "soNguoi": 2,
+        "ngansach": {
+          "soTien": 6000000,
+          "theo": "tong"
+        },
+        "sothich": [],
+        "tranh": [],
+        "ghiChu": [
+          "Đi vào cuối tuần này"
+        ],
+        "thieu": [
+          "soNgay"
+        ],
+        "cauHoiLamRo": [
+          "Bạn dự định đi du lịch trong mấy ngày ạ?"
+        ]
+      }
+    },
+    {
+      "id": "c06",
+      "passed": true,
+      "mismatches": [],
+      "ms": 3235,
+      "fromCache": true,
+      "retried": false,
+      "request": {
+        "schemaVersion": 14,
+        "diemDi": "TP.HCM",
+        "diemDen": "Đà Nẵng",
+        "soNgay": 3,
+        "soNguoi": 4,
+        "ngansachTongVND": 15000000,
+        "sothich": [
+          "am_thuc",
+          "thien_nhien"
+        ],
+        "tranh": [
+          "khong_di_dem"
+        ],
+        "ghiChu": [],
+        "thieu": [],
+        "cauHoiLamRo": [],
+        "canhBao": []
+      },
+      "raw": {
+        "schemaVersion": 14,
+        "diemDi": null,
+        "diemDen": "Đà Nẵng",
+        "soNgay": 3,
+        "soNguoi": 4,
+        "ngansach": {
+          "soTien": 15000000,
+          "theo": "tong"
+        },
+        "sothich": [
+          "am_thuc",
+          "thien_nhien"
+        ],
+        "tranh": [
+          "khong_di_dem"
+        ],
+        "ghiChu": [],
+        "thieu": [],
+        "cauHoiLamRo": []
+      }
+    },
+    {
+      "id": "c07",
+      "passed": true,
+      "mismatches": [],
+      "ms": 3195,
+      "fromCache": true,
+      "retried": false,
+      "request": {
+        "schemaVersion": 14,
+        "diemDi": "TP.HCM",
+        "diemDen": null,
+        "soNgay": null,
+        "soNguoi": null,
+        "ngansachTongVND": null,
+        "sothich": [],
+        "tranh": [],
+        "ghiChu": [],
+        "thieu": [
+          "soNguoi",
+          "soNgay",
+          "ngansach",
+          "diemDen"
+        ],
+        "cauHoiLamRo": [
+          "Bạn dự định đi du lịch ở đâu?",
+          "Bạn muốn đi trong bao nhiêu ngày?",
+          "Chuyến đi của mình có bao nhiêu người tham gia?",
+          "Ngân sách dự kiến cho chuyến đi này là bao nhiêu?"
+        ],
+        "canhBao": []
+      },
+      "raw": {
+        "schemaVersion": 14,
+        "diemDi": null,
+        "diemDen": null,
+        "soNgay": null,
+        "soNguoi": null,
+        "ngansach": {
+          "soTien": null,
+          "theo": null
+        },
+        "sothich": [],
+        "tranh": [],
+        "ghiChu": [],
+        "thieu": [
+          "diemDen",
+          "soNgay",
+          "soNguoi",
+          "ngansach"
+        ],
+        "cauHoiLamRo": [
+          "Bạn dự định đi du lịch ở đâu?",
+          "Bạn muốn đi trong bao nhiêu ngày?",
+          "Chuyến đi của mình có bao nhiêu người tham gia?",
+          "Ngân sách dự kiến cho chuyến đi này là bao nhiêu?"
+        ]
+      }
+    },
+    {
+      "id": "c08",
+      "passed": true,
+      "mismatches": [],
+      "ms": 3474,
+      "fromCache": true,
+      "retried": false,
+      "request": {
+        "schemaVersion": 14,
+        "diemDi": "TP.HCM",
+        "diemDen": "Đà Nẵng",
+        "soNgay": 3,
+        "soNguoi": 2,
+        "ngansachTongVND": 8000000,
+        "sothich": [],
+        "tranh": [
+          "tranh_di_bo_nhieu",
+          "khong_day_som"
+        ],
+        "ghiChu": [],
+        "thieu": [],
+        "cauHoiLamRo": [],
+        "canhBao": []
+      },
+      "raw": {
+        "schemaVersion": 14,
+        "diemDi": null,
+        "diemDen": "Đà Nẵng",
+        "soNgay": 3,
+        "soNguoi": 2,
+        "ngansach": {
+          "soTien": 8000000,
+          "theo": "tong"
+        },
+        "sothich": [],
+        "tranh": [
+          "tranh_di_bo_nhieu",
+          "khong_day_som"
+        ],
+        "ghiChu": [],
+        "thieu": [],
+        "cauHoiLamRo": []
+      }
+    },
+    {
+      "id": "c09",
+      "passed": true,
+      "mismatches": [],
+      "ms": 3301,
+      "fromCache": true,
+      "retried": false,
+      "request": {
+        "schemaVersion": 14,
+        "diemDi": "TP.HCM",
+        "diemDen": "Đà Nẵng",
+        "soNgay": 3,
+        "soNguoi": null,
+        "ngansachTongVND": 20000000,
+        "sothich": [],
+        "tranh": [],
+        "ghiChu": [
+          "Cả nhà mình"
+        ],
+        "thieu": [
+          "soNguoi"
+        ],
+        "cauHoiLamRo": [
+          "Dạ, gia đình mình đi tổng cộng bao nhiêu người vậy ạ?"
+        ],
+        "canhBao": []
+      },
+      "raw": {
+        "schemaVersion": 14,
+        "diemDi": null,
+        "diemDen": "Đà Nẵng",
+        "soNgay": 3,
+        "soNguoi": null,
+        "ngansach": {
+          "soTien": 20000000,
+          "theo": "tong"
+        },
+        "sothich": [],
+        "tranh": [],
+        "ghiChu": [
+          "Cả nhà mình"
+        ],
+        "thieu": [
+          "soNguoi"
+        ],
+        "cauHoiLamRo": [
+          "Dạ, gia đình mình đi tổng cộng bao nhiêu người vậy ạ?"
+        ]
+      }
+    },
+    {
+      "id": "c10",
+      "passed": true,
+      "mismatches": [],
+      "ms": 3105,
+      "fromCache": true,
+      "retried": false,
+      "request": {
+        "schemaVersion": 14,
+        "diemDi": "TP.HCM",
+        "diemDen": "Hà Nội",
+        "soNgay": 3,
+        "soNguoi": 2,
+        "ngansachTongVND": 10000000,
+        "sothich": [],
+        "tranh": [],
+        "ghiChu": [],
+        "thieu": [],
+        "cauHoiLamRo": [],
+        "canhBao": []
+      },
+      "raw": {
+        "schemaVersion": 14,
+        "diemDi": null,
+        "diemDen": "Hà Nội",
+        "soNgay": 3,
+        "soNguoi": 2,
+        "ngansach": {
+          "soTien": 10000000,
+          "theo": "tong"
+        },
+        "sothich": [],
+        "tranh": [],
+        "ghiChu": [],
+        "thieu": [],
+        "cauHoiLamRo": []
+      }
+    }
+  ]
+}

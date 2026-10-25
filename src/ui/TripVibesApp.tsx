@@ -4,6 +4,8 @@ import { AppProvider, useApp } from "@/ui/context/AppContext";
 import { TopBar } from "@/ui/components/TopBar";
 import { WelcomeScreen } from "@/ui/screens/WelcomeScreen";
 import { LoginScreen } from "@/ui/screens/LoginScreen";
+import { RegisterScreen } from "@/ui/screens/RegisterScreen";
+import { SavedTripsScreen } from "@/ui/screens/SavedTripsScreen";
 import { B1ChonNhanhScreen } from "@/ui/screens/B1ChonNhanhScreen";
 import { B2AgentScreen } from "@/ui/screens/B2AgentScreen";
 import { B3KeHoachScreen } from "@/ui/screens/B3KeHoachScreen";
@@ -39,6 +41,8 @@ function DevTools() {
   const ALL_SCREENS = [
     { id: "welcome", label: "Màn chào (Welcome)" },
     { id: "login", label: "Đăng nhập" },
+    { id: "register", label: "Đăng ký" },
+    { id: "saved-trips", label: "Nhật ký chuyến đi (Đã lưu)" },
     { id: "b1-chon-nhanh", label: "B1 · Chọn nhanh" },
     { id: "b2-dang-chay", label: "B2 · Đang tạo lịch trình" },
     { id: "b3-ke-hoach", label: "B3 · Kế hoạch" },
@@ -267,7 +271,7 @@ function UserTestModeBar() {
 function ScreenRouter() {
   const { screen } = useApp();
 
-  const isAuthScreen = ["welcome", "login"].includes(screen);
+  const isAuthScreen = ["welcome", "login", "register"].includes(screen);
 
   const renderContent = () => {
     switch (screen) {
@@ -275,6 +279,10 @@ function ScreenRouter() {
         return <WelcomeScreen />;
       case "login":
         return <LoginScreen />;
+      case "register":
+        return <RegisterScreen />;
+      case "saved-trips":
+        return <SavedTripsScreen />;
       case "b1-chon-nhanh":
         return <B1ChonNhanhScreen />;
       case "b2-dang-chay":
@@ -333,12 +341,19 @@ function ScreenRouter() {
   );
 }
 
-export function TripVibesApp() {
+export interface TripVibesAppProps {
+  initialScreen?: string;
+  initialMau?: string;
+  initialDest?: string;
+}
+
+export function TripVibesApp({ initialScreen, initialMau, initialDest }: TripVibesAppProps = {}) {
   return (
-    <AppProvider>
+    <AppProvider initialScreen={initialScreen} initialMau={initialMau} initialDest={initialDest}>
       <ScreenRouter />
     </AppProvider>
   );
 }
 
 export default TripVibesApp;
+

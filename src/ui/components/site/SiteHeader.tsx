@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Compass, ArrowRight } from "lucide-react";
+import { Compass, ArrowRight, BookOpen } from "lucide-react";
 
 export interface SiteHeaderProps {
   onNavigatePlan?: () => void;
@@ -111,8 +111,29 @@ export function SiteHeader({ onNavigatePlan }: SiteHeaderProps) {
         </Link>
       </nav>
 
-      {/* Nút Lập kế hoạch */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      {/* Nút Nhật ký chuyến đi & Lập kế hoạch */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <Link
+          href="/lap-ke-hoach?screen=saved-trips"
+          style={{
+            textDecoration: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            height: 40,
+            padding: "0 14px",
+            borderRadius: "var(--r-md)",
+            border: "1px solid var(--color-border)",
+            background: "var(--color-surface)",
+            color: "var(--color-text)",
+            fontSize: 14,
+            fontWeight: 600,
+            transition: "all 0.15s",
+          }}
+        >
+          <BookOpen size={16} color="var(--color-primary-main)" />
+          <span>Nhật ký chuyến đi</span>
+        </Link>
         <Link
           href="/lap-ke-hoach"
           onClick={onNavigatePlan}

@@ -1,18 +1,46 @@
 import { type Expense, ExpenseCategorySchema } from "@/contracts";
 
-function isValidDate(dateString: string): boolean {
-  const regex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!regex.test(dateString)) return false;
-  const parts = dateString.split("-");
-  const year = parseInt(parts[0], 10);
-  const month = parseInt(parts[1], 10);
-  const day = parseInt(parts[2], 10);
+function isValidDay(year: number, month: number, day: number): boolean {
   if (year < 1000 || year > 9999 || month === 0 || month > 12) return false;
   const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
     monthLength[1] = 29;
   }
   return day > 0 && day <= monthLength[month - 1];
+}
+
+function parseAndValidateDate(dateString: string): { isValid: boolean; normalized: string | null } {
+  // 1. Kiểm tra định dạng ISO YYYY-MM-DD
+  const regexIso = /^(\d{4})-(\d{2})-(\d{2})$/;
+  const matchIso = dateString.match(regexIso);
+  if (matchIso) {
+    const year = parseInt(matchIso[1], 10);
+    const month = parseInt(matchIso[2], 10);
+    const day = parseInt(matchIso[3], 10);
+    if (isValidDay(year, month, day)) {
+      return {
+        isValid: true,
+        normalized: `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+      };
+    }
+  }
+
+  // 2. Hỗ trợ định dạng Việt Nam / thân thiện DD/MM/YYYY hoặc DD-MM-YYYY
+  const regexDmy = /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/;
+  const matchDmy = dateString.match(regexDmy);
+  if (matchDmy) {
+    const day = parseInt(matchDmy[1], 10);
+    const month = parseInt(matchDmy[2], 10);
+    const year = parseInt(matchDmy[3], 10);
+    if (isValidDay(year, month, day)) {
+      return {
+        isValid: true,
+        normalized: `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+      };
+    }
+  }
+
+  return { isValid: false, normalized: null };
 }
 
 export interface ConfirmExpenseInput {
@@ -45,8 +73,14 @@ export function confirmExpense(
     loi.push("so_tien_khong_hop_le");
   }
 
-  if (input.ngay && !isValidDate(input.ngay)) {
-    loi.push("ngay_khong_hop_le");
+  let normalizedDate: string | null = null;
+  if (input.ngay) {
+    const dateCheck = parseAndValidateDate(input.ngay);
+    if (!dateCheck.isValid) {
+      loi.push("ngay_khong_hop_le");
+    } else {
+      normalizedDate = dateCheck.normalized;
+    }
   }
 
   if (
@@ -75,7 +109,7 @@ export function confirmExpense(
     id,
     nguon: input.nguon,
     tenCuaHang: input.tenCuaHang,
-    ngay: input.ngay,
+    ngay: normalizedDate,
     ngayTrongChuyen: input.ngayTrongChuyen,
     hangMuc: parsedHangMuc.data!,
     soTienVND: input.soTienVND,

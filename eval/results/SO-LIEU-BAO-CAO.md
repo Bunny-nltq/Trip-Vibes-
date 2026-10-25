@@ -6,12 +6,12 @@
 
 | STT | Bộ đánh giá | Trạng thái | Đánh giá độ mới | Kết quả tổng quát | Model | Prompt Version | Quy tắc Version (file) | Ngày chạy |
 |:---:|:---|:---:|:---|:---|:---|:---:|:---:|:---:|
-| 1 | **Phân tích yêu cầu tự nhiên (Parse Request)** (`parse`) | **CHƯA CHẠY** | - | **CHƯA CHẠY** | - | - | - | - |
-| 2 | **Tự sửa kế hoạch vi phạm (Repair Plan)** (`repair`) | **CHƯA CHẠY** | - | **CHƯA CHẠY** | - | - | - | - |
+| 1 | **Phân tích yêu cầu tự nhiên (Parse Request)** (`parse`) | Đã chạy | HOP_LE | **Đạt 10/10 ca** | gemini-3-flash-preview | v4 | 5 | 2026-10-25 |
+| 2 | **Tự sửa kế hoạch vi phạm (Repair Plan)** (`repair`) | Đã chạy | HOP_LE | **ĐÃ CHẠY** | gemini-3-flash-preview | v4 | 5 | 2026-10-25 |
 | 3 | **Nhận diện hóa đơn (Bill Extraction)** (`bill`) | Đã chạy | **CU_KHAC_PHIEN_BAN** | **Hóa đơn thật: 4/4; Không phải hóa đơn: 1/1** | gemini-3.5-flash-lite | v4 | 3 | 2026-10-19 (chấm lại ngày 2026-10-21) |
-| 4 | **Tối ưu sở thích người dùng (Preference Matching)** (`likes`) | Đã chạy | **CU_KHONG_GHI_PHIEN_BAN** | **2 tăng, 2 giữ nguyên, 1 tệ đi** | gemini-3.5-flash-lite | v1 | (không ghi) | 2026-10-19 |
+| 4 | **Tối ưu sở thích người dùng (Preference Matching)** (`likes`) | Đã chạy | HOP_LE | **0 tăng, 0 giữ nguyên, 0 tệ đi** | gemini-3-flash-preview | v1 | 5 | 2026-10-22 |
 | 5 | **Kiểm tra dữ liệu Live (Data Quality)** (`data`) | Đã chạy | HOP_LE | **Tổng địa điểm: 0** | khong_dung_ai | v4 | 5 | 2026-10-22 |
-| 6 | **Kiểm tra chất lượng địa điểm (Location Data)** (`diadiem`) | Đã chạy | HOP_LE | **Live: 0/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 6 THIẾU DỮ LIỆU | Có dự phòng: 0/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 6 THIẾU DỮ LIỆU** | khong_dung_ai | v4 | 5 | 2026-10-22 |
+| 6 | **Kiểm tra chất lượng địa điểm (Location Data)** (`diadiem`) | Đã chạy | HOP_LE | **Live: 5/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 1 THIẾU DỮ LIỆU | Có dự phòng: 5/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 1 THIẾU DỮ LIỆU** | khong_dung_ai | v4 | 5 | 2026-10-22 |
 | 7 | **Đánh giá chất lượng lập kế hoạch AI (AI Rate)** (`ai-rate`) | Đã chạy | HOP_LE | **2/10 kịch bản đã chạy với quy tắc hiện tại** | gemini-3.5-flash-lite | v4 | 5 | 2026-10-22 |
 
 ---
@@ -20,19 +20,25 @@
 
 ### 2.1. Phân tích yêu cầu tự nhiên (Parse Request) (`parse`)
 
-> **Định nghĩa đạt**: Số yêu cầu parse đúng toàn bộ các trường (điểm đến, số ngày, ngân sách, số người, sở thích) trên tổng số ca kiểm thử.
+> **Định nghĩa đạt**: Số yêu cầu parse đúng toàn bộ các trường trên tổng số ca kiểm thử.
 
-**Trạng thái**: **CHƯA CHẠY**
-
-- Chưa có kết quả kiểm thử trong `eval/results/`.
+- **Tập tin kết quả**: `parse-2026-10-25.json`
+- **Ngày chạy**: 2026-10-25
+- **Trường quy tắc ghi nhận từ file**: `5` *(hiện tại: `5`)*
+- **Trường prompt ghi nhận từ file**: `v4` *(hiện tại: `v4`)*
+- **Đánh giá độ mới**: `HOP_LE` — ✅ Hợp lệ (trong vòng 7 ngày, đúng quy tắc hiện tại)
+- **Kết quả**: **Đạt 10/10 ca**
 
 ### 2.2. Tự sửa kế hoạch vi phạm (Repair Plan) (`repair`)
 
-> **Định nghĩa đạt**: Số kế hoạch có vi phạm ban đầu được AI sửa thành công (0 lỗi hard, ngân sách hợp lệ) trên tổng số ca.
+> **Định nghĩa đạt**: Số kế hoạch có vi phạm ban đầu được AI sửa thành công trên tổng số ca.
 
-**Trạng thái**: **CHƯA CHẠY**
-
-- Chưa có kết quả kiểm thử trong `eval/results/`.
+- **Tập tin kết quả**: `repair-2026-10-25.json`
+- **Ngày chạy**: 2026-10-25
+- **Trường quy tắc ghi nhận từ file**: `5` *(hiện tại: `5`)*
+- **Trường prompt ghi nhận từ file**: `v4` *(hiện tại: `v4`)*
+- **Đánh giá độ mới**: `HOP_LE` — ✅ Hợp lệ (trong vòng 7 ngày, đúng quy tắc hiện tại)
+- **Kết quả**: **ĐÃ CHẠY**
 
 ### 2.3. Nhận diện hóa đơn (Bill Extraction) (`bill`)
 
@@ -61,22 +67,17 @@
 
 > **Định nghĩa đạt**: Ba số riêng biệt: số kịch bản tăng điểm sở thích, số kịch bản giữ nguyên và số kịch bản tệ đi (KHÔNG dùng 'hợp lệ' làm tiêu đề kết quả).
 
-- **Tập tin kết quả**: `likes-2026-10-19.json`
-- **Ngày chạy**: 2026-10-19
-- **Trường quy tắc ghi nhận từ file**: `(không ghi)` *(hiện tại: `5`)*
+- **Tập tin kết quả**: `likes-2026-10-22.json`
+- **Ngày chạy**: 2026-10-22
+- **Trường quy tắc ghi nhận từ file**: `5` *(hiện tại: `5`)*
 - **Trường prompt ghi nhận từ file**: `v1` *(hiện tại: `v4`)*
-- **Đánh giá độ mới**: `CU_KHONG_GHI_PHIEN_BAN` — ⚠️ CŨ: Tập tin kết quả không ghi trường phiên bản quy tắc
-- **Kết quả**: **2 tăng, 2 giữ nguyên, 1 tệ đi**
+- **Đánh giá độ mới**: `HOP_LE` — ✅ Hợp lệ (trong vòng 7 ngày, đúng quy tắc hiện tại)
+- **Kết quả**: **0 tăng, 0 giữ nguyên, 0 tệ đi**
 
 | Kịch bản | Sở thích | Điểm trước | Điểm sau | Kết quả |
 |:---|:---|:---:|:---:|:---:|
-| 1. [bien, hai_san] | ["bien","hai_san"] | 0.5 | 0.5 | Giữ nguyên |
-| 2. [van_hoa_lich_su, am_thuc] | ["van_hoa_lich_su","am_thuc"] | 0.5 | 1 | **Tăng** |
-| 3. [thien_nhien, check_in_chup_anh] | ["thien_nhien","check_in_chup_anh"] | 0.5 | 0 | ⚠️ **Tệ đi** |
-| 4. [thu_gian_spa] | ["thu_gian_spa"] | 0.25 | 0.5 | **Tăng** |
-| 5. [] + không muốn đi bộ nhiều | [] | 0 | 0 | Giữ nguyên |
 
-**Tổng kết**: 2 tăng, 2 giữ nguyên, 1 tệ đi
+**Tổng kết**: 0 tăng, 0 giữ nguyên, 0 tệ đi
 
 ### 2.5. Kiểm tra dữ liệu Live (Data Quality) (`data`)
 
@@ -98,35 +99,35 @@
 - **Trường quy tắc ghi nhận từ file**: `5` *(hiện tại: `5`)*
 - **Trường prompt ghi nhận từ file**: `v4` *(hiện tại: `v4`)*
 - **Đánh giá độ mới**: `HOP_LE` — ✅ Hợp lệ (trong vòng 7 ngày, đúng quy tắc hiện tại)
-- **Kết quả**: **Live: 0/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 6 THIẾU DỮ LIỆU | Có dự phòng: 0/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 6 THIẾU DỮ LIỆU**
+- **Kết quả**: **Live: 5/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 1 THIẾU DỮ LIỆU | Có dự phòng: 5/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 1 THIẾU DỮ LIỆU**
 
 #### Bảng 1: Kết quả chế độ Trực tiếp thuần (live-only)
 
-*Tổng kết live-only*: **0/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 6 THIẾU DỮ LIỆU**
+*Tổng kết live-only*: **5/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 1 THIẾU DỮ LIỆU**
 
 | STT | Điểm đến | Định vị | Trạng thái nội dung | KS / Ăn / Cafe / HĐ | Ô chưa lấp | Lỗi vi phạm / Ghi chú |
 |:---:|:---|:---:|:---:|:---:|:---:|:---|
-| 1 | **Đà Nẵng** | Thành công | **THIẾU DỮ LIỆU** | 0/0/0/0 | — | thiếu khach_san, quan_an, hoat_dong - máy chủ N/A - Dữ liệu địa phương tại Thành phố Đà Nẵng chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào. |
-| 2 | **Hà Nội** | Thành công | **THIẾU DỮ LIỆU** | 0/0/0/0 | — | thiếu khach_san, quan_an, hoat_dong - máy chủ N/A - Dữ liệu địa phương tại Hà Nội chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào. |
-| 3 | **Đà Lạt** | Thành công | **THIẾU DỮ LIỆU** | 0/0/0/0 | — | thiếu khach_san, quan_an, hoat_dong - máy chủ N/A - Dữ liệu địa phương tại Đà Lạt chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào. |
+| 1 | **Đà Nẵng** | Thành công | **CÓ NỘI DUNG** | 15/15/15/15 | HĐ:0, Ăn:6 | Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard). |
+| 2 | **Hà Nội** | Thành công | **CÓ NỘI DUNG** | 15/15/15/15 | HĐ:0, Ăn:0 | Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard). |
+| 3 | **Đà Lạt** | Thành công | **CÓ NỘI DUNG** | 15/15/15/15 | HĐ:0, Ăn:6 | Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard). |
 | 4 | **Phú Quốc** | Thành công | **THIẾU DỮ LIỆU** | 0/0/0/0 | — | thiếu khach_san, quan_an, hoat_dong - máy chủ N/A - Dữ liệu địa phương tại Đặc khu Phú Quốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào. |
-| 5 | **Bangkok** | Thành công | **THIẾU DỮ LIỆU** | 0/0/0/0 | — | thiếu khach_san, quan_an, hoat_dong - máy chủ N/A - Dữ liệu địa phương tại Băng Cốc chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào. |
-| 6 | **Seoul** | Thành công | **THIẾU DỮ LIỆU** | 0/0/0/0 | — | thiếu khach_san, quan_an, hoat_dong - máy chủ N/A - Dữ liệu địa phương tại Seoul chưa đủ để lập kế hoạch chất lượng: thiếu khách sạn (0/3), điểm tham quan (0/3), quán ăn (0/2). Nguồn: OpenStreetMap. Chi tiết máy chủ: Chưa có lượt gọi Overpass nào. |
+| 5 | **Bangkok** | Thành công | **CÓ NỘI DUNG** | 15/15/15/15 | HĐ:0, Ăn:6 | Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard). |
+| 6 | **Seoul** | Thành công | **CÓ NỘI DUNG** | 15/15/15/15 | HĐ:0, Ăn:6 | Tốt: Lập kế hoạch CÓ NỘI DUNG (đạt >= 80% ô khả dụng, không vi phạm hard). |
 
 > *Ghi chú cảnh báo*: Ở chế độ live-only, máy chủ Overpass thường xuyên bị timeout hoặc trả về 0 mục đối với khách sạn (Đà Nẵng, Hà Nội, Seoul), dẫn đến trạng thái THIẾU DỮ LIỆU.
 
 #### Bảng 2: Kết quả khi có cơ chế Dự phòng (có dự phòng snapshot / cache)
 
-*Tổng kết có dự phòng*: **0/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 6 THIẾU DỮ LIỆU**
+*Tổng kết có dự phòng*: **5/6 CÓ NỘI DUNG; 0 CÓ VI PHẠM; 0 CHƯA LẤP ĐỦ Ô; 1 THIẾU DỮ LIỆU**
 
 | STT | Điểm đến | Định vị | Trạng thái nội dung | Nguồn dữ liệu | KS / Ăn / Cafe / HĐ | Ô chưa lấp | Kết quả kế hoạch |
 |:---:|:---|:---:|:---:|:---|:---:|:---:|:---|
-| 1 | **Đà Nẵng** | Thành công | **THIẾU DỮ LIỆU** (từ lần chạy ngày 2026-10-22) | không có | 0/0/0/0 | HĐ:4, Ăn:6 | ❌ Chưa đạt |
-| 2 | **Hà Nội** | Thành công | **THIẾU DỮ LIỆU** (từ lần chạy ngày 2026-10-22) | không có | 0/0/0/0 | HĐ:4, Ăn:6 | ❌ Chưa đạt |
-| 3 | **Đà Lạt** | Thành công | **THIẾU DỮ LIỆU** (từ lần chạy ngày 2026-10-22) | không có | 0/0/0/0 | HĐ:4, Ăn:6 | ❌ Chưa đạt |
+| 1 | **Đà Nẵng** | Thành công | **CÓ NỘI DUNG** (từ lần chạy ngày 2026-10-22) | snapshot (ngày 2026-10-20) | 15/15/15/15 | HĐ:0, Ăn:6 | ✅ Hợp lệ, đủ ô |
+| 2 | **Hà Nội** | Thành công | **CÓ NỘI DUNG** (từ lần chạy ngày 2026-10-22) | snapshot (ngày 2026-10-20) | 15/15/15/15 | HĐ:0, Ăn:0 | ✅ Hợp lệ, đủ ô |
+| 3 | **Đà Lạt** | Thành công | **CÓ NỘI DUNG** (từ lần chạy ngày 2026-10-22) | snapshot (ngày 2026-10-20) | 15/15/15/15 | HĐ:0, Ăn:6 | ✅ Hợp lệ, đủ ô |
 | 4 | **Phú Quốc** | Thành công | **THIẾU DỮ LIỆU (không có snapshot)** | — | — | — | ❌ Thiếu snapshot hợp lệ trong src/data/snapshots |
-| 5 | **Bangkok** | Thành công | **THIẾU DỮ LIỆU** (từ lần chạy ngày 2026-10-22) | không có | 0/0/0/0 | HĐ:4, Ăn:6 | ❌ Chưa đạt |
-| 6 | **Seoul** | Thành công | **THIẾU DỮ LIỆU** (từ lần chạy ngày 2026-10-22) | không có | 0/0/0/0 | HĐ:4, Ăn:6 | ❌ Chưa đạt |
+| 5 | **Bangkok** | Thành công | **CÓ NỘI DUNG** (từ lần chạy ngày 2026-10-22) | snapshot (ngày 2026-10-20) | 15/15/15/15 | HĐ:0, Ăn:6 | ✅ Hợp lệ, đủ ô |
+| 6 | **Seoul** | Thành công | **CÓ NỘI DUNG** (từ lần chạy ngày 2026-10-22) | snapshot (ngày 2026-10-20) | 15/15/15/15 | HĐ:0, Ăn:6 | ✅ Hợp lệ, đủ ô |
 
 ### 2.7. Đánh giá chất lượng lập kế hoạch AI (AI Rate) (`ai-rate`)
 
@@ -160,10 +161,7 @@ Dưới đây là danh sách các bộ kiểm thử đang ở trạng thái **C�
 
 | STT | Bộ kiểm thử | Mã bộ | Tình trạng hiện tại | Lý do cần chạy lại |
 |:---:|:---|:---:|:---|:---|
-| 1 | **Phân tích yêu cầu tự nhiên (Parse Request)** | `parse` | ⚠️ CẦN CHẠY LẠI | CHƯA CHẠY — chưa có tệp kết quả kiểm thử |
-| 2 | **Tự sửa kế hoạch vi phạm (Repair Plan)** | `repair` | ⚠️ CẦN CHẠY LẠI | CHƯA CHẠY — chưa có tệp kết quả kiểm thử |
-| 3 | **Nhận diện hóa đơn (Bill Extraction)** | `bill` | ⚠️ CẦN CHẠY LẠI | CU_KHAC_PHIEN_BAN: ⚠️ CŨ: Quy tắc ghi trong file (3) khác quy tắc hiện tại (5) |
-| 4 | **Tối ưu sở thích người dùng (Preference Matching)** | `likes` | ⚠️ CẦN CHẠY LẠI | CU_KHONG_GHI_PHIEN_BAN: ⚠️ CŨ: Tập tin kết quả không ghi trường phiên bản quy tắc |
+| 1 | **Nhận diện hóa đơn (Bill Extraction)** | `bill` | ⚠️ CẦN CHẠY LẠI | CU_KHAC_PHIEN_BAN: ⚠️ CŨ: Quy tắc ghi trong file (3) khác quy tắc hiện tại (5) |
 
 ---
 

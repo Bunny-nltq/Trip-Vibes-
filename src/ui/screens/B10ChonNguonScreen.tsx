@@ -50,7 +50,7 @@ export function B10ChonNguonScreen() {
     return "";
   });
   const [ngay, setNgay] = useState<string>(() => {
-    return new Date().toLocaleDateString("vi-VN");
+    return new Date().toISOString().slice(0, 10);
   });
   const [ngayTrongChuyen, setNgayTrongChuyen] = useState<number>(() => {
     if (typeof window !== "undefined") {
@@ -68,7 +68,7 @@ export function B10ChonNguonScreen() {
     }
     return "";
   });
-  const [ghiChu] = useState<string>("");
+  const [ghiChu, setGhiChu] = useState<string>("");
 
   // AI & Bill state
   const [giaTriAIDoc, setGiaTriAIDoc] = useState<number | null>(() => {
@@ -568,6 +568,17 @@ export function B10ChonNguonScreen() {
                   </div>
                 </div>
 
+                <div className="Field">
+                  <div className="FieldLabel">Ghi chú (tuỳ chọn)</div>
+                  <input
+                    type="text"
+                    className="Input"
+                    value={ghiChu}
+                    onChange={(e) => setGhiChu(e.target.value)}
+                    placeholder="Ghi chú thêm về hóa đơn này..."
+                  />
+                </div>
+
                 <div className="Hint">
                   Hãy so lại số tiền với bill của bạn. Bạn có thể sửa trước khi ghi.
                 </div>
@@ -665,6 +676,17 @@ export function B10ChonNguonScreen() {
                 value={soTienVND}
                 onChange={(e) => setSoTienVND(e.target.value)}
                 placeholder="0 đ"
+              />
+            </div>
+
+            <div className="Field">
+              <div className="FieldLabel">Ghi chú (tuỳ chọn)</div>
+              <input
+                type="text"
+                className="Input"
+                value={ghiChu}
+                onChange={(e) => setGhiChu(e.target.value)}
+                placeholder="Ghi chú thêm về khoản chi..."
               />
             </div>
 

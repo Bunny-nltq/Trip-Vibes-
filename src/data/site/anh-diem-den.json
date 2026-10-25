@@ -59,5 +59,77 @@
     "giayPhep": "CC BY-SA 3.0",
     "linkGoc": "https://commons.wikimedia.org/wiki/File:Gyeongbokgung-GeunJeongJeon.jpg",
     "linkGiayPhep": "https://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "phu-quoc": {
+    "slug": "phu-quoc",
+    "diaDanh": "Bãi biển Saigon Phú Quốc Resort & Spa",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Phu_Quoc_beach_Saigon_Phu_Quoc_Resort_and_Spa.jpg/960px-Phu_Quoc_beach_Saigon_Phu_Quoc_Resort_and_Spa.jpg",
+    "urlThumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Phu_Quoc_beach_Saigon_Phu_Quoc_Resort_and_Spa.jpg/960px-Phu_Quoc_beach_Saigon_Phu_Quoc_Resort_and_Spa.jpg",
+    "alt": "Bãi biển Saigon Phú Quốc Resort biển xanh cát trắng",
+    "tacGia": "Elmschrat",
+    "nguon": "Wikimedia Commons",
+    "giayPhep": "CC0 Public Domain",
+    "linkGoc": "https://commons.wikimedia.org/wiki/File:Phu_Quoc_beach_Saigon_Phu_Quoc_Resort_and_Spa.jpg",
+    "linkGiayPhep": "https://creativecommons.org/publicdomain/zero/1.0/"
+  },
+  "nha-trang": {
+    "slug": "nha-trang",
+    "diaDanh": "Bãi biển và vịnh Nha Trang",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Nha_Trang_Beach_7.jpg/960px-Nha_Trang_Beach_7.jpg",
+    "urlThumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Nha_Trang_Beach_7.jpg/960px-Nha_Trang_Beach_7.jpg",
+    "alt": "Bãi biển Nha Trang trong xanh thơ mộng",
+    "tacGia": "Christophe95",
+    "nguon": "Wikimedia Commons",
+    "giayPhep": "CC BY-SA 4.0",
+    "linkGoc": "https://commons.wikimedia.org/wiki/File:Nha_Trang_Beach_7.jpg",
+    "linkGiayPhep": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "tokyo": {
+    "slug": "tokyo",
+    "diaDanh": "Khu đô thị Shinjuku và thành phố Tokyo",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Skyscrapers_of_Shinjuku_2009_January.jpg",
+    "urlThumb": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Skyscrapers_of_Shinjuku_2009_January.jpg",
+    "alt": "Thành phố Tokyo hiện đại lung linh",
+    "tacGia": "Morio",
+    "nguon": "Wikimedia Commons",
+    "giayPhep": "CC BY-SA 3.0",
+    "linkGoc": "https://commons.wikimedia.org/wiki/File:Skyscrapers_of_Shinjuku_2009_January.jpg",
+    "linkGiayPhep": "https://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "tp-hcm": {
+    "slug": "tp-hcm",
+    "diaDanh": "Bến Bạch Đằng và đường chân trời TP. Hồ Chí Minh",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f6/Ho_Chi_Minh_City_Skyline_%28night%29.jpg/960px-Ho_Chi_Minh_City_Skyline_%28night%29.jpg",
+    "urlThumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f6/Ho_Chi_Minh_City_Skyline_%28night%29.jpg/960px-Ho_Chi_Minh_City_Skyline_%28night%29.jpg",
+    "alt": "Đường chân trời TP. Hồ Chí Minh rực rỡ về đêm",
+    "tacGia": "Diegoparietti",
+    "nguon": "Wikimedia Commons",
+    "giayPhep": "CC BY-SA 4.0",
+    "linkGoc": "https://commons.wikimedia.org/wiki/File:Ho_Chi_Minh_City_Skyline_(night).jpg",
+    "linkGiayPhep": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "hoi-an": {
+    "slug": "hoi-an",
+    "diaDanh": "Phố cổ Hội An lung linh đèn lồng về đêm",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/28/Hoi_An_lanterns_at_night.jpg",
+    "urlThumb": "https://upload.wikimedia.org/wikipedia/commons/2/28/Hoi_An_lanterns_at_night.jpg",
+    "alt": "Phố cổ Hội An thơ mộng lung linh hoa đăng",
+    "tacGia": "CC-Photographer",
+    "nguon": "Wikimedia Commons",
+    "giayPhep": "CC BY-SA 4.0",
+    "linkGoc": "https://commons.wikimedia.org/wiki/File:Hoi_An_lanterns_at_night.jpg",
+    "linkGiayPhep": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "hue": {
+    "slug": "hue",
+    "diaDanh": "Cửa Ngọ Môn - Hoàng thành Huế",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Gate_in_Imperial_City%2C_Hu%E1%BA%BF_%28III%29.jpg/960px-Gate_in_Imperial_City%2C_Hu%E1%BA%BF_%28III%29.jpg",
+    "urlThumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Gate_in_Imperial_City%2C_Hu%E1%BA%BF_%28III%29.jpg/960px-Gate_in_Imperial_City%2C_Hu%E1%BA%BF_%28III%29.jpg",
+    "alt": "Kinh thành Huế cổ kính trang nghiêm",
+    "tacGia": "Supanut Arunoprayote",
+    "nguon": "Wikimedia Commons",
+    "giayPhep": "CC BY 4.0",
+    "linkGoc": "https://commons.wikimedia.org/wiki/File:Gate_in_Imperial_City,_Hu%E1%BA%BF_(III).jpg",
+    "linkGiayPhep": "https://creativecommons.org/licenses/by/4.0/"
   }
 }

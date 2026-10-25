@@ -25,6 +25,7 @@ import {
   Clock,
   ThumbsUp,
 } from "lucide-react";
+import { getHotelImage, getActivityImage } from "@/ui/lib/imageMap";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
 
@@ -296,13 +297,14 @@ export function B5KhachSanScreen() {
                 const isThamKhao = h.doTinCay === "tham_khao";
                 const isEstimated =
                   h.giaLaUocTinh || (h.doTinCay && h.doTinCay !== "xac_minh");
+                const hotelImg = getHotelImage(h.soSao, h.ten);
 
                 return (
                   <div
                     key={h.id}
                     className={`card ${isSelected ? "card-selected" : "card-hover"}`}
                     style={{
-                      padding: 20,
+                      padding: 16,
                       marginBottom: 14,
                       cursor: "pointer",
                       transition: "all 0.2s",
@@ -311,7 +313,31 @@ export function B5KhachSanScreen() {
                     onClick={() => setSelectedId(h.id)}
                   >
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
-                      <div style={{ flex: 1, minWidth: 260 }}>
+                      <div
+                        style={{
+                          width: 105,
+                          height: 85,
+                          borderRadius: "var(--r-md)",
+                          overflow: "hidden",
+                          flexShrink: 0,
+                          position: "relative",
+                          border: "1px solid var(--color-border)",
+                          background: "var(--color-surface-sub)",
+                        }}
+                      >
+                        <img
+                          src={hotelImg.urlThumb || hotelImg.url}
+                          alt={hotelImg.alt}
+                          loading="lazy"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            display: "block",
+                          }}
+                        />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 220 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                           <div style={{ fontWeight: 700, fontSize: 16, color: "var(--navy)" }}>{h.ten}</div>
                           {isThamKhao ? (
@@ -495,12 +521,14 @@ export function B5KhachSanScreen() {
                 const isEstimated =
                   a.giaLaUocTinh || (a.doTinCay && a.doTinCay !== "xac_minh");
 
+                const actImg = getActivityImage(a.nhan?.[0], a.ten);
+
                 return (
                   <div
                     key={a.id}
                     className={`card ${isSelected ? "card-selected" : "card-hover"}`}
                     style={{
-                      padding: 18,
+                      padding: 14,
                       marginBottom: 12,
                       cursor: "pointer",
                       transition: "all 0.2s",
@@ -508,8 +536,32 @@ export function B5KhachSanScreen() {
                     }}
                     onClick={() => setSelectedId(a.id)}
                   >
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-                      <div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+                      <div
+                        style={{
+                          width: 85,
+                          height: 70,
+                          borderRadius: "var(--r-md)",
+                          overflow: "hidden",
+                          flexShrink: 0,
+                          position: "relative",
+                          border: "1px solid var(--color-border)",
+                          background: "var(--color-surface-sub)",
+                        }}
+                      >
+                        <img
+                          src={actImg.urlThumb || actImg.url}
+                          alt={actImg.alt}
+                          loading="lazy"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            display: "block",
+                          }}
+                        />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 200 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                           <span style={{ fontWeight: 700, fontSize: 16, color: "var(--navy)" }}>
                             {a.ten}

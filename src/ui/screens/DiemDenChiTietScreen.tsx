@@ -4,10 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   MapPin,
-  Compass,
   Utensils,
   Coffee,
-  Building2,
   ExternalLink,
   Send,
   Star,
@@ -17,6 +15,12 @@ import {
 import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";
 import { dinhDangTien } from "@/core/formB1";
+import {
+  getActivityImage,
+  getRestaurantImage,
+  getCafeImage,
+  getHotelImage,
+} from "@/ui/lib/imageMap";
 
 export interface DiaDiemVuiChoiItem {
   id: string;
@@ -309,48 +313,63 @@ export function DiemDenChiTietScreen({
               gap: 20,
             }}
           >
-            {hoatDongs.map((hd) => (
-              <article
-                key={hd.id}
-                style={{
-                  background: "var(--color-surface)",
-                  borderRadius: "var(--r-xl)",
-                  border: "1px solid var(--color-border)",
-                  overflow: "hidden",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.03)",
-                }}
-              >
-                <div>
-                  {/* Khung ảnh tỉ lệ cố định 16:10 với nền thay thế */}
-                  <div
-                    style={{
-                      width: "100%",
-                      aspectRatio: "16 / 10",
-                      background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderBottom: "1px solid var(--color-border)",
-                    }}
-                  >
+            {hoatDongs.map((hd) => {
+              const actImg = getActivityImage("Vui chơi", hd.ten);
+              return (
+                <article
+                  key={hd.id}
+                  style={{
+                    background: "var(--color-surface)",
+                    borderRadius: "var(--r-xl)",
+                    border: "1px solid var(--color-border)",
+                    overflow: "hidden",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.03)",
+                  }}
+                >
+                  <div>
+                    {/* Khung ảnh hoạt động thật tỉ lệ 16:10 */}
                     <div
                       style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: "var(--r-full)",
-                        background: "var(--color-surface)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.05)",
+                        position: "relative",
+                        width: "100%",
+                        aspectRatio: "16 / 10",
+                        background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
+                        overflow: "hidden",
+                        borderBottom: "1px solid var(--color-border)",
                       }}
                     >
-                      <Compass size={22} color="var(--color-primary-main)" />
+                      <img
+                        src={actImg.urlThumb || actImg.url}
+                        alt={actImg.alt || hd.ten}
+                        loading="lazy"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          bottom: 6,
+                          left: 6,
+                          padding: "2px 6px",
+                          borderRadius: "var(--r-sm)",
+                          background: "rgba(0, 0, 0, 0.65)",
+                          color: "var(--color-primary-text)",
+                          fontSize: 9,
+                          fontWeight: 600,
+                          backdropFilter: "blur(4px)",
+                          pointerEvents: "none",
+                        }}
+                      >
+                        {actImg.tacGia} · {actImg.giayPhep}
+                      </div>
                     </div>
-                  </div>
 
                   <div style={{ padding: "16px 18px 10px" }}>
                     {/* Nhãn loại nếu có */}
@@ -419,7 +438,8 @@ export function DiemDenChiTietScreen({
                   </a>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         </section>
 
@@ -516,47 +536,63 @@ export function DiemDenChiTietScreen({
                 gap: 20,
               }}
             >
-              {quanAns.map((qa) => (
-                <article
-                  key={qa.id}
-                  style={{
-                    background: "var(--color-surface)",
-                    borderRadius: "var(--r-xl)",
-                    border: "1px solid var(--color-border)",
-                    overflow: "hidden",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.03)",
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        width: "100%",
-                        aspectRatio: "16 / 10",
-                        background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderBottom: "1px solid var(--color-border)",
-                      }}
-                    >
+              {quanAns.map((qa) => {
+                const foodImg = getRestaurantImage(qa.ten, qa.amThuc);
+                return (
+                  <article
+                    key={qa.id}
+                    style={{
+                      background: "var(--color-surface)",
+                      borderRadius: "var(--r-xl)",
+                      border: "1px solid var(--color-border)",
+                      overflow: "hidden",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.03)",
+                    }}
+                  >
+                    <div>
+                      {/* Khung ảnh ẩm thực thật tỉ lệ 16:10 */}
                       <div
                         style={{
-                          width: 44,
-                          height: 44,
-                          borderRadius: "var(--r-full)",
-                          background: "var(--color-surface)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.05)",
+                          position: "relative",
+                          width: "100%",
+                          aspectRatio: "16 / 10",
+                          background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
+                          overflow: "hidden",
+                          borderBottom: "1px solid var(--color-border)",
                         }}
                       >
-                        <Utensils size={22} color="var(--color-hangMuc-anUong)" />
+                        <img
+                          src={foodImg.urlThumb || foodImg.url}
+                          alt={foodImg.alt || qa.ten}
+                          loading="lazy"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            display: "block",
+                          }}
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: 6,
+                            left: 6,
+                            padding: "2px 6px",
+                            borderRadius: "var(--r-sm)",
+                            background: "rgba(0, 0, 0, 0.65)",
+                            color: "var(--color-primary-text)",
+                            fontSize: 9,
+                            fontWeight: 600,
+                            backdropFilter: "blur(4px)",
+                            pointerEvents: "none",
+                          }}
+                        >
+                          {foodImg.tacGia} · {foodImg.giayPhep}
+                        </div>
                       </div>
-                    </div>
 
                     <div style={{ padding: "16px 18px 10px" }}>
                       {qa.amThuc && (
@@ -622,7 +658,8 @@ export function DiemDenChiTietScreen({
                     </a>
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -635,47 +672,63 @@ export function DiemDenChiTietScreen({
                 gap: 20,
               }}
             >
-              {cafes.map((cf) => (
-                <article
-                  key={cf.id}
-                  style={{
-                    background: "var(--color-surface)",
-                    borderRadius: "var(--r-xl)",
-                    border: "1px solid var(--color-border)",
-                    overflow: "hidden",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.03)",
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        width: "100%",
-                        aspectRatio: "16 / 10",
-                        background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderBottom: "1px solid var(--color-border)",
-                      }}
-                    >
+              {cafes.map((cf) => {
+                const cafeImg = getCafeImage(cf.ten);
+                return (
+                  <article
+                    key={cf.id}
+                    style={{
+                      background: "var(--color-surface)",
+                      borderRadius: "var(--r-xl)",
+                      border: "1px solid var(--color-border)",
+                      overflow: "hidden",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.03)",
+                    }}
+                  >
+                    <div>
+                      {/* Khung ảnh cà phê thật tỉ lệ 16:10 */}
                       <div
                         style={{
-                          width: 44,
-                          height: 44,
-                          borderRadius: "var(--r-full)",
-                          background: "var(--color-surface)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.05)",
+                          position: "relative",
+                          width: "100%",
+                          aspectRatio: "16 / 10",
+                          background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
+                          overflow: "hidden",
+                          borderBottom: "1px solid var(--color-border)",
                         }}
                       >
-                        <Coffee size={22} color="var(--color-primary-main)" />
+                        <img
+                          src={cafeImg.urlThumb || cafeImg.url}
+                          alt={cafeImg.alt || cf.ten}
+                          loading="lazy"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            display: "block",
+                          }}
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: 6,
+                            left: 6,
+                            padding: "2px 6px",
+                            borderRadius: "var(--r-sm)",
+                            background: "rgba(0, 0, 0, 0.65)",
+                            color: "var(--color-primary-text)",
+                            fontSize: 9,
+                            fontWeight: 600,
+                            backdropFilter: "blur(4px)",
+                            pointerEvents: "none",
+                          }}
+                        >
+                          {cafeImg.tacGia} · {cafeImg.giayPhep}
+                        </div>
                       </div>
-                    </div>
 
                     <div style={{ padding: "16px 18px 10px" }}>
                       <h3
@@ -724,7 +777,8 @@ export function DiemDenChiTietScreen({
                     </a>
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>
@@ -777,47 +831,63 @@ export function DiemDenChiTietScreen({
               gap: 20,
             }}
           >
-            {khachSans.map((ks) => (
-              <article
-                key={ks.id}
-                style={{
-                  background: "var(--color-surface)",
-                  borderRadius: "var(--r-xl)",
-                  border: "1px solid var(--color-border)",
-                  overflow: "hidden",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.03)",
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      width: "100%",
-                      aspectRatio: "16 / 10",
-                      background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderBottom: "1px solid var(--color-border)",
-                    }}
-                  >
+            {khachSans.map((ks) => {
+              const hotelImg = getHotelImage(ks.soSao, ks.ten, ten);
+              return (
+                <article
+                  key={ks.id}
+                  style={{
+                    background: "var(--color-surface)",
+                    borderRadius: "var(--r-xl)",
+                    border: "1px solid var(--color-border)",
+                    overflow: "hidden",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.03)",
+                  }}
+                >
+                  <div>
+                    {/* Khung ảnh khách sạn thật tỉ lệ 16:10 */}
                     <div
                       style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: "var(--r-full)",
-                        background: "var(--color-surface)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.05)",
+                        position: "relative",
+                        width: "100%",
+                        aspectRatio: "16 / 10",
+                        background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
+                        overflow: "hidden",
+                        borderBottom: "1px solid var(--color-border)",
                       }}
                     >
-                      <Building2 size={22} color="var(--color-primary-main)" />
+                      <img
+                        src={hotelImg.urlThumb || hotelImg.url}
+                        alt={hotelImg.alt || ks.ten}
+                        loading="lazy"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          bottom: 6,
+                          left: 6,
+                          padding: "2px 6px",
+                          borderRadius: "var(--r-sm)",
+                          background: "rgba(0, 0, 0, 0.65)",
+                          color: "var(--color-primary-text)",
+                          fontSize: 9,
+                          fontWeight: 600,
+                          backdropFilter: "blur(4px)",
+                          pointerEvents: "none",
+                        }}
+                      >
+                        {hotelImg.tacGia} · {hotelImg.giayPhep}
+                      </div>
                     </div>
-                  </div>
 
                   <div style={{ padding: "16px 18px 10px" }}>
                     <div
@@ -902,7 +972,8 @@ export function DiemDenChiTietScreen({
                   </Link>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         </section>
 
