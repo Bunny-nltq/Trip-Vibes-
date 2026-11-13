@@ -46,6 +46,10 @@ next-env.d.ts
 /.cache/
 eval/.cache
 /scratch/
+/docs/screens/
+/docs/bang-chung/**/*.png
+/docs/bang-chung/**/*.txt
+/docs/bang-chung/**/*.json
 
 # private bills
 eval/bills-real/

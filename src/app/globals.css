@@ -3,7 +3,7 @@
 @import "./tokens.css";
 
 :root {
-  --v4-scene: url('/coastal-journey-v3.png');
+  --v4-scene: url('../design/assets/coastal-journey-v3.png');
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

@@ -1,2 +1,0 @@
-gop-nhanh : LOI (xung dot tai docs/bang-chung/dem/TIEN-DO.md)
-TONG: LOI
