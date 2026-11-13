@@ -1,0 +1,3 @@
+import type {z} from "zod";
+import {AccommodationTypeSchema} from "@/contracts";
+export function accommodationType(tags:Record<string,string|undefined>):z.infer<typeof AccommodationTypeSchema>{const tourism=tags.tourism;if(tags.resort==="yes"||tags["hotel:type"]==="resort")return "resort";if(tags.building==="villa"&&["chalet","guest_house","hotel"].includes(tourism||""))return "villa";if(tourism==="hotel")return "hotel";if(tourism==="resort")return "resort";if(tourism==="villa")return "villa";if(tourism==="apartment")return "apartment";if(tourism==="guest_house")return "guest_house";if(tags.homestay==="yes")return "homestay";return "unknown";}

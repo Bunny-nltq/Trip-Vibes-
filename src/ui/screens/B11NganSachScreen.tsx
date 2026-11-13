@@ -53,37 +53,7 @@ export function B11NganSachScreen() {
     return gomDiaDiemTheoNgay(plan);
   }, [plan]);
 
-  // Hỗ trợ mock state cho chụp ảnh màn hình / demo (chỉ trong môi trường development)
-  const effectiveLedger = useMemo(() => {
-    if (typeof window === "undefined" || process.env.NODE_ENV !== "development") return ledger;
-    const params = new URLSearchParams(window.location.search);
-    const mockState = params.get("state");
-    if (mockState === "binh_thuong" || mockState === "lech_ngan_sach") {
-      const s1: Expense[] = [
-        { id: "e1", nguon: "anh_bill", tenCuaHang: "Cơm gà Bà Buội", ngay: "2026-06-01", ngayTrongChuyen: 1, hangMuc: "an_uong", soTienVND: 560000, giaTriAIDoc: 560000, daSuaTay: false, ghiChu: null },
-        { id: "e2", nguon: "anh_bill", tenCuaHang: "Trà sữa Góc Phố", ngay: "2026-06-01", ngayTrongChuyen: 1, hangMuc: "an_uong", soTienVND: 108000, giaTriAIDoc: 108000, daSuaTay: false, ghiChu: null },
-        { id: "e3", nguon: "anh_bill", tenCuaHang: "Vé thắng cảnh Sơn Thủy", ngay: "2026-06-02", ngayTrongChuyen: 2, hangMuc: "vui_choi", soTienVND: 80000, giaTriAIDoc: 80000, daSuaTay: false, ghiChu: null },
-        { id: "e4", nguon: "nhap_tay", tenCuaHang: "Vé phố cổ Hội An", ngay: "2026-06-02", ngayTrongChuyen: 2, hangMuc: "vui_choi", soTienVND: 240000, giaTriAIDoc: null, daSuaTay: false, ghiChu: null },
-        { id: "e5", nguon: "anh_bill", tenCuaHang: "Quán Ăn Phố Cổ", ngay: "2026-06-02", ngayTrongChuyen: 2, hangMuc: "an_uong", soTienVND: 308000, giaTriAIDoc: 300000, daSuaTay: true, ghiChu: null },
-      ];
-      if (mockState === "lech_ngan_sach") {
-        s1.push({
-          id: "e6",
-          nguon: "nhap_tay",
-          tenCuaHang: "Show Ký Ức Hội An (vé VIP)",
-          ngay: "2026-06-02",
-          ngayTrongChuyen: 2,
-          hangMuc: "vui_choi",
-          soTienVND: 900000,
-          giaTriAIDoc: null,
-          daSuaTay: false,
-          ghiChu: null,
-        });
-      }
-      return { schemaVersion: 6, expenses: s1 };
-    }
-    return ledger;
-  }, [ledger]);
+  const effectiveLedger=ledger;
 
   // Mặc định ngày lớn nhất có khoản chi hoặc có địa điểm đã tick
   const initialDenHetNgay = useMemo(() => {
@@ -161,63 +131,6 @@ export function B11NganSachScreen() {
     if (deletingExpense) {
       deleteExpenseFromLedger(deletingExpense.id);
       setDeletingExpense(null);
-    }
-  };
-
-  const handleNapChiTieuMau = () => {
-    const today = new Date().toISOString().slice(0, 10);
-    const sampleExpenses: Expense[] = [
-      {
-        id: `exp_mau_${Date.now()}_1`,
-        nguon: "anh_bill",
-        tenCuaHang: "Cơm gà & Ẩm thực truyền thống",
-        ngay: today,
-        ngayTrongChuyen: 1,
-        hangMuc: "an_uong",
-        soTienVND: 420_000,
-        giaTriAIDoc: 420_000,
-        daSuaTay: false,
-        ghiChu: "Bữa trưa ngày 1 bóc tách từ hóa đơn",
-      },
-      {
-        id: `exp_mau_${Date.now()}_2`,
-        nguon: "nhap_tay",
-        tenCuaHang: "Vé tham quan danh lam thắng cảnh",
-        ngay: today,
-        ngayTrongChuyen: 1,
-        hangMuc: "vui_choi",
-        soTienVND: 160_000,
-        giaTriAIDoc: null,
-        daSuaTay: false,
-        ghiChu: "2 vé vào cổng",
-      },
-      {
-        id: `exp_mau_${Date.now()}_3`,
-        nguon: "anh_bill",
-        tenCuaHang: "Cà phê & Trà ngắm phố",
-        ngay: today,
-        ngayTrongChuyen: 2,
-        hangMuc: "an_uong",
-        soTienVND: 95_000,
-        giaTriAIDoc: 95_000,
-        daSuaTay: false,
-        ghiChu: null,
-      },
-      {
-        id: `exp_mau_${Date.now()}_4`,
-        nguon: "anh_bill",
-        tenCuaHang: "Hải sản / Bữa tối",
-        ngay: today,
-        ngayTrongChuyen: 2,
-        hangMuc: "an_uong",
-        soTienVND: 650_000,
-        giaTriAIDoc: 600_000,
-        daSuaTay: true,
-        ghiChu: "Đã sửa số tiền sau khi đối chiếu hóa đơn",
-      },
-    ];
-    for (const exp of sampleExpenses) {
-      addExpenseToLedger(exp);
     }
   };
 
@@ -338,12 +251,12 @@ export function B11NganSachScreen() {
     );
   }
 
-  const nganSachTongVND = comparison.datTruocVND + comparison.conLaiVND + comparison.thucTeTongVND;
+  const nganSachTongVND = comparison.nganSachVND;
 
   return (
     <div className="MainWide" style={{ width: "100%", padding: "0 0 40px" }}>
       {/* Ba tab Nhật ký chuyến đi: Hành trình, Chi tiêu, Ngân sách */}
-      <NhatKyTabBar activeTab="ngan-sach" />
+
 
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
@@ -364,10 +277,6 @@ export function B11NganSachScreen() {
             <div className="stat-num" style={{ color: "var(--navy)" }}>{fmt(nganSachTongVND)}</div>
           </div>
           <div className="stat">
-            <div className="stat-label">Đã đặt trước</div>
-            <div className="stat-num" style={{ color: "var(--p500)" }}>{fmt(comparison.datTruocVND)}</div>
-          </div>
-          <div className="stat">
             <div className="stat-label">Đã chi thực tế</div>
             <div className="stat-num" style={{ color: "var(--warning)" }}>{fmt(comparison.thucTeTongVND)}</div>
           </div>
@@ -382,6 +291,8 @@ export function B11NganSachScreen() {
           </div>
         </div>
 
+        <p className="Sub">Vé và phòng chỉ được coi là đã chi khi bạn ghi khoản thanh toán. Dự báo là ước tính; các điểm chưa có giá chưa được tính đủ.</p>
+        <details><summary>Xem dự toán theo phần giá đã biết</summary>
         {/* Forecast Card */}
         {comparison.duBao.trangThai === "du" ? (
           <div
@@ -398,11 +309,11 @@ export function B11NganSachScreen() {
           >
             <CheckCircle size={22} style={{ color: "var(--color-success-text)", flexShrink: 0 }} />
             <div style={{ fontSize: 14, color: "var(--navy)" }}>
-              <span style={{ fontWeight: 700 }}>Ngày còn lại:</span> Kế hoạch chi{" "}
+              <span style={{ fontWeight: 700 }}>Dự toán còn lại (gồm vé/phòng chưa đối chiếu):</span> Kế hoạch chi{" "}
               {fmt(comparison.duBao.keHoachNgayConLaiVND)}, ngân sách hiện còn{" "}
               {fmt(comparison.duBao.conLaiSauChiTieuVND)}. &nbsp;
               <span style={{ color: "var(--color-success-text)", fontWeight: 700 }}>
-                Ngân sách đủ, dự kiến dư {fmt(comparison.duBao.chenhDuBaoVND)}.
+                Chênh lệch theo các giá đã biết: còn {fmt(comparison.duBao.chenhDuBaoVND)}.
               </span>
             </div>
           </div>
@@ -419,7 +330,7 @@ export function B11NganSachScreen() {
           >
             <AlertTriangle size={22} style={{ color: "var(--color-warning-text)", flexShrink: 0 }} />
             <div style={{ fontSize: 14, color: "var(--navy)" }}>
-              <span style={{ fontWeight: 700 }}>Ngày còn lại:</span> Kế hoạch chi{" "}
+              <span style={{ fontWeight: 700 }}>Dự toán còn lại (gồm vé/phòng chưa đối chiếu):</span> Kế hoạch chi{" "}
               {fmt(comparison.duBao.keHoachNgayConLaiVND)}, còn lại{" "}
               {fmt(comparison.duBao.conLaiSauChiTieuVND)}. &nbsp;
               <span style={{ color: "var(--color-warning-text)", fontWeight: 700 }}>
@@ -429,6 +340,8 @@ export function B11NganSachScreen() {
           </div>
         )}
 
+        </details>
+        {effectiveLedger.expenses.length>0&&<>
         {/* Day selector & Compare table */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
           <div className="section-title" style={{ margin: 0 }}>Bảng đối chiếu hạng mục</div>
@@ -533,6 +446,7 @@ export function B11NganSachScreen() {
           </table>
         </div>
 
+        </>}
         {/* Danh sách khoản chi */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
           <div className="section-title" style={{ margin: 0 }}>Các khoản chi ({effectiveLedger.expenses.length})</div>
@@ -555,15 +469,7 @@ export function B11NganSachScreen() {
                 <Plus size={16} />
                 Thêm chi tiêu đầu tiên
               </button>
-              <button
-                type="button"
-                className="btn btn-outline"
-                onClick={handleNapChiTieuMau}
-                style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-              >
-                <Sparkles size={16} />
-                Nạp chi tiêu mẫu để xem đối chiếu
-              </button>
+
             </div>
           </div>
         ) : (

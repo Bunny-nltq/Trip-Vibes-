@@ -1,3 +1,5 @@
+import {isDiningVenue, uniqueNamedOsmVenues} from "./venueDiscovery";
+import {budgetIncludingReserve, spendingLimit} from "./travelRequest";
 /**
  * src/core/lapKeHoachTuDong.ts
  *
@@ -20,6 +22,7 @@ import { buildPlan } from "./buildPlan";
 import { lapOTrong } from "./lapOTrong";
 import {
   DU_TRU_HOAT_DONG_TI_LE,
+  ECONOMY_COMBO_LIMIT,
   AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA,
   NGUOI_MOI_PHONG,
 } from "./assumptions";
@@ -70,7 +73,7 @@ export function lapKeHoachTuDong(
     hotels: ungVien.hotels ?? [],
     activities: ungVien.activities ?? [],
     khachSans: ungVien.khachSans,
-    quanAns: ungVien.quanAns,
+    quanAns: ungVien.quanAns?.filter(isDiningVenue),
     cafes: ungVien.cafes,
     hoatDongs: ungVien.hoatDongs,
   };
@@ -79,7 +82,7 @@ export function lapKeHoachTuDong(
   const minBudgetRes = tinhNganSachToiThieu(currentRequest, planData);
 
   // Ngân sách nhỏ hơn mức tối thiểu hoặc không khả thi
-  if (!minBudgetRes.khaThi) {
+  if (!minBudgetRes.khaThi && (currentRequest.reservePercent !== undefined || minBudgetRes.lyDo !== "ngan_sach_khong_du")) {
     return {
       status: "khong_the_dat_ngan_sach",
       khaThi: false,
@@ -125,7 +128,7 @@ export function lapKeHoachTuDong(
 
   const soNguoi = currentRequest.soNguoi ?? 2;
   const soPhong = Math.ceil(soNguoi / NGUOI_MOI_PHONG);
-  const ngansachTongVND = currentRequest.ngansachTongVND ?? 0;
+  const ngansachTongVND = spendingLimit(currentRequest);
   const nguongDuTru =
     ngansachTongVND > 0
       ? ngansachTongVND * (1 - DU_TRU_HOAT_DONG_TI_LE)
@@ -146,9 +149,10 @@ export function lapKeHoachTuDong(
     const depDi = parseTimeToMinutes(tDi.departureTime);
     const gioDenTuyetDoi = depDi + tDi.durationMinutes;
     const soDem = soDemOKhachSan(soNgay, gioDenTuyetDoi);
-    if (soDem < 1) continue;
+    if (soDem < 1 && soNgay > 1) continue;
 
     for (const tVe of validVe) {
+      if (soNgay === 1 && gioDenTuyetDoi >= parseTimeToMinutes(tVe.departureTime)) continue;
       for (const hotel of hotelList) {
         const giaDem = getHotelPricePerNight(hotel);
         const chiPhiCoDinh =
@@ -212,68 +216,127 @@ export function lapKeHoachTuDong(
     }
   }
 
-  if (!selectedCombo) {
+  const cheapestCombos = [...combos].sort((a, b) =>
+    a.chiPhiCoDinh - b.chiPhiCoDinh || a.thoiLuong - b.thoiLuong
+  );
+  const cheapestMeal = (planData.quanAns ?? [])
+    .filter(place => place.giaUocTinhNguoi != null)
+    .reduce<NonNullable<PlanData["quanAns"]>[number] | undefined>((best, place) =>
+      !best || place.giaUocTinhNguoi! < best.giaUocTinhNguoi! ? place : best, undefined);
+  const mealId = cheapestMeal?.id ?? null;
+  const meals = planData.quanAns ?? [];
+  const notes = request.ghiChu.join(" ");
+  const wantsCafe = /cà phê|cafe|coffee|chill/i.test(notes);
+  const wantsLakesideCafe = wantsCafe && /bờ hồ|ven hồ|gần hồ|view hồ/i.test(notes);
+  const cafes = [...(planData.cafes ?? [])];
+  if (wantsLakesideCafe) {
+    const lakeMatch = (place: (typeof cafes)[number]) =>
+      /ven hồ|bờ hồ|hồ tây|hồ trúc bạch|bờ kè trúc bạch|hồ hoàn kiếm/i.test(`${place.ten} ${place.diaChi ?? ""}`);
+    cafes.sort((a, b) => Number(lakeMatch(b)) - Number(lakeMatch(a)));
+  }
+
+  function makeSelection(combo: (typeof combos)[number], economy: boolean): Selection {
+    return {
+      transportDiId: combo.tDi.id,
+      transportVeId: combo.tVe.id,
+      hotelId: combo.hotel.id,
+      hoatDongTheoNgay: Array.from({ length: soNgay }, () => []),
+      buaAnTheoNgay: Array.from({ length: soNgay }, (_, day) => ({
+        trua: economy ? mealId : meals[(day * 2) % meals.length]?.id ?? null,
+        toi: economy ? mealId : meals[(day * 2 + 1) % meals.length]?.id ?? null,
+        cafe: !economy && (wantsCafe || request.travelDates) ? cafes[day % cafes.length]?.id ?? null : null,
+      })),
+    };
+  }
+
+  const preferred = selectedCombo ? makeSelection(selectedCombo, false) : null;
+  const preferredBuild = preferred ? buildPlan(currentRequest, preferred, planData) : null;
+  let base = preferred && preferredBuild?.ok && preferredBuild.plan.tongKet.tongVND <= ngansachTongVND
+    ? { selection: preferred, plan: preferredBuild.plan }
+    : null;
+  let lowestEstimate = Infinity;
+  if (!base) {
+    for (const combo of cheapestCombos.slice(0, ECONOMY_COMBO_LIMIT)) {
+      const selection = makeSelection(combo, true);
+      const built = buildPlan(currentRequest, selection, planData);
+      if (!built.ok) continue;
+      const cost = built.plan.tongKet.tongVND;
+      if (cost >= lowestEstimate) continue;
+      lowestEstimate = cost;
+      if (cost <= ngansachTongVND) base = { selection, plan: built.plan };
+    }
+  }
+
+  if (!base) {
     return {
       status: "khong_the_dat_ngan_sach",
       khaThi: false,
-      toiThieuVND: minBudgetRes.toiThieuVND,
+      toiThieuVND: Number.isFinite(lowestEstimate)
+        ? budgetIncludingReserve(lowestEstimate, currentRequest.reservePercent)
+        : minBudgetRes.toiThieuVND,
       lyDo: minBudgetRes.lyDo ?? "ngan_sach_khong_du",
     };
   }
 
-  // 4. Khởi tạo Selection cơ bản từ combo được chọn
-  const hoatDongTheoNgay: string[][] = Array.from({ length: soNgay }, () => []);
-  const baseSelection: Selection = {
-    transportDiId: selectedCombo.tDi.id,
-    transportVeId: selectedCombo.tVe.id,
-    hotelId: selectedCombo.hotel.id,
-    hoatDongTheoNgay,
-  };
-
-  // 5. Xây dựng kế hoạch nền để xác định số tiền còn lại
-  const baseBuild = buildPlan(currentRequest, baseSelection, planData);
-  if (!baseBuild.ok) {
-    return {
-      status: "khong_the_dat_ngan_sach",
-      khaThi: false,
-      toiThieuVND: minBudgetRes.toiThieuVND,
-      lyDo: baseBuild.loi.join("; "),
-    };
+  if ((wantsCafe || request.travelDates) && cafes.length && !base.plan.items.some(item => item.experienceType === "cafe")) {
+    const firstCafe = cafes[0];
+    for (let day = 0; day < soNgay; day++) {
+      const selection: Selection = {
+        ...base.selection,
+        buaAnTheoNgay: base.selection.buaAnTheoNgay?.map((meal, index) =>
+          index === day ? { ...meal, cafe: firstCafe.id } : meal
+        ),
+      };
+      const built = buildPlan(currentRequest, selection, planData);
+      if (built.ok && built.plan.tongKet.tongVND <= ngansachTongVND &&
+          built.plan.items.some(item => item.experienceType === "cafe")) {
+        base = { selection, plan: built.plan };
+        break;
+      }
+    }
   }
 
-  // 6. Lấp hoạt động bằng lapOTrong với ngân sách còn lại
-  const availableActivities =
-    planData.hoatDongs && planData.hoatDongs.length > 0
-      ? planData.hoatDongs
-      : planData.activities;
-
+  const availableActivities = uniqueNamedOsmVenues<PlanData["activities"][number] | NonNullable<PlanData["hoatDongs"]>[number]>(
+    planData.hoatDongs?.length ? planData.hoatDongs : planData.activities
+  );
   const lapRes = lapOTrong(
-    baseSelection,
-    baseBuild.plan,
+    base.selection,
+    base.plan,
     availableActivities,
     currentRequest,
     planData.transports
   );
-
-  const finalSelection = lapRes.selection;
-  const finalBuild = buildPlan(currentRequest, finalSelection, planData);
-
-  if (!finalBuild.ok) {
-    return {
-      status: "khong_the_dat_ngan_sach",
-      khaThi: false,
-      toiThieuVND: minBudgetRes.toiThieuVND,
-      lyDo: finalBuild.loi.join("; "),
+  // Tính lại cả di chuyển nội vùng. Khi vượt trần, giữ phần đầu của các hoạt động
+  // đã xếp rồi thử lại với số điểm giảm dần.
+  let finalSelection = base.selection;
+  let plan = base.plan;
+  const activityCount = lapRes.selection.hoatDongTheoNgay.flat().length;
+  let kept = activityCount;
+  while (kept > 0) {
+    let slots = kept;
+    const selection: Selection = {
+      ...lapRes.selection,
+      hoatDongTheoNgay: lapRes.selection.hoatDongTheoNgay.map(day => {
+        const items = day.slice(0, slots);
+        slots -= items.length;
+        return items;
+      }),
     };
+    const built = buildPlan(currentRequest, selection, planData);
+    if (built.ok && built.plan.tongKet.tongVND <= ngansachTongVND) {
+      finalSelection = selection;
+      plan = built.plan;
+      break;
+    }
+    kept = Math.floor(kept / 2);
   }
-
-  const plan = finalBuild.plan;
   const canhBao = [...plan.canhBao];
   for (const cb of lapRes.canhBao) {
     if (!canhBao.includes(cb)) {
       canhBao.push(cb);
     }
   }
+  if (kept < activityCount) canhBao.push("Đã giảm hoạt động tùy chọn để giữ chi phí trong ngân sách.");
   plan.canhBao = canhBao;
 
   const theoHangMuc = {
@@ -291,7 +354,10 @@ export function lapKeHoachTuDong(
     plan,
     tongVND: plan.tongKet.tongVND,
     theoHangMuc,
-    toiThieuVND: minBudgetRes.toiThieuVND,
+    toiThieuVND: Math.min(
+      minBudgetRes.toiThieuVND,
+      budgetIncludingReserve(base.plan.tongKet.tongVND, currentRequest.reservePercent)
+    ),
     canhBao,
   };
 }

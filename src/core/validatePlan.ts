@@ -1,6 +1,7 @@
+import {spendingLimit} from "./travelRequest";
 import type { TripRequest, Plan } from "@/contracts";
 import type { PlanData } from "./buildPlan";
-import { calculateTransportFlags } from "./flags";
+import { localRouteWarnings,calculateTransportFlags } from "./flags";
 import { GIO_HOAT_DONG_1, GIO_HOAT_DONG_2, GIO_NHAN_PHONG, BUFFER_RA_BEN_PHUT, BUFFER_GIUA_HOAT_DONG_PHUT, NGUONG_GAN_HET_NGAN_SACH_PHAN_TRAM, DANH_SACH_MA_CANH_BAO } from "./assumptions";
 import { coCanhBaoDiChuyen, tiLeThoiGianDiChuyen } from "./tiLeDiChuyen";
 import { tinhOKhaDungTheoNgay } from "./oKhaDung";
@@ -38,8 +39,9 @@ export function validatePlan(
   const hard: Violation[] = [];
   const soft: Violation[] = [];
 
+  for(const warning of localRouteWarnings(plan.items))soft.push({code:"local_travel_review",chiTiet:warning});
   const { tongKet } = plan;
-  const ngansach = request.ngansachTongVND ?? 0;
+  const ngansach = spendingLimit(request);
 
   // 1. vuot_ngan_sach
   if (ngansach > 0 && tongKet.tongVND > ngansach) {
@@ -69,8 +71,8 @@ export function validatePlan(
   }
 
   // 2. Vi phạm điều cần tránh trên phương tiện
-  const tDiItem = plan.items.find((i) => i.hangMuc === "Di chuyển" && i.ngay === 1);
-  const tVeItem = plan.items.find((i) => i.hangMuc === "Di chuyển" && i.ngay === request.soNgay);
+  const tDiItem = plan.items.find((i) => i.hangMuc === "Di chuyển" && data.transports.some(t=>t.id===i.refId&&t.huong==="di"));
+  const tVeItem = plan.items.find((i) => i.hangMuc === "Di chuyển" && data.transports.some(t=>t.id===i.refId&&t.huong==="ve"));
 
   const tDi = data.transports.find((t) => t.id === tDiItem?.refId);
   const tVe = data.transports.find((t) => t.id === tVeItem?.refId);
@@ -85,7 +87,7 @@ export function validatePlan(
     if (flagsDi.gioDen < GIO_NHAN_PHONG) {
       soft.push({
         code: "den_truoc_gio_nhan_phong",
-        chiTiet: `Giờ đến (${min2hhmm(gioDenDiPhut)}) sớm hơn giờ nhận phòng (${GIO_NHAN_PHONG}).`,
+        chiTiet: `Giờ đến (${flagsDi.gioDen}) sớm hơn giờ nhận phòng (${GIO_NHAN_PHONG}).`,
       });
     }
 
@@ -111,7 +113,7 @@ export function validatePlan(
   if (tVe) {
     // soft: ve_den_ngay_sau
     const depVePhut = timeToMinutes(tVe.departureTime);
-    if (depVePhut + tVe.durationMinutes >= 1440) {
+    if (!request.travelDates && depVePhut + tVe.durationMinutes >= 1440) {
       soft.push({
         code: "ve_den_ngay_sau",
         chiTiet: `Chuyến về đến nơi vào ngày hôm sau.`,
@@ -151,6 +153,8 @@ export function validatePlan(
       });
     }
   }
+
+  if(tVe&&request.travelDates){const arrival=calculateTransportFlags(tVe.departureTime,tVe.durationMinutes);if(arrival.soNgayLech>0)soft.push({code:"chang_ve_qua_dem",chiTiet:`Chặng về dự kiến đến lúc ${arrival.gioDen}, sau ngày khởi hành chặng về ${arrival.soNgayLech} ngày. Nếu cần về nhà trong ngày đã chọn, hãy chọn chặng về sớm hơn hoặc phương tiện khác.`,duLieu:{soNgayLech:arrival.soNgayLech,gioDen:arrival.gioDen}});}
 
   // 3. Vi phạm điều cần tránh trên hoạt động và ràng buộc thời gian
   const hoatDongTheoNgay: Array<Array<{ act: any; gioThucTe: string }>> = 
@@ -254,7 +258,7 @@ export function validatePlan(
     const tongGio = Math.round((tongPhutDiChuyen / 60) * 10) / 10;
     soft.push({
       code: "di_chuyen_chiem_nhieu_thoi_gian",
-      chiTiet: `Di chuyển chiếm khoảng ${phanTram.toFixed(1).replace(".", ",")}% thời gian chuyến đi (${tongGio} giờ). Bạn có thể tăng ngân sách để đi nhanh hơn hoặc giảm số ngày.`,
+      chiTiet: `Di chuyển chiếm khoảng ${phanTram.toFixed(1).replace(".", ",")}% thời gian chuyến đi (${tongGio} giờ). Bạn có thể tăng ngân sách để đi nhanh hơn hoặc tăng thời gian chuyến đi.`,
       duLieu: {
         tiLe: phanTram,
         tongPhut: tongPhutDiChuyen,

@@ -1,0 +1,7 @@
+import {describe,it,expect} from "vitest";import {GET} from "../places/route";import {VenueCatalogResultSchema} from "@/contracts";
+describe("Domestic venue API",()=>{
+it("filters exact lodging types and returns verified source information",async()=>{const response=await GET(new Request("http://localhost/api/places?city=Hoi%20An&type=resort"));expect(response.status).toBe(200);const data=VenueCatalogResultSchema.parse(await response.json());expect(data.places.length).toBeGreaterThan(0);expect(data.places.every(p=>p.type==="resort"&&p.city==="Hội An"&&p.verifiedSource)).toBe(true);});
+it("provides city diversity and bounded pagination for home discovery",async()=>{const data=await(await GET(new Request("http://localhost/api/places?type=cafe&limit=4"))).json();expect(data.places).toHaveLength(4);expect(new Set(data.places.map((p:{city:string})=>p.city)).size).toBe(4);expect(data.offset).toBe(0);});
+it("distinguishes museum results from restaurants and lodging",async()=>{const data=await(await GET(new Request("http://localhost/api/places?type=museum&query=bao"))).json();expect(data.total).toBeGreaterThan(0);expect(data.places.every((p:{type:string})=>p.type==="museum")).toBe(true);});
+it("rejects unsupported filters and excessive page sizes",async()=>{expect((await GET(new Request("http://localhost/api/places?type=fabricated-google-rating"))).status).toBe(400);expect((await GET(new Request("http://localhost/api/places?limit=10000"))).status).toBe(400);});
+});

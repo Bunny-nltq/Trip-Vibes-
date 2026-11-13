@@ -1,254 +1,30 @@
 "use client";
-import React from "react";
 import Image from "next/image";
+import {getDestinationImage} from "@/ui/lib/imageMap";
 import Link from "next/link";
-import { MapPin, ArrowRight, Plane } from "lucide-react";
-
+import { MapPin, ArrowRight } from "lucide-react";
+import styles from "./Public.module.css";
 export interface HinhAnhGhiCong {
-  url: string;
-  urlThumb?: string;
-  alt?: string;
-  diaDanh?: string;
-  tacGia: string;
-  nguon: string;
-  giayPhep: string;
-  linkGoc: string;
-  linkGiayPhep?: string;
+    url: string;
+    urlThumb?: string;
+    alt?: string;
+    diaDanh?: string;
+    tacGia: string;
+    nguon: string;
+    giayPhep: string;
+    linkGoc: string;
+    linkGiayPhep?: string;
 }
-
 export interface DiemDenThe {
-  id: string;
-  slug: string;
-  ten: string;
-  quocGia: string;
-  ngayDuLieuFormatted: string; // dd/mm/yyyy
-  moTaNgan?: string;
-  hinhAnh?: HinhAnhGhiCong;
+    id: string;
+    slug: string;
+    ten: string;
+    quocGia: string;
+    ngayDuLieuFormatted: string;
+    moTaNgan?: string;
+    hinhAnh?: HinhAnhGhiCong;
 }
-
 export interface ThuDiemDenProps {
-  diemDens: DiemDenThe[];
+    diemDens: DiemDenThe[];
 }
-
-export function ThuDiemDen({ diemDens }: ThuDiemDenProps) {
-  if (!diemDens || diemDens.length === 0) {
-    return null;
-  }
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        gap: 24,
-        margin: "0 auto",
-        maxWidth: 1200,
-      }}
-    >
-      {diemDens.map((d) => (
-        <article
-          key={d.slug}
-          style={{
-            flex: "1 1 320px",
-            maxWidth: 380,
-            minWidth: 280,
-            background: "var(--color-surface)",
-            borderRadius: "var(--r-xl)",
-            border: "1px solid var(--color-border)",
-            overflow: "hidden",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            boxShadow: "0 4px 16px rgba(0, 0, 0, 0.04)",
-            transition: "all 0.2s ease",
-          }}
-        >
-          <div>
-            {/* Khung ảnh tỉ lệ cố định 16:10, có ảnh thật hoặc nền gradient thay thế */}
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                aspectRatio: "16 / 10",
-                background: "linear-gradient(135deg, var(--color-primary-tint) 0%, var(--color-surface-sub) 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderBottom: "1px solid var(--color-border)",
-                overflow: "hidden",
-              }}
-            >
-              {d.hinhAnh ? (
-                // unoptimized: ảnh Wikimedia Commons được trình duyệt tải trực tiếp (máy chủ Next không nhúng
-                // lại được vì Wikimedia chặn tải tự động); vẫn có lazy-load và kích thước cố định.
-                <Image
-                  src={d.hinhAnh.urlThumb || d.hinhAnh.url}
-                  alt={d.hinhAnh.alt || d.ten}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 400px"
-                  unoptimized
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <div
-                  style={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: "var(--r-full)",
-                    background: "var(--color-surface)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-                  }}
-                >
-                  <MapPin size={28} color="var(--color-primary-main)" />
-                </div>
-              )}
-
-              {/* Dòng ghi công bản quyền ảnh góc dưới */}
-              {d.hinhAnh && (
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: 6,
-                    left: 8,
-                    fontSize: 10,
-                    fontWeight: 500,
-                    color: "var(--color-primary-text)",
-                    background: "rgba(0, 0, 0, 0.65)",
-                    padding: "2px 8px",
-                    borderRadius: "var(--r-sm)",
-                    zIndex: 2,
-                    maxWidth: "calc(100% - 16px)",
-                    lineHeight: 1.4,
-                  }}
-                >
-                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>
-                    Ảnh:{" "}
-                    <a
-                      href={d.hinhAnh.linkGoc}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: "inherit", textDecoration: "underline" }}
-                    >
-                      {d.hinhAnh.tacGia}
-                    </a>{" "}
-                    ({d.hinhAnh.giayPhep})
-                  </span>
-                </div>
-              )}
-
-              {/* Huy hiệu quốc gia */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: 12,
-                  right: 12,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 4,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "var(--color-primary-main)",
-                  background: "var(--color-surface)",
-                  padding: "4px 10px",
-                  borderRadius: "var(--r-full)",
-                  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.12)",
-                  zIndex: 2,
-                }}
-              >
-                <span>{d.quocGia}</span>
-              </div>
-            </div>
-
-            {/* Thông tin tên và mô tả */}
-            <div style={{ padding: "20px 20px 12px" }}>
-              <h3
-                style={{
-                  fontSize: 20,
-                  fontWeight: 800,
-                  color: "var(--color-text)",
-                  marginBottom: 8,
-                  lineHeight: 1.3,
-                }}
-              >
-                {d.ten}
-              </h3>
-
-              {d.moTaNgan && (
-                <p
-                  style={{
-                    fontSize: 14,
-                    color: "var(--color-text-sub)",
-                    lineHeight: 1.6,
-                    margin: 0,
-                  }}
-                >
-                  {d.moTaNgan}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Nút thao tác: Xem chi tiết & Lên kế hoạch ngay */}
-          <div
-            style={{
-              padding: "16px 20px 20px",
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 10,
-            }}
-          >
-            <Link
-              href={`/diem-den/${d.slug}`}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 6,
-                height: 40,
-                borderRadius: "var(--r-md)",
-                background: "var(--color-surface-sub)",
-                color: "var(--color-text)",
-                border: "1px solid var(--color-border)",
-                fontSize: 13,
-                fontWeight: 600,
-                textDecoration: "none",
-                transition: "all 0.15s ease",
-              }}
-            >
-              <span>Chi tiết</span>
-              <ArrowRight size={14} />
-            </Link>
-
-            <Link
-              href={`/lap-ke-hoach?den=${encodeURIComponent(d.ten)}`}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 6,
-                height: 40,
-                borderRadius: "var(--r-md)",
-                background: "var(--color-primary-main)",
-                color: "var(--color-primary-text)",
-                fontSize: 13,
-                fontWeight: 700,
-                textDecoration: "none",
-                boxShadow: "0 2px 8px rgba(43, 85, 214, 0.2)",
-                transition: "all 0.15s ease",
-              }}
-            >
-              <Plane size={14} />
-              <span>Lập kế hoạch</span>
-            </Link>
-          </div>
-        </article>
-      ))}
-    </div>
-  );
-}
+export function ThuDiemDen({ diemDens }: ThuDiemDenProps) { return <div className={`${styles.grid} ${styles.destinations}`}>{diemDens.map(destination => <article key={destination.slug} className={styles.card}><div className={styles.photo}>{<Image src={getDestinationImage(destination.ten).urlThumb} alt={getDestinationImage(destination.ten).alt} onError={event=>{event.currentTarget.src=getDestinationImage().url;event.currentTarget.srcset="";}} fill sizes="(max-width:600px) 100vw, 400px" unoptimized/>}</div><div className={styles.body}><span className={styles.tag}><MapPin size={14}/>{destination.quocGia}</span><h3>{destination.ten}</h3><p className={styles.muted}>{destination.moTaNgan}</p><Link className={styles.link} href={`/diem-den/${destination.slug}`}>Khám phá {destination.ten}<ArrowRight size={16}/></Link></div></article>)}</div>; }

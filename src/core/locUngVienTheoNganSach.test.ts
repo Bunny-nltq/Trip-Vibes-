@@ -111,6 +111,16 @@ describe("locUngVienTheoNganSach (Mục 1 - Bước 14)", () => {
     expect(res.khachSan.map((h) => h.id)).toEqual(["H2"]);
   });
 
+  it("reports a minimum total that can be applied without reducing the reserve", () => {
+    const request = { ...baseRequest, reservePercent: 12, ngansachTongVND: 7_500_000 };
+    const candidates = { transports, hotels };
+    const result = locUngVienTheoNganSach(request, candidates);
+    expect(result.khaThi).toBe(false);
+    expect(result.toiThieuVND).toBe(7_728_000);
+    expect(locUngVienTheoNganSach({ ...request, ngansachTongVND: 7_727_999 }, candidates).khaThi).toBe(false);
+    expect(locUngVienTheoNganSach({ ...request, ngansachTongVND: 7_728_000 }, candidates).khaThi).toBe(true);
+  });
+
   it("Ngân sách 8.000.000, không tránh gì: phuongTienDi [A, B]; phuongTienVe [C, D]; khachSan [H1, H2]", () => {
     const req = { ...baseRequest, ngansachTongVND: 8_000_000, tranh: [] };
     const res = locUngVienTheoNganSach(req, { transports, hotels });

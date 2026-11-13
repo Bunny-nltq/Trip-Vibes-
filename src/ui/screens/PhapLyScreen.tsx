@@ -18,7 +18,11 @@ export function PhapLyScreen({ loai }: PhapLyScreenProps) {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        background: "var(--color-background)",
+        backgroundColor: "var(--home-wash)",
+        backgroundImage: "var(--home-overlay), var(--v4-scene)",
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
+        backgroundAttachment: "fixed",
         color: "var(--color-text)",
         fontSize: 16,
       }}

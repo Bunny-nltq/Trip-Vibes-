@@ -1,3 +1,4 @@
+import {budgetIncludingReserve, spendingLimit} from "./travelRequest";
 /**
  * src/core/locUngVienTheoNganSach.ts
  *
@@ -46,7 +47,7 @@ export function locUngVienTheoNganSach<
   const soNguoi = request.soNguoi ?? 2;
   const soNgay = request.soNgay ?? 3;
   const soPhong = Math.ceil(soNguoi / NGUOI_MOI_PHONG);
-  const ngansachTongVND = request.ngansachTongVND ?? 0;
+  const ngansachTongVND = spendingLimit(request);
   const tranhList = request.tranh ?? [];
 
   const allTransports = ungVien.transports ?? [];
@@ -106,14 +107,14 @@ export function locUngVienTheoNganSach<
     }
   }
 
-  const toiThieuVND = minCost === Infinity ? 0 : minCost;
+  const toiThieuVND = minCost === Infinity ? 0 : budgetIncludingReserve(minCost, request.reservePercent);
 
   // Nếu không có tổ hợp nào vừa ngân sách (hoặc không có tổ hợp hợp lệ)
   if (
     validDiIds.size === 0 ||
     validVeIds.size === 0 ||
     validHotelIds.size === 0 ||
-    (ngansachTongVND > 0 && toiThieuVND > ngansachTongVND)
+    (ngansachTongVND > 0 && minCost > ngansachTongVND)
   ) {
     return {
       phuongTienDi: [],

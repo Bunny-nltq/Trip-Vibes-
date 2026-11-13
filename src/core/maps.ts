@@ -1,38 +1,27 @@
-/**
- * src/core/maps.ts
- *
- * Hàm thuần tạo URL bản đồ cho địa điểm.
- * Không import AI hay UI.
- */
+/** Named map links; coordinates remain available for internal distance calculations only. */
+export interface MapsUrls{xem:string;chiDuong:string;apple:string;}
+export interface PlaceForMaps{ten:string;toaDo?:{lat:number;lng:number};diaChi?:string|null;}
+export function osmFeatureUrl(source?: string | null): string | undefined {
+  const match = /^osm:(node|way|relation):(\d+)$/.exec(source ?? "");
+  return match ? `https://www.openstreetmap.org/${match[1]}/${match[2]}` : undefined;
+}
+export function namedMapQuery(place: PlaceForMaps, city?: string) {
+  const addressParts = (place.diaChi ?? "").split(",").map(part => part.trim());
+  const parts = [place.ten.trim(), ...addressParts, city?.trim() ?? ""].filter(Boolean);
+  return [...new Set(parts)].join(", ");
+}
+export function buildMapsUrls(place:PlaceForMaps,city?:string):MapsUrls{const query=encodeURIComponent(namedMapQuery(place,city));return {xem:`https://www.google.com/maps/search/?api=1&query=${query}`,chiDuong:`https://www.google.com/maps/dir/?api=1&destination=${query}`,apple:`https://maps.apple.com/?daddr=${query}`};}
 
-export interface MapsUrls {
-  /** Google Maps tìm kiếm địa điểm theo tên */
-  xem: string;
-  /** Google Maps chỉ đường đến toạ độ */
-  chiDuong: string;
-  /** Apple Maps chỉ đường */
-  apple: string;
+export function accommodationMapUrls(place: PlaceForMaps, city: string) {
+    const named = buildMapsUrls(place, city);
+    const address = place.diaChi?.trim();
+    if (!address) return named;
+    const query = encodeURIComponent(namedMapQuery({ ten: address }, city));
+    return {
+        ...named,
+        xem: `https://www.google.com/maps/search/?api=1&query=${query}`,
+        chiDuong: `https://www.google.com/maps/dir/?api=1&destination=${query}`,
+    };
 }
 
-export interface PlaceForMaps {
-  ten: string;
-  toaDo: { lat: number; lng: number };
-}
-
-/**
- * buildMapsUrls: Tạo bộ URL Google Maps và Apple Maps cho một địa điểm.
- *
- * - xem: https://www.google.com/maps/search/?api=1&query=<encodeURIComponent("<ten>, <tenDiemDen>")>
- * - chiDuong: https://www.google.com/maps/dir/?api=1&destination=<lat>,<lng>
- * - apple: https://maps.apple.com/?daddr=<lat>,<lng>
- */
-export function buildMapsUrls(place: PlaceForMaps, tenDiemDen?: string): MapsUrls {
-  const queryStr = tenDiemDen ? `${place.ten}, ${tenDiemDen}` : place.ten;
-  const latLngStr = `${place.toaDo.lat},${place.toaDo.lng}`;
-
-  return {
-    xem: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryStr)}`,
-    chiDuong: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(latLngStr)}`,
-    apple: `https://maps.apple.com/?daddr=${place.toaDo.lat},${place.toaDo.lng}`,
-  };
-}
+export function planItemMaps(item:import("@/contracts").PlanItem,city:string):MapsUrls{const name=item.destinationName||item.noiDung.replace(/^(Lưu trú:|Trưa:|Tối:|Cà phê:|Vui chơi:)\s*/i,"").split("(")[0].trim();const maps=buildMapsUrls({ten:name,diaChi:item.diaChi},city);if(item.originName&&item.destinationName){const local=item.experienceType==="local_transfer";maps.chiDuong=`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(namedMapQuery({ten:item.originName,diaChi:item.originAddress},local?city:undefined))}&destination=${encodeURIComponent(namedMapQuery({ten:item.destinationName,diaChi:item.diaChi},local?city:undefined))}`;try{const mode=item.mapsUrl?new URL(item.mapsUrl).searchParams.get("travelmode"):null;if(local&&mode&&["walking","driving","transit","bicycling"].includes(mode))maps.chiDuong+=`&travelmode=${mode}`;}catch{/* The named fallback remains usable for malformed legacy links. */}}return maps;}

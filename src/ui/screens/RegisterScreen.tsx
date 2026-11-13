@@ -1,20 +1,13 @@
 "use client";
-import React, { useState } from "react";
-import Link from "next/link";
+import React, { useState, useEffect, useRef } from "react";
 import { useApp } from "@/ui/context/AppContext";
-import {
-  UserPlus,
-  LogIn,
-  AlertCircle,
-  Loader2,
-  Eye,
-  EyeOff,
-  ArrowLeft,
-} from "lucide-react";
+import { UserPlus, Loader2 } from "lucide-react";
+import { AuthPanel, PasswordField, authStyles } from "@/ui/components/AuthPanel";
 
 export function RegisterScreen() {
   const {
     nav,
+    user,
     registerUser,
     returnScreen,
     setReturnScreen,
@@ -30,6 +23,15 @@ export function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const savingAfterLogin = useRef(false);
+  useEffect(() => {
+    if (!user || !pendingSaveTrip || savingAfterLogin.current) return;
+    savingAfterLogin.current = true; setPendingSaveTrip(false);
+    void saveCurrentTripToAccount().then(result => {
+      if (result.ok) nav("saved-trips"); else setError(result.message || "Đăng nhập thành công nhưng chưa lưu được chuyến đi.");
+    }).finally(() => { savingAfterLogin.current = false; });
+  }, [user, pendingSaveTrip, setPendingSaveTrip, saveCurrentTripToAccount, nav]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -42,8 +44,8 @@ export function RegisterScreen() {
       setError("Vui lòng nhập địa chỉ email hợp lệ.");
       return;
     }
-    if (pass.length < 6) {
-      setError("Mật khẩu phải có ít nhất 6 ký tự.");
+    if (pass.length < 8) {
+      setError("Mật khẩu phải có ít nhất 8 ký tự.");
       return;
     }
     if (pass !== confirmPass) {
@@ -57,9 +59,8 @@ export function RegisterScreen() {
 
     if (result.ok) {
       if (pendingSaveTrip) {
-        setPendingSaveTrip(false);
-        await saveCurrentTripToAccount();
-        nav("saved-trips");
+        // Deferred until the authenticated context has rendered.
+        return;
       } else if (returnScreen && returnScreen !== "login" && returnScreen !== "register") {
         const dest = returnScreen;
         setReturnScreen(null);
@@ -72,265 +73,33 @@ export function RegisterScreen() {
     }
   };
 
-  const handleFillDemo = () => {
-    const randomSuffix = Math.floor(100 + Math.random() * 900);
-    setName("Trần Du Lịch");
-    setEmail(`dulich${randomSuffix}@tripvibes.vn`);
-    setPass("123456");
-    setConfirmPass("123456");
-    setError(null);
-  };
 
   return (
-    <div
-      className="Landing"
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "32px 20px",
-      }}
-    >
-      {/* Nút quay lại */}
-      <div
-        style={{
-          maxWidth: 440,
-          width: "100%",
-          marginBottom: 12,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            fontSize: 13,
-            fontWeight: 600,
-            color: "var(--color-text-sub)",
-            textDecoration: "none",
-          }}
-        >
-          <ArrowLeft size={14} />
-          <span>Trang chủ</span>
-        </Link>
-
-        {returnScreen && returnScreen !== "login" && returnScreen !== "register" && (
-          <button
-            type="button"
-            onClick={() => nav(returnScreen)}
-            style={{
-              background: "none",
-              border: "none",
-              color: "var(--color-primary-main)",
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-            }}
-          >
-            <span>Quay lại chuyến đi</span>
-            <ArrowLeft size={14} style={{ transform: "rotate(180deg)" }} />
-          </button>
-        )}
-      </div>
-
-      <div className="AuthCard" style={{ padding: "36px 32px", maxWidth: 440, width: "100%" }}>
-        {/* Logo & Header */}
-        <div style={{ textAlign: "center", marginBottom: 20 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-            <svg width="44" height="36" viewBox="0 0 62 48" aria-hidden="true">
-              <circle cx="43" cy="16" r="10" fill="var(--color-art-sun)" />
-              <path d="M2 44 22 14l11 16 7-9 20 23z" fill="var(--color-art-mountain1)" />
-              <path d="M12 44 30 22l10 14 6-8 14 16z" fill="var(--color-art-mountain2)" />
-              <path d="M2 44h58" stroke="var(--color-art-line)" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-            <div className="LogoName Script" style={{ fontSize: 32 }}>Trip Vibes</div>
-          </div>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: "var(--color-text)" }}>Đăng ký tài khoản</h2>
-          <p style={{ fontSize: 13, color: "var(--color-text-sub)", marginTop: 4 }}>
-            Tạo tài khoản để lưu trữ nhật ký chuyến đi và quản lý ngân sách thuận tiện.
-          </p>
-        </div>
-
-        {/* Nút điền mẫu nhanh */}
-        <div
-          style={{
-            background: "var(--color-surface-sub)",
-            border: "1px dashed var(--color-border)",
-            borderRadius: "var(--r-md)",
-            padding: "8px 12px",
-            marginBottom: 16,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <span style={{ fontSize: 12, color: "var(--color-text-sub)" }}>Thử nghiệm nhanh:</span>
-          <button
-            type="button"
-            onClick={handleFillDemo}
-            className="Btn BtnSmall"
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              padding: "3px 8px",
-              background: "var(--color-surface)",
-              color: "var(--color-primary-main)",
-              cursor: "pointer",
-            }}
-          >
-            Điền mẫu ngẫu nhiên
-          </button>
-        </div>
-
-        {error && (
-          <div
-            role="alert"
-            style={{
-              padding: "10px 14px",
-              background: "var(--color-status-errBg)",
-              color: "var(--color-status-errText)",
-              borderRadius: "var(--r-md)",
-              marginBottom: 16,
-              fontSize: 13,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              border: "1px solid var(--color-status-errText)",
-            }}
-          >
-            <AlertCircle size={16} style={{ flexShrink: 0 }} />
-            <span>{error}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <div className="Field">
-            <label className="FieldLabel" htmlFor="reg-name">Họ và tên</label>
-            <input
-              id="reg-name"
-              className="Input"
-              type="text"
-              placeholder="Nguyễn Văn A"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              autoComplete="name"
-              required
-            />
-          </div>
-
-          <div className="Field">
-            <label className="FieldLabel" htmlFor="reg-email">Email</label>
-            <input
-              id="reg-email"
-              className="Input"
-              type="email"
-              placeholder="ban@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-              required
-            />
-          </div>
-
-          <div className="Field">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-              <label className="FieldLabel" htmlFor="reg-pass" style={{ marginBottom: 0 }}>Mật khẩu (tối thiểu 6 ký tự)</label>
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  padding: 0,
-                  fontSize: 12,
-                  color: "var(--color-text-sub)",
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 4,
-                }}
-              >
-                {showPassword ? <EyeOff size={13} /> : <Eye size={13} />}
-                <span>{showPassword ? "Ẩn" : "Hiện"}</span>
-              </button>
-            </div>
-            <input
-              id="reg-pass"
-              className="Input"
-              type={showPassword ? "text" : "password"}
-              placeholder="••••••••"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
-              autoComplete="new-password"
-              required
-            />
-          </div>
-
-          <div className="Field">
-            <label className="FieldLabel" htmlFor="reg-confirm">Xác nhận mật khẩu</label>
-            <input
-              id="reg-confirm"
-              className="Input"
-              type={showPassword ? "text" : "password"}
-              placeholder="••••••••"
-              value={confirmPass}
-              onChange={(e) => setConfirmPass(e.target.value)}
-              autoComplete="new-password"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="Btn BtnPrimary BtnFull"
-            style={{ marginTop: 8, marginBottom: 12, height: 46, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
-            disabled={loading}
-          >
-            {loading ? <Loader2 size={18} className="animate-spin" /> : <UserPlus size={18} />}
-            <span>{loading ? "Đang tạo tài khoản..." : "Tạo tài khoản"}</span>
-          </button>
-        </form>
-
-        <div style={{ textAlign: "center", marginTop: 14 }}>
-          <button
-            type="button"
-            className="Btn BtnGhost BtnFull"
-            style={{
-              height: 42,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              fontSize: 13,
-              color: "var(--color-primary-main)",
-            }}
-            onClick={() => nav("login")}
-          >
-            <LogIn size={16} />
-            <span>Đã có tài khoản? Đăng nhập ngay</span>
-          </button>
-        </div>
-
-        <div style={{ textAlign: "center", marginTop: 18, borderTop: "1px solid var(--color-border)", paddingTop: 14 }}>
-          <span
-            className="Link"
-            onClick={() => nav(returnScreen && returnScreen !== "login" && returnScreen !== "register" ? returnScreen : "b1-chon-nhanh")}
-            style={{ fontSize: 13, color: "var(--color-text-sub)", cursor: "pointer" }}
-          >
-            Tiếp tục ở chế độ Khách (Guest) không cần tài khoản
-          </span>
-        </div>
-      </div>
-    </div>
+    <AuthPanel title="Đăng ký tài khoản" subtitle="Tạo tài khoản để lưu hành trình và theo dõi chi tiêu của bạn." error={error}
+      onContinue={() => nav(returnScreen && returnScreen !== "login" && returnScreen !== "register" ? returnScreen : "b1-chon-nhanh")}
+      onSwitch={() => nav("login")} switchLabel="Đã có tài khoản? Đăng nhập">
+      <form onSubmit={handleSubmit} className={authStyles.form} onChange={() => setError(null)}>
+        <label>Họ và tên
+          <input id="reg-name" name="name" autoComplete="name" required value={name}
+            onChange={(event) => setName(event.target.value)} />
+        </label>
+        <label>Email
+          <input id="reg-email" name="email" type="email" autoComplete="email" required value={email}
+            onChange={(event) => setEmail(event.target.value)} />
+        </label>
+        <PasswordField id="reg-pass" autoComplete="new-password" hint="Dùng ít nhất 8 ký tự."
+          value={pass} onChange={setPass} visible={showPassword} onToggle={() => setShowPassword(!showPassword)} />
+        <label>Xác nhận mật khẩu
+          <input id="reg-confirm" name="confirmPassword" type={showPassword ? "text" : "password"}
+            autoComplete="new-password" required value={confirmPass}
+            onChange={(event) => setConfirmPass(event.target.value)} />
+        </label>
+        <button className={authStyles.submit} type="submit" disabled={loading}>
+          {loading ? <Loader2 size={18} className="animate-spin" /> : <UserPlus size={18} />}
+          {loading ? "Đang tạo tài khoản…" : "Tạo tài khoản"}
+        </button>
+      </form>
+    </AuthPanel>
   );
 }
 

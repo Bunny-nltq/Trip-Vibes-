@@ -4,7 +4,7 @@
  *
  * Thanh tìm kiếm chính trên trang chủ:
  * - Chọn điểm đi & điểm đến bằng ChonDiem (danh sách thả xuống, lọc typeahead, aria).
- * - Chọn số ngày bằng danh sách thả xuống từ 2 đến 7 ("3 ngày 2 đêm").
+ * - Người dùng tự nhập số ngày dương.
  * - Chọn số người và ngân sách.
  * - Chuyển sang /lap-ke-hoach bằng taoGoiChuyenB1.
  * Tuân thủ AGENTS.md: tokens, không emoji, icon SVG.
@@ -66,7 +66,7 @@ export function HeroSearch({ onSuccess }: HeroSearchProps) {
     if (!res.ok) {
       if (res.loi === "thieu_diem_den") setLoi("Vui lòng chọn điểm đến trong danh sách.");
       else if (res.loi === "so_nguoi") setLoi("Số người phải từ 1 đến 10 người.");
-      else if (res.loi === "so_ngay") setLoi("Thời gian chuyến đi phải từ 2 đến 7 ngày.");
+      else if (res.loi === "so_ngay") setLoi("Thời gian chuyến đi phải từ 1 ngày theo nhu cầu của bạn.");
       else if (res.loi === "ngan_sach") setLoi("Vui lòng nhập ngân sách hợp lệ (lớn hơn 0).");
       return;
     }
@@ -144,7 +144,7 @@ export function HeroSearch({ onSuccess }: HeroSearchProps) {
             <Calendar size={16} color="var(--color-primary-main)" />
             <span>Số ngày</span>
           </label>
-          <select
+          <input type="number" min={1} step={1}
             id="hero-so-ngay"
             value={soNgay}
             onChange={(e) => setSoNgay(parseInt(e.target.value, 10))}
@@ -160,13 +160,7 @@ export function HeroSearch({ onSuccess }: HeroSearchProps) {
               outline: "none",
               cursor: "pointer",
             }}
-          >
-            {[2, 3, 4, 5, 6, 7].map((d) => (
-              <option key={d} value={d}>
-                {d} ngày {d - 1} đêm
-              </option>
-            ))}
-          </select>
+          />
         </div>
 
         {/* Số người */}

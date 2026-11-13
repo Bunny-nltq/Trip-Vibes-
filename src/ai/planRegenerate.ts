@@ -1,3 +1,4 @@
+import { isIndependentAttraction } from "@/core/venueDiscovery";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
@@ -8,7 +9,7 @@ import { diffPlan, type PlanDiff } from "@/core/diffPlan";
 import { diemKhopTrungBinh } from "@/core/soThich";
 import { GeminiProvider } from "@/ai/provider";
 
-export const REGEN_PROMPT_VERSION = "v1";
+export const REGEN_PROMPT_VERSION = "v2";
 
 export interface PlanRegenerateInput {
   request: TripRequest;
@@ -42,8 +43,8 @@ export async function planRegenerate(
 
   // 2. Gom danh sách hoạt động ứng viên
   const candidateMap = new Map<string, Activity | HoatDong>();
-  (data.activities || []).forEach((a) => candidateMap.set(a.id, a));
-  (data.hoatDongs || []).forEach((h) => candidateMap.set(h.id, h));
+  (data.activities || []).forEach((a) => { if (isIndependentAttraction(a)) candidateMap.set(a.id, a); });
+  (data.hoatDongs || []).forEach((h) => { if (isIndependentAttraction(h)) candidateMap.set(h.id, h); });
 
   // Sanitize selection để đảm bảo mọi ID đều tồn tại trong data hiện hành
   const validTransDi =
@@ -66,13 +67,14 @@ export async function planRegenerate(
       ? currentSelection.hotelId
       : data.hotels[0]?.id || data.khachSans?.[0]?.id || currentSelection.hotelId || "";
 
-  const allAvailableActIds = Array.from(candidateMap.keys());
-  const normalizedHoatDongTheoNgay = currentSelection.hoatDongTheoNgay.map((dayActs, dIdx) => {
-    const valid = dayActs.map((actId, aIdx) =>
-      candidateMap.has(actId) ? actId : allAvailableActIds[(dIdx * 2 + aIdx) % allAvailableActIds.length]
-    ).filter(Boolean);
-    return valid.length > 0 ? valid : [allAvailableActIds[dIdx % allAvailableActIds.length]].filter(Boolean);
-  });
+  const used = new Set<string>();
+  const normalizedHoatDongTheoNgay = currentSelection.hoatDongTheoNgay.map(day =>
+    day.filter(id => {
+      if (!candidateMap.has(id) || used.has(id)) return false;
+      used.add(id);
+      return true;
+    })
+  );
 
   const safeSelection: Selection = {
     ...currentSelection,

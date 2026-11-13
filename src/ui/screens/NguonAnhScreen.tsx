@@ -1,142 +1,70 @@
 "use client";
 import React from "react";
+import photoManifest from "@/design/anh-diem-den.json";
+import { getHotelImage, getRestaurantImage, getCafeImage, getActivityImage } from "@/ui/lib/imageMap";
+import journeyScene from "@/design/assets/coastal-journey-v3.png";
+import venueSamples from "@/design/assets/venue-samples.webp";
+import experienceSamples from "@/design/assets/experience-samples.webp";
+import lodgingSample from "@/design/assets/lodging-sample.webp";
 import Link from "next/link";
-import {
-  Camera,
-  ShieldCheck,
-  CheckCircle2,
-  ExternalLink,
-  ArrowRight,
-} from "lucide-react";
+import { Camera, ShieldCheck, CheckCircle2, ExternalLink, ArrowRight, } from "lucide-react";
 import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";
-
 export interface HinhAnhGhiCongRow {
-  diemDen: string;
-  nguon: string;
-  tacGia: string;
-  giayPhep: string;
-  url: string;
-  ghiChu: string;
+    diemDen: string;
+    nguon: string;
+    tacGia: string;
+    giayPhep: string;
+    url: string;
+    ghiChu: string;
 }
-
-const ANH_MAU: HinhAnhGhiCongRow[] = [
-  {
-    diemDen: "Đà Nẵng",
-    nguon: "Wikimedia Commons",
-    tacGia: "Supanut Arunoprayote",
-    giayPhep: "CC BY 4.0",
-    url: "https://commons.wikimedia.org/wiki/File:Da_Nang_Dragon_Bridge_(I).jpg",
-    ghiChu: "Cầu Rồng Đà Nẵng bắc qua sông Hàn",
-  },
-  {
-    diemDen: "Hà Nội",
-    nguon: "Wikimedia Commons",
-    tacGia: "DHN",
-    giayPhep: "CC BY-SA 3.0",
-    url: "https://commons.wikimedia.org/wiki/File:Th%C3%A1p_R%C3%B9a_3.jpg",
-    ghiChu: "Tháp Rùa Hồ Hoàn Kiếm",
-  },
-  {
-    diemDen: "Đà Lạt",
-    nguon: "Wikimedia Commons",
-    tacGia: "Diane Selwyn",
-    giayPhep: "Public Domain (CC0)",
-    url: "https://commons.wikimedia.org/wiki/File:Xuan_Huong_Lake_08.jpg",
-    ghiChu: "Hồ Xuân Hương Đà Lạt",
-  },
-  {
-    diemDen: "Bangkok",
-    nguon: "Wikimedia Commons",
-    tacGia: "Diliff",
-    giayPhep: "CC BY 2.5",
-    url: "https://commons.wikimedia.org/wiki/File:Wat_Arun_from_Chao_Phraya_River.jpg",
-    ghiChu: "Chùa Wat Arun bên dòng sông Chao Phraya",
-  },
-  {
-    diemDen: "Seoul",
-    nguon: "Wikimedia Commons",
-    tacGia: "Blmtduddl",
-    giayPhep: "CC BY-SA 3.0",
-    url: "https://commons.wikimedia.org/wiki/File:Gyeongbokgung-GeunJeongJeon.jpg",
-    ghiChu: "Điện Cần Chính Cung điện Gyeongbokgung",
-  },
-  {
-    diemDen: "Phú Quốc",
-    nguon: "Wikimedia Commons",
-    tacGia: "Trương Thái Du",
-    giayPhep: "CC BY-SA 3.0",
-    url: "https://commons.wikimedia.org/wiki/File:Saigon_Phuquoc_resort.jpg",
-    ghiChu: "Bãi biển nghỉ dưỡng Phú Quốc",
-  },
-  {
-    diemDen: "Nha Trang",
-    nguon: "Wikimedia Commons",
-    tacGia: "Vyacheslav Argenberg",
-    giayPhep: "CC BY 4.0",
-    url: "https://commons.wikimedia.org/wiki/File:Nha_Trang_Beach_7.jpg",
-    ghiChu: "Bờ biển và vịnh Nha Trang",
-  },
-  {
-    diemDen: "Tokyo",
-    nguon: "Wikimedia Commons",
-    tacGia: "Benh LIEU SONG",
-    giayPhep: "CC BY-SA 3.0",
-    url: "https://commons.wikimedia.org/wiki/File:Tokyo_Tower_and_around_Skyscrapers.jpg",
-    ghiChu: "Tháp Tokyo và đường chân trời Shinjuku",
-  },
-  {
-    diemDen: "TP. Hồ Chí Minh",
-    nguon: "Wikimedia Commons",
-    tacGia: "Tran Qui Thinh",
-    giayPhep: "CC BY-SA 4.0",
-    url: "https://commons.wikimedia.org/wiki/File:Ho_Chi_Minh_City_skyline_at_night_(Tran_Qui_Thinh).jpg",
-    ghiChu: "Skyline Bến Bạch Đằng về đêm",
-  },
-  {
-    diemDen: "Hội An",
-    nguon: "Wikimedia Commons",
-    tacGia: "Thoai Phung",
-    giayPhep: "CC BY-SA 4.0",
-    url: "https://commons.wikimedia.org/wiki/File:Hoi_An_Lanterns_at_Night.jpg",
-    ghiChu: "Phố cổ Hội An đèn lồng rực rỡ",
-  },
-  {
-    diemDen: "Huế",
-    nguon: "Wikimedia Commons",
-    tacGia: "Diego Delso",
-    giayPhep: "CC BY-SA 4.0",
-    url: "https://commons.wikimedia.org/wiki/File:Puerta_Ngo_Mon,_Ciudad_Imperial,_Hue,_Vietnam,_2013-08-12,_DD_02.JPG",
-    ghiChu: "Cửa Ngọ Môn Đại Nội Hoàng thành Huế",
-  },
-  {
-    diemDen: "Ẩm thực & Cà phê",
-    nguon: "Wikimedia Commons",
-    tacGia: "CC Contributors (takeaway, Popcorn)",
-    giayPhep: "CC BY-SA 3.0 / 4.0",
-    url: "https://commons.wikimedia.org/wiki/File:Beef_pho,_Hanoi,_Vietnam.jpg",
-    ghiChu: "Phở bò truyền thống, Bánh mì và Cà phê phin sữa đá",
-  },
+const photoAssets = [...Object.entries(photoManifest).flatMap(([name, info]) => typeof info === "object" && info !== null ? [{ name, ...info }] : []), ...["Đà Nẵng", "Hà Nội", "Đà Lạt", "Bangkok", "Seoul"].map(name => ({ name: `Lưu trú · ${name}`, ...getHotelImage(null, undefined, name) })), ...[1, 2, 3, 4, 5].map(stars => ({ name: "Minh họa lưu trú", ...getHotelImage(stars) })), { name: "Ẩm thực · phở", ...getRestaurantImage() }, { name: "Ẩm thực · bánh mì", ...getRestaurantImage("bánh mì") }, { name: "Cà phê", ...getCafeImage() }, ...["biển", "chùa", "chợ", ""].map(name => ({ name: `Trải nghiệm · ${name}`, ...getActivityImage(undefined, name) }))];
+const uniquePhotos = [...new Map(photoAssets.map(photo => [photo.url, photo])).values()].filter(photo=>photo.url!==journeyScene.src&&photo.tacGia!=="CC-Photographer"&&photo.tacGia!=="Wikimedia Commons");
+const generatedSamples: HinhAnhGhiCongRow[] = [
+    {
+        diemDen: "Khu tưởng niệm, tượng đài, điểm ngắm cảnh, khu vui chơi, phòng trưng bày và điểm tham quan",
+        nguon: "OpenAI Image Generation",
+        tacGia: "Minh họa AI cho Trip Vibes",
+        giayPhep: "Minh họa tạo bằng AI",
+        url: experienceSamples.src,
+        ghiChu: "Sáu cảnh mẫu minh họa theo loại trải nghiệm.",
+    },
+    {
+        diemDen: "Ẩm thực, cà phê, bảo tàng, di tích, công viên và bãi biển",
+        nguon: "OpenAI Image Generation",
+        tacGia: "Minh họa AI cho Trip Vibes",
+        giayPhep: "Minh họa tạo bằng AI",
+        url: venueSamples.src,
+        ghiChu: "Bộ ảnh minh họa theo loại địa điểm.",
+    },
+    {
+        diemDen: "Phòng lưu trú",
+        nguon: "OpenAI Image Generation",
+        tacGia: "Minh họa AI cho Trip Vibes",
+        giayPhep: "Minh họa tạo bằng AI",
+        url: lodgingSample.src,
+        ghiChu: "Ảnh phòng mẫu dùng trên các thẻ lưu trú.",
+    },
 ];
-
+const ANH_MAU: HinhAnhGhiCongRow[] = [...generatedSamples, { diemDen: "Nền hành trình biển–núi", nguon: "OpenAI Image Generation", tacGia: "Minh họa AI cho Trip Vibes", giayPhep: "Minh họa tạo bằng AI", url: journeyScene.src, ghiChu: "Phong cảnh minh họa, không đại diện một địa điểm thực. Tạo ngày 26/10/2026." }, ...uniquePhotos.map(photo => { const filename = photo.url.match(/\/commons\/(?:thumb\/)?[a-f0-9]\/[a-f0-9]{2}\/([^/]+)/)?.[1]; return { diemDen: photo.name, nguon: photo.nguon, tacGia: photo.tacGia, giayPhep: photo.giayPhep, url: filename ? `https://commons.wikimedia.org/wiki/File:${filename}` : photo.url, ghiChu: photo.alt || "Ảnh minh họa" }; })];
 export function NguonAnhScreen() {
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        background: "var(--color-background)",
-        color: "var(--color-text)",
-        fontSize: 16,
-      }}
-    >
+    return (<div style={{
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "var(--home-wash)",
+            backgroundImage: "var(--home-overlay), var(--v4-scene)",
+            backgroundSize: "cover",
+            backgroundPosition: "center top",
+            backgroundAttachment: "fixed",
+            color: "var(--color-text)",
+            fontSize: 16,
+        }}>
       <SiteHeader />
 
       <main id="main-content" style={{ flex: 1, maxWidth: 960, margin: "0 auto", padding: "40px 24px 80px", width: "100%" }}>
         {/* Breadcrumb */}
-        <div
-          style={{
+        <div style={{
             display: "inline-flex",
             alignItems: "center",
             gap: 6,
@@ -144,8 +72,7 @@ export function NguonAnhScreen() {
             fontWeight: 600,
             color: "var(--color-text-sub)",
             marginBottom: 20,
-          }}
-        >
+        }}>
           <Link href="/" style={{ color: "var(--color-text-sub)", textDecoration: "none" }}>
             Trang chủ
           </Link>
@@ -155,34 +82,30 @@ export function NguonAnhScreen() {
 
         {/* Tiêu đề */}
         <div style={{ marginBottom: 36 }}>
-          <h1
-            style={{
-              fontSize: 32,
-              fontWeight: 800,
-              color: "var(--color-text)",
-              margin: "0 0 12px",
-              letterSpacing: "-0.5px",
-            }}
-          >
+          <h1 style={{
+            fontSize: 32,
+            fontWeight: 800,
+            color: "var(--color-text)",
+            margin: "0 0 12px",
+            letterSpacing: "-0.5px",
+        }}>
             Chính Sách Bản Quyền Hình Ảnh & Ghi Công
           </h1>
           <p style={{ fontSize: 16, color: "var(--color-text-sub)", margin: 0, lineHeight: 1.6 }}>
-            Trip Vibes tuân thủ nghiêm ngặt quyền sở hữu trí tuệ. Toàn bộ hình ảnh sử dụng trên nền tảng đều có giấy phép mở hoặc được cấp quyền minh bạch.
+            Thông tin tác giả, nguồn và giấy phép ảnh được tập hợp tại đây. Ảnh minh họa không thay thế hình ảnh xác nhận của từng địa điểm hoặc nơi lưu trú.
           </p>
         </div>
 
         {/* Cam kết bản quyền */}
-        <section
-          style={{
+        <section style={{
             background: "var(--color-surface)",
             borderRadius: "var(--r-lg)",
             border: "1px solid var(--color-border)",
             padding: "28px 32px",
             marginBottom: 36,
-          }}
-        >
+        }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-            <ShieldCheck size={22} color="var(--color-status-success)" />
+            <ShieldCheck size={22} color="var(--color-status-success)"/>
             <h2 style={{ fontSize: 20, fontWeight: 700, margin: 0, color: "var(--color-text)" }}>
               Cam Kết Bản Quyền Hình Ảnh
             </h2>
@@ -190,21 +113,21 @@ export function NguonAnhScreen() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: 12, lineHeight: 1.6, color: "var(--color-text-sub)" }}>
             <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-              <CheckCircle2 size={18} color="var(--color-status-success)" style={{ flexShrink: 0, marginTop: 3 }} />
+              <CheckCircle2 size={18} color="var(--color-status-success)" style={{ flexShrink: 0, marginTop: 3 }}/>
               <div>
                 <strong style={{ color: "var(--color-text)" }}>Wikimedia Commons:</strong> Các ảnh tư liệu địa danh có liên kết thực thể Wikidata hoặc tài liệu Commons, được cấp phép theo Creative Commons (CC-BY, CC-BY-SA) hoặc thuộc phạm vi công cộng (Public Domain).
               </div>
             </div>
 
             <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-              <CheckCircle2 size={18} color="var(--color-status-success)" style={{ flexShrink: 0, marginTop: 3 }} />
+              <CheckCircle2 size={18} color="var(--color-status-success)" style={{ flexShrink: 0, marginTop: 3 }}/>
               <div>
                 <strong style={{ color: "var(--color-text)" }}>Unsplash:</strong> Ảnh nghệ thuật đại diện điểm đến và banner do nhóm phát triển tuyển chọn thủ công, tuân thủ giấy phép Unsplash License kèm UTM tracking.
               </div>
             </div>
 
             <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-              <CheckCircle2 size={18} color="var(--color-status-success)" style={{ flexShrink: 0, marginTop: 3 }} />
+              <CheckCircle2 size={18} color="var(--color-status-success)" style={{ flexShrink: 0, marginTop: 3 }}/>
               <div>
                 <strong style={{ color: "var(--color-text)" }}>Tuyệt đối không sử dụng:</strong> Trip Vibes kiên quyết KHÔNG cào dữ liệu hoặc sử dụng trái phép hình ảnh từ Google Places, Airbnb, Expedia, Wanderlog hay bất kỳ dịch vụ thương mại có bản quyền đóng nào.
               </div>
@@ -213,18 +136,16 @@ export function NguonAnhScreen() {
         </section>
 
         {/* Bảng ghi công tham khảo */}
-        <section
-          style={{
+        <section style={{
             background: "var(--color-surface)",
             borderRadius: "var(--r-lg)",
             border: "1px solid var(--color-border)",
             padding: "28px 32px",
             marginBottom: 40,
             overflowX: "auto",
-          }}
-        >
+        }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-            <Camera size={22} color="var(--color-primary-main)" />
+            <Camera size={22} color="var(--color-primary-main)"/>
             <h2 style={{ fontSize: 20, fontWeight: 700, margin: 0, color: "var(--color-text)" }}>
               Danh Mục Ghi Công Điểm Đến
             </h2>
@@ -241,77 +162,61 @@ export function NguonAnhScreen() {
               </tr>
             </thead>
             <tbody>
-              {ANH_MAU.map((row, idx) => (
-                <tr key={idx} style={{ borderBottom: "1px solid var(--color-border)" }}>
+              {ANH_MAU.map((row, idx) => (<tr key={idx} style={{ borderBottom: "1px solid var(--color-border)" }}>
                   <td style={{ padding: "14px", fontWeight: 700, color: "var(--color-text)" }}>{row.diemDen}</td>
                   <td style={{ padding: "14px", color: "var(--color-text)" }}>{row.tacGia}</td>
                   <td style={{ padding: "14px", color: "var(--color-text-sub)" }}>
-                    <a
-                      href={row.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: "var(--color-primary-main)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
-                    >
+                    <a href={row.url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-primary-main)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}>
                       <span>{row.nguon}</span>
-                      <ExternalLink size={12} />
+                      <ExternalLink size={12}/>
                     </a>
                   </td>
                   <td style={{ padding: "14px", color: "var(--color-text-sub)" }}>
-                    <span
-                      style={{
-                        fontSize: 12,
-                        padding: "2px 8px",
-                        borderRadius: "var(--r-xs)",
-                        background: "var(--color-surface-subtle)",
-                        border: "1px solid var(--color-border)",
-                      }}
-                    >
+                    <span style={{
+                fontSize: 12,
+                padding: "2px 8px",
+                borderRadius: "var(--r-xs)",
+                background: "var(--color-surface-subtle)",
+                border: "1px solid var(--color-border)",
+            }}>
                       {row.giayPhep}
                     </span>
                   </td>
                   <td style={{ padding: "14px", color: "var(--color-text-sub)" }}>{row.ghiChu}</td>
-                </tr>
-              ))}
+                </tr>))}
             </tbody>
           </table>
         </section>
 
         {/* Nút quay lại */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Link
-            href="/"
-            style={{
-              textDecoration: "none",
-              color: "var(--color-text-sub)",
-              fontSize: 14,
-              fontWeight: 600,
-            }}
-          >
+          <Link href="/" style={{
+            textDecoration: "none",
+            color: "var(--color-text-sub)",
+            fontSize: 14,
+            fontWeight: 600,
+        }}>
             ← Về trang chủ
           </Link>
-          <Link
-            href="/diem-den"
-            style={{
-              textDecoration: "none",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              height: 44,
-              padding: "0 22px",
-              borderRadius: "var(--r-md)",
-              background: "var(--color-primary-main)",
-              color: "var(--color-primary-text)",
-              fontSize: 14,
-              fontWeight: 700,
-            }}
-          >
+          <Link href="/diem-den" style={{
+            textDecoration: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            height: 44,
+            padding: "0 22px",
+            borderRadius: "var(--r-md)",
+            background: "var(--color-primary-main)",
+            color: "var(--color-primary-text)",
+            fontSize: 14,
+            fontWeight: 700,
+        }}>
             <span>Khám phá điểm đến</span>
-            <ArrowRight size={15} />
+            <ArrowRight size={15}/>
           </Link>
         </div>
       </main>
 
       <SiteFooter />
-    </div>
-  );
+    </div>);
 }

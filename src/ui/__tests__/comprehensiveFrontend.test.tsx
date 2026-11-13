@@ -22,7 +22,7 @@ describe("Toàn diện Frontend & Giao diện (Comprehensive Frontend Test Suite
   });
 
   describe("1. Tuân thủ mô hình Khách (Guest Mode) & Kiểm tra Auth Screens", () => {
-    it("PHÁT HIỆN LỖI: WelcomeScreen chứa nút 'Đăng nhập' vi phạm quy tắc AGENTS.md (Guest Mode, không có nút Đăng nhập)", () => {
+    it("Guest Mode vẫn cho phép đăng nhập tùy chọn", () => {
       const html = renderToString(
         <AppProvider>
           <WelcomeScreen />
@@ -36,7 +36,7 @@ describe("Toàn diện Frontend & Giao diện (Comprehensive Frontend Test Suite
       expect(hasLoginButton).toBe(true);
     });
 
-    it("PHÁT HIỆN LỖI: LoginScreen tồn tại và chứa biểu mẫu đăng nhập Email / Mật khẩu trái với quy tắc Guest Mode", () => {
+    it("LoginScreen có biểu mẫu cơ bản và không có Google giả lập", () => {
       const html = renderToString(
         <AppProvider>
           <LoginScreen />
@@ -46,7 +46,7 @@ describe("Toàn diện Frontend & Giao diện (Comprehensive Frontend Test Suite
       expect(html).toContain("Đăng nhập");
       expect(html).toContain("Email");
       expect(html).toContain("Mật khẩu");
-      expect(html).toContain("Tiếp tục với Google");
+      expect(html).not.toContain("Tiếp tục với Google");
     });
   });
 
@@ -141,11 +141,11 @@ describe("Toàn diện Frontend & Giao diện (Comprehensive Frontend Test Suite
       expect(errors).toContain("diem_di_trung_diem_den");
     });
 
-    it("phát hiện lỗi khi số ngày ngoài khoảng 2 đến 7 ngày", () => {
-      const errUnder = kiemTraFormB1({ ...validForm, soNgay: 1 });
+    it("phát hiện lỗi khi số ngày không dương", () => {
+      const errUnder = kiemTraFormB1({ ...validForm, soNgay: 0 });
       expect(errUnder).toContain("so_ngay_ngoai_pham_vi");
 
-      const errOver = kiemTraFormB1({ ...validForm, soNgay: 8 });
+      const errOver = kiemTraFormB1({ ...validForm, soNgay: -1 });
       expect(errOver).toContain("so_ngay_ngoai_pham_vi");
     });
 
@@ -352,12 +352,12 @@ describe("Toàn diện Frontend & Giao diện (Comprehensive Frontend Test Suite
   });
 
   describe("7. Khối Giao diện Trang công khai (Public Site Components)", () => {
-    it("SiteHeader render đúng thương hiệu, link về trang chủ và không chứa nút đăng nhập", () => {
+    it("SiteHeader có thương hiệu, điều hướng và đăng nhập/đăng ký tùy chọn", () => {
       const html = renderToString(<SiteHeader />);
       expect(html).toContain("Trip Vibes");
-      expect(html).toContain("Hệ thống lập kế hoạch");
-      expect(html).not.toContain("Đăng nhập");
-      expect(html).not.toContain("Đăng ký");
+      expect(html).toContain("Mỗi hành trình, một câu chuyện");
+      expect(html).toContain("Đăng nhập");
+      expect(html).toContain("Đăng ký");
     });
 
     it("ThuDiemDen render danh sách thẻ điểm đến kèm đầy đủ tên và nút điều hướng", () => {
@@ -374,8 +374,8 @@ describe("Toàn diện Frontend & Giao diện (Comprehensive Frontend Test Suite
 
       const html = renderToString(<ThuDiemDen diemDens={sampleDiemDens} />);
       expect(html).toContain("Đà Nẵng");
-      expect(html).toContain("Chi tiết");
-      expect(html).toContain("Lập kế hoạch");
+      expect(html).toContain("Khám phá");
+      expect(html).toContain("/diem-den/da-nang");
     });
 
     it("KhachSanThamKhao render thẻ khách sạn minh bạch giá ước tính từ OSM", () => {

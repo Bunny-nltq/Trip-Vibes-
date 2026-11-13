@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
 import { calculateTransportFlags } from "@/core/flags";
 import { geocodeDestination } from "@/data/live/geocodeClient";
-import type { DiemDen } from "@/contracts";
+import {HotelPublicDetailsSchema,schemaVersion,type DiemDen} from "@/contracts";
 
 import { getSnapshotDiemDen } from "@/data/prepareDestination";
 
@@ -34,7 +34,7 @@ export async function GET(req: Request) {
     );
   }
 
-  const cacheKey = `${loai}_${huong || ""}_${soNguoi}_${soNgay}_${diemDenParam || ""}_${diemDiParam || ""}`;
+  const cacheKey = `${schemaVersion}_${loai}_${huong || ""}_${soNguoi}_${soNgay}_${diemDenParam || ""}_${diemDiParam || ""}`;
   const cached = memoryCache.get(cacheKey);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
     return NextResponse.json(cached.data);
@@ -119,6 +119,7 @@ export async function GET(req: Request) {
       const seen = new Set(khachSans.map((k) => k.id));
       const combined = [
         ...khachSans.map((k) => ({
+          ...HotelPublicDetailsSchema.parse(k),
           id: k.id,
           ten: k.ten,
           khuVuc: k.khuVuc,
@@ -126,8 +127,13 @@ export async function GET(req: Request) {
           giaMotDem: k.khoangGiaDemVND
             ? Math.round((k.khoangGiaDemVND.min + k.khoangGiaDemVND.max) / 2)
             : k.giaUocTinhNguoi ?? 700_000,
-          includesBreakfast: false,
-          hasPool: false,
+          accommodationType:k.accommodationType,
+          includesBreakfast: k.includesBreakfast,
+          hasPool: k.hasPool,
+          diaChi: k.diaChi,
+          toaDo: k.toaDo,
+          gioMoCua: k.gioMoCua,
+          ngayLay: k.ngayLay,
           nguon: k.nguon,
           doTinCay: k.doTinCay,
           giaLaUocTinh: k.giaLaUocTinh,

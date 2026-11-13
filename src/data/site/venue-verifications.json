@@ -1,0 +1,60 @@
+{
+  "osm:node:2060866025": {
+    "source": "https://emeraldhoianriverside.com/",
+    "verifiedAt": "2026-10-27",
+    "patch": {
+      "venueType": "resort",
+      "accommodationType": "resort",
+      "website": "https://emeraldhoianriverside.com/",
+      "phone": "+84 235 3934 999",
+      "diaChi": "127 Ngo Quyen, Hoi An, Da Nang, Vietnam",
+      "addressStatus": "specific",
+      "hasPool": true,
+      "description": "Khu nghỉ dưỡng ven sông Thu Bồn, có hồ bơi và dịch vụ spa.",
+      "bookingUnit": "room"
+    }
+  },
+  "osm:way:551951748": {
+    "source": "https://www.belmarinahoian.com/",
+    "verifiedAt": "2026-10-27",
+    "patch": {
+      "venueType": "resort",
+      "accommodationType": "resort",
+      "website": "https://www.belmarinahoian.com/",
+      "phone": "+84 2353 938 888; +84 834 306 300",
+      "diaChi": "127 Nguyen Phuc Tan, Hoi An, Da Nang, Vietnam",
+      "addressStatus": "specific",
+      "description": "Khu nghỉ dưỡng ven sông, cung cấp nhiều hạng phòng và villa.",
+      "bookingUnit": "mixed"
+    }
+  },
+  "osm:node:4614042005": {
+    "source": "https://tntvillahoian.vn/",
+    "verifiedAt": "2026-10-27",
+    "patch": {
+      "ten": "Hoi An TNT Villa",
+      "venueType": "villa",
+      "accommodationType": "villa",
+      "website": "https://tntvillahoian.vn/",
+      "phone": "0912292100",
+      "diaChi": "100 Tran Hung Dao, Hoi An, Vietnam",
+      "addressStatus": "specific",
+      "hasPool": true,
+      "description": "Lưu trú kiểu villa, bán theo phòng và có hồ bơi; không mặc định là thuê nguyên căn.",
+      "bookingUnit": "room"
+    }
+  },
+  "osm:node:5805974253": {
+    "source": "https://www.booking.com/hotel/vn/d-central-hoi-an-homestay.html",
+    "verifiedAt": "2026-10-27",
+    "patch": {
+      "ten": "D Central Hoi An Homestay",
+      "venueType": "homestay",
+      "accommodationType": "homestay",
+      "diaChi": "33 Nguyen Phuc Tan, Hoi An, Vietnam",
+      "addressStatus": "specific",
+      "bookingUnit": "room",
+      "description": "Homestay của gia đình địa phương, bán theo phòng."
+    }
+  }
+}

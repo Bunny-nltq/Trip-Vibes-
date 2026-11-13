@@ -2,6 +2,10 @@
 
 @import "./tokens.css";
 
+:root {
+  --v4-scene: url('/coastal-journey-v3.png');
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -365,9 +369,9 @@ body {
 .STitle { font-size: 17px; line-height: 22px; font-weight: 700; color: var(--color-text); }
 .SSub { font-size: 12px; line-height: 16px; color: var(--color-text-sub); }
 .Presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
-.Preset { position: relative; display: flex; align-items: center; gap: 9px; height: 76px; padding: 0 10px 0 12px; border-radius: 18px; background: var(--color-surface); border: 1px solid var(--color-border); box-shadow: var(--shadow-preset); cursor: pointer; transition: all 0.15s ease; }
-.Preset:hover { transform: translateY(-1px); border-color: var(--color-border-input); }
-.PresetOn { background: var(--color-primary-tint); border: 1.5px solid var(--color-border-input); }
+.Preset { position: relative; display: flex; align-items: center; gap: 9px; height: 76px; padding: 0 10px 0 12px; border-radius: 18px; background: var(--color-surface); border: 1px solid var(--color-border); box-shadow: var(--shadow-preset); cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.Preset:hover { transform: translateY(-2px); border-color: var(--color-primary); box-shadow: 0 8px 20px -8px rgba(43,85,214,0.22); }
+.PresetOn { background: var(--color-primary-tint); border: 1.5px solid var(--color-primary); box-shadow: 0 4px 14px -6px rgba(43,85,214,0.3); }
 .PName { font-size: 14px; line-height: 18px; font-weight: 700; color: var(--color-text); }
 .PSub { font-size: 11.5px; line-height: 16px; color: var(--color-text-sub); white-space: nowrap; }
 .Badge { position: absolute; right: 8px; top: 8px; width: 20px; height: 20px; border-radius: 10px; background: var(--color-primary); color: var(--color-surface); display: flex; align-items: center; justify-content: center; }
@@ -389,7 +393,8 @@ body {
 .Go { display: flex; align-items: center; justify-content: center; gap: 10px; width: 200px; height: 50px; border-radius: 25px; background: var(--color-primary); color: var(--color-surface); font-size: 15px; font-weight: 600; box-shadow: var(--shadow-btn-go); cursor: pointer; border: none; flex: none; transition: all 0.2s ease; }
 .Go:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
 .GoOff { background: var(--color-border-input); box-shadow: none; cursor: not-allowed; }
-.DayCard { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 22px; margin-bottom: 16px; box-shadow: var(--shadow-day-card); }
+.DayCard { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 22px; margin-bottom: 16px; box-shadow: var(--shadow-day-card); transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+.DayCard:hover { border-color: var(--color-border-input); box-shadow: 0 8px 24px -12px rgba(43,85,214,0.15); }
 .DayHead { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--color-border); }
 .DayName { font-size: 16px; line-height: 24px; font-weight: 700; }
 .DayTotal { font-size: 14px; color: var(--color-text-sub); font-weight: 600; }
@@ -435,10 +440,20 @@ body {
 .BarRed { background: var(--color-error); }
 .Divider { height: 1px; background: var(--color-border); margin: 6px 0 14px; }
 .Link { font-size: 13px; color: var(--color-primary); text-decoration: underline; font-weight: 500; cursor: pointer; }
-.Modal { position: fixed; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 28px; padding: 28px; box-shadow: var(--shadow-modal); z-index: 1000; }
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.96) translateY(-4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.Modal { position: fixed; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 28px; padding: 28px; box-shadow: var(--shadow-modal); z-index: 1000; animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
 .ModalTitle { font-size: 22px; line-height: 30px; font-weight: 700; margin-bottom: 4px; color: var(--color-text); }
 .Dim { opacity: 0.32; pointer-events: none; }
-.Pop { position: absolute; width: 300px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 20px; padding: 8px; box-shadow: var(--shadow-popover); z-index: 500; }
+.Pop { position: absolute; width: 300px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 20px; padding: 8px; box-shadow: var(--shadow-popover); z-index: 500; animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
 .PopTitle { padding: 10px 12px 4px; font-weight: 700; color: var(--color-text); }
 .PopSub { padding: 0 12px 8px; font-size: 12px; color: var(--color-text-sub); }
 .PopItem { padding: 10px 12px; border-radius: 12px; font-size: 14px; cursor: pointer; transition: background 0.15s ease; color: var(--color-text); }

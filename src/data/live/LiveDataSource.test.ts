@@ -254,7 +254,7 @@ describe("LiveDataSource & Data Pipeline Tests (Bước 19)", () => {
     it("thứ tự dự phòng: live (hoặc cache), rồi snapshot ĐÚNG điểm đến; KHÔNG có mock và KHÔNG dùng snapshot của điểm đến khác; hết cả hai trả khong_du_du_lieu nêu loại thiếu", async () => {
       // 1. Điểm đến Huế không có snapshot trong kho snapshots/
       const diemDenHue: DiemDen = {
-        ten: "Huế",
+        ten: "QA Không Có Snapshot",
         quocGia: "Việt Nam",
         maQuocGia: "VN",
         toaDo: { lat: 16.4637, lng: 107.5909 },

@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useApp } from "@/ui/context/AppContext";
+import {unknownCostCount} from "@/core/travelRequest";
 import type { Plan } from "@/contracts";
 
 export function BudgetBox({
@@ -21,9 +22,10 @@ export function BudgetBox({
     propBudget ??
     plan?.request.ngansachTongVND ??
     tripConfig?.budget ??
-    10_000_000;
+    0;
 
-  const total = propTotal ?? plan?.tongKet.tongVND ?? 9_540_000;
+  const total = propTotal ?? plan?.tongKet.tongVND ?? 0;
+  const unknownCosts=plan?unknownCostCount(plan):0;
   const pct = currentBudget > 0 ? Math.min((total / currentBudget) * 100, 100) : 0;
   const remain = currentBudget - total;
   const danger = pct > 90 || total > currentBudget;
@@ -38,36 +40,31 @@ export function BudgetBox({
           label: "Di chuyển",
           amount: theoHangMuc["Di chuyển"] ?? 0,
           pct: total > 0 ? Math.round(((theoHangMuc["Di chuyển"] ?? 0) / total) * 100) : 0,
-          colorVar: "var(--p500)",
+          colorVar: "var(--color-primary-main)",
         },
         {
           label: "Chỗ ở",
           amount: theoHangMuc["Chỗ ở"] ?? 0,
           pct: total > 0 ? Math.round(((theoHangMuc["Chỗ ở"] ?? 0) / total) * 100) : 0,
-          colorVar: "var(--secondary-500)",
+          colorVar: "var(--color-primary-main)",
         },
         {
           label: "Ăn uống",
           amount: theoHangMuc["Ăn uống"] ?? 0,
           pct: total > 0 ? Math.round(((theoHangMuc["Ăn uống"] ?? 0) / total) * 100) : 0,
-          colorVar: "var(--warning)",
+          colorVar: "var(--color-primary-main)",
         },
         {
           label: "Vui chơi",
           amount: theoHangMuc["Vui chơi"] ?? 0,
           pct: total > 0 ? Math.round(((theoHangMuc["Vui chơi"] ?? 0) / total) * 100) : 0,
-          colorVar: "var(--status-loading)",
+          colorVar: "var(--color-primary-main)",
         },
       ]
-    : [
-        { label: "Di chuyển", amount: 3_920_000, pct: 41, colorVar: "var(--p500)" },
-        { label: "Chỗ ở", amount: 2_200_000, pct: 23, colorVar: "var(--secondary-500)" },
-        { label: "Ăn uống", amount: 1_800_000, pct: 19, colorVar: "var(--warning)" },
-        { label: "Vui chơi", amount: 1_620_000, pct: 17, colorVar: "var(--status-loading)" },
-      ];
+    : [];
 
   // Tính thời gian di chuyển
-  const moveMinutes = plan?.tongKet.tongThoiGianDiChuyenPhut ?? 170;
+  const moveMinutes = plan?.tongKet.tongThoiGianDiChuyenPhut ?? 0;
   const moveHours = Math.floor(moveMinutes / 60);
   const moveRemainingMin = moveMinutes % 60;
   const moveStr =
@@ -77,32 +74,33 @@ export function BudgetBox({
 
   return (
     <div className="BudgetSummary">
-      <div className="Label">Tổng kế hoạch</div>
+      <div className="Label">{unknownCosts>0?"Dự toán hiện có":"Tổng kế hoạch"}</div>
       <div className="Big">{fmt(total)}</div>
       <div className="BigSub">trên ngân sách {fmt(currentBudget)}</div>
 
       <div className="bar-track" style={{ marginBottom: 4 }}>
         <div
           className={`bar-fill ${danger ? "danger" : ""}`}
-          style={{ width: `${pct}%` }}
+          style={{ width: `${pct}%`, background: danger ? "var(--color-status-error, var(--color-primary-main))" : "var(--color-primary-main)" }}
         />
       </div>
       <div className="bar-remain">
         <span
           style={{
             fontWeight: 600,
-            color: danger ? "var(--warning)" : "var(--p500)",
+            color: danger ? "var(--color-primary-main)" : "var(--color-primary-main)",
           }}
         >
           {total > currentBudget
             ? `Vượt ngân sách ${fmt(total - currentBudget)}`
-            : `Đã dùng ${pct.toFixed(1)}%`}
+            : `Dự kiến dùng ${pct.toFixed(1)}%`}
         </span>
         <span style={{ color: "var(--g500)" }}>
-          {total > currentBudget ? `Âm ${fmt(remain)}` : `Còn lại ${fmt(remain)}`}
+          {total > currentBudget ? `Âm ${fmt(remain)}` : `${unknownCosts>0?"Dự phòng tạm tính":"Quỹ dự phòng"} ${fmt(remain)}`}
         </span>
       </div>
 
+      {showDetails && <p className="BigSub">Tỷ trọng trên tổng dự toán</p>}
       {showDetails &&
         cats.map((c) => (
           <div key={c.label} className="cat-row">
@@ -125,6 +123,7 @@ export function BudgetBox({
           </div>
         ))}
 
+      {unknownCosts>0&&<p>{unknownCosts} hạng mục chưa xác nhận đủ giá; tổng chi phí thực tế có thể tăng.</p>}
       <div className="divider" />
       <div className="move-row">
         <span>Tổng thời gian di chuyển</span>

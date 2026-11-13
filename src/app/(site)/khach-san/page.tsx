@@ -1,3 +1,4 @@
+import {DOMESTIC_DESTINATIONS} from "@/data/site/destinationCatalog";
 import React from "react";
 import fs from "node:fs";
 import path from "node:path";
@@ -8,6 +9,8 @@ import {
   type KhachSanItem,
 } from "@/ui/screens/KhachSanScreen";
 import { getHotelPricePerNight } from "@/core/minBudget";
+import { accommodationMapUrls } from "@/core/maps";
+import { applyVenueVerification } from "@/data/venueVerification";
 
 export const metadata: Metadata = {
   title: "Khách Sạn Tham Khảo",
@@ -15,13 +18,7 @@ export const metadata: Metadata = {
     "Danh sách khách sạn tham khảo với mức giá ước tính minh bạch từ dữ liệu kiểm toán OpenStreetMap.",
 };
 
-const DEST_ORDER = [
-  { slug: "da-nang", id: "da_nang", snapshotPrefix: "snapshot_da_nang_" },
-  { slug: "ha-noi", id: "ha_noi", snapshotPrefix: "snapshot_ha_noi_" },
-  { slug: "da-lat", id: "da_lat", snapshotPrefix: "snapshot_da_lat_" },
-  { slug: "bangkok", id: "bangkok", snapshotPrefix: "snapshot_bangkok_" },
-  { slug: "seoul", id: "seoul", snapshotPrefix: "snapshot_seoul_" },
-];
+const DEST_ORDER = DOMESTIC_DESTINATIONS;
 
 function docDanhSachKhachSanTheoDiemDen(): {
   danhSachDiemDen: DiemDenLuaChon[];
@@ -43,7 +40,7 @@ function docDanhSachKhachSanTheoDiemDen(): {
     return { danhSachDiemDen: [], ngayDuLieu: "20/10/2026" };
   }
 
-  const files = fs.readdirSync(dir);
+  const files = fs.readdirSync(dir).sort().reverse();
   const danhSachDiemDen: DiemDenLuaChon[] = [];
   let ngayChung = "20/10/2026";
 
@@ -68,18 +65,18 @@ function docDanhSachKhachSanTheoDiemDen(): {
         const quocGia = info.quocGia || "Việt Nam";
 
         const rawHotels: any[] = data.khachSans || [];
-        const hotels: KhachSanItem[] = rawHotels.map((ks) => {
+        const hotels: KhachSanItem[] = rawHotels.map((raw) => {
+          const ks = applyVenueVerification(raw);
           const giaDemUocTinh = getHotelPricePerNight(ks);
-          const mapUrl =
-            ks.mapsUrls?.xem ||
-            `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ks.ten + " " + ten)}`;
+          const maps = accommodationMapUrls({ ten: ks.ten, diaChi: ks.addressStatus === "specific" ? ks.diaChi : null }, ten);
           return {
             id: ks.id,
             ten: ks.ten,
             khuVuc: ks.khuVuc || undefined,
             soSao: ks.soSao ?? null,
             giaDemUocTinh,
-            mapUrl,
+            mapUrl: maps.xem,
+            directionsUrl: maps.chiDuong,
             nguon: "OpenStreetMap contributors",
           };
         });

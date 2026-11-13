@@ -1,4 +1,6 @@
 "use client";
+import {osmFeatureUrl, planItemMaps} from "@/core/maps";
+import { tripNights } from "@/core/tripWorkspace";
 import React, { useState } from "react";
 import { useApp, extractSelectionFromPlan } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
@@ -9,204 +11,152 @@ import { nhanNguonDuLieu } from "@/core/nhanNguon";
 import { tiLeThoiGianDiChuyen, coCanhBaoDiChuyen } from "@/core/tiLeDiChuyen";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import { usePlanRegenerate } from "@/ui/hooks/usePlanRegenerate";
-import {
-  Map as MapIcon,
-  Send,
-  SlidersHorizontal,
-  MapPin,
-  Navigation,
-  Pencil,
-  ArrowLeft,
-  Check,
-  ExternalLink,
-  Loader2,
-  AlertCircle,
-  Info,
-  RefreshCw,
-  Plane,
-  Hotel,
-  Sparkles,
-} from "lucide-react";
-import {
-  getDestinationImage,
-  getHotelImage,
-  getRestaurantImage,
-  getCafeImage,
-  getActivityImage,
-} from "@/ui/lib/imageMap";
-
-const VIBES: { label: string; key: Preference }[] = [
-  { label: "Biển", key: "bien" },
-  { label: "Ẩm thực", key: "am_thuc" },
-  { label: "Hải sản", key: "hai_san" },
-  { label: "Văn hóa", key: "van_hoa_lich_su" },
-  { label: "Thiên nhiên", key: "thien_nhien" },
-  { label: "Vui chơi", key: "giai_tri_vui_choi" },
-  { label: "Thư giãn", key: "thu_gian_spa" },
-  { label: "Chụp ảnh", key: "check_in_chup_anh" },
-  { label: "Mua sắm", key: "mua_sam" },
+import { Map as MapIcon, Send, SlidersHorizontal, MapPin, Navigation, Pencil, ArrowLeft, Check, ExternalLink, Loader2, AlertCircle, Info, RefreshCw, } from "lucide-react";
+import { getDestinationImage, getHotelImage, getRestaurantImage, getCafeImage, getActivityImage, } from "@/ui/lib/imageMap";
+const VIBES: {
+    label: string;
+    key: Preference;
+}[] = [
+    { label: "Biển", key: "bien" },
+    { label: "Ẩm thực", key: "am_thuc" },
+    { label: "Hải sản", key: "hai_san" },
+    { label: "Văn hóa", key: "van_hoa_lich_su" },
+    { label: "Thiên nhiên", key: "thien_nhien" },
+    { label: "Vui chơi", key: "giai_tri_vui_choi" },
+    { label: "Thư giãn", key: "thu_gian_spa" },
+    { label: "Chụp ảnh", key: "check_in_chup_anh" },
+    { label: "Mua sắm", key: "mua_sam" },
 ];
-
 function formatSource(source: string | null | undefined): string | null {
-  if (!source) return null;
-  if (source.startsWith("uoc_luong:khoang_cach:")) {
-    const km = source.replace("uoc_luong:khoang_cach:", "").replace("km", "");
-    return `Ước tính theo quãng đường ${km} km`;
-  }
-  try {
-    if (source.startsWith("http://") || source.startsWith("https://")) {
-      const u = new URL(source);
-      return u.hostname.replace(/^www\./, "");
+    if (!source)
+        return null;
+    if (source.startsWith("uoc_luong:khoang_cach:")) {
+        const km = source.replace("uoc_luong:khoang_cach:", "").replace("km", "");
+        return `Ước tính theo quãng đường ${km} km`;
     }
-  } catch {
-    // ignore
-  }
-  if (source.startsWith("osm:")) return "OpenStreetMap";
-  return source;
+    try {
+        if (source.startsWith("http://") || source.startsWith("https://")) {
+            const u = new URL(source);
+            return u.hostname.replace(/^www\./, "");
+        }
+    }
+    catch {
+        // ignore
+    }
+    if (source.startsWith("osm:"))
+        return "OpenStreetMap";
+    return source;
 }
-
 function getTagClass(hangMuc: string): string {
-  switch (hangMuc) {
-    case "Di chuyển":
-      return "tag-move";
-    case "Chỗ ở":
-      return "tag-stay";
-    case "Ăn uống":
-      return "tag-food";
-    case "Vui chơi":
-    default:
-      return "tag-fun";
-  }
+    switch (hangMuc) {
+        case "Di chuyển":
+            return "tag-move";
+        case "Chỗ ở":
+            return "tag-stay";
+        case "Ăn uống":
+            return "tag-food";
+        case "Vui chơi":
+        default:
+            return "tag-fun";
+    }
 }
-
 function getLyDoDuPhongText(lyDo?: string): string {
-  switch (lyDo) {
-    case "het_luot_ai":
-      return "hệ thống đã đạt giới hạn lượt xử lý AI";
-    case "qua_thoi_gian":
-      return "thời gian xử lý AI vượt quá giới hạn";
-    case "loi_mang_ai":
-      return "lỗi kết nối mạng tới dịch vụ AI";
-    case "ai_khong_sua_duoc_ngan_sach":
-      return "AI chưa cân đối được chi phí trong ngân sách";
-    case "vuot_so_luot_goi_ai":
-      return "đã đạt số lượt tương tác AI tối đa cho phép";
-    case "gioi_han_luot_ai":
-      return "đã đạt giới hạn lượt dùng AI trong ngày";
-    case "gioi_han_ip":
-      return "đã đạt giới hạn lượt dùng trong giờ này";
-    case "gioi_han_ngay":
-      return "đã đạt giới hạn lượt dùng trong ngày";
-    case "live_ai_tat":
-      return "tính năng AI đang tắt";
-    default:
-      return "tính năng AI đang tắt";
-  }
+    switch (lyDo) {
+        case "het_luot_ai":
+            return "hệ thống đã đạt giới hạn lượt xử lý AI";
+        case "qua_thoi_gian":
+            return "thời gian xử lý AI vượt quá giới hạn";
+        case "loi_mang_ai":
+            return "lỗi kết nối mạng tới dịch vụ AI";
+        case "ai_khong_sua_duoc_ngan_sach":
+            return "AI chưa cân đối được chi phí trong ngân sách";
+        case "vuot_so_luot_goi_ai":
+            return "đã đạt số lượt tương tác AI tối đa cho phép";
+        case "gioi_han_luot_ai":
+            return "đã đạt giới hạn lượt dùng AI trong ngày";
+        case "gioi_han_ip":
+            return "đã đạt giới hạn lượt dùng trong giờ này";
+        case "gioi_han_ngay":
+            return "đã đạt giới hạn lượt dùng trong ngày";
+        case "live_ai_tat":
+            return "tính năng AI đang tắt";
+        default:
+            return "tính năng AI đang tắt";
+    }
 }
-
 export function B3KeHoachScreen() {
-  const { aiBat } = useTrangThaiAI();
-  const {
-    nav,
-    plan,
-    planResult,
-    planStatus,
-    hardViolations,
-    softViolations,
-    tripConfig,
-    confirmed,
-    setPreviewData,
-    setEditContext,
-    dataSourceUsed,
-    ngayDuLieu,
-    tuoiGioCache,
-    phuongThucLap,
-    lyDoDuPhong,
-    retryPlan,
-  } = useApp();
-
-  const [selectedVibes, setSelectedVibes] = useState<Preference[]>(() =>
-    (plan?.request.sothich as Preference[]) ?? []
-  );
-  const [vibeNote, setVibeNote] = useState<string>("");
-  const {
-    loading: isRegenerating,
-    error: regenError,
-    regenerate: callRegenerate,
-    clearError: clearRegenError,
-  } = usePlanRegenerate();
-
-  const toggleVibe = (vibe: Preference) => {
-    setSelectedVibes((prev) =>
-      prev.includes(vibe) ? prev.filter((v) => v !== vibe) : [...prev, vibe]
-    );
-  };
-
-  const handleRegenerateVibes = async () => {
-    if (!plan) return;
-    if (selectedVibes.length === 0 && !vibeNote.trim()) return;
-
-    clearRegenError();
-
-    const currentSelection = extractSelectionFromPlan(plan);
-    const result = await callRegenerate({
-      request: {
-        ...plan.request,
-        sothich: selectedVibes,
-        ghiChu: vibeNote.trim()
-          ? [...(plan.request.ghiChu || []).filter((g) => g !== vibeNote.trim()), vibeNote.trim()]
-          : (plan.request.ghiChu || []),
-      },
-      selection: currentSelection,
-    });
-
-    if (result.ok && result.planSau && result.diff) {
-      setPreviewData({
-        planSau: result.planSau,
-        selection: result.selection || extractSelectionFromPlan(result.planSau),
-        diff: result.diff,
-        hard: result.hard || [],
-        soft: result.soft || [],
-        diemKhopTruoc: result.diemKhopTruoc,
-        diemKhopSau: result.diemKhopSau,
-      });
-      nav("b6-xem-truoc");
-    }
-  };
-
-  const handleEditItem = (item: PlanItem) => {
-    if (item.hangMuc === "Di chuyển") {
-      const isDi = item.ngay === 1;
-      setEditContext({
-        type: isDi ? "phuong_tien_di" : "phuong_tien_ve",
-        huong: isDi ? "di" : "ve",
-        currentId: item.refId ?? undefined,
-      });
-      nav("b4-phuong-tien");
-    } else if (item.hangMuc === "Chỗ ở") {
-      setEditContext({
-        type: "khach_san",
-        currentId: item.refId ?? undefined,
-      });
-      nav("b5-khach-san");
-    } else if (item.hangMuc === "Vui chơi") {
-      setEditContext({
-        type: "hoat_dong",
-        dayIndex: item.ngay - 1,
-        currentId: item.refId ?? undefined,
-      });
-      nav("b5-khach-san");
-    }
-  };
-
-  // Nếu chưa có plan (ví dụ mở trực tiếp màn hình B3)
-  if (!plan) {
-    return (
-      <div className="tv-layout">
+    const { aiBat } = useTrangThaiAI();
+    const { nav, plan, planResult, planStatus, hardViolations, softViolations, tripConfig, confirmed, setPreviewData, setEditContext, dataSourceUsed, ngayDuLieu, tuoiGioCache, phuongThucLap, lyDoDuPhong, retryPlan, } = useApp();
+    const [selectedVibes, setSelectedVibes] = useState<Preference[]>(() => (plan?.request.sothich as Preference[]) ?? []);
+    const [vibeNote, setVibeNote] = useState<string>("");
+    const { loading: isRegenerating, error: regenError, regenerate: callRegenerate, clearError: clearRegenError, } = usePlanRegenerate();
+    const toggleVibe = (vibe: Preference) => {
+        setSelectedVibes((prev) => prev.includes(vibe) ? prev.filter((v) => v !== vibe) : [...prev, vibe]);
+    };
+    const handleRegenerateVibes = async () => {
+        if (!plan)
+            return;
+        if (selectedVibes.length === 0 && !vibeNote.trim())
+            return;
+        clearRegenError();
+        const currentSelection = extractSelectionFromPlan(plan);
+        const result = await callRegenerate({
+            request: {
+                ...plan.request,
+                sothich: selectedVibes,
+                ghiChu: vibeNote.trim()
+                    ? [...(plan.request.ghiChu || []).filter((g) => g !== vibeNote.trim()), vibeNote.trim()]
+                    : (plan.request.ghiChu || []),
+            },
+            selection: currentSelection,
+            planTruoc: plan,
+        });
+        if (result.ok && result.planSau && result.diff) {
+            setPreviewData({
+                planSau: result.planSau,
+                selection: result.selection || extractSelectionFromPlan(result.planSau),
+                diff: result.diff,
+                hard: result.hard || [],
+                soft: result.soft || [],
+                diemKhopTruoc: result.diemKhopTruoc,
+                diemKhopSau: result.diemKhopSau,
+            });
+            nav("b6-xem-truoc");
+        }
+    };
+    const handleEditItem = (item: PlanItem) => {
+        if (item.hangMuc === "Di chuyển") {
+            const isDi = item.ngay === 1;
+            setEditContext({
+                type: isDi ? "phuong_tien_di" : "phuong_tien_ve",
+                huong: isDi ? "di" : "ve",
+                currentId: item.refId ?? undefined,
+            });
+            nav("b4-phuong-tien");
+        }
+        else if (item.hangMuc === "Chỗ ở") {
+            setEditContext({
+                type: "khach_san",
+                currentId: item.refId ?? undefined,
+            });
+            nav("b5-khach-san");
+        }
+        else if (item.hangMuc === "Vui chơi") {
+            setEditContext({
+                type: "hoat_dong",
+                dayIndex: item.ngay - 1,
+                currentId: item.refId ?? undefined,
+            });
+            nav("b5-khach-san");
+        }
+    };
+    // Nếu chưa có plan (ví dụ mở trực tiếp màn hình B3)
+    if (!plan) {
+        return (<div className="tv-layout">
         <SideNav />
         <div className="tv-main animate-in" style={{ padding: 40, textAlign: "center" }}>
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "var(--p500)" }}>
-            <MapIcon size={48} />
+            <MapIcon size={48}/>
           </div>
           <h2 style={{ fontSize: 22, fontWeight: 800, color: "var(--navy)", marginBottom: 8 }}>
             Chưa có kế hoạch nào được lập
@@ -214,81 +164,72 @@ export function B3KeHoachScreen() {
           <p style={{ color: "var(--g500)", marginBottom: 24, fontSize: 14 }}>
             Vui lòng chọn thông tin chuyến đi để xem lịch trình đề xuất phù hợp nhất cho bạn.
           </p>
-          <button
-            className="btn btn-primary"
-            onClick={() => nav("b1-chon-nhanh")}
-            style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-          >
-            <Send size={16} />
+          <button className="btn btn-primary" onClick={() => nav("b1-chon-nhanh")} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <Send size={16}/>
             Lập kế hoạch ngay
           </button>
         </div>
         <div className="tv-side">
           <BudgetBox />
         </div>
-      </div>
-    );
-  }
-
-  // Gom nhóm các items theo ngày
-  const soNgay = plan.request.soNgay || 3;
-  const daysMap = new Map<number, PlanItem[]>();
-  for (let d = 1; d <= soNgay; d++) {
-    daysMap.set(d, []);
-  }
-  for (const item of plan.items) {
-    const arr = daysMap.get(item.ngay);
-    if (arr) arr.push(item);
-    else daysMap.set(item.ngay, [item]);
-  }
-
-  // Danh sách cảnh báo lưu ý
-  const warningList: string[] = [];
-  if (plan.tongKet.trangThaiNganSach === "vuot") {
-    const vuot = plan.tongKet.tongVND - (plan.request.ngansachTongVND || 0);
-    warningList.push(`Vượt ngân sách ${vuot.toLocaleString("vi-VN")} đ.`);
-  } else if (plan.tongKet.phanTramDaDung >= 90) {
-    warningList.push(
-      `Đã dùng ${plan.tongKet.phanTramDaDung.toFixed(1)}% ngân sách, còn lại ${plan.tongKet.conLaiVND.toLocaleString("vi-VN")} đ.`
-    );
-  }
-  const tenDiemDiHienThi =
-    typeof plan.request.diemDi === "string"
-      ? plan.request.diemDi
-      : (plan.request.diemDi as any)?.ten || tripConfig.diemDi || "TP.HCM";
-
-  plan.request.canhBao.forEach((cb) => {
-    if (cb === "diem_den_mac_dinh") warningList.push("Chưa rõ điểm đến.");
-    else if (cb === "ngoai_pham_vi_so_ngay") warningList.push("Số ngày nằm ngoài phạm vi 2 đến 7 ngày.");
-    else warningList.push(cb);
-  });
-  softViolations.forEach((sv) => {
-    if (sv.code === "ve_den_ngay_sau") {
-      warningList.push(`Chuyến về đến ${tenDiemDiHienThi} vào ngày hôm sau.`);
-    } else {
-      warningList.push(sv.chiTiet);
+      </div>);
     }
-  });
-
-  const tongPhutDiChuyen = plan.tongKet.tongThoiGianDiChuyenPhut ?? 0;
-  if (coCanhBaoDiChuyen(tongPhutDiChuyen, soNgay)) {
-    const phanTram = tiLeThoiGianDiChuyen(tongPhutDiChuyen, soNgay);
-    const tongGio = Math.round((tongPhutDiChuyen / 60) * 10) / 10;
-    const msgDiChuyen = `Di chuyển chiếm khoảng ${phanTram.toFixed(1).replace(".", ",")}% thời gian chuyến đi (${tongGio} giờ). Bạn có thể tăng ngân sách để đi nhanh hơn hoặc giảm số ngày.`;
-    if (!warningList.some((w) => w.includes("Di chuyển chiếm khoảng"))) {
-      warningList.push(msgDiChuyen);
+    // Gom nhóm các items theo ngày
+    const soNgay = plan.request.soNgay || 3;
+    const daysMap = new Map<number, PlanItem[]>();
+    for (let d = 1; d <= soNgay; d++) {
+        daysMap.set(d, []);
     }
-  }
-
-  return (
-    <div className="tv-layout">
+    for (const item of plan.items) {
+        const arr = daysMap.get(item.ngay);
+        if (arr)
+            arr.push(item);
+        else
+            daysMap.set(item.ngay, [item]);
+    }
+    // Danh sách cảnh báo lưu ý
+    const warningList: string[] = [];
+    if (plan.tongKet.trangThaiNganSach === "vuot") {
+        const vuot = plan.tongKet.tongVND - (plan.request.ngansachTongVND || 0);
+        warningList.push(`Vượt ngân sách ${vuot.toLocaleString("vi-VN")} đ.`);
+    }
+    else if (plan.tongKet.phanTramDaDung >= 90) {
+        warningList.push(`Đã dùng ${plan.tongKet.phanTramDaDung.toFixed(1)}% ngân sách, còn lại ${plan.tongKet.conLaiVND.toLocaleString("vi-VN")} đ.`);
+    }
+    const tenDiemDiHienThi = typeof plan.request.diemDi === "string"
+        ? plan.request.diemDi
+        : (plan.request.diemDi as any)?.ten || tripConfig.diemDi || "TP.HCM";
+    [...new Set([...plan.request.canhBao,...plan.canhBao])].forEach((cb) => {
+        if (cb === "diem_den_mac_dinh")
+            warningList.push("Chưa rõ điểm đến.");
+        else if (cb === "ngoai_pham_vi_so_ngay")
+            warningList.push("Số ngày nằm không hợp lệ.");
+        else
+            warningList.push(cb);
+    });
+    softViolations.forEach((sv) => {
+        if (sv.code === "ve_den_ngay_sau") {
+            warningList.push(`Chuyến về đến ${tenDiemDiHienThi} vào ngày hôm sau.`);
+        }
+        else {
+            warningList.push(sv.chiTiet);
+        }
+    });
+    const tongPhutDiChuyen = plan.tongKet.tongThoiGianDiChuyenPhut ?? 0;
+    if (coCanhBaoDiChuyen(tongPhutDiChuyen, soNgay)) {
+        const phanTram = tiLeThoiGianDiChuyen(tongPhutDiChuyen, soNgay);
+        const tongGio = Math.round((tongPhutDiChuyen / 60) * 10) / 10;
+        const msgDiChuyen = `Di chuyển chiếm khoảng ${phanTram.toFixed(1).replace(".", ",")}% thời gian chuyến đi (${tongGio} giờ). Bạn có thể tăng ngân sách để đi nhanh hơn hoặc giảm số ngày.`;
+        if (!warningList.some((w) => w.includes("Di chuyển chiếm khoảng"))) {
+            warningList.push(msgDiChuyen);
+        }
+    }
+    return (<div className="tv-layout">
       <SideNav />
       <div className="tv-main animate-in" style={{ overflowY: "auto" }}>
         {plan.request.diemDen &&
-          typeof plan.request.diemDen === "object" &&
-          plan.request.diemDen.maQuocGia !== "VN" && (
-            <div
-              style={{
+            typeof plan.request.diemDen === "object" &&
+            plan.request.diemDen.maQuocGia !== "VN" && (<div style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
@@ -299,241 +240,105 @@ export function B3KeHoachScreen() {
                 color: "var(--color-primary)",
                 fontSize: 12,
                 marginBottom: 16,
-              }}
-            >
-              <Info size={15} style={{ flexShrink: 0 }} />
+            }}>
+              <Info size={15} style={{ flexShrink: 0 }}/>
               <span>
                 Dữ liệu ngoài Việt Nam có thể ít hơn và chỉ là ước tính. Trip Vibes không tư vấn visa.
               </span>
-            </div>
-          )}
-
-        {/* Banner xanh khi lập bằng quy tắc tự động */}
-        {(phuongThucLap === "quy_tac" ||
-          planResult?.phuongThucLap === "quy_tac" ||
-          (plan as any)?.phuongThucLap === "quy_tac") && (
-          <div className="banner banner-success" style={{ marginBottom: 16 }}>
-            <div
-              className="banner-mark"
-              style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-            >
-              <Check size={14} />
-            </div>
-            <div style={{ flex: 1 }}>
-              <div className="banner-title" style={{ color: "var(--color-success-text)" }}>
-                Kế hoạch được lập bằng quy tắc tự động
-              </div>
-              <div className="banner-text" style={{ color: "var(--color-success-text)" }}>
-                {(() => {
-                  const currentLyDo =
-                    lyDoDuPhong ?? planResult?.lyDoDuPhong ?? (plan as any)?.lyDoDuPhong;
-                  const lyDoText = getLyDoDuPhongText(currentLyDo);
-                  return `Kế hoạch này được lập bằng thuật toán quy tắc tự động (tối ưu thời gian di chuyển trong ngân sách) do ${lyDoText}. Bạn vẫn có thể chủ động đổi từng mục.`;
-                })()}
-              </div>
-              {aiBat && (
-                <div style={{ marginTop: 8 }}>
-                  <button
-                    type="button"
-                    onClick={() => retryPlan()}
-                    className="btn"
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 6,
-                      padding: "4px 10px",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      borderRadius: "var(--r-sm)",
-                      background: "var(--color-surface)",
-                      border: "1px solid var(--color-border)",
-                      color: "var(--color-success-text)",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <RefreshCw size={13} />
-                    <span>Thử lại bằng AI</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Banner lỗi nếu có vi phạm cứng */}
-        {planStatus === "co_vi_pham" && hardViolations.length > 0 && (
-          <div className="banner banner-error" style={{ marginBottom: 16 }}>
-            <div className="banner-mark">!</div>
-            <div>
-              <div className="banner-title">Kế hoạch đang có vi phạm ràng buộc</div>
-              {hardViolations.map((h, idx) => (
-                <div key={idx} className="banner-text">
-                  • {h.chiTiet}
-                </div>
-              ))}
-              <div className="banner-text" style={{ marginTop: 4, fontStyle: "italic" }}>
-                Hãy bấm nút &quot;Đổi&quot; ở khách sạn hoặc phương tiện để giảm chi phí hoặc điều chỉnh lịch trình.
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Warning banner thông thường */}
-        {warningList.length > 0 && (
-          <div className="banner banner-warn" style={{ marginBottom: 16 }}>
-            <div className="banner-mark">!</div>
-            <div>
-              <div className="banner-title">Lưu ý</div>
-              {warningList.map((w, idx) => (
-                <div key={idx} className="banner-text">
-                  {w}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+            </div>)}
 
         {/* Banner ảnh minh họa điểm đến trực quan từ Wikimedia Commons */}
         {(() => {
-          const tenDiemDenHienThi = getDiemDenTen(plan.request.diemDen);
-          const anhInfo = getDestinationImage(tenDiemDenHienThi);
-          const quocGia =
-            typeof plan.request.diemDen === "object" && plan.request.diemDen?.quocGia
-              ? plan.request.diemDen.quocGia
-              : "Việt Nam";
-
-          return (
-            <div
-              style={{
-                position: "relative",
-                borderRadius: "var(--r-xl)",
-                overflow: "hidden",
-                marginBottom: 20,
-                height: 220,
-                border: "1px solid var(--color-border)",
-                boxShadow: "0 4px 16px rgba(43, 85, 214, 0.08)",
-                background: "var(--color-surface)",
-              }}
-            >
-              <img
-                src={anhInfo.urlThumb || anhInfo.url}
-                alt={anhInfo.alt || tenDiemDenHienThi}
-                loading="lazy"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(15, 23, 42, 0.88) 100%)",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-end",
-                  padding: "18px 24px",
-                  color: "var(--color-primary-text)",
-                }}
-              >
+            const tenDiemDenHienThi = getDiemDenTen(plan.request.diemDen);
+            const anhInfo = getDestinationImage(tenDiemDenHienThi);
+            const quocGia = typeof plan.request.diemDen === "object" && plan.request.diemDen?.quocGia
+                ? plan.request.diemDen.quocGia
+                : "Việt Nam";
+            return (<div style={{
+                    position: "relative",
+                    borderRadius: "var(--r-xl)",
+                    overflow: "hidden",
+                    marginBottom: 20,
+                    height: 220,
+                    border: "1px solid var(--color-border)",
+                    boxShadow: "0 4px 16px rgba(43, 85, 214, 0.08)",
+                    background: "var(--color-surface)",
+                }}>
+              <img src={anhInfo.urlThumb || anhInfo.url} alt={anhInfo.alt || tenDiemDenHienThi} loading="lazy" style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                }}/>
+              <div style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: "linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(15, 23, 42, 0.88) 100%)",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-end",
+                    padding: "18px 24px",
+                    color: "var(--color-primary-text)",
+                }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      padding: "2px 8px",
-                      borderRadius: "var(--r-full)",
-                      background: "rgba(255, 255, 255, 0.2)",
-                      backdropFilter: "blur(4px)",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.5px",
-                    }}
-                  >
+                  <span style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    padding: "2px 8px",
+                    borderRadius: "var(--r-full)",
+                    background: "rgba(255, 255, 255, 0.2)",
+                    backdropFilter: "blur(4px)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                }}>
                     {quocGia}
                   </span>
                   <span style={{ fontSize: 13, opacity: 0.9 }}>
-                    {soNgay} ngày {Math.max(1, soNgay - 1)} đêm · {plan.request.soNguoi || 2} người
+                    {soNgay} ngày {tripNights(soNgay)} đêm · {plan.request.soNguoi || 2} người
                   </span>
                 </div>
 
-                <div
-                  style={{
+                <div style={{
                     fontSize: 24,
                     fontWeight: 800,
                     lineHeight: 1.2,
                     marginBottom: 6,
                     color: "var(--color-primary-text)",
-                  }}
-                >
+                }}>
                   Chuyến đi {tenDiemDenHienThi}
                 </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    fontSize: 11,
-                    opacity: 0.85,
-                    flexWrap: "wrap",
-                    gap: 8,
-                  }}
-                >
-                  <span>{anhInfo.diaDanh}</span>
-                  <span>
-                    Ảnh: {anhInfo.tacGia} ·{" "}
-                    {anhInfo.linkGiayPhep ? (
-                      <a
-                        href={anhInfo.linkGiayPhep}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ color: "var(--color-primary-text)", textDecoration: "underline" }}
-                      >
-                        {anhInfo.giayPhep}
-                      </a>
-                    ) : (
-                      <span>{anhInfo.giayPhep}</span>
-                    )}
-                  </span>
-                </div>
+                {null}
               </div>
-            </div>
-          );
+            </div>);
         })()}
 
         <div style={{ marginBottom: 20 }}>
           <h1 className="section-title" style={{ fontSize: 20, fontWeight: 800, margin: 0, color: "var(--navy)" }}>
             Kế hoạch du lịch {getDiemDenTen(plan.request.diemDen)}
           </h1>
-          <div
-            style={{
-              fontSize: 12,
-              color: "var(--g500)",
-              marginTop: 4,
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-            }}
-          >
+          <div style={{
+            fontSize: 12,
+            color: "var(--g500)",
+            marginTop: 4,
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+        }}>
             <span>
               {nhanNguonDuLieu({
-                dataSourceUsed: planResult?.dataSourceUsed ?? plan?.dataSourceUsed ?? dataSourceUsed,
-                ngay: planResult?.snapshotDate ?? planResult?.ngayDuLieu ?? ngayDuLieu ?? (plan as any)?.ngayDuLieu,
-                tuoiGio: planResult?.tuoiGioCache ?? tuoiGioCache ?? (plan as any)?.tuoiGioCache,
-              })}
+            dataSourceUsed: planResult?.dataSourceUsed ?? plan?.dataSourceUsed ?? dataSourceUsed,
+            ngay: planResult?.snapshotDate ?? planResult?.ngayDuLieu ?? ngayDuLieu ?? (plan as any)?.ngayDuLieu,
+            tuoiGio: planResult?.tuoiGioCache ?? tuoiGioCache ?? (plan as any)?.tuoiGioCache,
+        })}
             </span>
           </div>
         </div>
 
         {/* Hiển thị các ngày từ kết quả backend thực tế */}
         {Array.from(daysMap.entries()).map(([dayNum, items]) => {
-          const dayTotal = items.reduce((sum, it) => sum + it.thanhTien, 0);
-
-          return (
-            <div key={dayNum} className="daycard">
+            const dayTotal = items.reduce((sum, it) => sum + it.thanhTien, 0);
+            return (<div key={dayNum} className="daycard">
               <div className="daycard-head">
                 <div className="daycard-name">Ngày {dayNum}</div>
                 <div className="daycard-total">
@@ -542,177 +347,127 @@ export function B3KeHoachScreen() {
               </div>
 
               {items.map((item, i) => {
-                const isThamKhao = item.doTinCay === "tham_khao";
-                const isEstimated =
-                  item.giaLaUocTinh ||
-                  (item.doTinCay && item.doTinCay !== "xac_minh");
-
-                const sourceShort = formatSource(item.nguon);
-
-                const cleanName = item.noiDung
-                  .replace(/^(Di chuyển chiều đi:|Di chuyển chiều về:|Lưu trú:|Trưa:|Tối:|Cà phê:)\s*/i, "")
-                  .split("(")[0]
-                  .trim();
-
-                const currentDestName = getDiemDenTen(plan.request.diemDen);
-                const queryTarget = currentDestName ? `${cleanName}, ${currentDestName}` : cleanName;
-                const xemUrl =
-                  item.mapsUrl ||
-                  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryTarget)}`;
-                const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(queryTarget)}`;
-
-                const canEdit =
-                  item.hangMuc === "Di chuyển" ||
-                  item.hangMuc === "Chỗ ở" ||
-                  item.hangMuc === "Vui chơi";
-
-                const itemImg = (() => {
-                  if (item.hangMuc === "Chỗ ở") {
-                    return getHotelImage(undefined, cleanName, currentDestName);
-                  }
-                  if (item.hangMuc === "Ăn uống") {
-                    if (cleanName.toLowerCase().includes("cà phê") || cleanName.toLowerCase().includes("cafe")) {
-                      return getCafeImage(cleanName);
-                    }
-                    return getRestaurantImage(cleanName);
-                  }
-                  if (item.hangMuc === "Vui chơi") {
-                    return getActivityImage(undefined, cleanName);
-                  }
-                  return null;
-                })();
-
-                return (
-                  <div key={i} className="item" style={{ flexDirection: "column", alignItems: "stretch" }}>
+                    const isThamKhao = item.doTinCay === "tham_khao";
+                    const isEstimated = item.giaLaUocTinh ||
+                        (item.doTinCay && item.doTinCay !== "xac_minh");
+                    const sourceShort = formatSource(item.nguon);
+                    const cleanName = item.destinationName || item.noiDung
+                        .replace(/^(Di chuyển chiều đi:|Di chuyển chiều về:|Lưu trú:|Trưa:|Tối:|Cà phê:)\s*/i, "")
+                        .split("(")[0]
+                        .trim();
+                    const currentDestName = getDiemDenTen(plan.request.diemDen);
+                    const namedMaps=planItemMaps(item,currentDestName);
+                    const xemUrl=namedMaps.xem,dirUrl=namedMaps.chiDuong;
+                    const hasMapTarget = Boolean(item.destinationName || item.mapsUrl || item.refId);
+                    const sourceMap = osmFeatureUrl(item.nguon);
+                    const hotelMilestone = item.hangMuc === "Chỗ ở" && !item.refId && item.priceKnown === true && item.thanhTien === 0;
+                    const canEdit = (item.hangMuc === "Di chuyển"&&item.experienceType!=="local_transfer") ||
+                        (item.hangMuc === "Chỗ ở" && !hotelMilestone) ||
+                        item.hangMuc === "Vui chơi";
+                    const itemImg = (() => {
+                        if (item.hangMuc === "Chỗ ở") {
+                            return getHotelImage(undefined, cleanName, currentDestName);
+                        }
+                        if (item.hangMuc === "Ăn uống") {
+                            if (cleanName.toLowerCase().includes("cà phê") || cleanName.toLowerCase().includes("cafe")) {
+                                return getCafeImage(cleanName);
+                            }
+                            return getRestaurantImage(cleanName);
+                        }
+                        if (item.hangMuc === "Vui chơi") {
+                            return getActivityImage(undefined, cleanName);
+                        }
+                        return null;
+                    })();
+                    return (<div key={i} className="item" style={{ flexDirection: "column", alignItems: "stretch" }}>
                     <div style={{ display: "flex", alignItems: "flex-start", width: "100%" }}>
                       <div className="item-time">{item.gio || "—"}</div>
                       <span className={`tag ${getTagClass(item.hangMuc)}`}>
-                        {item.hangMuc}
+                        {item.experienceType?({cafe:"Cà phê",museum:"Bảo tàng",attraction:"Tham quan",nature:"Thiên nhiên",entertainment:"Vui chơi",restaurant:"Ăn uống",local_transfer:"Di chuyển nội vùng"})[item.experienceType]:item.hangMuc}
                       </span>
 
-                      {itemImg && (
-                        <div
-                          style={{
-                            width: 44,
-                            height: 44,
-                            borderRadius: "var(--r-md)",
-                            overflow: "hidden",
-                            flexShrink: 0,
-                            marginRight: 10,
-                            marginLeft: 4,
-                            border: "1px solid var(--color-border)",
-                            background: "var(--color-surface-sub)",
-                          }}
-                        >
-                          <img
-                            src={itemImg.urlThumb || itemImg.url}
-                            alt={itemImg.alt || cleanName}
-                            loading="lazy"
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover",
-                              display: "block",
-                            }}
-                          />
-                        </div>
-                      )}
+                      {itemImg && (<div style={{
+                                width: 44,
+                                height: 44,
+                                borderRadius: "var(--r-md)",
+                                overflow: "hidden",
+                                flexShrink: 0,
+                                marginRight: 10,
+                                marginLeft: 4,
+                                border: "1px solid var(--color-border)",
+                                background: "var(--color-surface-sub)",
+                            }}>
+                          <img src={itemImg.urlThumb || itemImg.url} alt={itemImg.alt || cleanName} loading="lazy" style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                display: "block",
+                            }}/>
+                        </div>)}
 
                       <div className="item-info" style={{ flex: 1, paddingRight: 12 }}>
                         <div className="item-title">{item.noiDung}</div>
+                        {item.diaChi && <p className="item-sub">{item.diaChi}</p>}
 
                         <div className="item-sub" style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 4 }}>
-                          {item.soLuong > 1 && (
-                            <span>
+                          {item.soLuong > 1 && (<span>
                               {item.soLuong}{" "}
                               {item.hangMuc === "Ăn uống"
                                 ? "suất"
                                 : item.hangMuc === "Di chuyển" || item.hangMuc === "Vui chơi"
-                                ? "vé"
-                                : item.hangMuc === "Chỗ ở"
-                                ? "phòng"
-                                : "phần"}{" "}
+                                    ? "vé"
+                                    : item.hangMuc === "Chỗ ở"
+                                        ? "phòng-đêm"
+                                        : "phần"}{" "}
                               × {item.donGia.toLocaleString("vi-VN")} đ
-                            </span>
-                          )}
+                            </span>)}
 
-                          {isThamKhao ? (
-                            <span
-                              className="tag"
-                              style={{
+                          {isThamKhao ? (<span className="tag" style={{
                                 background: "var(--g100)",
                                 color: "var(--g700)",
                                 fontSize: 11,
                                 fontWeight: 600,
                                 padding: "2px 8px",
-                              }}
-                            >
+                            }}>
                               Tham khảo
-                            </span>
-                          ) : isEstimated ? (
-                            <span
-                              className="tag"
-                              style={{
+                            </span>) : isEstimated ? (<span className="tag" style={{
                                 background: "var(--p100)",
                                 color: "var(--p500)",
                                 fontSize: 11,
                                 fontWeight: 600,
                                 padding: "2px 8px",
-                              }}
-                            >
+                            }}>
                               Giá ước tính
-                            </span>
-                          ) : null}
+                            </span>) : null}
 
-                          {sourceShort && (
-                            <span style={{ fontSize: 12, color: "var(--g500)" }}>
+                          {sourceShort && (<span style={{ fontSize: 12, color: "var(--g500)" }}>
                               {sourceShort.startsWith("Ước tính") ? sourceShort : `Nguồn: ${sourceShort}`}
-                            </span>
-                          )}
+                            </span>)}
                         </div>
 
-                        {/* Nút bản đồ Maps & Nút Đổi */}
+                        {/* Nút chỉ đường & Nút Đổi */}
                         <div style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap", alignItems: "center" }}>
-                          <a
-                            href={xemUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-outline btn-sm"
-                            style={{
-                              fontSize: 11,
-                              padding: "3px 10px",
-                              textDecoration: "none",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: 4,
-                            }}
-                          >
-                            <MapPin size={12} />
-                            Xem Maps <ExternalLink size={10} />
-                          </a>
-                          <a
-                            href={dirUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-outline btn-sm"
-                            style={{
-                              fontSize: 11,
-                              padding: "3px 10px",
-                              textDecoration: "none",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: 4,
-                            }}
-                          >
-                            <Navigation size={12} />
-                            Chỉ đường <ExternalLink size={10} />
-                          </a>
+                          {hasMapTarget && item.hangMuc !== "Di chuyển" && (
+                            <a href={xemUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm">
+                              Xem trên Google Maps <ExternalLink size={10}/>
+                            </a>
+                          )}
+                          {sourceMap && <a href={sourceMap} target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm">Vị trí trên OpenStreetMap</a>}
+                          {hasMapTarget && <a href={dirUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm" style={{
+                            fontSize: 11,
+                            padding: "4px 12px",
+                            textDecoration: "none",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 5,
+                            borderRadius: "var(--r-sm)",
+                            transition: "all 0.15s ease",
+                        }}>
+                            <Navigation size={12}/>
+                            Chỉ đường <ExternalLink size={10}/>
+                          </a>}
 
-                          {canEdit && (
-                            <button
-                              onClick={() => handleEditItem(item)}
-                              className="btn btn-outline btn-sm"
-                              style={{
+                          {canEdit && (<button onClick={() => handleEditItem(item)} className="btn btn-outline btn-sm" style={{
                                 fontSize: 11,
                                 padding: "3px 10px",
                                 borderColor: "var(--p400)",
@@ -723,169 +478,159 @@ export function B3KeHoachScreen() {
                                 display: "inline-flex",
                                 alignItems: "center",
                                 gap: 4,
-                              }}
-                            >
-                              <Pencil size={12} />
+                            }}>
+                              <Pencil size={12}/>
                               Đổi
-                            </button>
-                          )}
+                            </button>)}
                         </div>
                       </div>
 
                       <div className="item-amount" style={{ textAlign: "right", minWidth: 120 }}>
-                        {item.thanhTien === 0 ? (
-                          item.hangMuc === "Vui chơi" ? (
-                            <span style={{ color: "var(--color-text-sub)", fontSize: 13 }}>Chưa có giá vé</span>
-                          ) : (
-                            <span style={{ color: "var(--success)" }}>Miễn phí</span>
-                          )
-                        ) : item.giaGoc && item.giaGoc.tienTe !== "VND" ? (
-                          <div>
+                        {hotelMilestone ? <span>Đã tính trong lưu trú</span> : item.thanhTien === 0 ? (item.priceKnown!==true ? (<span style={{ color: "var(--color-text-sub)", fontSize: 13 }}>Chưa có giá xác nhận</span>) : (<span style={{ color: "var(--success)" }}>Miễn phí</span>)) : item.giaGoc && item.giaGoc.tienTe !== "VND" ? (<div>
                             <div style={{ fontWeight: 700, fontSize: 13, color: "var(--navy)" }}>
                               khoảng {item.giaGoc.soTien.toLocaleString("vi-VN")} {item.giaGoc.tienTe}, tương đương {item.thanhTien.toLocaleString("vi-VN")} đ
                             </div>
                             <div style={{ fontSize: 11, color: "var(--g500)", marginTop: 2 }}>
                               Tỷ giá: 1 {item.giaGoc.tienTe} = {item.giaGoc.tyGia.toLocaleString("vi-VN")} đ ({item.giaGoc.ngayTyGia})
                             </div>
-                          </div>
-                        ) : (
-                          `${item.thanhTien.toLocaleString("vi-VN")} đ`
-                        )}
+                          </div>) : (`${item.thanhTien.toLocaleString("vi-VN")} đ`)}
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
+                  </div>);
+                })}
+            </div>);
         })}
 
         {/* Khung Muốn kế hoạch hợp gu hơn - bị ẩn khi kế hoạch đã chốt hoặc AI tắt */}
-        {!confirmed && aiBat && (
-          <div className="personal-panel" style={{ marginTop: 24 }}>
+        {!confirmed && (<div className="personal-panel" style={{ marginTop: 24 }}>
             <div className="panel-title" style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <SlidersHorizontal size={16} />
+              <SlidersHorizontal size={16}/>
               Muốn kế hoạch hợp gu hơn?
             </div>
             <div className="panel-sub">
               Chọn điều bạn thích, hệ thống sẽ gợi ý lại các hoạt động phù hợp nhất.
             </div>
             <div className="chips">
-              {VIBES.map((v) => (
-                <button
-                  key={v.key}
-                  type="button"
-                  className={`chip ${selectedVibes.includes(v.key) ? "on" : ""}`}
-                  onClick={() => toggleVibe(v.key)}
-                >
+              {VIBES.map((v) => (<button key={v.key} type="button" className={`chip ${selectedVibes.includes(v.key) ? "on" : ""}`} onClick={() => toggleVibe(v.key)}>
                   {v.label}
-                </button>
-              ))}
+                </button>))}
             </div>
-            <textarea
-              className="textarea"
-              style={{ marginTop: 12 }}
-              placeholder="Hoặc nhắn thêm yêu cầu, ví dụ: không muốn đi bộ nhiều, thích cà phê ngắm cảnh..."
-              value={vibeNote}
-              onChange={(e) => setVibeNote(e.target.value)}
-            />
-            {regenError && (
-              <div
-                className="banner banner-warn"
-                style={{
-                  marginTop: 12,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  fontSize: 13,
-                  padding: "8px 12px",
-                }}
-              >
-                <AlertCircle size={16} style={{ flexShrink: 0, color: "var(--warning)" }} />
+            <textarea className="textarea" style={{ marginTop: 12 }} placeholder="Hoặc nhắn thêm yêu cầu, ví dụ: không muốn đi bộ nhiều, thích cà phê ngắm cảnh..." value={vibeNote} onChange={(e) => setVibeNote(e.target.value)}/>
+            {regenError && (<div className="banner banner-warn" style={{
+                    marginTop: 12,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    fontSize: 13,
+                    padding: "8px 12px",
+                }}>
+                <AlertCircle size={16} style={{ flexShrink: 0, color: "var(--warning)" }}/>
                 <span>{regenError}</span>
-              </div>
-            )}
+              </div>)}
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}>
-              <button
-                className="btn btn-primary btn-sm"
-                onClick={handleRegenerateVibes}
-                disabled={isRegenerating || (selectedVibes.length === 0 && !vibeNote.trim())}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  opacity: (selectedVibes.length === 0 && !vibeNote.trim()) || isRegenerating ? 0.6 : 1,
-                  cursor:
-                    (selectedVibes.length === 0 && !vibeNote.trim()) || isRegenerating
-                      ? "not-allowed"
-                      : "pointer",
-                }}
-              >
-                {isRegenerating ? (
-                  <>
-                    <Loader2 size={14} className="spin" style={{ animation: "spin 1s linear infinite" }} />
+              <button className="btn btn-primary btn-sm" onClick={handleRegenerateVibes} disabled={isRegenerating || (selectedVibes.length === 0 && !vibeNote.trim())} style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                opacity: (selectedVibes.length === 0 && !vibeNote.trim()) || isRegenerating ? 0.6 : 1,
+                cursor: (selectedVibes.length === 0 && !vibeNote.trim()) || isRegenerating
+                    ? "not-allowed"
+                    : "pointer",
+            }}>
+                {isRegenerating ? (<>
+                    <Loader2 size={14} className="spin" style={{ animation: "spin 1s linear infinite" }}/>
                     Đang tìm...
-                  </>
-                ) : (
-                  <>
-                    <RefreshCw size={14} />
+                  </>) : (<>
+                    <RefreshCw size={14}/>
                     Gợi ý lại
-                  </>
-                )}
+                  </>)}
               </button>
             </div>
-          </div>
-        )}
+          </div>)}
 
+        <button className="btn btn-outline" onClick={() => nav("workspace")}>Chỉnh sửa hành trình</button>
         {/* Action bar dưới cùng: Cho phép điều hướng liền mạch */}
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 12, marginTop: 24, padding: "16px 0", borderTop: "1px solid var(--color-border)" }}>
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={() => nav("b1-chon-nhanh")}
-            style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-          >
-            <ArrowLeft size={16} />
+          <button type="button" className="btn btn-outline" onClick={() => nav("b1-chon-nhanh")} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <ArrowLeft size={16}/>
             Chọn lại nhu cầu
           </button>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-            <button
-              type="button"
-              className="btn btn-outline"
-              onClick={() => nav("b4-phuong-tien")}
-              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-              title="Đổi phương tiện chiều đi hoặc chiều về"
-            >
-              <Plane size={15} />
-              Đổi phương tiện
+            <button type="button" className="btn btn-primary" onClick={() => nav(confirmed ? "b8-chuyen-di" : "b7-xac-nhan")}>
+              <Check size={16}/> {confirmed ? "Xem tiến độ chuyến đi" : "Xem lại và chốt kế hoạch"}
             </button>
-            <button
-              type="button"
-              className="btn btn-outline"
-              onClick={() => nav("b5-khach-san")}
-              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-              title="Đổi khách sạn hoặc khu vực lưu trú"
-            >
-              <Hotel size={15} />
-              Đổi nơi ở
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => nav("b7-xac-nhan")}
-              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-            >
-              <Check size={16} />
-              Xác nhận kế hoạch
-            </button>
+
           </div>
         </div>
       </div>
 
       <div className="tv-side">
-        <BudgetBox plan={plan} />
+        {plan.request.travelDates&&<p className="Sub">Ngày đi: {plan.request.travelDates.departureDate.split("-").reverse().join("/")} · Ngày về: {plan.request.travelDates.returnDate.split("-").reverse().join("/")}</p>}<BudgetBox plan={plan}/>        {/* Banner xanh khi lập bằng quy tắc tự động */}
+        {(phuongThucLap === "quy_tac" ||
+            planResult?.phuongThucLap === "quy_tac" ||
+            (plan as any)?.phuongThucLap === "quy_tac") && (<div className="banner banner-success" style={{ marginBottom: 16 }}>
+            <div className="banner-mark" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Check size={14}/>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div className="banner-title" style={{ color: "var(--color-success-text)" }}>
+                Kế hoạch được lập bằng quy tắc tự động
+              </div>
+              <div className="banner-text" style={{ color: "var(--color-success-text)" }}>
+                {(() => {
+                const currentLyDo = lyDoDuPhong ?? planResult?.lyDoDuPhong ?? (plan as any)?.lyDoDuPhong;
+                const lyDoText = getLyDoDuPhongText(currentLyDo);
+                return `Kế hoạch này được lập bằng thuật toán quy tắc tự động (tối ưu thời gian di chuyển trong ngân sách) do ${lyDoText}. Bạn vẫn có thể chủ động đổi từng mục.`;
+            })()}
+              </div>
+              {aiBat && (<div style={{ marginTop: 8 }}>
+                  <button type="button" onClick={() => retryPlan()} className="btn" style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "4px 10px",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    borderRadius: "var(--r-sm)",
+                    background: "var(--color-surface)",
+                    border: "1px solid var(--color-border)",
+                    color: "var(--color-success-text)",
+                    cursor: "pointer",
+                }}>
+                    <RefreshCw size={13}/>
+                    <span>Thử lại bằng AI</span>
+                  </button>
+                </div>)}
+            </div>
+          </div>)}
+
+        {/* Banner lỗi nếu có vi phạm cứng */}
+        {planStatus === "co_vi_pham" && hardViolations.length > 0 && (<div className="banner banner-error" style={{ marginBottom: 16 }}>
+            <div className="banner-mark">!</div>
+            <div>
+              <div className="banner-title">Kế hoạch đang có vi phạm ràng buộc</div>
+              {hardViolations.map((h, idx) => (<div key={idx} className="banner-text">
+                  • {h.chiTiet}
+                </div>))}
+              <div className="banner-text" style={{ marginTop: 4, fontStyle: "italic" }}>
+                Hãy bấm nút &quot;Đổi&quot; ở khách sạn hoặc phương tiện để giảm chi phí hoặc điều chỉnh lịch trình.
+              </div>
+            </div>
+          </div>)}
+
+        {/* Warning banner thông thường */}
+        {warningList.length > 0 && (<div className="banner banner-warn" style={{ marginBottom: 16 }}>
+            <div className="banner-mark">!</div>
+            <div>
+              <div className="banner-title">Lưu ý</div>
+              {warningList.map((w, idx) => (<div key={idx} className="banner-text">
+                  {w}
+                </div>))}
+            </div>
+          </div>)}
+
+
       </div>
-    </div>
-  );
+    </div>);
 }

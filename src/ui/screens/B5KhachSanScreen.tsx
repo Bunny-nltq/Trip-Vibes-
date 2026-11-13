@@ -1,4 +1,5 @@
 "use client";
+import {tripNights} from "@/core/tripWorkspace";
 import React, { useState, useMemo } from "react";
 import { useApp, extractSelectionFromPlan } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
@@ -55,7 +56,7 @@ export function B5KhachSanScreen() {
   const soDem =
     choOItem?.soLuong && soPhong > 0
       ? Math.round(choOItem.soLuong / soPhong)
-      : Math.max(1, soNgay - 1);
+      : tripNights(soNgay);
 
   // Fetch hotels
   const {
@@ -124,6 +125,7 @@ export function B5KhachSanScreen() {
     if (mode === "khach_san") {
       const res = await preview({
         request: plan.request,
+      planTruoc: plan,
         selection,
         thayDoi: {
           loai: "khach_san",
@@ -152,6 +154,7 @@ export function B5KhachSanScreen() {
 
       const res = await preview({
         request: plan.request,
+      planTruoc: plan,
         selection,
         thayDoi: {
           loai: "hoat_dong",

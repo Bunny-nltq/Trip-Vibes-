@@ -2,64 +2,53 @@
 import React from "react";
 import { useApp } from "@/ui/context/AppContext";
 import { getDestinationImage } from "@/ui/lib/imageMap";
-
 export function WelcomeScreen() {
-  const { nav } = useApp();
-
-  const featuredDestinations = [
-    { slug: "da-nang", ten: "Đà Nẵng", quocGia: "Việt Nam" },
-    { slug: "ha-noi", ten: "Hà Nội", quocGia: "Việt Nam" },
-    { slug: "da-lat", ten: "Đà Lạt", quocGia: "Việt Nam" },
-    { slug: "bangkok", ten: "Bangkok", quocGia: "Thái Lan" },
-    { slug: "seoul", ten: "Seoul", quocGia: "Hàn Quốc" },
-  ].map((d) => ({
-    ...d,
-    img: getDestinationImage(d.slug),
-  }));
-
-  const features = [
-    {
-      icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    const { nav } = useApp();
+    const featuredDestinations = [
+        { slug: "da-nang", ten: "Đà Nẵng", quocGia: "Việt Nam" },
+        { slug: "ha-noi", ten: "Hà Nội", quocGia: "Việt Nam" },
+        { slug: "da-lat", ten: "Đà Lạt", quocGia: "Việt Nam" },
+        { slug: "bangkok", ten: "Bangkok", quocGia: "Thái Lan" },
+        { slug: "seoul", ten: "Seoul", quocGia: "Hàn Quốc" },
+    ].map((d) => ({
+        ...d,
+        img: getDestinationImage(d.slug),
+    }));
+    const features = [
+        {
+            icon: (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
           <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-        </svg>
-      ),
-      title: "Kế hoạch có giá",
-      sub: "Phương tiện, khách sạn, hoạt động rõ ràng minh bạch",
-    },
-    {
-      icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        </svg>),
+            title: "Kế hoạch có giá",
+            sub: "Phương tiện, khách sạn, hoạt động rõ ràng minh bạch",
+        },
+        {
+            icon: (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
           <circle cx="12" cy="12" r="3"/>
-        </svg>
-      ),
-      title: "Xem trước thay đổi",
-      sub: "Biết trước chi phí và thời gian trước khi áp dụng",
-    },
-    {
-      icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        </svg>),
+            title: "Xem trước thay đổi",
+            sub: "Biết trước chi phí và thời gian trước khi áp dụng",
+        },
+        {
+            icon: (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
           <circle cx="12" cy="13" r="3"/>
-        </svg>
-      ),
-      title: "Theo dõi chi tiêu",
-      sub: "Bóc tách hóa đơn tự động — bạn kiểm tra và xác nhận",
-    },
-  ];
-
-  return (
-    <div className="Landing" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+        </svg>),
+            title: "Theo dõi chi tiêu",
+            sub: "Bóc tách hóa đơn tự động — bạn kiểm tra và xác nhận",
+        },
+    ];
+    return (<div className="Landing" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       {/* Top Header */}
       <header className="LandTop">
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <svg width="48" height="38" viewBox="0 0 62 48" aria-hidden="true">
-            <circle cx="43" cy="16" r="10" fill="var(--color-art-sun)" />
-            <path d="M2 44 22 14l11 16 7-9 20 23z" fill="var(--color-art-mountain1)" />
-            <path d="M12 44 30 22l10 14 6-8 14 16z" fill="var(--color-art-mountain2)" />
-            <path d="M2 44h58" stroke="var(--color-art-line)" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="43" cy="16" r="10" fill="var(--color-art-sun)"/>
+            <path d="M2 44 22 14l11 16 7-9 20 23z" fill="var(--color-art-mountain1)"/>
+            <path d="M12 44 30 22l10 14 6-8 14 16z" fill="var(--color-art-mountain2)"/>
+            <path d="M2 44h58" stroke="var(--color-art-line)" strokeWidth="2" strokeLinecap="round"/>
           </svg>
           <div>
             <div className="LogoName Script">Trip Vibes</div>
@@ -68,18 +57,10 @@ export function WelcomeScreen() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <button
-            type="button"
-            className="Btn BtnSmall"
-            onClick={() => nav("login")}
-          >
+          <button type="button" className="Btn BtnSmall" onClick={() => nav("login")}>
             Đăng nhập
           </button>
-          <button
-            type="button"
-            className="Btn BtnSmall BtnPrimary"
-            onClick={() => nav("register")}
-          >
+          <button type="button" className="Btn BtnSmall BtnPrimary" onClick={() => nav("register")}>
             Đăng ký
           </button>
         </div>
@@ -87,16 +68,14 @@ export function WelcomeScreen() {
 
       {/* Main Landing Card */}
       <main className="LandCard" style={{ padding: "64px 48px", textAlign: "center", marginTop: 24, marginBottom: 40 }}>
-        <h1
-          style={{
+        <h1 style={{
             fontSize: 42,
             lineHeight: 1.2,
             fontWeight: 800,
             color: "var(--color-text)",
             marginBottom: 16,
             letterSpacing: -0.5,
-          }}
-        >
+        }}>
           Lập kế hoạch du lịch,{" "}
           <span style={{ color: "var(--color-primary)" }}>
             giữ đúng ngân sách
@@ -107,26 +86,20 @@ export function WelcomeScreen() {
         </p>
 
         {/* 3 Features */}
-        <div
-          style={{
+        <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: 20,
             maxWidth: 820,
             margin: "0 auto 44px",
-          }}
-        >
-          {features.map((f) => (
-            <div
-              key={f.title}
-              style={{
+        }}>
+          {features.map((f) => (<div key={f.title} style={{
                 background: "var(--color-surface-sub)",
                 borderRadius: 22,
                 padding: "26px 20px",
                 border: "1px solid var(--color-border)",
                 textAlign: "left",
-              }}
-            >
+            }}>
               <div style={{ fontSize: 32, marginBottom: 12 }}>{f.icon}</div>
               <div style={{ fontWeight: 700, fontSize: 16, color: "var(--color-text)", marginBottom: 6 }}>
                 {f.title}
@@ -134,8 +107,7 @@ export function WelcomeScreen() {
               <div style={{ fontSize: 13, color: "var(--color-text-sub)", lineHeight: 1.5 }}>
                 {f.sub}
               </div>
-            </div>
-          ))}
+            </div>))}
         </div>
 
         {/* Featured Destinations with Real Photos */}
@@ -149,63 +121,34 @@ export function WelcomeScreen() {
             </div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-              gap: 12,
-            }}
-          >
-            {featuredDestinations.map((d) => (
-              <div
-                key={d.slug}
-                onClick={() => nav("b1-chon-nhanh")}
-                style={{
-                  background: "var(--color-surface)",
-                  borderRadius: "var(--r-lg)",
-                  border: "1px solid var(--color-border)",
-                  overflow: "hidden",
-                  cursor: "pointer",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-                  transition: "transform 0.15s ease",
-                }}
-              >
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+            gap: 12,
+        }}>
+            {featuredDestinations.map((d) => (<div key={d.slug} onClick={() => nav("b1-chon-nhanh")} style={{
+                background: "var(--color-surface)",
+                borderRadius: "var(--r-lg)",
+                border: "1px solid var(--color-border)",
+                overflow: "hidden",
+                cursor: "pointer",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                transition: "transform 0.15s ease",
+            }}>
                 <div style={{ position: "relative", height: 105, background: "var(--color-surface-sub)" }}>
-                  <img
-                    src={d.img.urlThumb || d.img.url}
-                    alt={d.img.alt}
-                    loading="lazy"
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: 4,
-                      right: 6,
-                      background: "rgba(0,0,0,0.65)",
-                      color: "var(--color-primary-text)",
-                      padding: "1px 6px",
-                      borderRadius: "var(--r-full)",
-                      fontSize: 9,
-                    }}
-                  >
-                    {d.img.giayPhep}
-                  </div>
+                  <img src={d.img.urlThumb || d.img.url} alt={d.img.alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}/>
+                  {null}
                 </div>
                 <div style={{ padding: "8px 10px" }}>
                   <div style={{ fontWeight: 700, fontSize: 13, color: "var(--color-text)" }}>{d.ten}</div>
                   <div style={{ fontSize: 11, color: "var(--color-text-sub)" }}>{d.quocGia}</div>
                 </div>
-              </div>
-            ))}
+              </div>))}
           </div>
         </div>
 
         {/* Call to action */}
-        <button
-          type="button"
-          className="Btn BtnPrimary"
-          style={{
+        <button type="button" className="Btn BtnPrimary" style={{
             height: 52,
             padding: "0 36px",
             fontSize: 16,
@@ -214,9 +157,7 @@ export function WelcomeScreen() {
             display: "inline-flex",
             alignItems: "center",
             gap: 10,
-          }}
-          onClick={() => nav("b1-chon-nhanh")}
-        >
+        }} onClick={() => nav("b1-chon-nhanh")}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
           </svg>
@@ -227,8 +168,6 @@ export function WelcomeScreen() {
           Phiên bản thử nghiệm · Nguồn dữ liệu minh bạch · Không lưu giữ ảnh hóa đơn trên đĩa
         </div>
       </main>
-    </div>
-  );
+    </div>);
 }
-
 export default WelcomeScreen;

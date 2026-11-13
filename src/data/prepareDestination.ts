@@ -13,7 +13,7 @@
 import path from "node:path";
 import fs from "node:fs";
 import type { DiemDen, CategoryKey, CategoryStatus, CategoryProgress, JobStatus, DestinationJob } from "@/contracts";
-import { DEFAULT_DIEM_DI } from "@/contracts";
+import { DiemDenSchema,DEFAULT_DIEM_DI } from "@/contracts";
 import {
   fetchKhachSansOSM,
   fetchQuanAnsOSM,
@@ -72,7 +72,7 @@ export function hasSnapshotForDestination(diemDen: DiemDen | string): boolean {
   const targetNorm = normalizeDestName(targetName);
   if (!targetNorm) return false;
 
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json"));
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json")).sort().reverse();
 
   for (const f of files) {
     const fNorm = normalizeDestName(f.replace(".json", ""));
@@ -149,7 +149,7 @@ export function getSnapshotDiemDen(diemDen: DiemDen | string): DiemDen | null {
   const targetNorm = normalizeDestName(diemDen);
   if (!targetNorm) return null;
 
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json"));
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json")).sort().reverse();
 
   for (const f of files) {
     try {
@@ -201,6 +201,9 @@ export function getSnapshotDiemDen(diemDen: DiemDen | string): DiemDen | null {
           tienTe = "THB";
         }
 
+        const metadata=raw.diemDenMetadata;
+        const validatedMetadata=DiemDenSchema.safeParse(metadata);
+        if(validatedMetadata.success)return validatedMetadata.data;
         const ten = dName || diemDen;
         const ngayLay = (raw.ngayTao || raw.createdAt || "2026-10-20").slice(0, 10);
 
@@ -210,7 +213,7 @@ export function getSnapshotDiemDen(diemDen: DiemDen | string): DiemDen | null {
           maQuocGia,
           toaDo: { lat, lng },
           tienTe,
-          nguon: "nominatim" as const,
+          nguon: "danh_sach_co_dinh" as const,
           ngayLay,
         };
       }

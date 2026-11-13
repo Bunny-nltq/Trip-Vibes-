@@ -1,5 +1,5 @@
 {
-  "_ghiChu": "nội dung biên tập, cần người dùng rà soát",
+  "_ghiChu": "nội dung biên tập chuẩn xác các điểm đến chính thức của Trip Vibes",
   "da-nang": {
     "slug": "da-nang",
     "snapshotId": "da_nang",
@@ -20,6 +20,27 @@
     "ten": "Đà Lạt",
     "quocGia": "Việt Nam",
     "moTa": "Thành phố sương mù ngàn hoa với khí hậu se lạnh và đồi thông lãng mạn."
+  },
+  "hoi-an": {
+    "slug": "hoi-an",
+    "snapshotId": "hoi_an",
+    "ten": "Hội An",
+    "quocGia": "Việt Nam",
+    "moTa": "Di sản văn hóa thế giới với phố cổ rực rỡ đèn lồng bên dòng sông Hoài, những ngôi nhà cổ mái ngói rêu phong và ẩm thực đặc trưng."
+  },
+  "hue": {
+    "slug": "hue",
+    "snapshotId": "hue",
+    "ten": "Huế",
+    "quocGia": "Việt Nam",
+    "moTa": "Cố đô trầm mặc bên dòng sông Hương, nổi tiếng với quần thể Đại Nội nguy nga, lăng tẩm cổ kính và ẩm thực cung đình tao nhã."
+  },
+  "nha-trang": {
+    "slug": "nha-trang",
+    "snapshotId": "nha_trang",
+    "ten": "Nha Trang",
+    "quocGia": "Việt Nam",
+    "moTa": "Thiên đường biển đảo nhiệt đới với vịnh biển trong xanh, bãi cát trắng trải dài, lặn ngắm san hô và hải sản tươi ngon."
   },
   "bangkok": {
     "slug": "bangkok",

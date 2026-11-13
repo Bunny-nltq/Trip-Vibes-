@@ -35,6 +35,7 @@ export function usePlanPreview() {
   const preview = useCallback(
     async (params: {
       request: TripRequest;
+      planTruoc?: Plan;
       selection: Selection;
       thayDoi: PreviewChangePayload;
     }): Promise<PreviewResult | null> => {

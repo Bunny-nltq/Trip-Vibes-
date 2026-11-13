@@ -8,6 +8,7 @@ import {
   HOTEL_GIA_THEO_SAO,
 } from "./assumptions";
 import { soDemOKhachSan } from "./soDem";
+import { budgetIncludingReserve } from "./travelRequest";
 
 export interface MinBudgetResult {
   khaThi: boolean;
@@ -139,7 +140,7 @@ export function tinhNganSachToiThieu(
   // Lọc các chiều đi có soDem >= 1 (tổ hợp 0 đêm không khả thi, bỏ qua)
   const feasibleDi = validDi.filter((di) => {
     const gioDenTuyetDoi = parseTimeToMinutes(di.departureTime) + di.durationMinutes;
-    return soDemOKhachSan(soNgay, gioDenTuyetDoi) >= 1;
+    return soNgay === 1 ? gioDenTuyetDoi < parseTimeToMinutes(minVe.departureTime) : soDemOKhachSan(soNgay, gioDenTuyetDoi) >= 1;
   });
 
   if (feasibleDi.length === 0) {
@@ -166,7 +167,7 @@ export function tinhNganSachToiThieu(
     }
   }
 
-  const toiThieuVND = bestCost;
+  const toiThieuVND = budgetIncludingReserve(bestCost, request.reservePercent);
   const combo = {
     transportDiId: bestDi.id,
     transportVeId: minVe.id,

@@ -237,9 +237,9 @@ describe("soSanhKeHoachThucTe", () => {
     const res = soSanhKeHoachThucTe(plan, ledger, 2);
 
     expect(res.denHetNgayHieuLuc).toBe(2);
-    expect(res.datTruocVND).toBe(6120000);
+    expect(res.datTruocVND).toBe(0);
     expect(res.thucTeTongVND).toBe(1296000);
-    expect(res.conLaiVND).toBe(2584000);
+    expect(res.conLaiVND).toBe(8704000);
 
     const anUong = res.bang.find((r) => r.hangMuc === "Ăn uống")!;
     expect(anUong.keHoachVND).toBe(1200000);
@@ -264,8 +264,8 @@ describe("soSanhKeHoachThucTe", () => {
     expect(res.tong.chenhVND).toBe(-224000);
     expect(res.tong.chenhPhanTram).toBe(-14.7);
 
-    expect(res.duBao.keHoachNgayConLaiVND).toBe(1900000);
-    expect(res.duBao.conLaiSauChiTieuVND).toBe(2584000);
+    expect(res.duBao.keHoachNgayConLaiVND).toBe(8020000);
+    expect(res.duBao.conLaiSauChiTieuVND).toBe(8704000);
     expect(res.duBao.chenhDuBaoVND).toBe(684000);
     expect(res.duBao.trangThai).toBe("du");
   });
@@ -297,7 +297,7 @@ describe("soSanhKeHoachThucTe", () => {
     expect(res.tong.chenhVND).toBe(676000);
     expect(res.tong.chenhPhanTram).toBe(44.5);
 
-    expect(res.conLaiVND).toBe(1684000);
+    expect(res.conLaiVND).toBe(7804000);
     expect(res.duBao.chenhDuBaoVND).toBe(-216000);
     expect(res.duBao.trangThai).toBe("thieu");
   });
@@ -308,8 +308,8 @@ describe("soSanhKeHoachThucTe", () => {
     const res = soSanhKeHoachThucTe(plan, ledger, 0);
 
     expect(res.thucTeTongVND).toBe(0);
-    expect(res.conLaiVND).toBe(3880000);
-    expect(res.duBao.keHoachNgayConLaiVND).toBe(3420000);
+    expect(res.conLaiVND).toBe(10000000);
+    expect(res.duBao.keHoachNgayConLaiVND).toBe(9540000);
     expect(res.duBao.chenhDuBaoVND).toBe(460000);
     expect(res.duBao.trangThai).toBe("du");
   });
@@ -350,14 +350,24 @@ describe("soSanhKeHoachThucTe", () => {
     expect(res.thucTeTongVND).toBe(1396000);
   });
 
-  it("Fixture A (ngân sách 10.000.000, Di chuyển 3.920.000, Chỗ ở 2.200.000, chưa chi gì) cho conLaiVND = 3.880.000", () => {
+  it("Fixture A (ngân sách 10.000.000, Di chuyển 3.920.000, Chỗ ở 2.200.000, chưa chi gì) không tự trừ tiền vé/phòng chưa ghi nhận", () => {
     const plan = createFixtureA();
     const ledger: Ledger = { schemaVersion: 6, expenses: [] };
     const res = soSanhKeHoachThucTe(plan, ledger, 1);
 
-    expect(res.datTruocVND).toBe(6120000); // 3.920.000 + 2.200.000
+    expect(res.datTruocVND).toBe(0);
     expect(res.thucTeTongVND).toBe(0);
-    expect(res.conLaiVND).toBe(3880000); // 10.000.000 - 6.120.000 - 0 = 3.880.000
+    expect(res.conLaiVND).toBe(10000000);
   });
 });
 
+
+it("counts confirmed transport payments once and keeps remaining bookings in the forecast",()=>{
+ const plan=createFixtureA();const ledger=createS1();
+ ledger.expenses.push({...ledger.expenses[0],id:"paid-flight",hangMuc:"di_chuyen",soTienVND:100000});
+ const result=soSanhKeHoachThucTe(plan,ledger,2);
+ expect(result.datTruocVND).toBe(100000);expect(result.conLaiVND).toBe(8604000);
+ expect(result.duBao.keHoachNgayConLaiVND).toBe(7920000);expect(result.duBao.chenhDuBaoVND).toBe(684000);
+});
+
+it("does not count paid travel/lodging twice in companion budget progress",async()=>{const {tripBudgetProgress}=await import("./soSanhThucTe");const plan=createFixtureA();const entry={...createS1().expenses[0],id:"paid-hotel-only",hangMuc:"cho_o" as const,soTienVND:1000000};const result=tripBudgetProgress(plan,{schemaVersion:18,expenses:[entry]},1);expect(result.tongNganSach).toBe(10000000);expect(result.daChi).toBe(1000000);expect(result.datTruoc).toBe(1000000);expect(result.conLai).toBe(9000000);expect(result.percentSpent).toBe(10);});

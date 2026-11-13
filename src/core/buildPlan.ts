@@ -1,3 +1,7 @@
+import {isDiningVenue, isIndependentAttraction} from "./venueDiscovery";
+import {buildMapsUrls} from "./maps";
+import {estimateLocalRoutes} from "./localRoutes";
+import {localRouteWarnings} from "./flags";
 import {
   type TripRequest,
   type Selection,
@@ -17,6 +21,9 @@ import {
   HOTEL_GIA_THEO_SAO,
   HOTEL_GIA_MAC_DINH,
   NGUOI_MOI_PHONG,
+  GIO_NHAN_PHONG, GIO_TRA_PHONG_DU_KIEN, NGHI_SAU_CHANG_DAI_PHUT,
+  NGUONG_DI_CHUYEN_LAU_PHUT, BUFFER_DEN_KHACH_SAN_PHUT, BUFFER_RA_BEN_PHUT, GIA_AN_SANG_UOC_TINH_VND,
+  GIO_CA_PHE_SANG, GIO_AN_TRUA_CO_NGAY, THOI_LUONG_BUA_AN_PHUT, THOI_LUONG_CA_PHE_PHUT, THOI_LUONG_THAM_QUAN_SANG_TOI_DA,
   SO_HOAT_DONG_TOI_DA_MOI_NGAY,
   GIO_HOAT_DONG_1,
   GIO_HOAT_DONG_2,
@@ -38,6 +45,21 @@ export interface PlanData {
   cafes?: Cafe[];
   /** Hoạt động từ dữ liệu live (nếu có) */
   hoatDongs?: HoatDong[];
+}
+
+function mealSpecialty(place: QuanAn): string | undefined {
+  const name = place.ten.trim();
+  const dish = /^(phở bò|phở gà|bún chả|bún ngan|bún riêu|bún bò(?: huế)?|bún đậu|bánh mì|bánh cuốn|cơm tấm|xôi|cháo|phở)(?=\s|$)/i.exec(name)?.[0];
+  if (dish) return `Món theo tên quán: ${dish}`;
+  const cuisine: Record<string, string> = { pizza: "Pizza", sushi: "Sushi", hotpot: "Lẩu", grill: "Món nướng", noodles: "Món sợi", noodle: "Món sợi", japanese: "Món Nhật", korean: "Món Hàn", vietnamese: "Món Việt" };
+  const types = (place.amThuc ?? place.cuisine ?? "").split(";").map(tag => cuisine[tag.trim()]).filter(Boolean);
+  return types.length ? `Theo dữ liệu ẩm thực: ${[...new Set(types)].join(", ")}` : undefined;
+}
+
+function dailyOpeningCovers(hours: string | null, start: string, end: string): boolean | undefined {
+  if (hours === "24/7") return true;
+  const range = /^(?:Mo-Su )?(\d{2}:\d{2})-(\d{2}:\d{2})$/.exec(hours ?? "");
+  return range ? range[1] <= start && range[2] >= end : undefined;
 }
 
 export type BuildPlanResult =
@@ -138,15 +160,15 @@ export function buildPlan(
 
   const activityMap = new Map<string, Activity | HoatDong>();
   for (const act of data.activities) {
-    activityMap.set(act.id, act);
+    if (isIndependentAttraction(act)) activityMap.set(act.id, act);
   }
   for (const hd of data.hoatDongs ?? []) {
-    activityMap.set(hd.id, hd);
+    if (isIndependentAttraction(hd)) activityMap.set(hd.id, hd);
   }
 
   // Build map quán ăn & cafe từ dữ liệu live
   const quanAnMap = new Map<string, QuanAn>();
-  for (const qa of data.quanAns ?? []) quanAnMap.set(qa.id, qa);
+  for (const qa of data.quanAns ?? []) if (isDiningVenue(qa)) quanAnMap.set(qa.id, qa);
   const cafeMap = new Map<string, Cafe>();
   for (const c of data.cafes ?? []) cafeMap.set(c.id, c);
 
@@ -215,11 +237,11 @@ export function buildPlan(
     ngay: 1,
     gio: tDi.departureTime,
     hangMuc: "Di chuyển",
-    noiDung: `Di chuyển chiều đi: ${tDi.provider} (${tDi.origin} → ${tDi.destination})`,
+    noiDung: `Di chuyển chiều đi · ${tDi.type === "PLANE" ? "Máy bay" : tDi.type === "TRAIN" ? "Tàu hỏa" : "Xe khách"}: ${tDi.provider} (${tDi.origin} → ${tDi.destination})`,
     soLuong: soNguoi,
     donGia: donGiaDi,
     thanhTien: thanhTienDi,
-    refId: tDi.id,
+    refId: tDi.id,originName:tDi.origin,destinationName:tDi.destination,
     nguon: tDi.nguon ?? null,
     doTinCay: tDi.doTinCay,
     giaLaUocTinh: tDi.giaLaUocTinh,
@@ -228,13 +250,27 @@ export function buildPlan(
 
   // 5.2. Chỗ ở (thuộc ngày đến, giờ nhận phòng là max(14:00, giờ đến mod 1440))
   const ngayChoO = Math.floor(gioDenNgay1Phut / 1440) + 1;
-  const gioChoO = min2hhmm(Math.max(14 * 60, gioDenNgay1Phut % 1440));
+  const arrivalClock = gioDenNgay1Phut % 1440;
+  const checkIn = Math.max(hhmm2min(GIO_NHAN_PHONG), Math.min(1439, arrivalClock + (request.travelDates ? BUFFER_DEN_KHACH_SAN_PHUT : 0)));
+  const gioChoO = min2hhmm(checkIn);
+  const checkInAbsolute = (ngayChoO - 1) * 1440 + checkIn;
+  const restEnd = request.travelDates && soDem > 0 && tDi.durationMinutes >= NGUONG_DI_CHUYEN_LAU_PHUT
+    ? checkInAbsolute + NGHI_SAU_CHANG_DAI_PHUT : 0;
+  const checkout = Math.min(hhmm2min(GIO_TRA_PHONG_DU_KIEN), hhmm2min(tVe.departureTime) - BUFFER_RA_BEN_PHUT);
+  const checkoutAbsolute = (soNgay - 1) * 1440 + checkout;
+  if (request.travelDates && soDem > 0 && checkoutAbsolute <= checkInAbsolute) {
+    return { ok: false, loi: ["Không đủ thời gian nhận và trả phòng giữa hai chặng di chuyển."] };
+  }
+  if (restEnd > checkoutAbsolute) return { ok: false, loi: ["Chặng đi dài không còn đủ thời gian nghỉ tại khách sạn trước khi trả phòng."] };
   const tenKhachSan = khachSanLive?.ten ?? hotelMock!.name;
-  items.push({
+  if (soDem > 0) items.push({
     ngay: ngayChoO,
     gio: gioChoO,
     hangMuc: "Chỗ ở",
-    noiDung: `Lưu trú: ${tenKhachSan} (${soDem} đêm, ${soPhong} phòng)`,
+    noiDung: request.travelDates
+      ? `Nhận phòng dự kiến: ${tenKhachSan} (${soDem} đêm, ${soPhong} phòng)`
+      : `Lưu trú: ${tenKhachSan} (${soDem} đêm, ${soPhong} phòng)`,
+    destinationName: tenKhachSan,
     soLuong: soLuongPhongDem,
     donGia: giaDem,
     thanhTien: thanhTienHotel,
@@ -244,7 +280,29 @@ export function buildPlan(
     mapsUrl: khachSanLive?.mapsUrls?.xem,
   });
 
-  // 5.3. Ăn uống theo ngày (tính theo từng bữa hoặc dùng mặc định)
+  if (request.travelDates && soDem > 0) {
+    const hotelStop = {
+      hangMuc: "Chỗ ở" as const, destinationName: tenKhachSan, diaChi: khachSanLive?.diaChi,
+      soLuong: 1, donGia: 0, thanhTien: 0, refId: null, priceKnown: true,
+      nguon: khachSanLive?.nguon,
+    };
+    if (restEnd) items.push({
+      ...hotelStop, ngay: ngayChoO, gio: gioChoO,
+      noiDung: `Nghỉ tại ${tenKhachSan} sau chặng dài · ${NGHI_SAU_CHANG_DAI_PHUT / 60} giờ`,
+      durationMinutes: NGHI_SAU_CHANG_DAI_PHUT,
+    });
+    items.push({
+      ...hotelStop, ngay: Math.floor(checkoutAbsolute / 1440) + 1,
+      gio: min2hhmm((checkoutAbsolute + 1440) % 1440),
+      noiDung: `Trả phòng dự kiến: ${tenKhachSan} · trước khi ra điểm khởi hành`,
+    });
+  }
+
+  // 5.3. Dùng tên, địa chỉ và thông tin món từ nguồn dữ liệu.
+  const restaurants = [...quanAnMap.values()];
+  const breakfastPlaces = restaurants.filter(place => /^(phở|bún ngan|bún bò|bún riêu|bánh mì|xôi|cháo|bánh cuốn)\s/i.test(place.ten.trim()));
+  const openForBreakfast = breakfastPlaces.filter(place => dailyOpeningCovers(place.gioMoCua, "07:30", "08:15"));
+  const suitableBreakfast = openForBreakfast.length ? openForBreakfast : breakfastPlaces.filter(place => !place.gioMoCua);
   let tongAnUong = 0;
 
   for (let day = 1; day <= soNgay; day++) {
@@ -256,63 +314,71 @@ export function buildPlan(
       gioKhoiHanhVe: tVe.departureTime,
     };
 
-    // --- Bữa trưa ---
-    const quanTrua = bua?.trua ? (quanAnMap.get(bua.trua) ?? null) : null;
-    const giaTriTrua = quanTrua?.giaUocTinhNguoi ?? AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA;
-    const thanhTienTrua = giaTriTrua * soNguoi;
-    tongAnUong += thanhTienTrua;
-    items.push({
-      ngay: day,
-      gio: mealTimeOrNull("12:00", mealCtx),
-      hangMuc: "Ăn uống",
-      noiDung: quanTrua
-        ? `Trưa: ${quanTrua.ten} (${soNguoi} người)`
-        : `Trưa ngày ${day} – ước tính (${soNguoi} người)`,
-      soLuong: soNguoi,
-      donGia: giaTriTrua,
-      thanhTien: thanhTienTrua,
-      refId: quanTrua?.id ?? null,
-      nguon: quanTrua?.nguon ?? null,
-      doTinCay: quanTrua?.doTinCay,
-      giaLaUocTinh: quanTrua?.giaLaUocTinh ?? true,
-      mapsUrl: quanTrua?.nguon
-        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(quanTrua.ten + (tenDiemDen ? `, ${tenDiemDen}` : ""))}`
-        : undefined,
-    });
+    function scheduleMeal(nominal: string, duration = THOI_LUONG_BUA_AN_PHUT) {
+      if (!request.travelDates) return mealTimeOrNull(nominal, mealCtx);
+      const time = hhmm2min(nominal);
+      const start = (day - 1) * 1440 + time;
+      if (start < gioDenNgay1Phut + BUFFER_DEN_KHACH_SAN_PHUT) return null;
+      if (restEnd && start < restEnd && start + duration > checkInAbsolute) return null;
+      if (day === soNgay && time + duration > hhmm2min(tVe.departureTime) - BUFFER_RA_BEN_PHUT) return null;
+      return nominal;
+    }
 
-    // --- Bữa tối ---
-    const quanToi = bua?.toi ? (quanAnMap.get(bua.toi) ?? null) : null;
-    const giaTriToi = quanToi?.giaUocTinhNguoi ?? AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA;
-    const thanhTienToi = giaTriToi * soNguoi;
-    tongAnUong += thanhTienToi;
-    items.push({
-      ngay: day,
-      gio: mealTimeOrNull("18:30", mealCtx),
-      hangMuc: "Ăn uống",
-      noiDung: quanToi
-        ? `Tối: ${quanToi.ten} (${soNguoi} người)`
-        : `Tối ngày ${day} – ước tính (${soNguoi} người)`,
-      soLuong: soNguoi,
-      donGia: giaTriToi,
-      thanhTien: thanhTienToi,
-      refId: quanToi?.id ?? null,
-      nguon: quanToi?.nguon ?? null,
-      doTinCay: quanToi?.doTinCay,
-      giaLaUocTinh: quanToi?.giaLaUocTinh ?? true,
-      mapsUrl: quanToi?.nguon
-        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(quanToi.ten + (tenDiemDen ? `, ${tenDiemDen}` : ""))}`
-        : undefined,
-    });
+    const regularMeals = [
+      { label: "Trưa", time: request.travelDates ? GIO_AN_TRUA_CO_NGAY : "12:00", place: quanAnMap.get(bua?.trua ?? "") ??
+          (request.travelDates ? restaurants[(day * 2) % restaurants.length] : undefined) },
+      { label: "Tối", time: "18:30", place: quanAnMap.get(bua?.toi ?? "") ??
+          (request.travelDates ? restaurants[(day * 2 + 1) % restaurants.length] : undefined) },
+    ];
+    const meals = request.travelDates ? [
+      { label: "Sáng", time: "07:30", place: suitableBreakfast[(day - 1) % suitableBreakfast.length] },
+      ...regularMeals,
+    ] : regularMeals;
+    for (const { label, time, place } of meals) {
+      const gio = scheduleMeal(time);
+      if (request.travelDates && !gio) continue;
+      const breakfast = label === "Sáng";
+      const atHotel = breakfast && khachSanLive?.includesBreakfast && day > ngayChoO && day <= soNgay;
+      const dish = atHotel ? undefined : place && mealSpecialty(place);
+      const price = atHotel ? 0 : place?.giaUocTinhNguoi ??
+        (breakfast ? GIA_AN_SANG_UOC_TINH_VND : AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA);
+      const cost = price * soNguoi;
+      tongAnUong += cost;
+      items.push({
+        ngay: day, gio, hangMuc: "Ăn uống", experienceType: "restaurant",
+        durationMinutes: request.travelDates ? THOI_LUONG_BUA_AN_PHUT : undefined,
+        noiDung: atHotel ? `Sáng: ${tenKhachSan} · Theo thông tin nguồn, có bữa sáng; xác nhận với chỗ ở`
+          : place ? `${label}: ${place.ten}${dish ? ` · ${dish}` : request.travelDates ? " · Chưa có dữ liệu món" : ""}${breakfast && !place.gioMoCua ? " · Cần xác nhận giờ mở cửa" : ""}`
+          : `${label} ngày ${day} – ${request.travelDates ? "chưa có quán trong dữ liệu, đã dự trù chi phí" : `ước tính (${soNguoi} người)`}`,
+        destinationName: atHotel ? tenKhachSan : place?.ten,
+        diaChi: atHotel ? khachSanLive?.diaChi : place?.diaChi,
+        soLuong: soNguoi, donGia: price, thanhTien: cost,
+        refId: atHotel ? selection.hotelId : place?.id ?? null,
+        nguon: atHotel ? khachSanLive?.nguon : place?.nguon ?? null,
+        doTinCay: place?.doTinCay,
+        giaLaUocTinh: !atHotel && (place?.giaUocTinhNguoi == null || place.giaLaUocTinh),
+        priceKnown: atHotel ? true : undefined,
+      });
+    }
 
     // --- Cafe (tuỳ chọn) ---
     if (bua?.cafe) {
-      const quanCafe = cafeMap.get(bua.cafe) ?? null;
+      const selectedCafe = cafeMap.get(bua.cafe);
+      const cafeEnd = min2hhmm(hhmm2min(GIO_CA_PHE_SANG) + THOI_LUONG_CA_PHE_PHUT);
+      const fitsMorning = (place: Cafe) => dailyOpeningCovers(place.gioMoCua, GIO_CA_PHE_SANG, cafeEnd) !== false;
+      const quanCafe = request.travelDates
+        ? selectedCafe && fitsMorning(selectedCafe) ? selectedCafe : [...cafeMap.values()].find(fitsMorning)
+        : selectedCafe;
+      if (request.travelDates && !quanCafe) continue;
       const giaTriCafe = quanCafe?.giaUocTinhNguoi ?? CAFE_MAC_DINH_MOI_NGUOI;
       const thanhTienCafe = giaTriCafe * soNguoi;
       tongAnUong += thanhTienCafe;
       items.push({
         ngay: day,
-        gio: mealTimeOrNull("09:00", mealCtx),
+        gio: scheduleMeal(request.travelDates ? GIO_CA_PHE_SANG : "09:00", THOI_LUONG_CA_PHE_PHUT),
+        durationMinutes: request.travelDates ? THOI_LUONG_CA_PHE_PHUT : undefined,
+        destinationName: quanCafe?.ten,
+        experienceType:"cafe",
         hangMuc: "Ăn uống",
         noiDung: quanCafe
           ? `Cà phê: ${quanCafe.ten} (${soNguoi} người)`
@@ -360,6 +426,10 @@ export function buildPlan(
       } else {
         gioDanhNghia = actIdx === 0 ? min2hhmm(GIO_HOAT_DONG_1) : min2hhmm(GIO_HOAT_DONG_2);
       }
+      const activityStart = (day - 1) * 1440 + hhmm2min(gioDanhNghia);
+      if (request.travelDates && activityStart < Math.max(gioDenNgay1Phut, restEnd)) return;
+      if (request.travelDates && hhmm2min(gioDanhNghia) < 12 * 60 &&
+          act.thoiLuongPhut > THOI_LUONG_THAM_QUAN_SANG_TOI_DA) return;
       const tenAct = (act as any).ten || (act as any).name || "Hoạt động";
       const actAny = act as any;
       const mapsUrl =
@@ -373,13 +443,17 @@ export function buildPlan(
         gio: gioDanhNghia,
         hangMuc: "Vui chơi",
         noiDung: tenAct,
+        destinationName: tenAct,
+        experienceType:/museum|bảo tàng/i.test(actAny.loai||tenAct)?"museum":/park|beach|nature|biển|thác|hồ /i.test(actAny.loai||tenAct)?"nature":"attraction",
+        durationMinutes:actAny.thoiLuongPhut||60,
+        priceKnown:actAny.priceKnown===true,
         soLuong: soNguoi,
         donGia: donGiaVe,
         thanhTien: thanhTienAct,
         refId: act.id,
         nguon: actAny.nguon ?? null,
         doTinCay: actAny.doTinCay,
-        giaLaUocTinh: actAny.giaLaUocTinh,
+        giaLaUocTinh: request.travelDates?actAny.priceKnown!==true:actAny.giaLaUocTinh,
         mapsUrl,
         nhan: actAny.nhan ?? [],
       });
@@ -393,30 +467,62 @@ export function buildPlan(
     ngay: soNgay,
     gio: tVe.departureTime,
     hangMuc: "Di chuyển",
-    noiDung: `Di chuyển chiều về: ${tVe.provider} (${tVe.origin} → ${tVe.destination})`,
+    noiDung: `Di chuyển chiều về · ${tVe.type === "PLANE" ? "Máy bay" : tVe.type === "TRAIN" ? "Tàu hỏa" : "Xe khách"}: ${tVe.provider} (${tVe.origin} → ${tVe.destination})`,
     soLuong: soNguoi,
     donGia: donGiaVeTransport,
     thanhTien: thanhTienVe,
-    refId: tVe.id,
+    refId: tVe.id,originName:tVe.origin,destinationName:tVe.destination,
     nguon: tVe.nguon ?? null,
     doTinCay: tVe.doTinCay,
     giaLaUocTinh: tVe.giaLaUocTinh,
     thoiLuongPhut: tVe.durationMinutes,
   } as any);
 
-  // 6. Tính tổng kết
-  const theoHangMuc: Record<PlanItemCategory, number> = {
-    "Di chuyển": thanhTienDi + thanhTienVe,
-    "Chỗ ở": thanhTienHotel,
-    "Ăn uống": tongAnUong,
-    "Vui chơi": 0,
-  };
-
-  for (const item of items) {
-    if (item.hangMuc === "Vui chơi") {
-      theoHangMuc["Vui chơi"] += item.thanhTien;
+  if(request.travelDates){for(let index=items.length-1;index>=0;index--)if(items[index].hangMuc==="Ăn uống"&&!items[index].gio)items.splice(index,1);}
+  const sourcePlaces=new Map([...(data.khachSans??[]),...(data.quanAns??[]),...(data.cafes??[]),...(data.hoatDongs??[])].map(place=>[place.id,place]));
+  for(const item of items){const place=item.refId?sourcePlaces.get(item.refId):null;if(place){item.diaChi=place.diaChi;item.mapsUrl=buildMapsUrls(place,tenDiemDen).xem;}else if(item.destinationName){item.mapsUrl=buildMapsUrls({ten:item.destinationName,diaChi:item.diaChi},item.hangMuc === "Di chuyển" ? undefined : tenDiemDen).xem;}}
+  const routePlaces = [...sourcePlaces.values()];
+  let route = estimateLocalRoutes(items, routePlaces, request);
+  if (request.travelDates) {
+    const cafesThatOverlap = new Set<PlanItem>();
+    for (const leg of route.items) {
+      if (leg.experienceType !== "local_transfer" || !leg.gio) continue;
+      const departure = hhmm2min(leg.gio);
+      const arrival = departure + (leg.durationMinutes ?? 0);
+      const before = items.filter(item => item.ngay === leg.ngay && item.gio &&
+        item.destinationName === leg.originName && hhmm2min(item.gio) <= arrival)
+        .sort((a, b) => b.gio!.localeCompare(a.gio!))[0];
+      const after = items.find(item => item.ngay === leg.ngay && item.gio &&
+        item.destinationName === leg.destinationName && hhmm2min(item.gio) === arrival);
+      if (!before?.gio || departure >= hhmm2min(before.gio) + (before.durationMinutes ?? 0)) continue;
+      if (before.experienceType === "cafe") cafesThatOverlap.add(before);
+      if (after?.experienceType === "cafe") cafesThatOverlap.add(after);
+    }
+    if (cafesThatOverlap.size) {
+      for (let index = items.length - 1; index >= 0; index--) {
+        if (cafesThatOverlap.has(items[index])) items.splice(index, 1);
+      }
+      route = estimateLocalRoutes(items, routePlaces, request);
     }
   }
+  if (restEnd) {
+    const conflicts = route.items.filter(item => {
+      if (item.experienceType !== "local_transfer" || !item.gio) return false;
+      const leaveAt = (item.ngay - 1) * 1440 + hhmm2min(item.gio);
+      return leaveAt >= checkInAbsolute && leaveAt < restEnd;
+    });
+    for (const leg of conflicts) {
+      const scheduledTime = hhmm2min(leg.gio!) + (leg.durationMinutes ?? 0);
+      const index = items.findIndex(item => item.ngay === leg.ngay && item.gio &&
+        hhmm2min(item.gio) === scheduledTime && item.destinationName === leg.destinationName &&
+        (item.hangMuc === "Ăn uống" || item.hangMuc === "Vui chơi"));
+      if (index >= 0) items.splice(index, 1);
+    }
+    if (conflicts.length) route = estimateLocalRoutes(items, routePlaces, request);
+  }
+  items.splice(0,items.length,...route.items);
+  const theoHangMuc:Record<PlanItemCategory,number>={"Di chuyển":0,"Chỗ ở":0,"Ăn uống":0,"Vui chơi":0};
+  for(const item of items)theoHangMuc[item.hangMuc]+=item.thanhTien;
 
   const tongVND =
     theoHangMuc["Di chuyển"] +
@@ -431,11 +537,14 @@ export function buildPlan(
       : 0;
 
   const tongThoiGianDiChuyenPhut =
-    (tDi.durationMinutes ?? 0) + (tVe.durationMinutes ?? 0);
+    (tDi.durationMinutes ?? 0) + (tVe.durationMinutes ?? 0)+route.minutes;
 
   const trangThaiNganSach = tongVND > ngansachTongVND ? "vuot" : "trong";
 
-  const canhBao = Array.from(new Set(request.canhBao));
+  const canhBao = Array.from(new Set([...request.canhBao,...localRouteWarnings(items)]));
+  if (restEnd && arrivalClock + BUFFER_DEN_KHACH_SAN_PHUT < checkIn) {
+    canhBao.push("Đến trước giờ nhận phòng dự kiến. Hãy hỏi khách sạn về gửi hành lý hoặc nhận phòng sớm.");
+  }
   if (trangThaiNganSach === "vuot") {
     canhBao.push("vuot_ngan_sach");
   }

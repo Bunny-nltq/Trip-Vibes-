@@ -1,1210 +1,461 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useRef, useState, type FormEvent } from "react";
+import { Sparkles, ArrowRight, CalendarDays, AlertCircle } from "lucide-react";
+import { VietnameseDateInput } from "@/ui/components/VietnameseDateInput";
+import { useTravelConversation } from "@/ui/hooks/useTravelConversation";
 import { useApp } from "@/ui/context/AppContext";
 import {
-  getDiemDenTen,
-  type DiemDen,
   POPULAR_DESTINATIONS,
   POPULAR_ORIGINS,
   toDiemDen,
+  getDiemDenTen,
+  type DiemDen,
+  type TripRequest,
 } from "@/contracts";
-import {
-  FormB1,
-  FormB1ErrorCode,
-  kiemTraFormB1,
-  taoYeuCauTuForm,
-  dinhDangTien,
-  docTien,
-  goiYPhanBoNganSach,
-} from "@/core/formB1";
-import { layThongBaoLoi, type ThongBaoLoi } from "@/ui/messages/loi";
-import { docGoiChuyenTuSession } from "@/ui/lib/chuyenB1";
-import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
-import { ChonDiem } from "@/ui/components/ChonDiem";
-import { useDiemChon } from "@/ui/hooks/useDiemChon";
-import { getDestinationImage } from "@/ui/lib/imageMap";
-import {
-  MapPin,
-  Search,
-  Calendar,
-  Wallet,
-  Check,
-  Plane,
-  Paperclip,
-  Moon,
-  Sunrise,
-  Timer,
-  Users,
-  Footprints,
-  RefreshCw,
-  AlertCircle,
-  AlertTriangle,
-  Minus,
-  Plus,
-  Loader2,
-  Sparkles,
-  Compass,
-  Coffee,
-  Briefcase,
-} from "lucide-react";
+import { travelDuration } from "@/core/travelRequest";
+import { returnDateOrderError } from "@/ui/messages/loi";
+import styles from "@/ui/components/Journey.module.css";
 
-export interface PopularDestPreset {
-  ten: string;
-  moTa: string;
-  nganSachGoiY: number;
-  diemDiMacDinh: string;
-  soNgay: number;
+export const POPULAR_DEST_PRESETS = POPULAR_DESTINATIONS.filter(
+  (p) => p.maQuocGia === "VN"
+).map((p) => ({ ten: p.ten }));
+
+const points = [...POPULAR_DESTINATIONS, ...POPULAR_ORIGINS].filter(
+  (p) => p.maQuocGia === "VN"
+);
+
+function point(value: string): DiemDen | string {
+  const known = points.find(
+    (p) => p.ten.toLowerCase() === value.trim().toLowerCase()
+  );
+  return known ? toDiemDen(known) : value.trim();
 }
 
-export const POPULAR_DEST_PRESETS: PopularDestPreset[] = [
-  { ten: "Đà Nẵng", moTa: "Biển Mỹ Khê & Cầu Rồng", nganSachGoiY: 10_000_000, diemDiMacDinh: "TP.HCM", soNgay: 3 },
-  { ten: "Hà Nội", moTa: "Phố cổ & Hồ Hoàn Kiếm", nganSachGoiY: 10_000_000, diemDiMacDinh: "TP.HCM", soNgay: 3 },
-  { ten: "Đà Lạt", moTa: "Ngàn hoa & Sương sớm", nganSachGoiY: 8_000_000, diemDiMacDinh: "TP.HCM", soNgay: 3 },
-  { ten: "Bangkok", moTa: "Chùa Vàng & Ẩm thực", nganSachGoiY: 25_000_000, diemDiMacDinh: "TP.HCM", soNgay: 3 },
-  { ten: "Seoul", moTa: "Cung điện & Mua sắm", nganSachGoiY: 35_000_000, diemDiMacDinh: "TP.HCM", soNgay: 3 },
-];
-
-function timDiemDen(ten: string): DiemDen {
-  const norm = ten.trim().toLowerCase();
-  const matched = POPULAR_DESTINATIONS.find((d) => d.ten.toLowerCase() === norm);
-  if (matched) return toDiemDen(matched);
-  const matchedOrigin = POPULAR_ORIGINS.find((o) => o.ten.toLowerCase() === norm);
-  if (matchedOrigin) return toDiemDen(matchedOrigin);
-  return {
-    ten,
-    quocGia: "Việt Nam",
-    maQuocGia: "VN",
-    toaDo: { lat: 16.0544, lng: 108.2022 },
-    tienTe: "VND",
-    nguon: "nominatim",
-    ngayLay: new Date().toISOString(),
-  };
-}
-
-const PRESETS = [
-  {
-    id: "couple",
-    name: "Cặp đôi",
-    people: 2,
-    sub: "2 người",
-    iconType: "couple",
-  },
-  {
-    id: "group",
-    name: "Nhóm bạn",
-    people: 4,
-    sub: "4 người",
-    iconType: "group",
-  },
-  {
-    id: "family",
-    name: "Gia đình",
-    people: 4,
-    sub: "4 người",
-    iconType: "family",
-  },
-  {
-    id: "solo",
-    name: "Đi một mình",
-    people: 1,
-    sub: "1 người",
-    iconType: "solo",
-  },
-];
-
-const BUDGET_BUTTONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000];const AVOID_ITEMS = [
-  { label: "Không dậy sớm", icon: Sunrise },
-  { label: "Không đi đêm", icon: Moon },
-  { label: "Tránh đi lâu", icon: Timer },
-  { label: "Tránh chỗ đông", icon: Users },
-  { label: "Tránh đi bộ nhiều", icon: Footprints },
-];export function B1ChonNhanhScreen() {
+export function B1ChonNhanhScreen() {
   const {
-    nav,
     tripConfig,
     setTripConfig,
-    executePlan,
+    nav,
+    planStatus,
+    planError,
+    hardViolations,
   } = useApp();
-  const { aiBat } = useTrangThaiAI();
-  const { data: diemChonData } = useDiemChon();
+  const conversation = useTravelConversation();
 
-  // ─── 1. Form state B1 ───
-  const [diemDi, setDiemDi] = useState<DiemDen | null>(
-    tripConfig.diemDi && typeof tripConfig.diemDi === "object"
-      ? (tripConfig.diemDi as DiemDen)
-      : null
+  const [origin, setOrigin] = useState(getDiemDenTen(tripConfig.diemDi));
+  const [destination, setDestination] = useState(getDiemDenTen(tripConfig.diemDen));
+  const [start, setStart] = useState(tripConfig.travelDates?.departureDate || "");
+  const [end, setEnd] = useState(tripConfig.travelDates?.returnDate || "");
+  const [people, setPeople] = useState(tripConfig.people || 1);
+  const [budget, setBudget] = useState(tripConfig.budget || 0);
+  const [note, setNote] = useState(tripConfig.note || "");
+  const [transport, setTransport] = useState<NonNullable<TripRequest["transportMode"]>>(
+    tripConfig.transportMode || "auto"
   );
-  const [diemDen, setDiemDen] = useState<DiemDen | null>(
-    tripConfig.diemDen && typeof tripConfig.diemDen === "object"
-      ? (tripConfig.diemDen as DiemDen)
-      : null
+  const [local, setLocal] = useState<NonNullable<TripRequest["localTransportMode"]>>(
+    tripConfig.localTransportMode || "taxi"
   );
-  const [soNguoi, setSoNguoi] = useState<number>(tripConfig.people || 2);
-  const [nganSachSoTien, setNganSachSoTien] = useState<number>(
-    tripConfig.nganSachSoTien || tripConfig.budget || 0
-  );
-  const [nganSachTheo, setNganSachTheo] = useState<"tong" | "moi_nguoi">(
-    tripConfig.nganSachTheo || "tong"
-  );
-  const [nganSachInputStr, setNganSachInputStr] = useState<string>(
-    tripConfig.nganSachSoTien || tripConfig.budget
-      ? dinhDangTien(tripConfig.nganSachSoTien || tripConfig.budget)
-      : ""
-  );
-  const [soNgay, setSoNgay] = useState<number>(tripConfig.soNgay || 3);
-  const [tranh, setTranh] = useState<string[]>(tripConfig.avoids || []);
-  const [ghiChu, setGhiChu] = useState<string>(tripConfig.note || "");
+  const [error, setError] = useState("");
 
-  // Đã từng thử submit hoặc tương tác
-  const [hasInteracted, setHasInteracted] = useState(false);
-
-  // Xem trước môi trường phát triển (preview URL) và đọc dữ liệu chuyển từ Home
-  useEffect(() => {
-    // 1. Đọc từ sessionStorage (gói chuyển taoGoiChuyenB1)
-    const pkg = docGoiChuyenTuSession();
-    if (pkg) {
-      if (pkg.diemDiTen) {
-        setDiemDi(timDiemDen(pkg.diemDiTen));
-      }
-      if (pkg.diemDenTen) {
-        setDiemDen(timDiemDen(pkg.diemDenTen));
-      }
-      if (pkg.soNguoi) setSoNguoi(pkg.soNguoi);
-      if (pkg.soNgay) setSoNgay(pkg.soNgay);
-      if (pkg.nganSachSoTien) {
-        setNganSachSoTien(pkg.nganSachSoTien);
-        setNganSachInputStr(dinhDangTien(pkg.nganSachSoTien));
-      }
-      if (pkg.nganSachTheo) setNganSachTheo(pkg.nganSachTheo);
+  const duration = travelDuration(start, end);
+  const invalidDateOrder = Boolean(start && end && end < start);
+  const planIssueMessage = (() => {
+    if (planStatus === "khong_the_dat_ngan_sach") {
+      return "Chưa tìm được lịch trình trong ngân sách đã nhập. Bạn có thể chọn phương tiện khác hoặc rút ngắn chuyến đi.";
     }
-
-    if (typeof window !== "undefined") {
-      const sp = new URLSearchParams(window.location.search);
-      // 2. Fallback tham số URL (hỗ trợ cả tu/diemDi, den/diemDen, ngay/soNgay, nguoi/soNguoi, ngansach/budget)
-      const tu = sp.get("tu") || sp.get("diemDi");
-      const den = sp.get("den") || sp.get("diemDen");
-      const ngay = parseInt(sp.get("ngay") || sp.get("soNgay") || "0", 10);
-      const nguoi = parseInt(sp.get("nguoi") || sp.get("soNguoi") || "0", 10);
-      const ns = parseInt(sp.get("ngansach") || sp.get("budget") || "0", 10);
-      if (den && !pkg) {
-        setDiemDen(timDiemDen(den));
-      }
-      if (tu && !pkg) {
-        setDiemDi(timDiemDen(tu));
-      }
-      if (nguoi >= 1 && nguoi <= 10 && !pkg) setSoNguoi(nguoi);
-      if (ngay >= 2 && ngay <= 7 && !pkg) setSoNgay(ngay);
-      if (ns > 0 && !pkg) {
-        setNganSachSoTien(ns);
-        setNganSachInputStr(dinhDangTien(ns));
-      }
+    if (planStatus === "can_lam_ro") {
+      return hardViolations.length > 0
+        ? hardViolations.map((v) => v.chiTiet).join(". ")
+        : planError || "Cần làm rõ thêm thông tin điểm đến hoặc thời gian chuyến đi.";
     }
-  }, []);
-
-  // Đồng bộ sang AppContext
-  useEffect(() => {
-    const tongNganSach =
-      nganSachTheo === "tong" ? nganSachSoTien : nganSachSoTien * soNguoi;
-
-    setTripConfig({
-      diemDi,
-      diemDen,
-      people: soNguoi,
-      budget: tongNganSach,
-      nganSachSoTien,
-      nganSachTheo,
-      soNgay,
-      avoids: tranh,
-      note: ghiChu,
-    });
-  }, [diemDi, diemDen, soNguoi, nganSachSoTien, nganSachTheo, soNgay, tranh, ghiChu, setTripConfig]);
-
-  // Đối tượng FormB1 thuần để kiểm tra
-  const currentForm: FormB1 = {
-    diemDi,
-    diemDen,
-    soNguoi,
-    nganSach: {
-      soTien: nganSachSoTien,
-      theo: nganSachTheo,
-    },
-    soNgay,
-    tranh,
-    ghiChu,
-  };
-
-  const validationErrors = kiemTraFormB1(currentForm);
-  const isFormValid = validationErrors.length === 0;
-
-  // Tính tổng quy đổi ngân sách
-  const tongNganSachQuyDoiVND =
-    nganSachTheo === "tong" ? nganSachSoTien : nganSachSoTien * soNguoi;
-
-  // Xử lý gõ ngân sách (dấu chấm phân cách hàng nghìn)
-  const handleNganSachChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value;
-    const num = docTien(raw);
-    if (num === null) {
-      // Giữ nguyên ký tự người dùng gõ nếu đang xóa hoặc nhập dở
-      setNganSachInputStr(raw);
-      setNganSachSoTien(0);
-    } else {
-      setNganSachSoTien(num);
-      setNganSachInputStr(dinhDangTien(num));
+    if (planStatus === "khong_co_phuong_an") {
+      return hardViolations.length > 0
+        ? hardViolations.map((v) => v.chiTiet).join(". ")
+        : planError || "Không tìm thấy phương án di chuyển hoặc chỗ ở phù hợp. Hãy thử đổi ngày hoặc phương tiện khác.";
     }
-  };
-
-  // Chọn nhanh điểm đến phổ biến có sẵn dữ liệu
-  const handleSelectPreset = (p: PopularDestPreset) => {
-    const targetDen = timDiemDen(p.ten);
-    setDiemDen(targetDen);
-    if (!diemDi || diemDi.ten.toLowerCase() === p.ten.toLowerCase()) {
-      setDiemDi(timDiemDen(p.diemDiMacDinh));
+    if (planStatus === "error" && planError) {
+      return planError;
     }
-    setSoNgay(p.soNgay);
-    setSoNguoi(2);
-    setNganSachSoTien(p.nganSachGoiY);
-    setNganSachInputStr(dinhDangTien(p.nganSachGoiY));
-    setNganSachTheo("tong");
-    setHasInteracted(false);
-  };
+    return null;
+  })();
 
-  // Bấm nút gợi ý ngân sách (5, 8, 10, 15, 20 triệu)
-  const handlePickBudget = (val: number) => {
-    setNganSachSoTien(val);
-    setNganSachInputStr(dinhDangTien(val));
-  };
+  const errorRef = useRef<HTMLDivElement>(null);
 
-  // Tăng giảm số người
-  const handleStepPeople = (delta: number) => {
-    const next = Math.max(1, Math.min(10, soNguoi + delta));
-    setSoNguoi(next);
-  };
+  function reject(message: string) {
+    setError(message);
+    requestAnimationFrame(() => errorRef.current?.focus());
+  }
 
-  // Bật/tắt mục tránh
-  const toggleAvoid = (label: string) => {
-    setTranh((prev) =>
-      prev.includes(label) ? prev.filter((x) => x !== label) : [...prev, label]
-    );
-  };
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    const wishes = [
+      ...new Set([
+        ...conversation.messages.filter((m) => m.role === "user").map((m) => m.text),
+        note,
+      ].filter(Boolean)),
+    ].join(". ");
 
-  // Submit form B1
-  const handleSubmit = async () => {
-    setHasInteracted(true);
-    if (!isFormValid) {
+    if (wishes.length > 500) {
+      reject("Vui lòng rút gọn mong muốn trong 500 ký tự.");
       return;
     }
-    const yeuCau = taoYeuCauTuForm(currentForm);
+    if (!origin.trim()) {
+      reject("Vui lòng nhập nơi xuất phát.");
+      return;
+    }
+    if (!destination.trim()) {
+      reject("Vui lòng nhập điểm đến.");
+      return;
+    }
+    if (origin.trim().toLowerCase() === destination.trim().toLowerCase()) {
+      reject("Hãy chọn điểm xuất phát và điểm đến khác nhau.");
+      return;
+    }
+    if (!start || !end || !duration) {
+      reject(invalidDateOrder ? returnDateOrderError : "Vui lòng chọn ngày đi và ngày về hợp lệ.");
+      return;
+    }
+    if (!Number.isInteger(people) || people < 1 || people > 10) {
+      reject("Số khách phải từ 1 đến 10 người.");
+      return;
+    }
+    if (!Number.isSafeInteger(budget) || budget <= 0) {
+      reject("Vui lòng nhập tổng ngân sách dự kiến hợp lệ (lớn hơn 0 VND).");
+      return;
+    }
+
+    setError("");
     setTripConfig({
-      diemDi: yeuCau.diemDi,
-      diemDen: yeuCau.diemDen,
-      soNgay: yeuCau.soNgay,
-      people: yeuCau.soNguoi,
-      budget: yeuCau.ngansachTongVND,
-      avoids: yeuCau.tranh,
-      note: yeuCau.ghiChu,
+      diemDi: point(origin),
+      diemDen: point(destination),
+      travelDates: { departureDate: start, returnDate: end },
+      soNgay: duration.days,
+      people,
+      budget,
+      nganSachSoTien: budget,
+      nganSachTheo: "tong",
+      transportMode: transport,
+      localTransportMode: local,
+      note: wishes,
+      avoids: [],
     });
     nav("b2-dang-chay");
-  };
-
-  // Chú thích lý do vì sao nút "Lập kế hoạch" đang tắt
-  const getLyDoTat = (): string => {
-    if (validationErrors.includes("diem_di_trung_diem_den"))
-      return "Điểm đi và điểm đến không được trùng nhau.";
-    if (validationErrors.includes("so_nguoi_ngoai_pham_vi"))
-      return "Số người cần trong khoảng từ 1 đến 10 người.";
-    if (validationErrors.includes("ngan_sach_khong_hop_le"))
-      return "Vui lòng nhập ngân sách dự kiến hợp lệ.";
-    if (validationErrors.includes("so_ngay_ngoai_pham_vi"))
-      return "Số ngày cần trong khoảng từ 2 đến 7 ngày.";
-    if (validationErrors.includes("ghi_chu_qua_dai"))
-      return "Ghi chú vượt quá 500 ký tự.";
-    if (validationErrors.includes("diem_di_thieu") || validationErrors.includes("diem_den_thieu") || tongNganSachQuyDoiVND <= 0)
-      return "Vui lòng chọn điểm đi, điểm đến và ngân sách để tiếp tục.";
-    return "Vui lòng hoàn thiện các thông tin để tiếp tục.";
-  };
-
-  const soDem = Math.max(1, soNgay - 1);
-  const tenDiemDen = diemDen ? getDiemDenTen(diemDen) : null;
-  const tenDiemDi = diemDi ? (typeof diemDi === "string" ? diemDi : diemDi.ten) : null;
-
-  // Lỗi hiển thị theo vị trí
-  const hasDiemDiError = validationErrors.includes("diem_di_thieu") && hasInteracted;
-  const hasDiemDenMissingError =
-    validationErrors.includes("diem_den_thieu") && hasInteracted;
-  const hasDiemTrungError = validationErrors.includes("diem_di_trung_diem_den");
-  const hasSoNguoiError = validationErrors.includes("so_nguoi_ngoai_pham_vi");
-  const hasNganSachError =
-    validationErrors.includes("ngan_sach_khong_hop_le") &&
-    (hasInteracted || (nganSachInputStr.length > 0 && nganSachSoTien <= 0));
-  const hasSoNgayError = validationErrors.includes("so_ngay_ngoai_pham_vi");
-  const hasGhiChuError = validationErrors.includes("ghi_chu_qua_dai");
+  }
 
   return (
-    <div className="HomeRow">
-      {/* CỘT CHÍNH: HomeCard */}
-      <div className="HomeCard">
-        {/* HERO BANNER - CHUẨN DOANH NGHIỆP CLEAN & PHẲNG */}
-        {(() => {
-          const heroImg = getDestinationImage(tenDiemDen);
-          return (
-            <div
-              className="HeroGradientBanner"
-              style={{
-                position: "relative",
-                height: 120,
-                margin: "8px 8px 0",
-                borderRadius: "var(--r-xl)",
-                overflow: "hidden",
-                flex: "none",
-                background: "var(--color-primary-main)",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                padding: "0 32px",
-                boxShadow: "0 2px 10px rgba(43, 85, 214, 0.15)",
-              }}
-            >
-              <img
-                src={heroImg.urlThumb || heroImg.url}
-                alt={heroImg.alt}
-                loading="lazy"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  opacity: 0.32,
-                  pointerEvents: "none",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: "linear-gradient(90deg, rgba(31, 42, 68, 0.85) 0%, rgba(43, 85, 214, 0.65) 100%)",
-                  pointerEvents: "none",
-                }}
-              />
-              <div style={{ position: "relative", zIndex: 1 }}>
-                <div
-                  style={{
-                    fontSize: 26,
-                    lineHeight: "32px",
-                    fontWeight: 800,
-                    color: "var(--color-primary-text)",
-                    marginBottom: 4,
-                  }}
-                >
-                  {tenDiemDen ? `Chuyến đi ${tenDiemDen} của bạn` : "Bạn muốn đi đâu?"}
-                </div>
-                <div
-                  style={{
-                    fontSize: 13,
-                    lineHeight: "18px",
-                    color: "var(--color-primary-tint)",
-                  }}
-                >
-                  {tenDiemDi
-                    ? `${soNgay} ngày ${soDem} đêm từ ${tenDiemDi}`
-                    : "Chọn điểm đi và điểm đến để bắt đầu"}
-                </div>
-              </div>
-            </div>
-          );
-        })()}
+    <div className={styles.form}>
+      <section className={styles.hero}>
+        <span>
+          <Sparkles size={18} /> Hành trình theo cách của bạn
+        </span>
+        <h1>Việt Nam có rất nhiều điều để khám phá.</h1>
+        <p>
+          Chọn ngày, phương tiện và kể điều bạn mong muốn. Cùng xây một hành trình vừa vặn với bạn.
+        </p>
+      </section>
 
-        {/* BODY NỘI DUNG FORM (Theo đúng 5 mục đánh số) */}
-        <div className="Body">
-          {/* ═════════════════════════════════════════════════════════════════
-              MỤC 1: ĐI TỪ ĐÂU, ĐẾN ĐÂU?
-          ═════════════════════════════════════════════════════════════════ */}
-          <div className="Section" id="sec-diem-di-den">
-            <div className="Sec">
-              <div className="NumC">1</div>
-              <div>
-                <div className="STitle">Đi từ đâu, đến đâu?</div>
-                <div className="SSub">Nhập điểm khởi hành và điểm đến bạn mong muốn</div>
+      <form onSubmit={submit} noValidate>
+        {(error || planIssueMessage) && (
+          <div
+            role="alert"
+            className={styles.error}
+            ref={errorRef}
+            tabIndex={-1}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              padding: "16px",
+              borderRadius: "12px",
+              marginBottom: "20px",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+              <AlertCircle size={20} style={{ flexShrink: 0, marginTop: "2px" }} />
+              <div style={{ flex: 1, lineHeight: "1.5" }}>
+                <strong>
+                  {error ? "Thông tin chưa hợp lệ:" : "Lưu ý từ hệ thống lập kế hoạch:"}
+                </strong>{" "}
+                {error || planIssueMessage}
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-              {/* Ô 1: Điểm đi */}
-              <ChonDiem
-                id="b1-diem-di"
-                label="Điểm khởi hành"
-                placeholder="Chọn điểm xuất phát..."
-                value={diemDi}
-                onChange={(val) => setDiemDi(val)}
-                options={diemChonData.diemDi}
-                disabledOptionTen={diemDen?.ten}
-                error={hasDiemDiError}
-                errorMessage="Vui lòng chọn điểm khởi hành trong danh sách."
-              />
-
-              {/* Ô 2: Điểm đến */}
-              <ChonDiem
-                id="b1-diem-den"
-                label="Điểm đến"
-                placeholder="Chọn điểm đến..."
-                value={diemDen}
-                onChange={(val) => setDiemDen(val)}
-                options={diemChonData.diemDen}
-                disabledOptionTen={diemDi?.ten}
-                error={hasDiemDenMissingError || hasDiemTrungError}
-                errorMessage={
-                  hasDiemTrungError
-                    ? "Điểm khởi hành và điểm đến không được trùng nhau."
-                    : "Vui lòng chọn điểm đến trong danh sách."
-                }
-              />
-            </div>
-
-            {/* Gợi ý điểm đến thịnh hành có sẵn dữ liệu */}
-            <div style={{ marginTop: 14 }}>
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "var(--color-text-sub)",
-                  marginBottom: 8,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                }}
-              >
-                <Sparkles size={13} color="var(--color-primary-main)" />
-                <span>Gợi ý điểm đến có sẵn dữ liệu đầy đủ:</span>
-              </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {POPULAR_DEST_PRESETS.map((p) => {
-                  const isSelected = diemDen?.ten.toLowerCase() === p.ten.toLowerCase();
-                  const pImg = getDestinationImage(p.ten);
-                  return (
-                    <button
-                      key={p.ten}
-                      type="button"
-                      onClick={() => handleSelectPreset(p)}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 8,
-                        padding: "5px 12px 5px 6px",
-                        borderRadius: "var(--r-md)",
-                        border: isSelected
-                          ? "1.5px solid var(--color-primary-main)"
-                          : "1px solid var(--color-border)",
-                        background: isSelected
-                          ? "var(--color-primary-tint)"
-                          : "var(--color-surface)",
-                        color: isSelected
-                          ? "var(--color-primary-main)"
-                          : "var(--color-text)",
-                        cursor: "pointer",
-                        fontSize: 13,
-                        fontWeight: isSelected ? 700 : 500,
-                        transition: "all 0.15s ease",
-                      }}
-                      title={`${p.ten} - ${p.moTa} (Gợi ý: ${dinhDangTien(p.nganSachGoiY)} đ)`}
-                    >
-                      <img
-                        src={pImg.urlThumb || pImg.url}
-                        alt={p.ten}
-                        loading="lazy"
-                        style={{
-                          width: 24,
-                          height: 24,
-                          borderRadius: "var(--r-full)",
-                          objectFit: "cover",
-                          flexShrink: 0,
-                          border: isSelected ? "1.5px solid var(--color-primary-main)" : "1px solid var(--color-border)",
-                        }}
-                      />
-                      <span>{p.ten}</span>
-                      <span
-                        style={{
-                          fontSize: 11,
-                          padding: "1px 6px",
-                          borderRadius: "var(--r-full)",
-                          background: isSelected ? "var(--color-surface)" : "var(--color-surface-sub)",
-                          color: "var(--color-text-sub)",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {dinhDangTien(p.nganSachGoiY)} đ
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
           </div>
+        )}
 
-          {/* ═════════════════════════════════════════════════════════════════
-              MỤC 2: MẤY NGƯỜI ĐI?
-          ═════════════════════════════════════════════════════════════════ */}
-          <div className="Section" id="sec-so-nguoi">
-            <div className="Sec">
-              <div className="NumC">2</div>
-              <div>
-                <div className="STitle">Mấy người đi?</div>
-                <div className="SSub">Tùy chỉnh số người từ 1 đến 10</div>
-              </div>
-            </div>
-
-            {/* Stepper tăng giảm số người */}
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 12,
-                background: "var(--color-neutral-gray50)",
-                border: "1px solid var(--color-neutral-borderInput)",
-                borderRadius: 10,
-                padding: "6px 12px",
-                marginBottom: 16,
-              }}
-            >
-              <button
-                type="button"
-                className="Btn BtnSmall"
-                disabled={soNguoi <= 1}
-                onClick={() => handleStepPeople(-1)}
-                style={{
-                  width: 32,
-                  height: 32,
-                  padding: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 6,
+        <section className={styles.panel}>
+          <h2>Đi đâu và khi nào?</h2>
+          <div className={styles.grid}>
+            <label className={styles.field}>
+              Nơi xuất phát
+              <input
+                required
+                value={origin}
+                onChange={(e) => {
+                  setOrigin(e.target.value);
+                  if (error) setError("");
                 }}
-                aria-label="Giảm 1 người"
-              >
-                <Minus size={14} />
-              </button>
-
-              <span style={{ fontSize: 16, fontWeight: 700, minWidth: 70, textAlign: "center" }}>
-                {soNguoi} người
-              </span>
-
-              <button
-                type="button"
-                className="Btn BtnSmall"
-                disabled={soNguoi >= 10}
-                onClick={() => handleStepPeople(1)}
-                style={{
-                  width: 32,
-                  height: 32,
-                  padding: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 6,
-                }}
-                aria-label="Tăng 1 người"
-              >
-                <Plus size={14} />
-              </button>
-            </div>
-
-            {/* Thẻ nhóm (CHỈ đặt số người, KHÔNG CÓ CHỮ TRIỆU NÀO) */}
-            <div className="Presets">
-              {PRESETS.map((preset) => {
-                const isSelected = soNguoi === preset.people;
-                return (
-                  <div
-                    key={preset.id}
-                    className={`Preset ${isSelected ? "PresetOn" : ""}`}
-                    onClick={() => setSoNguoi(preset.people)}
-                  >
-                    {preset.iconType === "couple" && (
-                      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
-                        <circle cx="17" cy="17" r="16" fill="var(--color-art-icon-bg-blue)" />
-                        <ellipse cx="17" cy="25" rx="10" ry="3.5" fill="var(--color-art-sand)" />
-                        <path d="M12 25 C13 18, 15 15, 17 11 C19 15, 21 18, 22 25" stroke="var(--color-art-wood-trunk)" strokeWidth="2" strokeLinecap="round" />
-                        <path d="M17 11 C14 8, 10 9, 8 13 C12 13, 15 12, 17 11 Z" fill="var(--color-art-palm1)" />
-                        <path d="M17 11 C20 8, 24 9, 26 13 C22 13, 19 12, 17 11 Z" fill="var(--color-art-palm2)" />
-                      </svg>
-                    )}
-                    {preset.iconType === "group" && (
-                      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
-                        <circle cx="17" cy="17" r="16" fill="var(--color-art-icon-bg-primary)" />
-                        <circle cx="12" cy="14" r="3.5" fill="var(--color-art-blue-mid)" />
-                        <circle cx="22" cy="14" r="3.5" fill="var(--color-art-blue-mid)" />
-                        <circle cx="17" cy="11.5" r="4" fill="var(--color-art-blue-dark)" />
-                        <path d="M9 25 C9 20, 15 20, 15 25" fill="var(--color-art-blue-dark)" />
-                        <path d="M19 25 C19 20, 25 20, 25 25" fill="var(--color-art-blue-dark)" />
-                        <path d="M13 25 C13 18.5, 21 18.5, 21 25" fill="var(--color-art-blue-deep)" />
-                      </svg>
-                    )}
-                    {preset.iconType === "family" && (
-                      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
-                        <circle cx="17" cy="17" r="16" fill="var(--color-art-icon-bg-green)" />
-                        <circle cx="13" cy="12" r="3.5" fill="var(--color-art-hill2)" />
-                        <circle cx="21" cy="12" r="3.5" fill="var(--color-art-hill2)" />
-                        <circle cx="17" cy="17" r="2.8" fill="var(--color-art-warm-amber)" />
-                        <path d="M10 25 C10 19, 16 19, 16 25" fill="var(--color-art-hill2)" />
-                        <path d="M18 25 C18 19, 24 19, 24 25" fill="var(--color-art-hill2)" />
-                        <path d="M14 25 C14 22, 20 22, 20 25" fill="var(--color-art-orange)" />
-                      </svg>
-                    )}
-                    {preset.iconType === "solo" && (
-                      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
-                        <circle cx="17" cy="17" r="16" fill="var(--color-art-icon-bg-tint)" />
-                        <circle cx="17" cy="13" r="4.5" fill="var(--color-primary)" />
-                        <path d="M11 25 C11 19, 23 19, 23 25" fill="var(--color-primary)" />
-                      </svg>
-                    )}
-
-                    <div style={{ minWidth: 0 }}>
-                      <div className="PName">{preset.name}</div>
-                      <div className="PSub">{preset.sub}</div>
-                    </div>
-
-                    {isSelected && (
-                      <div className="Badge">
-                        <Check size={12} strokeWidth={3} />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {hasSoNguoiError && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "var(--color-status-errBg)",
-                  border: "1px solid var(--color-status-errBorder)",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  marginTop: 10,
-                }}
-              >
-                <AlertCircle size={16} color="var(--color-status-errText)" />
-                <span style={{ fontSize: 12, color: "var(--color-status-errText)", fontWeight: 600 }}>
-                  Số người đi phải nằm trong khoảng từ 1 đến 10 người.
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* ═════════════════════════════════════════════════════════════════
-              MỤC 3: NGÂN SÁCH
-          ═════════════════════════════════════════════════════════════════ */}
-          <div className="Section" id="sec-ngan-sach">
-            <div className="Sec">
-              <div className="NumC">3</div>
-              <div style={{ flex: 1 }}>
-                <div className="STitle">Ngân sách</div>
-                <div className="SSub">Nhập số tiền VND dự kiến và chọn cách tính</div>
-              </div>
-
-              {/* Nút chuyển chế độ: Cho cả nhóm vs Mỗi người */}
-              <div
-                style={{
-                  display: "inline-flex",
-                  background: "var(--color-neutral-gray100)",
-                  borderRadius: 8,
-                  padding: 3,
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setNganSachTheo("tong")}
-                  style={{
-                    padding: "6px 14px",
-                    fontSize: 13,
-                    fontWeight: nganSachTheo === "tong" ? 700 : 500,
-                    background: nganSachTheo === "tong" ? "var(--color-surface)" : "transparent",
-                    color:
-                      nganSachTheo === "tong"
-                        ? "var(--color-primary-brand)"
-                        : "var(--color-neutral-mutedText)",
-                    border: "none",
-                    borderRadius: 6,
-                    cursor: "pointer",
-                    boxShadow:
-                      nganSachTheo === "tong" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
-                  }}
-                >
-                  Cho cả nhóm
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setNganSachTheo("moi_nguoi")}
-                  style={{
-                    padding: "6px 14px",
-                    fontSize: 13,
-                    fontWeight: nganSachTheo === "moi_nguoi" ? 700 : 500,
-                    background: nganSachTheo === "moi_nguoi" ? "var(--color-surface)" : "transparent",
-                    color:
-                      nganSachTheo === "moi_nguoi"
-                        ? "var(--color-primary-brand)"
-                        : "var(--color-neutral-mutedText)",
-                    border: "none",
-                    borderRadius: 6,
-                    cursor: "pointer",
-                    boxShadow:
-                      nganSachTheo === "moi_nguoi" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
-                  }}
-                >
-                  Mỗi người
-                </button>
-              </div>
-            </div>
-
-            {/* Ô nhập số tiền có dấu chấm phân cách */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10, maxWidth: 360, marginBottom: 12 }}>
-              <div style={{ position: "relative", flex: 1 }}>
-                <input
-                  type="text"
-                  className="Input"
-                  placeholder="Ví dụ: 10.000.000"
-                  value={nganSachInputStr}
-                  onChange={handleNganSachChange}
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 700,
-                    paddingRight: 32,
-                    textAlign: "right",
-                  }}
-                />
-                <span
-                  style={{
-                    position: "absolute",
-                    right: 12,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    fontWeight: 700,
-                    color: "var(--color-neutral-mutedText)",
-                  }}
-                >
-                  đ
-                </span>
-              </div>
-            </div>
-
-            {/* Các nút điền số nhanh: 5, 8, 10, 15, 20 triệu */}
-            <div className="ChipsNo" style={{ marginBottom: 10 }}>
-              {BUDGET_BUTTONS.map((amt) => {
-                const isSelected = nganSachSoTien === amt;
-                return (
-                  <div
-                    key={amt}
-                    className={`Chip ${isSelected ? "ChipOn" : ""}`}
-                    onClick={() => handlePickBudget(amt)}
-                  >
-                    {amt / 1_000_000} triệu
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Dòng nhỏ luôn hiện tổng quy đổi */}
-            <div
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: "var(--color-primary-brand)",
-                background: "var(--color-primary-brandSoft)",
-                padding: "6px 12px",
-                borderRadius: 6,
-                display: "inline-block",
-                marginBottom: 12,
-              }}
-            >
-              Tổng cả nhóm: {tongNganSachQuyDoiVND > 0 ? `${dinhDangTien(tongNganSachQuyDoiVND)} đ` : "0 đ"}
-              {nganSachTheo === "moi_nguoi" && nganSachSoTien > 0 && (
-                <span style={{ fontSize: 12, color: "var(--color-neutral-mutedText)", marginLeft: 6 }}>
-                  ({dinhDangTien(nganSachSoTien)} đ × {soNguoi} người)
-                </span>
-              )}
-            </div>
-
-            {/* Ý TƯỞNG 2: GỢI Ý PHÂN BỔ NGÂN SÁCH THÔNG MINH (Chuẩn du lịch) */}
-            {tongNganSachQuyDoiVND > 0 && (() => {
-              const allocation = goiYPhanBoNganSach(tongNganSachQuyDoiVND);
-              return (
-                <div
-                  style={{
-                    background: "var(--color-surface)",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: "var(--r-md)",
-                    padding: "12px 14px",
-                    marginTop: 4,
-                    maxWidth: 580,
-                  }}
-                >
-                  <div
+                list="vn-places"
+                placeholder="Ví dụ: Hà Nội"
+              />
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }}>
+                {["TP.HCM", "Hà Nội", "Đà Nẵng"].map((city) => (
+                  <button
+                    key={city}
+                    type="button"
+                    onClick={() => {
+                      setOrigin(city);
+                      if (error) setError("");
+                    }}
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
                       fontSize: 12,
-                      fontWeight: 700,
-                      color: "var(--color-text)",
-                      marginBottom: 8,
+                      padding: "3px 10px",
+                      borderRadius: "var(--r-full)",
+                      border: "1px solid",
+                      borderColor: origin.toLowerCase() === city.toLowerCase() ? "var(--color-primary)" : "var(--color-border)",
+                      background: origin.toLowerCase() === city.toLowerCase() ? "var(--color-primary-tint)" : "var(--color-surface)",
+                      color: origin.toLowerCase() === city.toLowerCase() ? "var(--color-primary)" : "var(--color-text-sub)",
+                      fontWeight: origin.toLowerCase() === city.toLowerCase() ? 600 : 500,
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
                     }}
                   >
-                    <Sparkles size={14} color="var(--color-primary-main)" />
-                    <span>Gợi ý phân bổ chi phí lý tưởng (Tham khảo):</span>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-                      gap: 8,
-                      fontSize: 11,
-                    }}
-                  >
-                    <div style={{ padding: "6px 8px", background: "var(--color-surface-sub)", borderRadius: 6 }}>
-                      <div style={{ color: "var(--color-text-sub)" }}>Di chuyển (35%)</div>
-                      <div style={{ fontWeight: 700, color: "var(--color-hangMuc-diChuyen)", marginTop: 2 }}>
-                        {dinhDangTien(allocation.diChuyen)} đ
-                      </div>
-                    </div>
-                    <div style={{ padding: "6px 8px", background: "var(--color-surface-sub)", borderRadius: 6 }}>
-                      <div style={{ color: "var(--color-text-sub)" }}>Lưu trú (30%)</div>
-                      <div style={{ fontWeight: 700, color: "var(--color-hangMuc-choO)", marginTop: 2 }}>
-                        {dinhDangTien(allocation.choO)} đ
-                      </div>
-                    </div>
-                    <div style={{ padding: "6px 8px", background: "var(--color-surface-sub)", borderRadius: 6 }}>
-                      <div style={{ color: "var(--color-text-sub)" }}>Ăn uống (20%)</div>
-                      <div style={{ fontWeight: 700, color: "var(--color-hangMuc-anUong)", marginTop: 2 }}>
-                        {dinhDangTien(allocation.anUong)} đ
-                      </div>
-                    </div>
-                    <div style={{ padding: "6px 8px", background: "var(--color-surface-sub)", borderRadius: 6 }}>
-                      <div style={{ color: "var(--color-text-sub)" }}>Vui chơi (15%)</div>
-                      <div style={{ fontWeight: 700, color: "var(--color-hangMuc-vuiChoi)", marginTop: 2 }}>
-                        {dinhDangTien(allocation.vuiChoiVaDuPhong)} đ
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* Lỗi ở ô ngân sách */}
-            {hasNganSachError && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "var(--color-status-errBg)",
-                  border: "1px solid var(--color-status-errBorder)",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  marginTop: 10,
-                }}
-              >
-                <AlertCircle size={16} color="var(--color-status-errText)" />
-                <span style={{ fontSize: 12, color: "var(--color-status-errText)", fontWeight: 600 }}>
-                  Ngân sách dự kiến phải là số nguyên dương hợp lệ (lớn hơn 0 đ).
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* ═════════════════════════════════════════════════════════════════
-              MỤC 4: THỜI GIAN
-          ═════════════════════════════════════════════════════════════════ */}
-          <div className="Section" id="sec-thoi-gian">
-            <div className="Sec">
-              <div className="NumC">4</div>
-              <div>
-                <div className="STitle">Thời gian</div>
-                <div className="SSub">Thời lượng chuyến đi từ 2 đến 7 ngày</div>
-              </div>
-            </div>
-
-            <div style={{ maxWidth: 360, marginTop: 10 }}>
-              <select
-                id="select-so-ngay-b1"
-                aria-label="Chọn số ngày đi"
-                value={soNgay}
-                onChange={(e) => setSoNgay(parseInt(e.target.value, 10))}
-                style={{
-                  width: "100%",
-                  height: 44,
-                  padding: "0 14px",
-                  fontSize: "var(--font-size-base)",
-                  borderRadius: "var(--r-md)",
-                  border: "1px solid var(--color-border)",
-                  background: "var(--color-surface)",
-                  color: "var(--color-text)",
-                  outline: "none",
-                  cursor: "pointer",
-                }}
-              >
-                {[2, 3, 4, 5, 6, 7].map((d) => (
-                  <option key={d} value={d}>
-                    {d} ngày {d - 1} đêm
-                  </option>
+                    {city}
+                  </button>
                 ))}
-              </select>
-            </div>
-
-            {hasSoNgayError && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "var(--color-status-errBg)",
-                  border: "1px solid var(--color-status-errBorder)",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  marginTop: 10,
+              </div>
+            </label>
+            <label className={styles.field}>
+              Điểm đến
+              <input
+                required
+                value={destination}
+                onChange={(e) => {
+                  setDestination(e.target.value);
+                  if (error) setError("");
                 }}
-              >
-                <AlertCircle size={16} color="var(--color-status-errText)" />
-                <span style={{ fontSize: 12, color: "var(--color-status-errText)", fontWeight: 600 }}>
-                  Chuyến đi hỗ trợ từ 2 đến 7 ngày (tương ứng 1 đến 6 đêm).
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* ═════════════════════════════════════════════════════════════════
-              MỤC 5: MUỐN TRÁNH GÌ? VÀ GHI CHÚ
-          ═════════════════════════════════════════════════════════════════ */}
-          <div className="Section" id="sec-muon-tranh">
-            <div className="Sec">
-              <div className="NumC">5</div>
-              <div>
-                <div className="STitle">Muốn tránh gì?</div>
-                <div className="SSub">Trip Vibes sẽ tối ưu lịch trình theo tiêu chí của bạn</div>
-              </div>
-            </div>
-
-            {/* Ý TƯỞNG 3: BỘ LỌC PHONG CÁCH CHUYẾN ĐI NHANH (Quick Travel Persona) */}
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--color-text)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
-                <Sparkles size={14} color="var(--color-primary-main)" />
-                <span>Chọn nhanh phong cách chuyến đi:</span>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 8 }}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTranh(["Tránh đi bộ nhiều"]);
-                    setGhiChu("Ưu tiên tối ưu chi phí, ăn uống quán bình dân địa phương, trải nghiệm thực tế.");
-                  }}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "8px 12px",
-                    borderRadius: "var(--r-md)",
-                    border: "1px solid var(--color-border)",
-                    background: "var(--color-surface)",
-                    color: "var(--color-text)",
-                    cursor: "pointer",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    textAlign: "left",
-                  }}
-                >
-                  <Briefcase size={15} color="var(--color-primary-main)" />
-                  <div>
-                    <div style={{ fontWeight: 700 }}>Tiết kiệm</div>
-                    <div style={{ fontSize: 10, color: "var(--color-text-sub)" }}>Tối ưu ngân sách</div>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTranh(["Không dậy sớm", "Tránh đi bộ nhiều"]);
-                    setGhiChu("Nghỉ ngơi thư giãn, thức dậy thong thả, chọn quán cà phê view đẹp và không gian yên tĩnh.");
-                  }}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "8px 12px",
-                    borderRadius: "var(--r-md)",
-                    border: "1px solid var(--color-border)",
-                    background: "var(--color-surface)",
-                    color: "var(--color-text)",
-                    cursor: "pointer",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    textAlign: "left",
-                  }}
-                >
-                  <Coffee size={15} color="var(--color-primary-main)" />
-                  <div>
-                    <div style={{ fontWeight: 700 }}>Nghỉ dưỡng & Chill</div>
-                    <div style={{ fontSize: 10, color: "var(--color-text-sub)" }}>Không dậy sớm, thong thả</div>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTranh(["Tránh đi lâu"]);
-                    setGhiChu("Khám phá nhiều điểm đặc sắc, chụp ảnh check-in và trải nghiệm văn hóa trọn vẹn.");
-                  }}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "8px 12px",
-                    borderRadius: "var(--r-md)",
-                    border: "1px solid var(--color-border)",
-                    background: "var(--color-surface)",
-                    color: "var(--color-text)",
-                    cursor: "pointer",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    textAlign: "left",
-                  }}
-                >
-                  <Compass size={15} color="var(--color-primary-main)" />
-                  <div>
-                    <div style={{ fontWeight: 700 }}>Khám phá & Check-in</div>
-                    <div style={{ fontSize: 10, color: "var(--color-text-sub)" }}>Lịch trình năng động</div>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--color-text-sub)", marginBottom: 6 }}>
-              Hoặc chọn riêng từng tiêu chí:
-            </div>
-            <div className="ChipsWrap" style={{ marginBottom: 16 }}>
-              {AVOID_ITEMS.map((item) => {
-                const IconComponent = item.icon;
-                const isAvoided = tranh.includes(item.label);
-                return (
-                  <div
-                    key={item.label}
-                    className={`Chip ChipIcon ${isAvoided ? "ChipOn" : ""}`}
-                    onClick={() => toggleAvoid(item.label)}
-                  >
-                    <IconComponent size={14} />
-                    <span>{item.label}</span>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Ghi chú tùy chọn với bộ đếm ký tự chuẩn - chỉ hiện khi AI bật */}
-            {aiBat && (
-              <div style={{ marginTop: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-neutral-navyText)" }}>
-                    Ghi chú thêm (không bắt buộc)
-                  </span>
-                  <span
+                list="vn-places"
+                placeholder="Một nơi tại Việt Nam"
+              />
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }}>
+                {["Đà Nẵng", "Hà Nội", "Đà Lạt", "Hội An", "Huế", "Nha Trang"].map((city) => (
+                  <button
+                    key={city}
+                    type="button"
+                    onClick={() => {
+                      setDestination(city);
+                      if (error) setError("");
+                    }}
                     style={{
                       fontSize: 12,
-                      color: ghiChu.length > 500 ? "var(--color-status-error)" : "var(--color-neutral-mutedText)",
+                      padding: "3px 10px",
+                      borderRadius: "var(--r-full)",
+                      border: "1px solid",
+                      borderColor: destination.toLowerCase() === city.toLowerCase() ? "var(--color-primary)" : "var(--color-border)",
+                      background: destination.toLowerCase() === city.toLowerCase() ? "var(--color-primary-tint)" : "var(--color-surface)",
+                      color: destination.toLowerCase() === city.toLowerCase() ? "var(--color-primary)" : "var(--color-text-sub)",
+                      fontWeight: destination.toLowerCase() === city.toLowerCase() ? 600 : 500,
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
                     }}
                   >
-                    {ghiChu.length}/500
-                  </span>
-                </div>
-
-                <textarea
-                  className="Area"
-                  placeholder="Ví dụ: đi cùng gia đình, thích trải nghiệm văn hóa địa phương, muốn nghỉ ngơi thong thả..."
-                  value={ghiChu}
-                  maxLength={600}
-                  onChange={(e) => setGhiChu(e.target.value)}
-                  style={{ width: "100%", resize: "none", outline: "none", fontFamily: "inherit" }}
-                />
-
-                {hasGhiChuError && (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      background: "var(--color-status-errBg)",
-                      border: "1px solid var(--color-status-errBorder)",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      marginTop: 6,
-                    }}
-                  >
-                    <AlertCircle size={16} color="var(--color-status-errText)" />
-                    <span style={{ fontSize: 12, color: "var(--color-status-errText)", fontWeight: 600 }}>
-                      Nội dung ghi chú tối đa 500 ký tự. Vui lòng rút gọn lại.
-                    </span>
-                  </div>
-                )}
+                    {city}
+                  </button>
+                ))}
               </div>
-            )}
-          </div>
-        </div>
-
-        {/* ═════════════════════════════════════════════════════════════════
-            THANH TÓM TẮT DƯỚI CÙNG (DỰNG TỪ GIÁ TRỊ THẬT)
-        ═════════════════════════════════════════════════════════════════ */}
-        <div className="BarWrap">
-          <div className="BarIn">
-            <div className="BarText" style={{ display: "flex", alignItems: "center", gap: 10, flex: 1 }}>
-              <MapPin size={18} color="var(--color-primary-brand)" style={{ flexShrink: 0 }} />
-              <div style={{ lineHeight: "20px", fontSize: 13 }}>
-                {diemDi && diemDen && tongNganSachQuyDoiVND > 0 ? (
-                  <span>
-                    <strong>{soNguoi}</strong> người · <strong>{dinhDangTien(tongNganSachQuyDoiVND)} đ</strong> ·{" "}
-                    <strong>{soNgay} ngày {soDem} đêm</strong> ({diemDi.ten} → {diemDen.ten})
-                    {tranh.length > 0 ? ` · Tránh: ${tranh.join(", ")}` : ""}
-                  </span>
-                ) : (
-                  <span style={{ color: "var(--color-text-sub)" }}>
-                    {soNguoi} người · {tongNganSachQuyDoiVND > 0 ? `${dinhDangTien(tongNganSachQuyDoiVND)} đ` : "Ngân sách đang trống"} · {soNgay} ngày {soDem} đêm · {diemDi ? (typeof diemDi === "string" ? diemDi : diemDi.ten) : "..."} → {diemDen ? (typeof diemDen === "string" ? diemDen : diemDen.ten) : "..."}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Cụm nút submit + Chú thích ngắn lý do bị tắt dưới nút */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
-              <button
-                type="button"
-                className="Go"
-                disabled={!isFormValid}
-                onClick={handleSubmit}
-                style={{
-                  opacity: !isFormValid ? 0.6 : 1,
-                  cursor: !isFormValid ? "not-allowed" : "pointer",
+            </label>
+            <datalist id="vn-places">
+              {[...new Map(points.map((p) => [p.ten, p])).values()].map((p) => (
+                <option key={p.ten} value={p.ten} />
+              ))}
+            </datalist>
+            <label className={styles.field}>
+              Ngày đi
+              <VietnameseDateInput
+                aria-label="Ngày đi"
+                required
+                value={start}
+                onValueChange={(value) => {
+                  setStart(value);
+                  if (error) setError("");
                 }}
-              >
-                <Plane size={18} />
-                <span>Lập kế hoạch</span>
-                <span>→</span>
-              </button>
-              {!isFormValid && (
-                <span
-                  style={{
-                    fontSize: 11,
-                    color: "var(--color-status-errText)",
-                    lineHeight: "14px",
-                    marginTop: 2,
-                    textAlign: "right",
-                  }}
-                >
-                  {getLyDoTat()}
-                </span>
+              />
+            </label>
+            <label className={styles.field}>
+              Ngày về
+              <VietnameseDateInput
+                aria-label="Ngày về"
+                aria-invalid={invalidDateOrder || undefined}
+                aria-describedby={invalidDateOrder ? "planner-return-date-error" : undefined}
+                required
+                min={start || undefined}
+                value={end}
+                onValueChange={(value) => {
+                  setEnd(value);
+                  if (error) setError("");
+                }}
+              />
+              {invalidDateOrder && (
+                <small id="planner-return-date-error" role="alert">{returnDateOrderError}</small>
               )}
+            </label>
+            <label className={styles.field}>
+              Số khách
+              <input
+                type="number"
+                min={1}
+                max={10}
+                required
+                value={people}
+                onChange={(e) => {
+                  setPeople(e.target.valueAsNumber);
+                  if (error) setError("");
+                }}
+              />
+            </label>
+            <div className={styles.field}>
+              <span>Thời gian khám phá</span>
+              <p>
+                <CalendarDays size={18} />{" "}
+                {duration ? `${duration.days} ngày · ${duration.nights} đêm` : "Chọn ngày đi và ngày về"}
+              </p>
             </div>
           </div>
+        </section>
+
+        <section className={styles.panel}>
+          <h2>Ngân sách và di chuyển</h2>
+          <div className={styles.grid}>
+            <label className={styles.field}>
+              Tổng ngân sách (VND)
+              <input
+                aria-label="Ngân sách dự kiến VND"
+                type="number"
+                min={1}
+                step={1}
+                required
+                value={budget || ""}
+                onChange={(e) => {
+                  setBudget(e.target.valueAsNumber || 0);
+                  if (error) setError("");
+                }}
+                placeholder="Ngân sách cho cả chuyến"
+              />
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }}>
+                {[
+                  { label: "3 triệu", val: 3000000 },
+                  { label: "5 triệu", val: 5000000 },
+                  { label: "8 triệu", val: 8000000 },
+                  { label: "10 triệu", val: 10000000 },
+                  { label: "15 triệu", val: 15000000 },
+                  { label: "20 triệu", val: 20000000 },
+                ].map((item) => (
+                  <button
+                    key={item.val}
+                    type="button"
+                    onClick={() => {
+                      setBudget(item.val);
+                      if (error) setError("");
+                    }}
+                    style={{
+                      fontSize: 12,
+                      padding: "3px 10px",
+                      borderRadius: "var(--r-full)",
+                      border: "1px solid",
+                      borderColor: budget === item.val ? "var(--color-primary)" : "var(--color-border)",
+                      background: budget === item.val ? "var(--color-primary-tint)" : "var(--color-surface)",
+                      color: budget === item.val ? "var(--color-primary)" : "var(--color-text-sub)",
+                      fontWeight: budget === item.val ? 600 : 500,
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+              <small>Hệ thống tìm lịch trình trong mức này. Phần còn dư sau khi tính chi phí sẽ là quỹ dự phòng.</small>
+            </label>
+            <label className={styles.field}>
+              Phương tiện đi xa
+              <select
+                aria-label="Phương tiện đi xa"
+                value={transport}
+                onChange={(e) => setTransport(e.target.value as typeof transport)}
+              >
+                <option value="auto">Đề xuất phù hợp tuyến</option>
+                <option value="PLANE">Máy bay</option>
+                <option value="TRAIN">Tàu hỏa</option>
+                <option value="BUS">Xe khách</option>
+              </select>
+            </label>
+            <label className={styles.field}>
+              Di chuyển tại điểm đến
+              <select
+                aria-label="Di chuyển tại điểm đến"
+                value={local}
+                onChange={(e) => setLocal(e.target.value as typeof local)}
+              >
+                <option value="taxi">Taxi / xe công nghệ</option>
+                <option value="motorbike">Xe máy</option>
+                <option value="car">Ô tô</option>
+                <option value="transit">Phương tiện công cộng</option>
+                <option value="walking">Đi bộ</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section className={`${styles.panel} ${styles.chat}`}>
+          <h2>
+            <Sparkles size={20} /> Bạn mong chờ điều gì ở chuyến đi?
+          </h2>
+          <label className={styles.field}>
+            <span>Kể cho trợ lý hành trình</span>
+            <textarea
+              aria-label="Kể cho trợ lý hành trình"
+              maxLength={500}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Tôi thích bảo tàng, muốn ghé một quán cà phê đẹp và đi chơi nhẹ nhàng, không dậy quá sớm…"
+            />
+            <small>Nhu cầu này được gửi cùng yêu cầu lập kế hoạch. Bạn có thể chỉnh lại trước khi tạo.</small>
+          </label>
+          <button
+            type="button"
+            className={styles.primary}
+            disabled={conversation.busy || !note.trim()}
+            onClick={async () => {
+              const sent = await conversation.send(note);
+              if (sent !== false) setNote("");
+            }}
+          >
+            {conversation.busy ? "Trợ lý đang đọc…" : "Gửi mong muốn"}
+          </button>
+          <button
+            type="button"
+            onClick={() => conversation.reset()}
+            disabled={conversation.busy}
+          >
+            Làm lại mong muốn
+          </button>
+          <div role="log" aria-live="polite">
+            {conversation.messages.map((message, index) => (
+              <p key={index}>
+                <strong>{message.role === "user" ? "Bạn" : "Trợ lý"}:</strong> {message.text}
+              </p>
+            ))}
+          </div>
+        </section>
+
+        <div className={styles.actions}>
+          <p className={styles.muted}>Bạn được xem và chỉnh kế hoạch trước khi lưu.</p>
+          <button className={styles.primary} type="submit">
+            Tạo hành trình của tôi
+            <ArrowRight size={18} />
+          </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

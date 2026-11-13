@@ -3,6 +3,8 @@ import { prepareDestinationJob, getSnapshotDiemDen } from "@/data/prepareDestina
 import { geocodeDestination } from "@/data/live/geocodeClient";
 import { DiemDenSchema, type DiemDen } from "@/contracts";
 
+import { MAX_AUTO_PLAN_DAYS } from "@/core/assumptions";
+
 export async function POST(req: NextRequest) {
   try {
     let body: any;
@@ -22,6 +24,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const days=body.soNgay ?? 3;
+    if(!Number.isSafeInteger(days)||days<1||days>MAX_AUTO_PLAN_DAYS)return NextResponse.json({ok:false,error:`Mỗi lượt chuẩn bị dữ liệu hỗ trợ 1–${MAX_AUTO_PLAN_DAYS} ngày. Hãy chia chuyến dài thành chặng.`},{status:422});
     let resolvedDiemDen: DiemDen | null = null;
     if (typeof body.diemDen === "string") {
       resolvedDiemDen = getSnapshotDiemDen(body.diemDen);

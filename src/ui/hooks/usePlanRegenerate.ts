@@ -32,6 +32,7 @@ export function usePlanRegenerate() {
     async (params: {
       request: TripRequest;
       selection: Selection;
+      planTruoc?: Plan;
     }): Promise<PlanRegenerateResult> => {
       setLoading(true);
       setError(null);
@@ -52,7 +53,7 @@ export function usePlanRegenerate() {
 
         const data = await res.json().catch(() => null);
 
-        if (!res.ok || !data) {
+        if (!res.ok || !data || data.ok === false) {
           const isRateLimit =
             data?.error?.includes("429") ||
             data?.message?.includes("429") ||
@@ -60,7 +61,7 @@ export function usePlanRegenerate() {
           const errMsg = isRateLimit
             ? "Đã đạt giới hạn gợi ý lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\" ở từng mục."
             : data?.message ||
-              data?.error ||
+              data?.error || data?.thongBao ||
               "Không thể gợi ý lại lúc này. Bạn có thể đổi hoạt động thủ công bằng nút \"Đổi\".";
           setError(errMsg);
           return { ok: false, error: errMsg, is429: Boolean(isRateLimit) };

@@ -1,3 +1,4 @@
+import {planItemMaps} from "./maps";
 /**
  * src/core/tripProgress.ts
  *
@@ -19,6 +20,7 @@ export interface ProgressPlace {
   thanhTien: number;
   diaChi?: string;
   thoiGianDiChuyenPhut?: number;
+  priceKnown?:boolean;
   mapsUrl?: string;
   mapsUrls?: {
     xem?: string;
@@ -43,12 +45,6 @@ export function gomDiaDiemTheoNgay(plan: Plan): Record<number, ProgressPlace[]> 
 
   for (let i = 0; i < plan.items.length; i++) {
     const item = plan.items[i];
-    const isPlace =
-      item.hangMuc === "Vui chơi" ||
-      (item.hangMuc === "Ăn uống" && Boolean(item.refId));
-
-    if (!isPlace) continue;
-
     const d = item.ngay;
     if (!result[d]) result[d] = [];
 
@@ -57,7 +53,8 @@ export function gomDiaDiemTheoNgay(plan: Plan): Record<number, ProgressPlace[]> 
       .split("(")[0]
       .trim();
 
-    const id = item.refId || `place-${item.ngay}-${i}`;
+    const base=item.id||item.refId||`place-${item.ngay}-${i}`;
+    const id=Object.values(result).some(list=>list.some(p=>p.id===base))?`${base}:${item.ngay}:${i}`:base;
 
     const place: ProgressPlace = {
       id,
@@ -66,13 +63,10 @@ export function gomDiaDiemTheoNgay(plan: Plan): Record<number, ProgressPlace[]> 
       hangMuc: item.hangMuc,
       ten: cleanName,
       thanhTien: item.thanhTien,
-      diaChi: `${cleanName}${locationSuffix}`,
-      mapsUrl: item.mapsUrl,
-      mapsUrls: {
-        xem: item.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${cleanName}${locationSuffix}`)}`,
-        chiDuong: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${cleanName}${locationSuffix}`)}`,
-        apple: `http://maps.apple.com/?daddr=${encodeURIComponent(`${cleanName}${locationSuffix}`)}`,
-      },
+      priceKnown:item.priceKnown??item.thanhTien>0,
+      diaChi: item.diaChi||undefined,
+      mapsUrl:planItemMaps(item,tenDiemDen).xem,
+      mapsUrls:planItemMaps(item,tenDiemDen),
     };
 
     result[d].push(place);

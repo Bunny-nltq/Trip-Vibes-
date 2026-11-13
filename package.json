@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=20.11"
+    "node": ">=22.14"
   },
   "scripts": {
     "dev": "next dev",
@@ -35,7 +35,10 @@
     "build:tokens": "tsx scripts/build-tokens.ts",
     "verify:keys": "tsx scripts/verify-no-key-leak.ts",
     "eval:tonghop": "tsx eval/run-tonghop.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "backup:local": "tsx scripts/backup-local.ts",
+    "migrate:auth": "tsx scripts/migrate-auth.ts",
+    "sync:ui-images": "tsx scripts/sync-ui-images.ts"
   },
   "dependencies": {
     "@google/genai": "^1",

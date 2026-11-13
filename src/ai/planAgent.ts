@@ -1,3 +1,6 @@
+import {ThinkingLevel} from "@google/genai";
+import {planningContext,requestedJourneyContext} from "@/core/planningContext";
+import {planCacheKey} from "./planCacheKey";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -24,16 +27,14 @@ import {
   executeChotKeHoach,
 } from "./tools";
 import {
-  AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA,
-  NGUOI_MOI_PHONG,
   QUY_TAC_VERSION,
 } from "@/core/assumptions";
 import { locUngVienTheoNganSach } from "@/core/locUngVienTheoNganSach";
 import { logger } from "@/lib/logger";
 
-export const AGENT_PROMPT_VERSION = "v4";
+export const AGENT_PROMPT_VERSION = "v6";
 export const AGENT_MAX_STEPS = 10;
-export const GEMINI_CALL_TIMEOUT_MS = 20_000;
+export const GEMINI_CALL_TIMEOUT_MS = 40_000;
 
 export async function callGeminiWithTimeout<T>(
   fn: () => Promise<T>,
@@ -77,13 +78,13 @@ NGUYÊN TẮC BẮT BUỘC:
 4. TẤT CẢ ứng viên phương tiện và khách sạn trong công cụ tìm kiếm đã được lọc trước theo ngân sách (chỉ chứa các mục khả thi để không bị vượt ngân sách).
 5. Hãy ưu tiên chọn phương án phù hợp sở thích của khách hàng và có thời gian di chuyển ngắn.
 
-QUY TRÌNH LÀM VIỆC (thực hiện TUẦN TỰ):
+QUY TRÌNH LÀM VIỆC: GỌI SONG SONG các công cụ tìm kiếm độc lập trong cùng một lượt (phương tiện hai chiều, nơi ở, quán ăn, cà phê, hoạt động). Sau khi nhận kết quả, chọn ID và chốt. Không gọi tuần tự từng loại khi không có phụ thuộc.
   Bước 1: Gọi timPhuongTien cho chiều "di" và chiều "ve".
   Bước 2: Gọi timKhachSan để tìm chỗ ở.
   Bước 3: Gọi timQuanAn để tìm quán ăn (cho bữa trưa và tối các ngày).
-  Bước 4 (tùy chọn): Gọi timCafe để tìm quán cà phê.
+  Bước 4: Gọi timCafe để tìm quán cà phê; chọn khi phù hợp mong muốn.
   Bước 5: Gọi goiYHoatDong để tìm hoạt động vui chơi.
-  Bước 6: Xem xét tổng chi phí sao cho không vượt ngân sách (ngansachTongVND).
+  Bước 6: Dựa vào chi phí do công cụ core cung cấp. Không tự cộng tổng tiền; core sẽ kiểm tra chính xác sau khi chốt và báo ràng buộc cần sửa. Giá null là chưa biết, không phải miễn phí.
   Bước 7: Gọi chotKeHoach ĐÚNG MỘT LẦN để chốt:
     - transportDiId, transportVeId, hotelId
     - hoatDongTheoNgay: mảng hoạt động theo từng ngày (độ dài đúng bằng số ngày, mỗi ngày 0-2 hoạt động, KHÔNG lặp lại)
@@ -119,6 +120,7 @@ export interface PlanAgentOptions {
   startTimeOverall?: number;
   maxAICallsOverall?: number;
   currentAICallsCount?: number;
+  onAIUsage?:(calls:number,rateLimitHits:number)=>void;
   allowedTransportDiIds?: Set<string>;
   allowedTransportVeIds?: Set<string>;
   allowedHotelIds?: Set<string>;
@@ -154,11 +156,7 @@ export async function runPlanAgent(
       ? dataSource
       : new LiveDataSource(undefined, undefined, resolvedDiemDen, resolvedDiemDi, request.soNgay ?? 3));
 
-  const soNguoi = request.soNguoi ?? 2;
-  const soNgay = request.soNgay ?? 3;
-  const soDem = Math.max(1, soNgay - 1);
-  const soPhong = Math.ceil(soNguoi / NGUOI_MOI_PHONG);
-  const anUongDuKien = AN_UONG_MAC_DINH_MOI_NGUOI_MOI_BUA * 2 * soNguoi * soNgay;
+  const {soNguoi,soNgay,soDem,soPhong,anUongDuKien}=planningContext(request);
 
   let allowedDi = options?.allowedTransportDiIds;
   let allowedVe = options?.allowedTransportVeIds;
@@ -211,39 +209,8 @@ export async function runPlanAgent(
         liveDataSource.getHoatDongs(),
         liveDataSource.getTransports(),
       ]);
-      const candidateIds = [
-        ...allKs.map((k) => k.id),
-        ...allQa.map((q) => q.id),
-        ...allCf.map((c) => c.id),
-        ...allHd.map((h) => h.id),
-        ...allTr.map((t) => t.id),
-      ]
-        .filter(Boolean)
-        .sort();
-
-      const hashPayload = JSON.stringify({
-        req: {
-          diemDi: request.diemDi,
-          diemDen: request.diemDen,
-          soNgay: request.soNgay,
-          soNguoi: request.soNguoi,
-          ngansachTongVND: request.ngansachTongVND,
-          sothich: request.sothich,
-          tranh: request.tranh,
-          repair: options?.repairInfo
-            ? {
-                vong: options.repairInfo.viPham.map((v) => v.code),
-                sel: options.repairInfo.selectionTruoc,
-              }
-            : null,
-        },
-        model: process.env.GEMINI_MODEL ?? "gemini-3-flash-preview",
-        promptVersion: AGENT_PROMPT_VERSION,
-        quyTacVersion: QUY_TAC_VERSION,
-        candidateIds,
-      });
-
-      cacheKey = crypto.createHash("sha256").update(hashPayload).digest("hex");
+      const candidateSignature=crypto.createHash("sha256").update(JSON.stringify([allKs,allQa,allCf,allHd,allTr])).digest("hex");
+      cacheKey=planCacheKey(request,candidateSignature,{model:process.env.GEMINI_MODEL??"",prompt:AGENT_PROMPT_VERSION,rules:QUY_TAC_VERSION},options?.repairInfo??null);
       const cacheDir = path.join(process.cwd(), ".cache", "agent_eval");
       cacheFilePath = path.join(cacheDir, `${cacheKey}.json`);
 
@@ -256,7 +223,7 @@ export async function runPlanAgent(
             logger.debug(
               `[AgentCache] Sử dụng lựa chọn agent từ cache (${cacheKey.slice(0, 8)}).`
             );
-            return cached;
+            return {...cached,soLanGoiAI:0,soLan429:0};
           }
         } catch {
           // ignore corrupted cache
@@ -277,11 +244,11 @@ export async function runPlanAgent(
   const tenDiemDen = getDiemDenTen(request.diemDen);
 
   const minCost = toiThieuVND ?? 0;
-  const nganSachConLai = request.ngansachTongVND
-    ? Math.max(0, request.ngansachTongVND - minCost)
-    : 0;
+  const nganSachConLai=planningContext(request,minCost).nganSachConLai;
 
   let userPrompt = `Yêu cầu du lịch của khách hàng:
+${requestedJourneyContext(request)}
+Mỗi công cụ chỉ trả về một danh sách ứng viên giới hạn. Hãy lọc đúng nhu cầu, chọn ID từ công cụ và gọi chotKeHoach khi đủ dữ liệu.
 - Điểm đi: ${tenDiemDi}
 - Điểm đến: ${tenDiemDen}
 - Số ngày: ${soNgay} ngày (${soDem} đêm)
@@ -289,7 +256,7 @@ export async function runPlanAgent(
 - Ngân sách tổng: ${request.ngansachTongVND ? request.ngansachTongVND.toLocaleString("vi-VN") + " VND" : "Chưa có"}
 - Mức chi phí tối thiểu ước tính: ${minCost.toLocaleString("vi-VN")} VND
 - Ngân sách còn lại ước tính cho hoạt động và ăn uống: ${nganSachConLai.toLocaleString("vi-VN")} VND
-- Lưu ý quan trọng: TẤT CẢ ứng viên phương tiện và khách sạn trả về từ công cụ đã được lọc trước theo ngân sách. Hãy ưu tiên chọn theo sở thích và thời gian di chuyển ngắn.
+- Lưu ý quan trọng: TẤT CẢ ứng viên phương tiện và khách sạn trả về từ công cụ đã được lọc trước theo ngân sách. Hãy chọn theo sở thích, thời gian di chuyển và chi phí. Khi ngân sách sát, ưu tiên phương án tiết kiệm và hoạt động miễn phí đã xác nhận; bỏ khoản tùy chọn trước khi đề xuất tăng ngân sách. Không thêm hạng mục chỉ để dùng hết số tiền còn lại.
 - Chi phí ăn uống dự kiến (ước tính, 2 bữa/ngày): ${anUongDuKien.toLocaleString("vi-VN")} VND
 - Sở thích: ${request.sothich.length > 0 ? request.sothich.join(", ") : "Không nêu cụ thể"}
 - Điều cần tránh: ${request.tranh.length > 0 ? request.tranh.join(", ") : "Không nêu cụ thể"}
@@ -351,6 +318,7 @@ Chỉ thị:
 
       attempts++;
       soLanGoiAI++;
+      options?.onAIUsage?.(soLanGoiAI,soLan429);
       try {
         response = await callGeminiWithTimeout(() =>
           provider.client.models.generateContent({
@@ -359,6 +327,8 @@ Chỉ thị:
             config: {
               systemInstruction: AGENT_SYSTEM_PROMPT,
               temperature: 0,
+              httpOptions:{timeout:GEMINI_CALL_TIMEOUT_MS},
+              ...(provider.modelName.includes("gemini-3")&&provider.modelName.includes("flash")?{thinkingConfig:{thinkingLevel:ThinkingLevel.LOW}}:{}),
               tools: [{ functionDeclarations: AGENT_TOOLS_DECLARATIONS as never }],
             },
           })
@@ -381,6 +351,7 @@ Chỉ thị:
 
         if (is429) {
           soLan429++;
+          options?.onAIUsage?.(soLanGoiAI,soLan429);
           if (attempts < 2) {
             // Tối đa 1 lần thử lại sau không quá 3 giây (ở đây 2000ms <= 3000ms)
             await new Promise((r) => setTimeout(r, 2000));

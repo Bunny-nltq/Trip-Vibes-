@@ -16,8 +16,9 @@ const SLUG_MAPPING: Record<string, { snapshotPrefix: string; defaultName: string
   "da-nang": { snapshotPrefix: "snapshot_da_nang_", defaultName: "Đà Nẵng", country: "Việt Nam" },
   "ha-noi": { snapshotPrefix: "snapshot_ha_noi_", defaultName: "Hà Nội", country: "Việt Nam" },
   "da-lat": { snapshotPrefix: "snapshot_da_lat_", defaultName: "Đà Lạt", country: "Việt Nam" },
-  bangkok: { snapshotPrefix: "snapshot_bangkok_", defaultName: "Bangkok", country: "Thái Lan" },
-  seoul: { snapshotPrefix: "snapshot_seoul_", defaultName: "Seoul", country: "Hàn Quốc" },
+  hue:{snapshotPrefix:"snapshot_hue_",defaultName:"Huế",country:"Việt Nam"},
+  "nha-trang":{snapshotPrefix:"snapshot_nha_trang_",defaultName:"Nha Trang",country:"Việt Nam"},
+  "hoi-an":{snapshotPrefix:"snapshot_hoi_an_",defaultName:"Hội An",country:"Việt Nam"},
 };
 
 export async function generateStaticParams() {

@@ -1,0 +1,7 @@
+import {balanceVenuesByCity} from "@/core/venueDiscovery";
+import {NextResponse} from "next/server";
+import {VenueCatalogInputSchema,VenueCatalogResultSchema} from "@/contracts";
+import {loadVenueCatalog,canonicalCity} from "@/data/venueCatalog";
+import {removeVietnameseDiacritics} from "@/core/normalizeRequest";
+export const dynamic="force-dynamic";
+export async function GET(request:Request){const url=new URL(request.url),parsed=VenueCatalogInputSchema.safeParse(Object.fromEntries(url.searchParams));if(!parsed.success)return NextResponse.json({ok:false,error:"Bộ lọc địa điểm không hợp lệ."},{status:400});const input=parsed.data;try{const all=loadVenueCatalog(),cities=[...new Set(all.map(p=>p.city))].sort();const query=removeVietnameseDiacritics(input.query),city=removeVietnameseDiacritics(canonicalCity(input.city));const places=all.filter(p=>(!city||removeVietnameseDiacritics(p.city)===city)&&(input.type==="all"||p.type===input.type||p.group===input.type)&&(!query||removeVietnameseDiacritics(`${p.name} ${p.address||""}`).includes(query)));return NextResponse.json(VenueCatalogResultSchema.parse({ok:true,cities,places:balanceVenuesByCity(places).slice(input.offset,input.offset+input.limit),total:places.length,offset:input.offset,limit:input.limit}),{headers:{"Cache-Control":"no-store"}});}catch{return NextResponse.json({ok:false,error:"Chưa thể tải danh mục địa điểm."},{status:503});}}

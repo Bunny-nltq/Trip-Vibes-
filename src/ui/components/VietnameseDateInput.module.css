@@ -1,0 +1,33 @@
+.control {
+  display: flex;
+  align-items: center;
+  gap: var(--home-smallSpace);
+  min-width: 0;
+  border: var(--home-rule) solid var(--home-line);
+  border-radius: var(--home-space);
+  color: var(--home-ink);
+}
+.control:focus-within { outline: var(--home-rule) solid var(--home-blue); }
+.control .text {
+  min-width: 0;
+  width: 100%;
+  padding: var(--home-smallSpace);
+  border: 0;
+  background: transparent;
+}
+.picker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: var(--home-smallSpace);
+}
+.control .picker input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}

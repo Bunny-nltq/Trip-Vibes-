@@ -4,7 +4,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://tripvibes.vn";
   const now = new Date();
 
-  const slugs = ["da-nang", "ha-noi", "da-lat", "bangkok", "seoul"];
+  const slugs = ["da-nang", "ha-noi", "da-lat"];
 
   const routes: MetadataRoute.Sitemap = [
     {

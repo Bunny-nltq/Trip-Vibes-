@@ -14,13 +14,13 @@ import { AGENT_PROMPT_VERSION } from "../../src/ai/planAgent";
 describe("eval/lib/phanLoai", () => {
   const contextHienTai = {
     quyTacHienTai: QUY_TAC_VERSION, // "5"
-    promptHienTai: AGENT_PROMPT_VERSION, // "v4"
+    promptHienTai: AGENT_PROMPT_VERSION, // current prompt
   };
 
   describe("1) phanLoaiKetQua", () => {
     it('{ quyTacVersion "3", prompt "v4", lyDo null, soLanGoiAI 3 } cho "cu"', () => {
       const res = phanLoaiKetQua(
-        { quyTacVersion: "3", prompt: "v4", lyDo: null, soLanGoiAI: 3 },
+        { quyTacVersion: "3", prompt: AGENT_PROMPT_VERSION, lyDo: null, soLanGoiAI: 3 },
         contextHienTai
       );
       expect(res).toBe("cu");
@@ -28,7 +28,7 @@ describe("eval/lib/phanLoai", () => {
 
     it('{ "5", "v4", "qua_thoi_gian", 0 } cho "khong_do_duoc"', () => {
       const res = phanLoaiKetQua(
-        { quyTacVersion: "5", prompt: "v4", lyDo: "qua_thoi_gian", soLanGoiAI: 0 },
+        { quyTacVersion: "5", prompt: AGENT_PROMPT_VERSION, lyDo: "qua_thoi_gian", soLanGoiAI: 0 },
         contextHienTai
       );
       expect(res).toBe("khong_do_duoc");
@@ -36,7 +36,7 @@ describe("eval/lib/phanLoai", () => {
 
     it('{ "5", "v4", "het_luot_ai", 1 } cho "khong_do_duoc"', () => {
       const res = phanLoaiKetQua(
-        { quyTacVersion: "5", prompt: "v4", lyDo: "het_luot_ai", soLanGoiAI: 1 },
+        { quyTacVersion: "5", prompt: AGENT_PROMPT_VERSION, lyDo: "het_luot_ai", soLanGoiAI: 1 },
         contextHienTai
       );
       expect(res).toBe("khong_do_duoc");
@@ -44,7 +44,7 @@ describe("eval/lib/phanLoai", () => {
 
     it('{ "5", "v4", "qua_thoi_gian", 2 } cho "hop_le"', () => {
       const res = phanLoaiKetQua(
-        { quyTacVersion: "5", prompt: "v4", lyDo: "qua_thoi_gian", soLanGoiAI: 2 },
+        { quyTacVersion: "5", prompt: AGENT_PROMPT_VERSION, lyDo: "qua_thoi_gian", soLanGoiAI: 2 },
         contextHienTai
       );
       expect(res).toBe("hop_le");
@@ -52,7 +52,7 @@ describe("eval/lib/phanLoai", () => {
 
     it('{ "5", "v4", "vuot_so_luot_goi_ai", 8 } cho "hop_le"', () => {
       const res = phanLoaiKetQua(
-        { quyTacVersion: "5", prompt: "v4", lyDo: "vuot_so_luot_goi_ai", soLanGoiAI: 8 },
+        { quyTacVersion: "5", prompt: AGENT_PROMPT_VERSION, lyDo: "vuot_so_luot_goi_ai", soLanGoiAI: 8 },
         contextHienTai
       );
       expect(res).toBe("hop_le");
@@ -60,7 +60,7 @@ describe("eval/lib/phanLoai", () => {
 
     it('{ "5", "v4", null, 3 } cho "hop_le"', () => {
       const res = phanLoaiKetQua(
-        { quyTacVersion: "5", prompt: "v4", lyDo: null, soLanGoiAI: 3 },
+        { quyTacVersion: "5", prompt: AGENT_PROMPT_VERSION, lyDo: null, soLanGoiAI: 3 },
         contextHienTai
       );
       expect(res).toBe("hop_le");
@@ -176,3 +176,5 @@ describe("eval/lib/phanLoai", () => {
   });
 });
 
+
+it("marks results from the previous prompt as outdated",()=>{expect(phanLoaiKetQua({quyTacVersion:QUY_TAC_VERSION,prompt:"v4",lyDo:null,soLanGoiAI:3},{quyTacHienTai:QUY_TAC_VERSION,promptHienTai:AGENT_PROMPT_VERSION})).toBe("cu");});

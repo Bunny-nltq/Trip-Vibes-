@@ -87,7 +87,7 @@ describe("confirmExpense", () => {
     });
   });
 
-  it("C5: hangMuc abc, ngayTrongChuyen 0 và 8, tenCuaHang 81 ký tự -> lỗi", () => {
+  it("C5: hangMuc abc, ngayTrongChuyen 0 và -1, tenCuaHang 81 ký tự -> lỗi", () => {
     const base: ConfirmExpenseInput = {
       nguon: "nhap_tay",
       tenCuaHang: null,
@@ -107,7 +107,7 @@ describe("confirmExpense", () => {
     expect(r2.ok).toBe(false);
     if (!r2.ok) expect(r2.loi).toContain("ngay_trong_chuyen_khong_hop_le");
 
-    const r3 = confirmExpense({ ...base, ngayTrongChuyen: 8 }, "id");
+    const r3 = confirmExpense({ ...base, ngayTrongChuyen: -1 }, "id");
     expect(r3.ok).toBe(false);
     if (!r3.ok) expect(r3.loi).toContain("ngay_trong_chuyen_khong_hop_le");
 

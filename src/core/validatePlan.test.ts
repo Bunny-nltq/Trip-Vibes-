@@ -1,3 +1,4 @@
+import {PlanItemSchema} from "@/contracts";
 import { describe, it, expect } from "vitest";
 import { validatePlan } from "./validatePlan";
 import { buildPlan, type PlanData } from "./buildPlan";
@@ -830,3 +831,5 @@ describe("validatePlan", () => {
     });
   });
 });
+
+it("formats overnight arrival correctly and warns when the return arrives the next day",()=>{const data=createMockData();data.transports[0].departureTime="08:30";data.transports[0].durationMinutes=1071;const back=data.transports.find(t=>t.id==="T_VE")!;back.departureTime="16:30";back.durationMinutes=1071;const request:TripRequest={schemaVersion:18,diemDi:"TP.HCM",diemDen:"Hội An",soNgay:3,soNguoi:2,ngansachTongVND:100000000,sothich:[],tranh:[],ghiChu:[],thieu:[],cauHoiLamRo:[],canhBao:[],travelDates:{departureDate:"2026-10-28",returnDate:"2026-10-30"}};const result=buildPlan(request,{transportDiId:data.transports[0].id,transportVeId:back.id,hotelId:"H1",hoatDongTheoNgay:[[],[],[]]},data);expect(result.ok).toBe(true);if(result.ok){result.plan.items.unshift(PlanItemSchema.parse({ngay:3,gio:"09:00",hangMuc:"Di chuyển",noiDung:"Taxi",soLuong:1,donGia:0,thanhTien:0,refId:null,experienceType:"local_transfer"}));const checked=validatePlan(request,result.plan,data);expect(checked.soft.find(s=>s.code==="den_truoc_gio_nhan_phong")?.chiTiet).toContain("02:21");expect(checked.soft.find(s=>s.code==="chang_ve_qua_dem")?.chiTiet).toContain("10:21");}});

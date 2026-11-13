@@ -1,3 +1,4 @@
+import {DOMESTIC_DESTINATIONS} from "@/data/site/destinationCatalog";
 import React from "react";
 import fs from "node:fs";
 import path from "node:path";
@@ -6,13 +7,7 @@ import type { DiemDenThe } from "@/ui/components/site/ThuDiemDen";
 import type { KhachSanThe } from "@/ui/components/site/KhachSanThamKhao";
 import { getHotelPricePerNight } from "@/core/minBudget";
 
-const DEST_ORDER = [
-  { slug: "da-nang", id: "da_nang", snapshotPrefix: "snapshot_da_nang_" },
-  { slug: "ha-noi", id: "ha_noi", snapshotPrefix: "snapshot_ha_noi_" },
-  { slug: "da-lat", id: "da_lat", snapshotPrefix: "snapshot_da_lat_" },
-  { slug: "bangkok", id: "bangkok", snapshotPrefix: "snapshot_bangkok_" },
-  { slug: "seoul", id: "seoul", snapshotPrefix: "snapshot_seoul_" },
-];
+const DEST_ORDER = DOMESTIC_DESTINATIONS;
 
 function docDanhSachDiemDenVaKhachSan(): {
   diemDens: DiemDenThe[];
@@ -45,7 +40,7 @@ function docDanhSachDiemDenVaKhachSan(): {
     return { diemDens: [], khachSans: [], ngayDuLieu: "20/10/2026" };
   }
 
-  const files = fs.readdirSync(dir);
+  const files = fs.readdirSync(dir).sort().reverse();
   const diemDens: DiemDenThe[] = [];
   const khachSans: KhachSanThe[] = [];
   let ngayChung = "20/10/2026";

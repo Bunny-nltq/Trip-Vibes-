@@ -399,9 +399,9 @@ describe("buildPlan – Maps URLs (core/maps.ts)", () => {
       "https://www.google.com/maps/search/?api=1&query=B%C3%A3i%20bi%E1%BB%83n%20M%E1%BB%B9%20Kh%C3%AA%2C%20%C4%90%C3%A0%20N%E1%BA%B5ng"
     );
     expect(urls.chiDuong).toBe(
-      "https://www.google.com/maps/dir/?api=1&destination=16.0617%2C108.2478"
+      "https://www.google.com/maps/dir/?api=1&destination=B%C3%A3i%20bi%E1%BB%83n%20M%E1%BB%B9%20Kh%C3%AA%2C%20%C4%90%C3%A0%20N%E1%BA%B5ng"
     );
-    expect(urls.apple).toBe("https://maps.apple.com/?daddr=16.0617,108.2478");
+    expect(urls.apple).toBe("https://maps.apple.com/?daddr=B%C3%A3i%20bi%E1%BB%83n%20M%E1%BB%B9%20Kh%C3%AA%2C%20%C4%90%C3%A0%20N%E1%BA%B5ng");
   });
 });
 

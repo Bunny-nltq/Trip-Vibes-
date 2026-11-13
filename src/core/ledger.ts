@@ -8,6 +8,7 @@ export function createLedger(): Ledger {
 }
 
 export function addExpense(ledger: Ledger, expense: Expense): Ledger {
+  if(ledger.expenses.some(existing=>existing.id===expense.id))return ledger;
   return {
     ...ledger,
     expenses: [...ledger.expenses, expense],

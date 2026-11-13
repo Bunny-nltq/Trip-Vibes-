@@ -19,9 +19,9 @@ export interface PlanHistoryState {
   future: Plan[];
 }
 
-export function usePlanHistory() {
+export function usePlanHistory(initial: Plan | null = null) {
   const [state, setState] = useState<PlanHistoryState>({
-    current: null,
+    current: initial,
     past: [],
     future: [],
   });
@@ -74,6 +74,7 @@ export function usePlanHistory() {
   }, []);
 
   return {
+    clear: () => setState({current:null,past:[],future:[]}),
     current: state.current,
     past: state.past,
     future: state.future,

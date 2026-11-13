@@ -1,111 +1,28 @@
-import { describe, it, expect } from "vitest";
-import {
-  loginUser,
-  registerUser,
-  getUserById,
-  getUserTrips,
-  saveUserTrip,
-  deleteUserTrip,
-} from "./authStore";
-import { PlanSchema } from "@/contracts";
+import { describe,it,expect } from "vitest";
+import { registerUser,loginUser,getUserById,getUserTrips,saveUserTrip,deleteUserTrip,createSession,sessionUser,revokeSession,updateUserTrip,TripConflict } from "./authStore";
+import { closeDatabase } from "./database";
+import { DEFAULT_SAMPLE_PLAN } from "@/testing/fixtures/samplePlan";
+import { schemaVersion } from "@/contracts";
 
-describe("Hệ thống Xác thực & Quản lý Nhật ký chuyến đi (Auth & Trips Store)", () => {
-  it("cho phép đăng nhập bằng tài khoản mẫu đã tạo sẵn (khachhang@tripvibes.vn / 123456)", () => {
-    const result = loginUser("khachhang@tripvibes.vn", "123456");
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-    expect(result.user).toBeDefined();
-    expect(result.user.email).toBe("khachhang@tripvibes.vn");
-    expect(result.user.name).toBe("Nguyễn Du Khách");
-    expect((result.user as any).passwordHash).toBeUndefined();
-    expect((result.user as any).salt).toBeUndefined();
-  });
-
-  it("từ chối đăng nhập khi sai mật khẩu", () => {
-    const result = loginUser("khachhang@tripvibes.vn", "sai_mat_khau");
-    expect(result.ok).toBe(false);
-    if (result.ok) return;
-    expect(result.error).toContain("Tài khoản hoặc mật khẩu không chính xác");
-  });
-
-  it("từ chối đăng nhập khi email không tồn tại", () => {
-    const result = loginUser("khongton_tai@example.com", "123456");
-    expect(result.ok).toBe(false);
-    if (result.ok) return;
-    expect(result.error).toContain("Tài khoản hoặc mật khẩu không chính xác");
-  });
-
-  it("cho phép đăng ký tài khoản mới và đăng nhập bằng tài khoản vừa tạo", () => {
-    const testEmail = `test_${Date.now()}@example.com`;
-    const regResult = registerUser("Người Dùng Test", testEmail, "MatKhau123");
-
-    expect(regResult.ok).toBe(true);
-    if (!regResult.ok) return;
-    expect(regResult.user).toBeDefined();
-    expect(regResult.user.name).toBe("Người Dùng Test");
-    expect(regResult.user.email).toBe(testEmail);
-
-    // Thử đăng nhập lại với mật khẩu mới
-    const loginResult = loginUser(testEmail, "MatKhau123");
-    expect(loginResult.ok).toBe(true);
-    if (!loginResult.ok) return;
-    expect(loginResult.user.id).toBe(regResult.user.id);
-  });
-
-  it("từ chối đăng ký khi email đã tồn tại", () => {
-    const res = registerUser("Trùng lặp", "khachhang@tripvibes.vn", "123456");
-    expect(res.ok).toBe(false);
-    if (res.ok) return;
-    expect(res.error).toContain("Email này đã được sử dụng");
-  });
-
-  it("từ chối đăng ký khi mật khẩu dưới 6 ký tự hoặc thông tin rỗng", () => {
-    const resShortPass = registerUser("Họ Tên", "email_short@test.com", "123");
-    expect(resShortPass.ok).toBe(false);
-    if (!resShortPass.ok) {
-      expect(resShortPass.error).toContain("Mật khẩu phải có ít nhất 6 ký tự");
-    }
-
-    const resEmptyName = registerUser("", "email_noname@test.com", "123456");
-    expect(resEmptyName.ok).toBe(false);
-
-    const resEmptyEmail = registerUser("Họ Tên", "", "123456");
-    expect(resEmptyEmail.ok).toBe(false);
-  });
-
-  it("tài khoản demo có sẵn nhật ký chuyến đi mẫu Đà Nẵng", () => {
-    const trips = getUserTrips("usr_demo_tripvibes");
-    expect(trips.length).toBeGreaterThanOrEqual(1);
-    const danangTrip = trips.find((t) => t.title.includes("Đà Nẵng"));
-    expect(danangTrip).toBeDefined();
-    expect(danangTrip?.ledger.expenses.length).toBeGreaterThan(0);
-    expect(danangTrip?.plan.items.length).toBeGreaterThan(0);
-  });
-
-  it("cho phép lưu và xóa nhật ký chuyến đi của người dùng", () => {
-    const demoTrip = getUserTrips("usr_demo_tripvibes")[0];
-    expect(demoTrip).toBeDefined();
-
-    // Lưu một chuyến đi mới
-    const saved = saveUserTrip({
-      userId: "usr_demo_tripvibes",
-      title: "Chuyến đi Hà Nội Mùa Thu",
-      plan: demoTrip.plan,
-      ledger: { schemaVersion: 15, expenses: [] },
-      tickedPlaces: { "place-1": true },
-    });
-
-    expect(saved.id).toBeDefined();
-    expect(saved.title).toBe("Chuyến đi Hà Nội Mùa Thu");
-
-    const updatedTrips = getUserTrips("usr_demo_tripvibes");
-    expect(updatedTrips.some((t) => t.id === saved.id)).toBe(true);
-
-    // Xóa chuyến đi vừa tạo
-    const deleted = deleteUserTrip("usr_demo_tripvibes", saved.id);
-    expect(deleted).toBe(true);
-
-    const tripsAfterDelete = getUserTrips("usr_demo_tripvibes");
-    expect(tripsAfterDelete.some((t) => t.id === saved.id)).toBe(false);
-  });
+describe("SQLite auth/trips V2",()=>{
+ it("does not seed public demo credentials",()=>{expect(loginUser("khachhang@tripvibes.vn","123456").ok).toBe(false);expect(getUserTrips("usr_demo_tripvibes")).toEqual([]);});
+ it("validates credentials, normalizes email and omits password",()=>{
+  expect(registerUser("","bad","123").ok).toBe(false);
+  const a=registerUser("Alice","Alice@Example.com","StrongPass123");expect(a.ok).toBe(true);if(!a.ok)return;
+  expect(a.user.email).toBe("alice@example.com");expect(a.user).not.toHaveProperty("passwordHash");expect(getUserById(a.user.id)).toEqual(a.user);
+  expect(registerUser("Again","alice@example.com","StrongPass123").ok).toBe(false);
+  expect(loginUser("alice@example.com","wrongpass").ok).toBe(false);expect(loginUser("ALICE@example.com","StrongPass123").ok).toBe(true);
+ });
+ it("stores only opaque session digests and revokes sessions",()=>{
+  const a=registerUser("Session","session@example.com","StrongPass123");if(!a.ok)throw Error();
+  const token=createSession(a.user.id);expect(sessionUser(token)?.id).toBe(a.user.id);expect(sessionUser("forged")).toBeNull();revokeSession(token);expect(sessionUser(token)).toBeNull();
+ });
+ it("persists across connections, enforces ownership and optimistic version",()=>{
+  const a=registerUser("Owner","owner@example.com","StrongPass123");if(!a.ok)throw Error();
+  const trip=saveUserTrip({userId:a.user.id,plan:DEFAULT_SAMPLE_PLAN,ledger:{schemaVersion,expenses:[]},status:"in_progress"});
+  closeDatabase();expect(getUserTrips(a.user.id)[0].id).toBe(trip.id);expect(updateUserTrip("other",trip.id,{title:"attack"},1)).toBeNull();expect(deleteUserTrip("other",trip.id)).toBe(false);
+  expect(updateUserTrip(a.user.id,trip.id,{status:"completed"},1)?.version).toBe(2);
+  expect(()=>updateUserTrip(a.user.id,trip.id,{title:"old"},1)).toThrow(TripConflict);
+  expect(deleteUserTrip(a.user.id,trip.id)).toBe(true);expect(getUserTrips(a.user.id)).toEqual([]);
+ });
 });

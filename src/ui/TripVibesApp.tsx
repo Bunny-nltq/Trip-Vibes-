@@ -16,8 +16,18 @@ import { B7XacNhanScreen } from "@/ui/screens/B7XacNhanScreen";
 import { B8ChuyenDiScreen } from "@/ui/screens/B8ChuyenDiScreen";
 import { B9ChiDuongScreen, B10ChonNguonScreen, B11NganSachScreen } from "@/ui/screens/B9to11Screens";
 import { SideNav, SidebarContext } from "@/ui/components/SideNav";
+import { TripWorkspaceScreen } from "@/ui/screens/TripWorkspaceScreen";
+import { ProfileScreen } from "@/ui/screens/ProfileScreen";
+import styles from "@/ui/components/Workspace.module.css";
+import tokens from "@/design/tokens.json";
+import journeyScene from "@/design/assets/coastal-journey-v3.png";
 import { useSessionLog } from "@/ui/hooks/useSessionLog";
 
+import {JourneyTabs} from "@/ui/components/JourneyTabs";
+import {SiteHeader} from "@/ui/components/site/SiteHeader";
+import {SiteFooter} from "@/ui/components/site/SiteFooter";
+import {publicTheme} from "@/ui/components/site/publicTheme";
+import journeyStyles from "@/ui/components/Journey.module.css";
 /**
  * Công cụ thử nghiệm:
  * Chỉ có khi NODE_ENV = development VÀ URL có ?dev=1; mặc định ẨN hoàn toàn.
@@ -135,46 +145,6 @@ function DevTools() {
   );
 }
 
-function MockDataBanner() {
-  const { dataSourceUsed, isSampleDataActive, plan } = useApp();
-  const showBanner =
-    dataSourceUsed === "mock" ||
-    plan?.dataSourceUsed === "mock" ||
-    isSampleDataActive;
-
-  if (!showBanner) return null;
-
-  return (
-    <div
-      role="status"
-      aria-label="Thông báo dữ liệu mẫu"
-      style={{
-        background: "var(--color-warning-bg)",
-        color: "var(--color-warning-text)",
-        borderBottom: "1.5px solid var(--color-border-input)",
-        padding: "6px 16px",
-        fontSize: 12,
-        fontWeight: 800,
-        textAlign: "center",
-        letterSpacing: "1px",
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 8,
-        zIndex: 9999,
-      }}
-    >
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-        <line x1="12" y1="9" x2="12" y2="13" />
-        <line x1="12" y1="17" x2="12.01" y2="17" />
-      </svg>
-      <span>DỮ LIỆU MẪU</span>
-    </div>
-  );
-}
-
 /**
  * Thanh trạng thái và xuất dữ liệu kiểm thử người dùng (chỉ bật khi URL có ?test=1)
  */
@@ -269,11 +239,14 @@ function UserTestModeBar() {
 }
 
 function ScreenRouter() {
-  const { screen } = useApp();
+  const { screen, plan, nav, user, templateLoading, templateError, newTrip } = useApp();
 
   const isAuthScreen = ["welcome", "login", "register"].includes(screen);
 
   const renderContent = () => {
+    if(templateLoading) return <p aria-busy="true">Đang tải lịch trình mẫu…</p>;
+    if(templateError) return <div role="alert"><p>{templateError}</p><button onClick={newTrip}>Tạo chuyến đi riêng</button></div>;
+    if(!plan && ["b3-ke-hoach","b4-phuong-tien","b5-khach-san","b6-xem-truoc","b7-xac-nhan","b8-chuyen-di","b9-chi-duong","b10-chon-nguon","b11-ngan-sach"].includes(screen)) return <div className="DayCard"><h1 className="H1">Chưa có hành trình</h1><p className="Sub">Tạo một chuyến đi để xem lịch trình và quản lý chi tiêu của bạn.</p><button className="Btn BtnPrimary" onClick={()=>nav("b1-chon-nhanh")}>Lên kế hoạch</button></div>;
     switch (screen) {
       case "welcome":
         return <WelcomeScreen />;
@@ -281,6 +254,8 @@ function ScreenRouter() {
         return <LoginScreen />;
       case "register":
         return <RegisterScreen />;
+      case "workspace": return <TripWorkspaceScreen />;
+      case "profile": return <ProfileScreen />;
       case "saved-trips":
         return <SavedTripsScreen />;
       case "b1-chon-nhanh":
@@ -310,35 +285,25 @@ function ScreenRouter() {
     }
   };
 
-  if (isAuthScreen) {
-    return (
-      <div className="Frame">
-        <MockDataBanner />
-        <UserTestModeBar />
-        <DevTools />
-        <main>{renderContent()}</main>
-      </div>
-    );
-  }
-
+  const hasJourneyTabs = !isAuthScreen && plan && !["b1-chon-nhanh", "b2-dang-chay", "saved-trips", "profile"].includes(screen);
+  const showActions = Boolean(hasJourneyTabs);
   return (
-    <div className="Frame">
-      <MockDataBanner />
-      <UserTestModeBar />
-      <DevTools />
-      <div className="Shell">
-        <SideNav />
-        <SidebarContext.Provider value={true}>
-          <div className="Content">
-            <TopBar />
-            <main style={{ minWidth: 0, position: "relative" }}>
-              {renderContent()}
-            </main>
-          </div>
-        </SidebarContext.Provider>
-      </div>
+    <div className={journeyStyles.shell} style={{ ...publicTheme, "--v4-scene": `url(${journeyScene.src})` } as React.CSSProperties}>
+      <SiteHeader account={user} onPlannerScreen={nav} />
+      <UserTestModeBar /><DevTools />
+      <SidebarContext.Provider value={true}>
+        <main className={journeyStyles.content} id="main-content">
+          {(hasJourneyTabs || showActions) && <div className={journeyStyles.journeyControls}>
+            {hasJourneyTabs && <JourneyTabs screen={screen} onNavigate={nav} />}
+            {showActions && <TopBar />}
+          </div>}
+          <div className={isAuthScreen ? undefined : journeyStyles.contentSurface}>{renderContent()}</div>
+        </main>
+      </SidebarContext.Provider>
+      <SiteFooter />
     </div>
   );
+
 }
 
 export interface TripVibesAppProps {
@@ -348,6 +313,8 @@ export interface TripVibesAppProps {
 }
 
 export function TripVibesApp({ initialScreen, initialMau, initialDest }: TripVibesAppProps = {}) {
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
+  if (!mounted) return <main aria-busy="true">Đang khôi phục chuyến đi…</main>;
   return (
     <AppProvider initialScreen={initialScreen} initialMau={initialMau} initialDest={initialDest}>
       <ScreenRouter />

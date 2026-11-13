@@ -17,7 +17,7 @@ import type {
   Avoidance,
   Preference,
 } from "@/contracts";
-import { schemaVersion } from "@/contracts";
+import { BudgetAlternativeSchema, schemaVersion } from "@/contracts";
 import { useTrangThaiAI } from "./useTrangThaiAI";
 import { quyetDinhGoiParse, thongBaoLoiThanThien } from "../messages/loi";
 
@@ -40,6 +40,9 @@ export type PlanStatus =
 import { type DiemDen } from "@/contracts";
 
 export interface PlanStructuredInput {
+  travelDates?:TripRequest["travelDates"];
+  transportMode?:TripRequest["transportMode"];
+  localTransportMode?:TripRequest["localTransportMode"];
   people?: number;
   budget?: number;
   avoids?: string[];
@@ -66,6 +69,7 @@ export interface PlanApiResponse {
   status?: PlanStatus;
   request?: TripRequest;
   plan?: Plan;
+  budgetAlternatives?: import("@/contracts").BudgetAlternative[];
   hard?: Violation[];
   soft?: Violation[];
   lichSu?: unknown[];
@@ -233,6 +237,7 @@ export function usePlan() {
         if (!sInput.soNgay) thieuList.push("soNgay");
 
         const tripRequest: TripRequest = {
+          travelDates:sInput.travelDates,transportMode:sInput.transportMode,localTransportMode:sInput.localTransportMode,
           schemaVersion,
           diemDi: sInput.diemDi || "",
           diemDen: sInput.diemDen || null,
@@ -263,6 +268,7 @@ export function usePlan() {
       clearTimeout(stepTimer3);
 
       const data: PlanApiResponse = await res.json();
+      if (abortControllerRef.current !== controller) return;
 
       if (!res.ok || !data.ok) {
         let errorMsg = thongBaoLoiThanThien(data.error || `Lỗi máy chủ (${res.status})`);
@@ -293,6 +299,10 @@ export function usePlan() {
         return data;
       }
 
+      if (data.budgetAlternatives) {
+        const parsed = BudgetAlternativeSchema.array().max(2).safeParse(data.budgetAlternatives);
+        data.budgetAlternatives = parsed.success ? parsed.data : [];
+      }
       const nextStatus: PlanStatus = data.status || "ok";
       setResult(data);
       setStatus(nextStatus);
@@ -303,6 +313,7 @@ export function usePlan() {
       clearTimeout(stepTimer2);
       clearTimeout(stepTimer3);
 
+      if (abortControllerRef.current !== controller) return;
       if (err instanceof Error && err.name === "AbortError") {
         const msg = "Yêu cầu đã quá thời gian chờ (65 giây). Vui lòng bấm 'Thử lại'.";
         setError(msg);
@@ -318,7 +329,7 @@ export function usePlan() {
       setStatus("error");
       return { ok: false, error: msg };
     } finally {
-      abortControllerRef.current = null;
+      if (abortControllerRef.current === controller) abortControllerRef.current = null;
     }
   }, [aiBat]);
 
@@ -328,7 +339,14 @@ export function usePlan() {
     }
   }, [executePlan]);
 
+  const acceptBudgetAlternative = useCallback((plan: Plan) => {
+    setError(null);
+    setResult({ ok: true, status: "ok", request: plan.request, plan, phuongThucLap: "quy_tac", dataSourceUsed: plan.dataSourceUsed });
+    setStatus("ok");
+  }, []);
+
   return {
+    acceptBudgetAlternative,
     status,
     result,
     error,

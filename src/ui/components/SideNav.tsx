@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { useApp } from "@/ui/context/AppContext";
-import { Compass, Send, BookOpen, Receipt, BookmarkCheck, LogIn, LogOut, User } from "lucide-react";
+import { Mountain, Compass, Send, BookOpen, Receipt, BookmarkCheck, LogIn, LogOut, User } from "lucide-react";
 
 export const SidebarContext = React.createContext<boolean>(false);
 
@@ -22,6 +22,7 @@ export function SideNav() {
 
   // Xác định mục nào sáng duy nhất theo màn hình hiện tại
   const activeItem = (() => {
+    if(screen==="workspace"||screen==="profile") return null;
     if (screen === "saved-trips") {
       return "saved-trips";
     }
@@ -64,17 +65,19 @@ export function SideNav() {
               flexShrink: 0,
             }}
           >
-            <Compass size={20} strokeWidth={2.2} />
+            <Mountain size={20} strokeWidth={2.2} />
           </div>
           <div>
             <div className="LogoName" style={{ fontSize: 18, fontWeight: 800, color: "var(--color-text)", letterSpacing: "-0.3px" }}>Trip Vibes</div>
-            <div className="LogoSub" style={{ fontSize: 11, color: "var(--color-text-sub)" }}>Hệ thống lập kế hoạch</div>
+            <div className="LogoSub" style={{ fontSize: 11, color: "var(--color-text-sub)" }}>Mỗi hành trình, một câu chuyện</div>
           </div>
         </div>
       </Link>
 
       {/* Navigation: Lên kế hoạch, Đồng hành chuyến đi, Hóa đơn & Chi tiêu, Nhật ký các chuyến đi */}
       <nav className="Nav" style={{ marginTop: 28, flex: 1 }}>
+        <button type="button" className={`NavItem ${screen === "workspace" ? "active" : ""}`} onClick={()=>nav("workspace")}><Compass size={18} /><span>Quản lý hành trình</span></button>
+        <button type="button" className={`NavItem ${screen === "profile" ? "active" : ""}`} onClick={()=>nav("profile")}><User size={18} /><span>Hồ sơ & cá nhân hóa</span></button>
         {/* Lên kế hoạch */}
         <div
           className={`NavItem ${activeItem === "ke-hoach" ? "NavActive" : "NavOn"}`}

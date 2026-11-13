@@ -1,3 +1,4 @@
+import { PlanSchema } from "@/contracts";
 import { NextResponse } from "next/server";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
 import { taoDataSourceTuRequest } from "../_dataSource";
@@ -125,7 +126,8 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const planTruoc = buildTruoc.plan;
+    const actual = PlanSchema.safeParse(payload.planTruoc);
+    const planTruoc = actual.success ? actual.data : buildTruoc.plan;
 
     // Tạo selection mới
     const newSelection = { ...currentSelection };

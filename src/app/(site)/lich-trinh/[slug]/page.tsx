@@ -9,7 +9,7 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-const SLUGS = ["da-nang", "ha-noi", "da-lat", "bangkok", "seoul"];
+const SLUGS = ["da-nang", "ha-noi", "da-lat"];
 
 export async function generateStaticParams() {
   return SLUGS.map((slug) => ({ slug }));
@@ -17,6 +17,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  if(!SLUGS.includes(slug))notFound();
   const filePath = path.join(process.cwd(), "src", "data", "mau", `${slug}-3ngay.json`);
   if (!fs.existsSync(filePath)) {
     return { title: "Không tìm thấy lịch trình - Trip Vibes" };
@@ -34,6 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function LichTrinhChiTietPage({ params }: PageProps) {
   const { slug } = await params;
+  if(!SLUGS.includes(slug))notFound();
   const filePath = path.join(process.cwd(), "src", "data", "mau", `${slug}-3ngay.json`);
 
   if (!fs.existsSync(filePath)) {

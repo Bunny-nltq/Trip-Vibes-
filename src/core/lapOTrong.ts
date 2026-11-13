@@ -18,7 +18,7 @@ import type {
   Activity,
   Transport,
 } from "@/contracts";
-import { BUFFER_RA_BEN_PHUT } from "./assumptions";
+import { BUFFER_RA_BEN_PHUT, THOI_LUONG_THAM_QUAN_SANG_TOI_DA } from "./assumptions";
 import { tinhOKhaDungTheoNgay } from "./oKhaDung";
 
 const GIO_HOAT_DONG_1_PHUT = 570; // 09:30
@@ -126,6 +126,9 @@ export function lapOTrong(
     gioDenPhutNgay1,
     gioKhoiHanhVePhut
   );
+  const restDay = plan.items.find(item => item.hangMuc === "Chỗ ở" &&
+    item.durationMinutes && item.noiDung.startsWith("Nghỉ tại "))?.ngay;
+  if (restDay) oKhaDungTheoNgay[restDay - 1] = 0;
 
   // 3. Khởi tạo mảng hoạt động
   const hoatDongTheoNgay: string[][] = [];
@@ -191,6 +194,9 @@ export function lapOTrong(
         if (cost > conLaiVND) return false;
 
         const dur = getThoiLuong(item);
+        const morningSlot = slot === 0 && (d > Math.floor(gioDenPhutNgay1 / 1440) + 1 ||
+          gioDenPhutNgay1 % 1440 + 60 <= GIO_HOAT_DONG_1_PHUT);
+        if (request.travelDates && morningSlot && dur > THOI_LUONG_THAM_QUAN_SANG_TOI_DA) return false;
 
         // Ràng buộc giờ giấc:
         // a) Ô thứ hai của ngày: hoạt động thứ nhất phải có thoiLuong <= 330 phút

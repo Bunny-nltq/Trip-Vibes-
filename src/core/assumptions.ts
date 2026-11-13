@@ -8,6 +8,18 @@
  */
 
 // ─── Ăn uống ────────────────────────────────────────────────────────────────
+export const NEARBY_MAX_DISTANCE_KM = 20;
+export const NEARBY_RESULT_COUNT = 5;
+export const NEARBY_ACTIVITY_DURATION = 60;
+export const NEARBY_CAFE_DURATION = 45;
+export const NEXT_TRIP_IDEAS = [
+  {name:"Đà Nẵng",tags:["bien","biển","nghi duong","nghỉ dưỡng"]},
+  {name:"Hà Nội",tags:["van hoa","văn hóa","bao tang","bảo tàng","am thuc","ẩm thực"]},
+  {name:"Đà Lạt",tags:["cafe","cà phê","thien nhien","thiên nhiên","chill"]},
+  {name:"Huế",tags:["van hoa","văn hóa","bao tang","bảo tàng"]},
+  {name:"Hội An",tags:["am thuc","ẩm thực","cafe","cà phê"]},
+  {name:"Nha Trang",tags:["bien","biển","nghi duong","nghỉ dưỡng"]},
+] as const;
 
 /**
  * Chi phí ăn uống mặc định cho một người một bữa (VND).
@@ -93,6 +105,15 @@ export const GIO_HOAT_DONG_2 = 930;
 
 /** Giờ nhận phòng khách sạn chuẩn */
 export const GIO_NHAN_PHONG = "14:00";
+export const GIO_TRA_PHONG_DU_KIEN = "12:00";
+export const NGHI_SAU_CHANG_DAI_PHUT = 180;
+export const BUFFER_DEN_KHACH_SAN_PHUT = 30;
+export const GIA_AN_SANG_UOC_TINH_VND = 50_000;
+export const GIO_CA_PHE_SANG = "08:30";
+export const GIO_AN_TRUA_CO_NGAY = "12:30";
+export const THOI_LUONG_BUA_AN_PHUT = 45;
+export const THOI_LUONG_CA_PHE_PHUT = 30;
+export const THOI_LUONG_THAM_QUAN_SANG_TOI_DA = 120;
 
 /** Thời gian dự phòng (phút) sau khi đến nơi trước khi có thể bắt đầu hoạt động */
 export const BUFFER_SAU_KHI_DEN_PHUT = 60;
@@ -118,6 +139,9 @@ export const MAX_REPAIR_ROUNDS = 2;
  * Giả định đồ án (chưa hiệu chỉnh).
  */
 export const DU_TRU_HOAT_DONG_TI_LE = 0.10;
+export const ECONOMY_COMBO_LIMIT = 8;
+export const MAX_BUDGET_ALTERNATIVES = 2;
+export const MAX_BUDGET_SHORTENING_DAYS = 3;
 
 /** Ngưỡng phần trăm ngân sách bị coi là gần hết (để cảnh báo soft) */
 export const NGUONG_GAN_HET_NGAN_SACH_PHAN_TRAM = 95;
@@ -165,3 +189,17 @@ export const DANH_SACH_MA_CANH_BAO = [
 
 export type MaCanhBao = (typeof DANH_SACH_MA_CANH_BAO)[number];
 
+
+// Giới hạn tài nguyên cho bản chạy local; không phải phạm vi sản phẩm 2–7 ngày.
+export const MAX_AUTO_PLAN_DAYS = 90;
+export const MAX_STORED_TRIP_DAYS = 3660;
+
+// V4: percentage targets apply to the base budget; reserve is separate.
+export const TRAVEL_BUDGET_WEIGHTS={longDistance:40,accommodation:25,food:15,localTransport:7,experiences:8,shopping:5} as const;
+export const DEFAULT_RESERVE_PERCENT=12;
+
+export const LOCAL_ROUTE_ASSUMPTIONS={roadFactor:1.25,stopMinutes:30,modes:{taxi:{speed:25,wait:5,perKm:12000,seats:4},motorbike:{speed:25,wait:5,perKm:2500,seats:2},car:{speed:30,wait:5,perKm:4500,seats:4},transit:{speed:15,wait:15,perKm:0,seats:1},walking:{speed:4,wait:0,perKm:0,seats:1}},transitFare:10000} as const;
+
+export const OSM_ACTIVITY_DURATION_MINUTES={museum:90,other:60} as const;
+
+export const AI_TOOL_RESULT_LIMIT=12;

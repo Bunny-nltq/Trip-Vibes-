@@ -1,3 +1,4 @@
+import {applyVenueVerification} from "../venueVerification";
 /**
  * src/data/live/LiveDataSource.ts
  *
@@ -43,6 +44,7 @@ export type DataMode = "live" | "snapshot" | "mock";
 const DEFAULT_COORD = { lat: 10.7769, lng: 106.7009 }; // default center if not specified
 
 function ensureDoTinCay<T extends { nguon?: string | null; doTinCay?: any }>(item: T): T {
+  item=applyVenueVerification(item);
   if (!item.nguon || item.nguon.trim() === "") {
     return {
       ...item,
@@ -77,13 +79,14 @@ export class LiveDataSource implements DataSource {
     diemDen?: DiemDen,
     diemDi?: DiemDen,
     soNgay: number = 3,
-    giaVeTuNhap?: { chieuDiVND: number; chieuVeVND: number }
+    giaVeTuNhap?: { chieuDiVND: number; chieuVeVND: number },
+    forceSnapshot = false
   ) {
     // Khi process.env.VERCEL có giá trị: DATA_MODE mặc định "snapshot"; chế độ live chỉ khi LIVE_DATA_ENABLED=true.
     const isVercel = Boolean(
       process.env.VERCEL && process.env.VERCEL !== "0" && process.env.VERCEL !== "false"
     );
-    if (isVercel) {
+    if (forceSnapshot) { this.mode = "snapshot"; } else if (isVercel) {
       if (process.env.LIVE_DATA_ENABLED === "true") {
         this.mode = (process.env.DATA_MODE as DataMode) ?? "live";
       } else {
@@ -495,7 +498,7 @@ export class LiveDataSource implements DataSource {
 
     const targetNorm = normalizeStr(target);
 
-    const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json"));
+    const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json")).sort().reverse();
 
     // 2. Ưu tiên khớp theo tên file
     for (const f of files) {

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useApp } from "@/ui/context/AppContext";
-import { Map, MapPin, ArrowLeft, ExternalLink } from "lucide-react";
+import { Map, MapPin, ArrowLeft, ExternalLink, Navigation } from "lucide-react";
 
 export function B9ChiDuongScreen() {
   const { nav } = useApp();
@@ -107,8 +107,8 @@ export function B9ChiDuongScreen() {
               textDecoration: "none",
             }}
           >
-            <MapPin size={16} />
-            Mở chỉ đường trên Google Maps
+            <Navigation size={16} />
+            Mở chỉ đường trên bản đồ
             <ExternalLink size={14} />
           </a>
         </div>

@@ -13,7 +13,7 @@ import { SiteFooter } from "@/ui/components/site/SiteFooter";
 const FAQS = [
   {
     q: "Trip Vibes hoạt động như thế nào?",
-    a: "Trip Vibes là công cụ hỗ trợ bạn xây dựng kế hoạch du lịch dựa trên ngân sách thực tế. Bạn chỉ cần chọn điểm đến, số ngày (2-7 ngày), số người và mức tiền dự kiến; hệ thống sẽ tự động phân bổ chi phí phương tiện, khách sạn, ăn uống và gợi ý các điểm tham quan phù hợp từ OpenStreetMap.",
+    a: "Trip Vibes là công cụ hỗ trợ bạn xây dựng kế hoạch du lịch dựa trên ngân sách thực tế. Bạn chỉ cần chọn điểm đến, số ngày (tự chọn), số người và mức tiền dự kiến; hệ thống sẽ tự động phân bổ chi phí phương tiện, khách sạn, ăn uống và gợi ý các điểm tham quan phù hợp từ OpenStreetMap.",
   },
   {
     q: "Làm thế nào để ghi nhận chi tiêu từ hóa đơn?",
@@ -42,7 +42,11 @@ export function TroGiupScreen() {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        background: "var(--color-background)",
+        backgroundColor: "var(--home-wash)",
+        backgroundImage: "var(--home-overlay), var(--v4-scene)",
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
+        backgroundAttachment: "fixed",
         color: "var(--color-text)",
         fontSize: 16,
       }}
@@ -121,7 +125,7 @@ export function TroGiupScreen() {
               </div>
               <strong style={{ fontSize: 15, color: "var(--color-text)" }}>Nhập thông tin cơ bản</strong>
               <p style={{ margin: 0, fontSize: 13, color: "var(--color-text-sub)", lineHeight: 1.5 }}>
-                Chọn điểm đến, thời lượng (2-7 ngày), số lượng người đi và ngân sách dự kiến của bạn.
+                Chọn điểm đến, thời lượng (tự chọn), số lượng người đi và ngân sách dự kiến của bạn.
               </p>
             </div>
 

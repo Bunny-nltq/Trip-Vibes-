@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
+    "/api/templates/[slug]": ["./src/data/mau/*.json"],
+    "/api/nearby": ["./src/data/snapshots/*.json"],
     "/api/plan": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
     "/api/plan/preview": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],
     "/api/plan/regenerate": ["./src/data/snapshots/*.json", "./src/data/reference/*.json"],

@@ -339,8 +339,8 @@ describe("Toàn diện Backend API Routes (Comprehensive Backend Test Suite)", (
       expect(data.loi).toContain("hang_muc_khong_hop_le");
     });
 
-    it("trả về 400 khi ngayTrongChuyen ngoài phạm vi 1 đến 7", async () => {
-      for (const invalidDay of [0, 8, -1]) {
+    it("trả về 400 khi ngayTrongChuyen không dương", async () => {
+      for (const invalidDay of [0, -2, -1]) {
         const req = new Request("http://localhost/api/expenses/confirm", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -478,7 +478,7 @@ describe("Toàn diện Backend API Routes (Comprehensive Backend Test Suite)", (
   });
 
   describe("7. Lập kế hoạch du lịch & Dự phòng thuật toán thuần (/api/plan)", () => {
-    it("POST /api/plan: trả về 400 khi gửi số ngày < 2 hoặc > 7", async () => {
+    it("POST /api/plan: trả về 400 khi gửi số ngày không dương", async () => {
       const reqUnder = new Request("http://localhost/api/plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -486,7 +486,7 @@ describe("Toàn diện Backend API Routes (Comprehensive Backend Test Suite)", (
           request: {
             diemDi: "TP.HCM",
             diemDen: "Đà Nẵng",
-            soNgay: 1, // Không hợp lệ
+            soNgay: 0, // Không hợp lệ
             soNguoi: 2,
             ngansachTongVND: 10000000,
             sothich: [],
@@ -501,7 +501,7 @@ describe("Toàn diện Backend API Routes (Comprehensive Backend Test Suite)", (
       const resUnder = await postPlan(reqUnder);
       expect(resUnder.status).toBe(400);
       const dataUnder = await resUnder.json();
-      expect(dataUnder.error).toContain("2 đến 7 ngày");
+      expect(dataUnder.error).toContain("từ 1 ngày");
 
       const reqOver = new Request("http://localhost/api/plan", {
         method: "POST",
@@ -510,7 +510,7 @@ describe("Toàn diện Backend API Routes (Comprehensive Backend Test Suite)", (
           request: {
             diemDi: "TP.HCM",
             diemDen: "Đà Nẵng",
-            soNgay: 8, // Không hợp lệ
+            soNgay: -1, // Không hợp lệ
             soNguoi: 2,
             ngansachTongVND: 10000000,
             sothich: [],

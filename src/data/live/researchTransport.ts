@@ -181,8 +181,8 @@ export function taoPhuongTienUocLuong(
       gioDi: "08:00",
       gioVe: "17:30",
       seatClass: "Phổ thông",
-      boardingDi: `Sân bay ${diemDi.ten}`,
-      boardingVe: `Sân bay ${diemDen.ten}`,
+      boardingDi: `Nơi khởi hành tại ${diemDi.ten}: cần xác nhận sân bay`,
+      boardingVe: `Nơi khởi hành tại ${diemDen.ten}: cần xác nhận sân bay`,
     },
     tau: {
       type: "TRAIN",
@@ -190,8 +190,8 @@ export function taoPhuongTienUocLuong(
       gioDi: "07:00",
       gioVe: "16:00",
       seatClass: "Ngồi mềm",
-      boardingDi: `Ga ${diemDi.ten}`,
-      boardingVe: `Ga ${diemDen.ten}`,
+      boardingDi: `Nơi khởi hành tại ${diemDi.ten}: cần xác nhận nhà ga`,
+      boardingVe: `Nơi khởi hành tại ${diemDen.ten}: cần xác nhận nhà ga`,
     },
     xe_khach: {
       type: "BUS",
@@ -199,8 +199,8 @@ export function taoPhuongTienUocLuong(
       gioDi: "08:30",
       gioVe: "16:30",
       seatClass: "Giường nằm",
-      boardingDi: `Bến xe ${diemDi.ten}`,
-      boardingVe: `Bến xe ${diemDen.ten}`,
+      boardingDi: `Nơi đón tại ${diemDi.ten}: cần xác nhận bến xe`,
+      boardingVe: `Nơi đón tại ${diemDen.ten}: cần xác nhận bến xe`,
     },
   };
 

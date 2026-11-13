@@ -86,6 +86,7 @@ export function B4PhuongTienScreen() {
 
     const res = await preview({
       request: plan.request,
+      planTruoc: plan,
       selection,
       thayDoi: {
         loai: thayDoiType,

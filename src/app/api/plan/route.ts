@@ -10,6 +10,9 @@ import {
 } from "@/data/prepareDestination";
 import { kiemTraGioiHanAI, taoTrangThaiGioiHanAI } from "@/core/gioiHanAI";
 
+import { MAX_AUTO_PLAN_DAYS } from "@/core/assumptions";
+
+import {normalizeTravelRequest} from "@/core/travelRequest";
 export const maxDuration = 60;
 
 // Bộ nhớ trạng thái giới hạn lượt gọi AI theo IP và ngày
@@ -65,7 +68,7 @@ export async function POST(req: Request) {
         const soNgayIssue = issues.find((iss) => iss.path.includes("soNgay"));
         let thongBaoLoi = "Dữ liệu yêu cầu chưa đúng định dạng hợp lệ.";
         if (soNgayIssue) {
-          thongBaoLoi = "Số ngày chuyến đi phải từ 2 đến 7 ngày.";
+          thongBaoLoi = "Số ngày chuyến đi phải từ 1 ngày theo nhu cầu của bạn.";
         } else if (issues.length > 0) {
           const first = issues[0];
           thongBaoLoi = `Thông tin '${first.path.join(".")}' không hợp lệ: ${first.message}.`;
@@ -86,6 +89,12 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    try {tripRequest=normalizeTravelRequest(tripRequest);}catch(error){return NextResponse.json({ok:false,error:error instanceof Error?error.message:"Ngày không hợp lệ"},{status:400});}
+    const dest=tripRequest.diemDen;
+    if((typeof dest==="object"&&dest?.maQuocGia?.toUpperCase()!=="VN")||(typeof dest==="string"&&/bangkok|seoul|thái lan|hàn quốc/i.test(dest)))return NextResponse.json({ok:false,error:"Trip Vibes hiện tập trung các điểm đến trong Việt Nam."},{status:422});
+
+    if ((tripRequest.soNgay||0)>MAX_AUTO_PLAN_DAYS) return NextResponse.json({ok:false,maLoi:"chia_chang",error:`Bản local xử lý tự động tối đa ${MAX_AUTO_PLAN_DAYS} ngày mỗi lượt. Hãy chia chuyến dài thành các chặng; lịch trình thủ công vẫn hỗ trợ chuyến dài hơn.`},{status:422});
 
     // Kiểm tra snapshot nếu đang ở môi trường production (không có snapshot thì trả khong_co_du_lieu_luu_san, KHÔNG gọi Overpass)
     if (isProductionEnvironment() && tripRequest.diemDen) {

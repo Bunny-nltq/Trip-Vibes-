@@ -1,10 +1,12 @@
 "use client";
+import { tripNights } from "@/core/tripWorkspace";
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useDestinationSearch } from "@/ui/hooks/useDestinationSearch";
 import { useApp } from "@/ui/context/AppContext";
 import { getDiemDenTen, type DiemDen } from "@/contracts";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import { useDestinationPrepare } from "@/ui/hooks/useDestinationPrepare";
-import type { CategoryKey, CategoryProgress } from "@/contracts";
+import type { CategoryKey } from "@/contracts";
 import { Check, AlertCircle, Loader2, Hotel, Utensils, Coffee, Compass, Bus, Tag, RefreshCw } from "lucide-react";
 
 const AI_STEPS = [
@@ -26,30 +28,41 @@ const CATEGORY_META: Record<
   gia_diem_den: { label: "Giá cả điểm đến", icon: Tag },
 };
 
-const fmt = (n: number) => {
-  if (n >= 1_000_000) {
-    const tr = n / 1_000_000;
-    return Number.isInteger(tr) ? `${tr} triệu` : `${tr.toFixed(1)} triệu`;
-  }
-  return `${n.toLocaleString("vi-VN")} đ`;
-};
+const fmt = (n: number) => `${n.toLocaleString("vi-VN")} đ`;
 
 export function B2AgentScreen() {
   const {
     nav,
     tripConfig,
+    setTripConfig,
     planStatus,
     planError,
     loadingStep,
     executePlan,
     retryPlan,
     abortPlan,
+    toiThieuVND,
+    hardViolations,
+    planResult,
+    chooseBudgetAlternative,
   } = useApp();
+  const alternatives = planResult?.budgetAlternatives ?? [];
   const { aiBat } = useTrangThaiAI();
+  const locationSearch = useDestinationSearch();
+
+  const isPlanIssue =
+    planStatus === "error" ||
+    planStatus === "khong_the_dat_ngan_sach" ||
+    planStatus === "can_lam_ro" ||
+    planStatus === "khong_co_phuong_an";
 
   // Pha thực thi: "chuan_bi" (Bước A) | "lap_ke_hoach" (Bước B)
   const [phase, setPhase] = useState<"chuan_bi" | "lap_ke_hoach">("chuan_bi");
   const hasExecutedPlanRef = useRef(false);
+  const latestExecutePlan = useRef(executePlan);
+  useEffect(() => {
+    latestExecutePlan.current = executePlan;
+  }, [executePlan]);
 
   const {
     trangThai: prepStatus,
@@ -91,11 +104,11 @@ export function B2AgentScreen() {
         setPhase("lap_ke_hoach");
         if (!hasExecutedPlanRef.current) {
           hasExecutedPlanRef.current = true;
-          executePlan();
+          void latestExecutePlan.current();
         }
       },
     });
-  }, [diemDen, diemDi, tripConfig.soNgay, nav, triggerPrepare, executePlan]);
+  }, [diemDen, diemDi, tripConfig.soNgay, nav, triggerPrepare]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- đồng bộ với hệ thống bên ngoài React (URL, sessionStorage, mạng) chỉ làm được sau khi dựng
@@ -105,7 +118,7 @@ export function B2AgentScreen() {
     };
   }, [startPrepare, cancelPrepare]);
 
-  // 3. Tự động chuyển trang khi Bước B hoàn tất
+  // 3. Tự động chuyển trang khi Bước B hoàn tất thành công
   useEffect(() => {
     if (phase === "lap_ke_hoach") {
       if (planStatus === "ok" || planStatus === "co_vi_pham") {
@@ -113,12 +126,6 @@ export function B2AgentScreen() {
           nav("b3-ke-hoach");
         }, 500);
         return () => clearTimeout(timer);
-      } else if (
-        planStatus === "can_lam_ro" ||
-        planStatus === "khong_the_dat_ngan_sach" ||
-        planStatus === "khong_co_phuong_an"
-      ) {
-        nav("b1-chon-nhanh");
       }
     }
   }, [phase, planStatus, nav]);
@@ -126,21 +133,31 @@ export function B2AgentScreen() {
   const handleCancel = () => {
     cancelPrepare();
     abortPlan();
-    nav("b1-chon-nhanh");
+    if (window.history.state?.tripVibesPlanningEntry) window.history.back();
+    else nav("b1-chon-nhanh");
   };
+
+  useEffect(() => {
+    function cancelOnBack() {
+      const target = new URLSearchParams(window.location.search).get("screen");
+      if (target !== "b2-dang-chay") abortPlan();
+    }
+    window.addEventListener("popstate", cancelOnBack);
+    return () => window.removeEventListener("popstate", cancelOnBack);
+  }, [abortPlan]);
 
   // Tính phần trăm tiến trình Bước B
   const pct =
     planStatus === "ok" || planStatus === "co_vi_pham"
       ? 100
-      : planStatus === "error"
+      : isPlanIssue
       ? 0
       : Math.min(25 + loadingStep * 25, 95);
 
   // CHỈ gồm giá trị người dùng thật sự đã chọn (KHÔNG tự thêm sở thích)
   const understoodChips: string[] = [];
   understoodChips.push(`${tripConfig.people || 2} người`);
-  understoodChips.push(`${tripConfig.soNgay || 3} ngày ${Math.max(1, (tripConfig.soNgay || 3) - 1)} đêm`);
+  understoodChips.push(`${tripConfig.soNgay || 3} ngày ${tripNights(tripConfig.soNgay || 3)} đêm`);
   if (tripConfig.budget > 0) {
     understoodChips.push(`Ngân sách ${fmt(tripConfig.budget)}`);
   }
@@ -171,7 +188,7 @@ export function B2AgentScreen() {
             marginBottom: 16,
           }}
         >
-          {dataPrepError || planStatus === "error" ? (
+          {dataPrepError || isPlanIssue ? (
             <AlertCircle size={30} color="var(--color-status-error)" />
           ) : (
             <Compass size={28} />
@@ -181,6 +198,12 @@ export function B2AgentScreen() {
         <h1 className="page-title" style={{ fontSize: 24, fontWeight: 800, textAlign: "center", margin: 0 }}>
           {dataPrepError || planStatus === "error"
             ? "Đã xảy ra sự cố"
+            : planStatus === "khong_the_dat_ngan_sach"
+            ? "Cần điều chỉnh chuyến đi"
+            : planStatus === "can_lam_ro"
+            ? "Cần làm rõ yêu cầu"
+            : planStatus === "khong_co_phuong_an"
+            ? "Không tìm thấy phương án"
             : phase === "chuan_bi"
             ? `Chuẩn bị dữ liệu cho ${tenDiemDen}`
             : planStatus === "ok" || planStatus === "co_vi_pham"
@@ -191,12 +214,44 @@ export function B2AgentScreen() {
         <p className="page-sub" style={{ textAlign: "center", marginTop: 8, fontSize: 14, color: "var(--color-neutral-mutedText)" }}>
           {dataPrepError
             ? dataPrepError.noiDung
+            : planStatus === "khong_the_dat_ngan_sach"
+            ? "Xem mức dự toán và các cách điều chỉnh bên dưới."
+            : planStatus === "can_lam_ro"
+            ? (hardViolations.length > 0 ? hardViolations.map((v) => v.chiTiet).join(". ") : "Vui lòng hoàn thiện thêm thông tin điểm đến hoặc thời gian.")
+            : planStatus === "khong_co_phuong_an"
+            ? "Không tìm thấy lựa chọn di chuyển hoặc khách sạn phù hợp với các tiêu chí này."
             : planStatus === "error"
             ? planError || "Không thể hoàn thành việc lập kế hoạch."
             : phase === "chuan_bi"
             ? "Hệ thống đang chuẩn bị dữ liệu thực tế (khách sạn, quán ăn, điểm tham quan, giá vé)."
             : "Đang tối ưu lịch trình phù hợp ngân sách và sở thích của bạn."}
         </p>
+
+        {dataPrepError && (
+          <section>
+            <button
+              type="button"
+              className="Btn BtnGhost"
+              disabled={locationSearch.loading}
+              onClick={() => void locationSearch.search(tenDiemDen)}
+            >
+              Xác định đúng địa phương
+            </button>
+            <p role="status">{locationSearch.message}</p>
+            {locationSearch.results
+              .filter((place) => place.maQuocGia === "VN")
+              .map((place) => (
+                <button
+                  type="button"
+                  className="Btn BtnGhost"
+                  key={`${place.toaDo.lat}:${place.toaDo.lng}`}
+                  onClick={() => setTripConfig({ diemDen: place })}
+                >
+                  {place.ten} · {place.quocGia}
+                </button>
+              ))}
+          </section>
+        )}
 
         {phase === "chuan_bi" && !dataPrepError && (
           <div
@@ -220,7 +275,7 @@ export function B2AgentScreen() {
             padding: 24,
             marginBottom: 20,
             border: "1.5px solid var(--color-status-error)",
-            background: "var(--color-status-errBg)",
+            background: "var(--color-surface)",
             borderRadius: 12,
           }}
         >
@@ -247,7 +302,7 @@ export function B2AgentScreen() {
             <button
               type="button"
               className="Btn BtnSmall"
-              onClick={() => nav("b1-chon-nhanh")}
+              onClick={handleCancel}
               style={{ background: "var(--color-surface)" }}
             >
               Chọn điểm đến khác
@@ -265,30 +320,89 @@ export function B2AgentScreen() {
       )}
 
       {/* ─── MÀN LỖI KHI LẬP KẾ HOẠCH BẰNG AI (BƯỚC B) ─── */}
-      {!dataPrepError && planStatus === "error" && (
+      {!dataPrepError && isPlanIssue && (
         <div
+          role="alert"
           className="card"
           style={{
             padding: 24,
             marginBottom: 20,
             border: "1.5px solid var(--color-status-error)",
-            background: "var(--color-status-errBg)",
+            background: "var(--color-surface)",
             borderRadius: 12,
           }}
         >
           <div style={{ fontWeight: 700, fontSize: 16, color: "var(--color-status-errText)", marginBottom: 8 }}>
-            Gặp sự cố kết nối hoặc xử lý
+            {planStatus === "khong_the_dat_ngan_sach"
+              ? alternatives.length ? "Có lịch trình khác vừa ngân sách" : "Chưa tìm được lịch trình trong ngân sách"
+              : planStatus === "can_lam_ro"
+              ? "Cần bổ sung hoặc làm rõ thông tin"
+              : planStatus === "khong_co_phuong_an"
+              ? "Không có phương án phù hợp"
+              : "Gặp sự cố kết nối hoặc xử lý"}
           </div>
           <div style={{ fontSize: 14, color: "var(--color-neutral-bodyText)", marginBottom: 20, lineHeight: 1.5 }}>
-            {planError || "Không nhận được phản hồi hợp lệ từ máy chủ."}
+            {planStatus === "khong_the_dat_ngan_sach"
+              ? (toiThieuVND
+                  ? `Ngân sách của bạn vẫn là ${fmt(tripConfig.budget || 0)}. Với lựa chọn hiện tại, phương án tìm được ước tính ${fmt(toiThieuVND)}.`
+                  : "Chưa tìm được phương án phù hợp. Hãy thử điều chỉnh ngày đi hoặc phương tiện.")
+              : planStatus === "can_lam_ro"
+              ? (hardViolations.length > 0 ? hardViolations.map((v) => v.chiTiet).join(". ") : planError || "Cần làm rõ thêm thông tin điểm đến hoặc số ngày.")
+              : planStatus === "khong_co_phuong_an"
+              ? (hardViolations.length > 0 ? hardViolations.map((v) => v.chiTiet).join(". ") : planError || "Không tìm thấy phương án di chuyển hoặc chỗ ở phù hợp.")
+              : (planError || "Không nhận được phản hồi hợp lệ từ máy chủ.")}
           </div>
-          <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <button type="button" className="Btn BtnSmall" onClick={handleCancel} style={{ background: "var(--color-surface)" }}>
-              ← Về màn hình chọn
+          {planStatus === "khong_the_dat_ngan_sach" && alternatives.length > 0 && (
+            <ul style={{ display: "grid", gap: "var(--home-space)", marginBottom: "var(--home-space)" }}>
+              {alternatives.map(({ plan, changes }) => {
+                const { travelDates, soNgay } = plan.request;
+                const cafe = plan.items.find(item => item.experienceType === "cafe");
+                const transport = plan.items.filter(item => item.hangMuc === "Di chuyển" &&
+                  item.experienceType !== "local_transfer" && item.refId);
+                return (
+                  <li key={changes.join("-") + soNgay} style={{
+                    padding: "var(--home-space)", borderRadius: "var(--home-space)", background: "var(--home-wash)",
+                  }}>
+                    <strong>{changes.includes("shorter") ? `Rút còn ${soNgay} ngày` : "Giữ nguyên ngày đi và ngày về"}</strong>
+                    <p>
+                      {travelDates && `Ngày về ${travelDates.returnDate.split("-").reverse().join("/")} · `}
+                      {changes.includes("flexible_transport") && "Đổi phương tiện đi xa · "}
+                      {changes.includes("public_transit") && "Đi lại bằng phương tiện công cộng (ước tính) · "}
+                      Dự toán {fmt(plan.tongKet.tongVND)} · Còn {fmt(plan.tongKet.conLaiVND)}
+                    </p>
+                    {transport.map((item, index) => <p key={`${item.refId}-${index}`}>{item.noiDung}</p>)}
+                    {cafe && <p>{cafe.noiDung}{/bờ hồ|ven hồ|gần hồ|view hồ/i.test(tripConfig.note) && " · Cần xác nhận vị trí gần hồ."}</p>}
+                    {!cafe && /cà phê|cafe|coffee/i.test(tripConfig.note) && <p>Phương án này chưa xếp được quán cà phê.</p>}
+                    <button type="button" className="Btn BtnPrimary BtnSmall" onClick={() => chooseBudgetAlternative(plan)}>
+                      Xem lịch trình này
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
+            <button
+              type="button"
+              className="Btn BtnSmall"
+              onClick={handleCancel}
+              style={{ background: "var(--color-surface)" }}
+            >
+              ← Quay lại chỉnh lịch trình
             </button>
-            <button type="button" className="Btn BtnPrimary BtnSmall" onClick={retryPlan}>
-              Thử lại
-            </button>
+            {planStatus === "khong_the_dat_ngan_sach" && alternatives.length === 0 && tripConfig.transportMode && tripConfig.transportMode !== "auto" && (
+              <button type="button" className="Btn BtnPrimary BtnSmall" onClick={() => {
+                setTripConfig({ transportMode: "auto" });
+                void executePlan({ ...tripConfig, transportMode: "auto" });
+              }}>
+                Giữ ngân sách, thử phương tiện khác
+              </button>
+            )}
+            {planStatus === "error" && (
+              <button type="button" className="Btn BtnPrimary BtnSmall" onClick={retryPlan}>
+                Thử lại
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -444,7 +558,7 @@ export function B2AgentScreen() {
       )}
 
       {/* ─── TIẾN TRÌNH THẬT BƯỚC B: LẬP KẾ HOẠCH BẰNG AI (KHI DỮ LIỆU ĐÃ SẴN SÀNG) ─── */}
-      {phase === "lap_ke_hoach" && planStatus !== "error" && (
+      {phase === "lap_ke_hoach" && !isPlanIssue && (
         <div className="card" style={{ padding: 24, background: "var(--color-surface)", borderRadius: 12, border: "1px solid var(--color-neutral-borderCard)" }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: "var(--color-neutral-navyText)", marginBottom: 16 }}>
             Lập kế hoạch chi tiết

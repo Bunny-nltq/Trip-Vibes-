@@ -9,6 +9,7 @@ export interface HangMucSoSanh {
 }
 
 export interface SoSanhKeHoachThucTeResult {
+  nganSachVND:number;
   denHetNgayHieuLuc: number;
   datTruocVND: number;
   thucTeTongVND: number;
@@ -45,10 +46,10 @@ export function soSanhKeHoachThucTe(
   }, 0);
   const denHetNgayHieuLuc = Math.max(denHetNgay, maxNgayChi);
 
-  // 2. datTruocVND = tổng Di chuyển + Chỗ ở của kế hoạch
-  const datTruocVND =
-    (plan.tongKet?.theoHangMuc?.["Di chuyển"] ?? 0) +
-    (plan.tongKet?.theoHangMuc?.["Chỗ ở"] ?? 0);
+  // Chỉ những khoản thực chi người dùng đã xác nhận; đây là tập con của ledger.
+  const paidTransport=ledger.expenses.filter(e=>e.hangMuc==="di_chuyen").reduce((sum,e)=>sum+e.soTienVND,0);
+  const paidHotel=ledger.expenses.filter(e=>e.hangMuc==="cho_o").reduce((sum,e)=>sum+e.soTienVND,0);
+  const datTruocVND=paidTransport+paidHotel;
 
   // 3. Ngân sách lấy từ plan.tongKet
   const nganSachVND =
@@ -61,7 +62,7 @@ export function soSanhKeHoachThucTe(
   );
 
   // 5. conLaiVND = ngân sách - datTruocVND - thucTeTongVND
-  const conLaiVND = nganSachVND - datTruocVND - thucTeTongVND;
+  const conLaiVND = nganSachVND - thucTeTongVND;
 
   // 6. Tính thực tế theo các khoản có ngayTrongChuyen <= denHetNgayHieuLuc
   // (ngayTrongChuyen null tính vào denHetNgayHieuLuc, tức là được tính vào đây)
@@ -148,10 +149,14 @@ export function soSanhKeHoachThucTe(
     }
   }
 
+  // Giá vé/phòng trong plan không mặc nhiên đã được thanh toán. Giữ phần chưa đối chiếu trong dự báo.
+  keHoachNgayConLaiVND += Math.max(0,(plan.tongKet.theoHangMuc["Di chuyển"]||0)-paidTransport)
+    + Math.max(0,(plan.tongKet.theoHangMuc["Chỗ ở"]||0)-paidHotel);
   const chenhDuBaoVND = conLaiVND - keHoachNgayConLaiVND;
   const trangThai: "du" | "thieu" = chenhDuBaoVND >= 0 ? "du" : "thieu";
 
   return {
+    nganSachVND,
     denHetNgayHieuLuc,
     datTruocVND,
     thucTeTongVND,
@@ -166,3 +171,6 @@ export function soSanhKeHoachThucTe(
     },
   };
 }
+
+/** Paid travel/lodging is a subset of actual expenses, never an extra debit. */
+export function tripBudgetProgress(plan:Plan|null,ledger:Ledger,day:number,fallbackBudget=0){const comparison=plan?soSanhKeHoachThucTe(plan,ledger,day):null;const daChi=comparison?.thucTeTongVND??ledger.expenses.reduce((sum,e)=>sum+e.soTienVND,0);const tongNganSach=comparison?.nganSachVND??fallbackBudget;return {tongNganSach,datTruoc:comparison?.datTruocVND??0,daChi,conLai:tongNganSach-daChi,percentSpent:tongNganSach>0?Math.min(100,Math.max(0,Math.round(daChi/tongNganSach*100))):0};}

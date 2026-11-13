@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useApp, DEFAULT_SAMPLE_PLAN, extractSelectionFromPlan } from "@/ui/context/AppContext";
+import { useApp } from "@/ui/context/AppContext";
 import { SideNav } from "@/ui/components/SideNav";
 import { BudgetBox } from "@/ui/components/BudgetBox";
 import {
@@ -21,50 +21,7 @@ const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
 export function B6XemTruocScreen() {
   const { nav, plan, previewData, applyPreview, cancelPreview } = useApp();
 
-  const effectivePreview =
-    previewData ||
-    (typeof window !== "undefined" &&
-    new URLSearchParams(window.location.search).get("screen") === "b6-xem-truoc"
-      ? {
-          planSau: {
-            ...DEFAULT_SAMPLE_PLAN,
-            request: {
-              ...DEFAULT_SAMPLE_PLAN.request,
-              sothich: ["bien", "thien_nhien", "check_in_chup_anh"] as any,
-            },
-          },
-          selection: extractSelectionFromPlan(DEFAULT_SAMPLE_PLAN),
-          diff: {
-            tongVND: { truoc: 9540000, sau: 8860000, chenh: -680000 },
-            conLaiVND: { truoc: 460000, sau: 1140000, chenh: 680000 },
-            thoiGianDiChuyenPhut: { truoc: 170, sau: 160, chenh: -10 },
-            doiMuc: [
-              {
-                loai: "hoat_dong" as const,
-                truoc: "Tham quan Bà Nà Hills (mẫu)",
-                sau: "Bãi biển Non Nước & Check-in Chụp ảnh",
-              },
-            ],
-            ngayAnhHuong: [
-              { ngay: 2, lyDo: "đổi hoạt động phù hợp sở thích biển & chụp ảnh" },
-              { ngay: 3, lyDo: "đổi hoạt động sang thư giãn ngắm cảnh" },
-            ],
-            theoHangMuc: [
-              { ten: "Di chuyển", truoc: 3920000, sau: 3920000, chenh: 0 },
-              { ten: "Chỗ ở", truoc: 2200000, sau: 2200000, chenh: 0 },
-              { ten: "Ăn uống", truoc: 1800000, sau: 1800000, chenh: 0 },
-              { ten: "Vui chơi", truoc: 1620000, sau: 940000, chenh: -680000 },
-            ],
-            canhBaoMoi: [],
-            canhBaoDaSua: [],
-            canhBaoGiaiQuyet: [],
-          },
-          hard: [],
-          soft: [],
-          diemKhopTruoc: 0.75,
-          diemKhopSau: 1.5,
-        }
-      : null);
+  const effectivePreview = previewData;
 
   if (!effectivePreview) {
     return (

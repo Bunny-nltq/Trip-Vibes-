@@ -33,6 +33,8 @@ export function nhanNguonDuLieu(params?: NhanNguonParams | null): string {
 
   const ds = params.dataSourceUsed.toLowerCase().trim();
 
+  if (ds === "nguoi_dung") return "Lịch trình do bạn xây dựng";
+
   if (ds === "mock") {
     return "DỮ LIỆU MẪU";
   }

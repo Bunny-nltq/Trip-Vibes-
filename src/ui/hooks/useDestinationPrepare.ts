@@ -52,6 +52,7 @@ export function useDestinationPrepare() {
 
   const pollTimerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
+  const requestRef = useRef<AbortController | null>(null);
 
   const cleanPoll = useCallback(() => {
     if (pollTimerRef.current) {
@@ -60,11 +61,14 @@ export function useDestinationPrepare() {
     }
   }, []);
 
-  useEffect(() => {
-    return () => {
-      cleanPoll();
-    };
+  const cancel = useCallback(() => {
+    requestRef.current?.abort();
+    cleanPoll();
   }, [cleanPoll]);
+
+  useEffect(() => {
+    return cancel;
+  }, [cancel]);
 
   const startPrepare = useCallback(
     async (params: {
@@ -73,7 +77,10 @@ export function useDestinationPrepare() {
       soNgay?: number;
       onReady?: () => void;
     }) => {
-      cleanPoll();
+      cancel();
+      const controller = new AbortController();
+      requestRef.current = controller;
+      const signal = controller.signal;
       setLoi(null);
       setTrangThai("dang_chuan_bi");
       startTimeRef.current = Date.now();
@@ -81,6 +88,7 @@ export function useDestinationPrepare() {
       try {
         const res = await fetch("/api/destination/prepare", {
           method: "POST",
+          signal,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             diemDen: params.diemDen,
@@ -90,6 +98,7 @@ export function useDestinationPrepare() {
         });
 
         const data = await res.json();
+        if (signal.aborted) return;
 
         if (!res.ok || !data.ok) {
           if (data.maLoi === "khong_co_du_lieu_luu_san") {
@@ -141,11 +150,13 @@ export function useDestinationPrepare() {
 
             try {
               const statusRes = await fetch(
-                `/api/destination/status?jobId=${encodeURIComponent(currentJobId)}`
+                `/api/destination/status?jobId=${encodeURIComponent(currentJobId)}`,
+                { signal }
               );
               if (!statusRes.ok) return;
 
               const statusData = await statusRes.json();
+              if (signal.aborted) return;
               if (statusData.tienTrinh) {
                 setTienTrinh(statusData.tienTrinh);
               }
@@ -171,6 +182,7 @@ export function useDestinationPrepare() {
           }, 2000);
         }
       } catch {
+        if (signal.aborted) return;
         setLoi({
           maLoi: "mang_loi",
           tieuDe: "Lỗi kết nối mạng",
@@ -179,7 +191,7 @@ export function useDestinationPrepare() {
         setTrangThai("loi");
       }
     },
-    [cleanPoll]
+    [cancel, cleanPoll]
   );
 
   return {
@@ -188,6 +200,6 @@ export function useDestinationPrepare() {
     tienTrinh,
     loi,
     startPrepare,
-    cancel: cleanPoll,
+    cancel,
   };
 }

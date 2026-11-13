@@ -72,29 +72,10 @@ export function normalizeRequest(raw: RawTripRequest): TripRequest {
     thieuSet.add("soNguoi");
   }
 
-  // 4. Số ngày (hợp lệ trong phạm vi đồ án: 2 - 7 ngày)
+  // Thời lượng do người dùng chọn, không cố định 2–7 ngày.
   let soNgay: number | null = null;
-  if (raw.soNgay !== null && raw.soNgay !== undefined) {
-    if (Number.isInteger(raw.soNgay)) {
-      if (raw.soNgay >= 2 && raw.soNgay <= 7) {
-        soNgay = raw.soNgay;
-      } else if (raw.soNgay === 1 || raw.soNgay === 8) {
-        soNgay = null;
-        thieuSet.add("soNgay");
-        canhBao.push("ngoai_pham_vi_so_ngay");
-      } else {
-        soNgay = null;
-        thieuSet.add("soNgay");
-        canhBao.push("so_ngay_khong_hop_le");
-      }
-    } else {
-      soNgay = null;
-      thieuSet.add("soNgay");
-      canhBao.push("so_ngay_khong_hop_le");
-    }
-  } else {
-    thieuSet.add("soNgay");
-  }
+  if (Number.isSafeInteger(raw.soNgay) && raw.soNgay! >= 1) soNgay = raw.soNgay;
+  else { thieuSet.add("soNgay"); if (raw.soNgay !== null) canhBao.push("so_ngay_khong_hop_le"); }
 
   // 5. Ngân sách
   let ngansachTongVND: number | null = null;

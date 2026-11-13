@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     const ms = Date.now() - startMs;
     return NextResponse.json({ ok: true, extraction, ms });
   } catch (err: any) {
-    console.error("Lỗi extract-bill:", err);
+    console.error("[extract-bill] Không thể đọc hóa đơn; không ghi dữ liệu nhà cung cấp.");
     const msg = err?.message || String(err);
     if (msg.includes("429") || msg.includes("RESOURCE_EXHAUSTED")) {
       return NextResponse.json({ ok: false, error: "Đã vượt hạn mức sử dụng. Vui lòng thử lại sau." }, { status: 429 });

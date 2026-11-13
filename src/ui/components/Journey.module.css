@@ -1,0 +1,88 @@
+.shell{min-height:100vh;display:flex;flex-direction:column;background:var(--home-canvas);color:var(--home-ink);font-size:var(--home-small);line-height:1.65}.content{max-width:var(--home-wide);padding:var(--home-gap);margin:auto;min-width:0;flex:1 0 auto;width:100%}.content :global(.Row2),.content :global(.tv-layout){gap:var(--home-gap)}.toolbar{display:flex;gap:var(--home-smallSpace);align-items:center;flex-wrap:wrap;margin-bottom:var(--home-gap)}.toolbar a,.toolbar button{border:1px solid var(--home-line);border-radius:var(--home-pill);background:var(--home-white);padding:var(--home-smallSpace) var(--home-space);color:var(--home-blue);font:inherit;text-decoration:none;cursor:pointer}.toolbar [aria-current=page]{background:var(--home-blue);color:var(--home-white)}.hero{padding:var(--home-gap);background-image:var(--home-overlay),var(--v4-scene);background-size:cover;background-position:center;border-radius:var(--home-radius);margin-bottom:var(--home-gap)}.hero h1{font-size:var(--home-pageTitle);font-weight:800;line-height:1.2;max-width:var(--home-heroTextWidth)}.hero p{max-width:var(--home-emptyWidth);color:var(--home-muted);margin-top:var(--home-space)}.form{max-width:var(--home-max);margin:auto}.panel{padding:var(--home-gap);background:var(--home-white);border:1px solid var(--home-line);border-radius:var(--home-radius);box-shadow:var(--home-shadow);margin-bottom:var(--home-gap)}.panel h2{font-size:var(--home-cardTitle);font-weight:800;margin-bottom:var(--home-space)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--home-gap)}.field{display:flex;flex-direction:column;gap:var(--home-smallSpace);font-weight:600;min-width:0}.field input,.field select,.field textarea{font:inherit;font-weight:400;color:var(--home-ink);padding:var(--home-space);border:1px solid var(--home-line);border-radius:var(--home-space);width:100%;background:var(--home-wash);min-height:var(--home-controlHeight)}.field textarea{min-height:var(--home-discoverArtHeight);resize:vertical}.field small,.muted{font-size:var(--home-small);color:var(--home-muted);font-weight:400}.actions{display:flex;gap:var(--home-space);align-items:center;justify-content:space-between;flex-wrap:wrap}.primary{background:var(--home-blue);color:var(--home-white);padding:var(--home-space) var(--home-gap);border:0;border-radius:var(--home-pill);font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:var(--home-smallSpace)}.error{background:var(--home-pink);padding:var(--home-space);border-radius:var(--home-space);margin-bottom:var(--home-space)}.allocation{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--home-space);margin-top:var(--home-space)}.allocation div{background:var(--home-wash);padding:var(--home-space);border-radius:var(--home-space)}.allocation strong{display:block;color:var(--home-blue)}.chat{background:linear-gradient(120deg,var(--home-lavender),var(--home-mint))}.shell :global(.AuthPage){min-height:auto}.shell input:focus-visible,.shell button:focus-visible,.shell a:focus-visible,.shell select:focus-visible,.shell textarea:focus-visible{outline:var(--home-rule) solid var(--home-line);outline-offset:var(--home-smallSpace)}@media(max-width:768px){.content{padding:var(--home-space)}.hero{padding:var(--home-gap)}.grid,.allocation{grid-template-columns:1fr}.content :global(.Row2),.content :global(.tv-layout){display:block}.content :global(.tv-side){position:static}.toolbar{overflow:auto;flex-wrap:nowrap}.toolbar a,.toolbar button{white-space:nowrap}}
+
+.shell{--color-primary-main:var(--home-blue);--color-primary-tint:var(--home-lavender);--color-border:var(--home-line);--color-background:var(--home-wash);--color-surface:var(--home-white);--color-text:var(--home-ink);--color-text-sub:var(--home-muted)}.content :global(.DayCard),.content :global(.tv-panel){border-radius:var(--home-radius);border-color:var(--home-line);box-shadow:var(--home-shadow)}.content :global(.TopbarFlow){flex-wrap:wrap}.content :global(.TopRight){display:flex;gap:var(--home-smallSpace);flex-wrap:wrap}.shell :global(.HomeRow){max-width:100%}
+
+.shell :global(.AuthCard){background:var(--home-white);border:1px solid var(--home-line);border-radius:var(--home-radius);box-shadow:var(--home-shadow)}
+.shell > main { flex: 1 0 auto; width: 100%; }
+
+.journeyControls {
+  background: var(--home-white);
+  border: 1px solid var(--home-line);
+  border-radius: var(--home-radius);
+  box-shadow: var(--home-shadow);
+  padding: var(--home-smallSpace);
+  margin-bottom: var(--home-gap);
+}
+.journeyControls .toolbar { margin: 0; }
+.journeyControls :global(.TopbarFlow) {
+  min-height: auto;
+  height: auto;
+  margin: 0;
+  padding: var(--home-smallSpace) !important;
+  border: 0;
+  background: transparent;
+}
+.contentSurface {
+  background: var(--home-white);
+  border: 1px solid var(--home-line);
+  border-radius: var(--home-radius);
+  padding: var(--home-gap);
+  box-shadow: var(--home-shadow);
+  min-width: 0;
+}
+
+.guestAction:global(.Btn) {
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: var(--home-controlHeight);
+  padding-block: var(--home-smallSpace);
+  white-space: normal;
+}
+
+.guestAction span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.guestAction svg {
+  flex-shrink: 0;
+}
+.reviewLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(var(--home-cardMin), 1fr);
+  align-items: start;
+  gap: var(--home-gap);
+}
+.reviewTitle { font-size: var(--home-heading); font-weight: 800; margin-top: var(--home-space); }
+.reviewDays { display: grid; gap: var(--home-smallSpace); margin: var(--home-gap) 0; }
+.reviewDays details { padding: var(--home-space); border: var(--home-rule) solid var(--home-line); border-radius: var(--home-space); }
+.reviewDays summary { cursor: pointer; font-weight: 700; }
+.reviewDays summary span { float: right; }
+.reviewDays li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--home-space);
+  padding-block: var(--home-smallSpace);
+  border-top: var(--home-rule) solid var(--home-line);
+}
+.contentSurface :global(.TripExpenseSide) { display: grid; align-content: start; gap: var(--home-space); }
+.contentSurface :global(.TripBulk) { display: flex; align-items: center; gap: var(--home-smallSpace); }
+.contentSurface :global(.DayTotal) { display: flex; flex-wrap: wrap; gap: var(--home-space); }
+@media (max-width: 768px) {
+  .contentSurface { padding: var(--home-smallSpace); }
+  .reviewLayout { grid-template-columns: 1fr; }
+}
+.contentSurface :global(.TripExpenseForm) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: var(--home-gap);
+}
+.contentSurface :global(.TripExpenseForm .Modal) {
+  width: min(100%, var(--home-formWidth)) !important;
+  max-width: 100% !important;
+  z-index: auto;
+  box-shadow: var(--home-shadow);
+}
+.contentSurface :global(.TripExpenseForm .Tabs) { margin-block: var(--home-space); }

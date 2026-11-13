@@ -1,6 +1,8 @@
 import { z } from "zod";
+import { MAX_STORED_TRIP_DAYS } from "@/core/assumptions";
 
-export const schemaVersion = 15;
+export const schemaVersion = 18;
+export const TemplateSlugSchema=z.enum(["da-nang","ha-noi","da-lat","bangkok","seoul"]);
 
 // ─── Destination Job & Category Progress ──────────────────────────────────────
 
@@ -115,7 +117,14 @@ export type DoTinCay = z.infer<typeof DoTinCaySchema>;
 
 // ─── Place chung (base cho QuanAn, Cafe, HoatDong, KhachSan) ─────────────────
 
-export const PlaceBaseSchema = z.object({
+export const VenueTypeSchema=z.enum(["hotel","resort","villa","homestay","apartment","guest_house","restaurant","eatery","cafe","museum","memorial","monument","heritage","tourist_attraction","amusement_park","park","beach","viewpoint","gallery","unknown"]);
+export const VenueDetailsSchema=z.object({
+ websiteStatus:z.enum(["verified","reachable_unverified","unavailable","unknown"]).optional(),websiteCheckedAt:z.string().optional(),
+ verifiedSource:z.string().url().optional(),verifiedAt:z.string().optional(),bookingUnit:z.enum(["room","entire_property","mixed","unknown"]).optional(),
+ venueType:VenueTypeSchema.optional(),description:z.string().max(4000).nullable().optional(),phone:z.string().max(160).nullable().optional(),website:z.string().url().nullable().optional(),cuisine:z.string().nullable().optional(),wheelchair:z.enum(["yes","no","limited","unknown"]).optional(),addressStatus:z.enum(["specific","partial","missing"]).optional(),
+});
+export const PlaceBaseSchema = VenueDetailsSchema.extend({
+  priceKnown:z.boolean().optional(),
   id: z.string(),
   osmId: z.string().nullable(),
   ten: z.string(),
@@ -125,7 +134,7 @@ export const PlaceBaseSchema = z.object({
   loai: z.string(),
   gioMoCua: z.string().nullable(),
   soSao: z.number().nullable(),               // chỉ khách sạn (OSM tag stars)
-  giaUocTinhNguoi: z.number().int().nonnegative().nullable(),
+  giaUocTinhNguoi: z.number().int().nonnegative().safe().nullable(),
   giaGoc: GiaGocSchema.optional(),
   nguon: z.string().nullable(),               // url hoặc osmId; null nếu không có
   ngayLay: z.string(),                        // ISO datetime
@@ -147,7 +156,7 @@ export type Cafe = z.infer<typeof CafeSchema>;
 
 export const HoatDongSchema = PlaceBaseSchema.extend({
   loai: z.string(),                          // attraction | museum | viewpoint | beach | ...
-  giaVeNguoi: z.number().int().nonnegative(), // alias của giaUocTinhNguoi cho backward compat
+  giaVeNguoi: z.number().int().nonnegative().safe(), // alias của giaUocTinhNguoi cho backward compat
   thoiLuongPhut: z.number().int().positive(),
   nhan: z.array(PreferenceSchema),
   dongNguoi: z.boolean(),
@@ -160,12 +169,14 @@ export const HoatDongSchema = PlaceBaseSchema.extend({
 });
 export type HoatDong = z.infer<typeof HoatDongSchema>;
 
+export const AccommodationTypeSchema=z.enum(["hotel","resort","villa","homestay","apartment","guest_house","unknown"]);
 export const KhachSanSchema = PlaceBaseSchema.extend({
+  accommodationType:AccommodationTypeSchema.optional(),
   loai: z.literal("khach_san"),
   soSao: z.number().nullable(),
   khoangGiaDemVND: z.object({
-    min: z.number().int().nonnegative(),
-    max: z.number().int().nonnegative(),
+    min: z.number().int().nonnegative().safe(),
+    max: z.number().int().nonnegative().safe(),
   }).nullable(),
   includesBreakfast: z.boolean(),
   hasPool: z.boolean(),
@@ -205,11 +216,23 @@ export type RawTripRequest = z.infer<typeof RawTripRequestSchema>;
 
 // ─── TripRequest (kết quả chuẩn hoá cuối cùng) ────────────────────────────────
 
+export const TravelDatesSchema = z.object({
+ departureDate:z.string().date(), returnDate:z.string().date(),
+ departureTime:z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).optional(),
+ returnTime:z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).optional(),
+}).refine(value=>value.returnDate>=value.departureDate,{message:"Ngày về phải từ ngày đi trở đi"});
+export const TravelModeSchema=z.enum(["auto","PLANE","TRAIN","BUS"]);
+export const LocalTravelModeSchema=z.enum(["taxi","motorbike","car","transit","walking"]);
+
 export const TripRequestSchema = z.object({
+  travelDates:TravelDatesSchema.optional(),
+  transportMode:TravelModeSchema.optional(),
+  localTransportMode:LocalTravelModeSchema.optional(),
+  reservePercent:z.number().int().min(0).max(30).optional(),
   schemaVersion: z.number().int().default(schemaVersion),
   diemDi: z.union([DiemDenSchema, z.string()]).default(DEFAULT_DIEM_DI),
   diemDen: z.union([DiemDenSchema, z.string()]).nullable(),
-  soNgay: z.number().int().min(2).max(7).nullable(),
+  soNgay: z.number().int().positive().safe().max(MAX_STORED_TRIP_DAYS).nullable(),
   soNguoi: z.number().int().nullable(),
   /** Ngân sách tổng tính bằng VND (số nguyên), null nếu thiếu thông tin ngân sách */
   ngansachTongVND: z.number().int().nullable(),
@@ -220,8 +243,8 @@ export const TripRequestSchema = z.object({
   cauHoiLamRo: z.array(z.string()),
   canhBao: z.array(z.string()),
   giaVeTuNhap: z.object({
-    chieuDiVND: z.number().int().nonnegative(),
-    chieuVeVND: z.number().int().nonnegative(),
+    chieuDiVND: z.number().int().nonnegative().safe(),
+    chieuVeVND: z.number().int().nonnegative().safe(),
   }).optional(),
 });
 export type TripRequest = z.infer<typeof TripRequestSchema>;
@@ -240,13 +263,13 @@ export const HotelSchema = z.object({
   name: z.string(),
   stars: z.number().int().min(1).max(5),
   /** Giá mỗi đêm, VND, số nguyên */
-  pricePerNight: z.number().int().nonnegative(),
+  pricePerNight: z.number().int().nonnegative().safe(),
   area: z.string(),
   includesBreakfast: z.boolean(),
   hasPool: z.boolean(),
   openingDate: z.string().optional(), // ISO date string YYYY-MM-DD
   rating: z.number().min(0).max(10),
-  reviewCount: z.number().int().nonnegative(),
+  reviewCount: z.number().int().nonnegative().safe(),
   source: z.string().optional(),
   retrievedAt: z.string().optional(), // ISO date string
   praised: z.array(z.string()),
@@ -277,7 +300,7 @@ export const TransportSchema = z.object({
   arrivalTime: z.string().optional(), // HH:mm (giờ đến)
   durationMinutes: z.number().int().positive(), // thời lượng tính bằng phút
   /** Giá mỗi người, VND, số nguyên */
-  pricePerPerson: z.number().int().nonnegative(),
+  pricePerPerson: z.number().int().nonnegative().safe(),
   seatClass: z.string(),
   boardingPoint: z.string(),
   dropOffPoint: z.string(),
@@ -301,7 +324,7 @@ export const ActivitySchema = z.object({
   ten: z.string(),
   khuVuc: z.string(),
   /** Giá vé mỗi người, VND, số nguyên */
-  giaVeNguoi: z.number().int().nonnegative(),
+  giaVeNguoi: z.number().int().nonnegative().safe(),
   thoiLuongPhut: z.number().int().positive(),
   tuKhoaBanDo: z.string(),
   nhan: z.array(PreferenceSchema),
@@ -311,7 +334,7 @@ export const ActivitySchema = z.object({
   name: z.string().optional(),
   category: z.string().optional(),
   location: z.string().optional(),
-  pricePerPerson: z.number().int().nonnegative().optional(),
+  pricePerPerson: z.number().int().nonnegative().safe().optional(),
   durationMinutes: z.number().int().positive().optional(),
   description: z.string().optional(),
   openHours: z.string().optional(),
@@ -351,6 +374,17 @@ export const PlanItemCategorySchema = z.enum([
 export type PlanItemCategory = z.infer<typeof PlanItemCategorySchema>;
 
 export const PlanItemSchema = z.object({
+  originName:z.string().optional(),originAddress:z.string().nullable().optional(),destinationName:z.string().optional(),
+  diaChi:z.string().nullable().optional(),
+  experienceType:z.enum(["cafe","museum","attraction","nature","entertainment","restaurant","local_transfer"]).optional(),
+  id: z.string().optional(),
+  state: z.enum(["pending", "visited", "skipped", "closed"]).optional(),
+  locked: z.boolean().optional(),
+  durationMinutes: z.number().int().min(1).max(1440).optional(),
+  latitude: z.number().min(-90).max(90).optional(),
+  longitude: z.number().min(-180).max(180).optional(),
+  priceKnown: z.boolean().optional(),
+  leg: z.string().max(150).optional(),
   /** Ngày trong chuyến đi (1..soNgay) */
   ngay: z.number().int().positive(),
   /** Giờ bắt đầu danh nghĩa (HH:mm) hoặc null */
@@ -359,9 +393,9 @@ export const PlanItemSchema = z.object({
   noiDung: z.string(),
   soLuong: z.number().int().positive(),
   /** Đơn giá VND, số nguyên */
-  donGia: z.number().int().nonnegative(),
+  donGia: z.number().int().nonnegative().safe(),
   /** Thành tiền = donGia * soLuong, VND, số nguyên */
-  thanhTien: z.number().int().nonnegative(),
+  thanhTien: z.number().int().nonnegative().safe(),
   /** ID tham chiếu trong data, null với hạng mục Ăn uống tổng hợp */
   refId: z.string().nullable(),
   /** URL Google Maps xem địa điểm (nếu có) */
@@ -377,15 +411,15 @@ export type PlanItem = z.infer<typeof PlanItemSchema>;
 
 export const PlanTongKetSchema = z.object({
   /** Tổng chi phí VND, số nguyên */
-  tongVND: z.number().int().nonnegative(),
+  tongVND: z.number().int().nonnegative().safe(),
   /** Ngân sách còn lại VND (ngansachTongVND - tongVND) */
   conLaiVND: z.number().int(),
   /** Phần trăm ngân sách đã dùng (làm tròn 1 chữ số thập phân) */
   phanTramDaDung: z.number(),
   /** Chi phí theo từng hạng mục */
-  theoHangMuc: z.record(PlanItemCategorySchema, z.number().int().nonnegative()),
+  theoHangMuc: z.record(PlanItemCategorySchema, z.number().int().nonnegative().safe()),
   /** Tổng thời gian di chuyển chiều đi + chiều về (phút) */
-  tongThoiGianDiChuyenPhut: z.number().int().nonnegative(),
+  tongThoiGianDiChuyenPhut: z.number().int().nonnegative().safe(),
   /** Trạng thái ngân sách: "trong" nếu tongVND <= ngansachTongVND, "vuot" nếu vượt */
   trangThaiNganSach: z.enum(["trong", "vuot"]),
 });
@@ -418,6 +452,13 @@ export const PlanSchema = z.object({
 });
 export type Plan = z.infer<typeof PlanSchema>;
 
+export const BudgetAlternativeSchema = z.object({
+  plan: PlanSchema,
+  changes: z.array(z.enum(["shorter", "flexible_transport", "public_transit"])).min(1),
+});
+export type BudgetAlternative = z.infer<typeof BudgetAlternativeSchema>;
+
+
 // ─── Bills & Expenses (Tính năng Quản lý chi tiêu) ──────────────────────────
 
 export const ExpenseCategorySchema = z.enum([
@@ -438,7 +479,7 @@ export const BillExtractionRawSchema = z.object({
   tamTinhVND: z.number().int().nullable(),
   giamGiaVND: z.number().int().nullable(),
   phuThuVND: z.number().int().nullable(),
-  thueVND: z.number().int().nonnegative().nullable(),
+  thueVND: z.number().int().nonnegative().safe().nullable(),
   dongChiTiet: z.array(
     z.object({
       ten: z.string(),
@@ -465,9 +506,9 @@ export const ExpenseSchema = z.object({
   nguon: z.enum(["anh_bill", "nhap_tay"]),
   tenCuaHang: z.string().nullable(),
   ngay: z.string().nullable(),
-  ngayTrongChuyen: z.number().int().min(1).max(7).nullable(),
+  ngayTrongChuyen: z.number().int().positive().safe().nullable(),
   hangMuc: ExpenseCategorySchema,
-  soTienVND: z.number().int().positive(),
+  soTienVND: z.number().int().positive().safe(),
   giaTriAIDoc: z.number().int().nullable(),
   daSuaTay: z.boolean(),
   ghiChu: z.string().nullable(),
@@ -487,6 +528,12 @@ export const UserSchema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
   createdAt: z.string(),
+  profile: z.object({
+    birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
+    gender: z.enum(["female", "male", "other", "undisclosed"]).optional(),
+    interests: z.array(z.string().min(1).max(60)).max(20).optional(),
+    personalize: z.boolean().optional(),
+  }).optional(),
 });
 export type User = z.infer<typeof UserSchema>;
 
@@ -507,9 +554,63 @@ export const SavedTripSchema = z.object({
   plan: PlanSchema,
   ledger: LedgerSchema,
   tickedPlaces: z.record(z.boolean()).default({}),
+  status: z.enum(["planned", "in_progress", "completed", "cancelled"]).optional(),
+  version: z.number().int().positive().optional(),
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
+  journal: z.string().max(10000).optional(),
 });
 export type SavedTrip = z.infer<typeof SavedTripSchema>;
 
 export * from "./destinations";
 
 
+
+// Requests are normalized at the server boundary; aliases preserve existing clients.
+export const LoginInputSchema = z.object({
+  email: z.string().trim().email().max(254),
+  password: z.string().min(1).max(128),
+});
+export const RegisterInputSchema = LoginInputSchema.extend({
+  name: z.string().trim().min(1).max(100),
+  password: z.string().min(8).max(128),
+});
+export const ProfileInputSchema = UserSchema.shape.profile.unwrap();
+export const TripWriteSchema = SavedTripSchema.pick({title:true, plan:true, ledger:true, tickedPlaces:true, status:true, startDate:true, journal:true}).extend({
+  title: z.string().trim().min(1).max(200).optional(),
+});
+export const TripUpdateSchema = TripWriteSchema.partial().extend({id:z.string().min(1),version:z.number().int().positive()});
+
+export const PlaceSuggestionSchema = z.object({
+  id:z.string(), name:z.string(), kind:z.enum(["cafe","activity","restaurant"]),
+  latitude:z.number().min(-90).max(90), longitude:z.number().min(-180).max(180),
+  price:z.number().int().nonnegative().safe().nullable(), duration:z.number().int().positive(),
+  address:z.string().nullable().optional(),mapsUrl:z.string().optional(),venueType:VenueTypeSchema.optional(),description:z.string().nullable().optional(),
+  source:z.string(), fetchedAt:z.string(), openingHours:z.string().nullable(),
+  distanceKm:z.number().nonnegative().nullable(), reason:z.string(),
+});
+export type PlaceSuggestion = z.infer<typeof PlaceSuggestionSchema>;
+export const NearbyInputSchema = z.object({
+  destination:z.string().trim().min(1).max(200), kind:z.enum(["cafe","activity","restaurant"]),
+  latitude:z.number().min(-90).max(90).optional(), longitude:z.number().min(-180).max(180).optional(),
+  people:z.number().int().min(1).max(20).default(1),
+  exclude:z.array(z.string()).max(2000).default([]), budget:z.number().nonnegative().optional(),
+  minutes:z.number().positive().optional(), interests:z.array(z.string().max(60)).max(20).default([]),
+});
+export const NearbyResultSchema = z.object({ok:z.boolean(), suggestions:z.array(PlaceSuggestionSchema), method:z.enum(["rules","ai"]), note:z.string()});
+export const MapsReferenceSchema = z.object({
+  url:z.string().url(), name:z.string().nullable(), latitude:z.number().nullable(),longitude:z.number().nullable(),placeId:z.string().nullable(),needsConfirmation:z.literal(true),
+});
+
+// Public hotel facts: only fields actually present in the upstream data.
+export const HotelPublicDetailsSchema=VenueDetailsSchema.merge(KhachSanSchema.pick({id:true,ten:true,includesBreakfast:true,hasPool:true,accommodationType:true})).extend({
+ diaChi:PlaceBaseSchema.shape.diaChi.optional(),toaDo:PlaceBaseSchema.shape.toaDo.optional(),gioMoCua:PlaceBaseSchema.shape.gioMoCua.optional(),ngayLay:PlaceBaseSchema.shape.ngayLay.optional(),nguon:PlaceBaseSchema.shape.nguon.optional(),
+ praised:HotelSchema.shape.praised.optional(),watchOut:HotelSchema.shape.watchOut.optional(),tip:HotelSchema.shape.tip,
+});
+export type HotelPublicDetails=z.infer<typeof HotelPublicDetailsSchema>;
+
+export const VenuePublicSchema=VenueDetailsSchema.extend({id:z.string(),name:z.string(),city:z.string(),type:VenueTypeSchema,group:z.enum(["accommodation","dining","cafe","experience"]),address:z.string().nullable(),mapsUrl:z.string().url(),directionsUrl:z.string().url(),source:z.string(),sourceUrl:z.string().url(),fetchedAt:z.string(),openingHours:z.string().nullable(),accommodationStars:z.number().nullable(),price:z.number().nonnegative().nullable(),priceEstimated:z.boolean()});
+export type VenuePublic=z.infer<typeof VenuePublicSchema>;
+export const VenueCatalogResultSchema=z.object({ok:z.literal(true),cities:z.array(z.string()),places:z.array(VenuePublicSchema),total:z.number().int().nonnegative(),offset:z.number().int().nonnegative(),limit:z.number().int().positive()});
+export const VenueCatalogInputSchema=z.object({city:z.string().trim().max(150).default(""),type:z.union([VenueTypeSchema,z.enum(["all","accommodation","dining","experience"])]).default("all"),query:z.string().trim().max(150).default(""),offset:z.coerce.number().int().min(0).default(0),limit:z.coerce.number().int().min(1).max(60).default(24)});
+
+export const WebsiteBusinessSchema=z.object({name:z.string().max(500),"@type":z.union([z.string(),z.array(z.string()).max(20)]),telephone:z.string().max(160).optional(),address:z.object({streetAddress:z.string().max(300).optional(),addressLocality:z.string().max(150).optional(),addressRegion:z.string().max(150).optional(),postalCode:z.string().max(30).optional(),addressCountry:z.union([z.string(),z.object({name:z.string()})]).optional()}).passthrough().optional()}).passthrough();

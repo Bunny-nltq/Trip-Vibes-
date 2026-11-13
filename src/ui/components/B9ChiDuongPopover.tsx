@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import type { ProgressPlace } from "@/core/tripProgress";
-import { X } from "lucide-react";
+import { X, Navigation, Copy, Check, ExternalLink } from "lucide-react";
 
 interface B9ChiDuongPopoverProps {
   place: ProgressPlace | null;
@@ -119,26 +119,46 @@ export function B9ChiDuongPopover({ place, onClose, position }: B9ChiDuongPopove
 
         <div
           className="PopItem"
+          style={{ display: "flex", alignItems: "center", gap: 8 }}
           onClick={() => {
             window.open(googleMapsUrl, "_blank", "noopener,noreferrer");
             onClose();
           }}
         >
-          Mở bằng Google Maps
+          <Navigation size={15} style={{ color: "var(--color-primary)" }} />
+          <span style={{ flex: 1 }}>Mở chỉ đường trên bản đồ</span>
+          <ExternalLink size={12} style={{ color: "var(--color-text-sub)" }} />
         </div>
 
         <div
           className="PopItem"
+          style={{ display: "flex", alignItems: "center", gap: 8 }}
           onClick={() => {
             window.open(appleMapsUrl, "_blank", "noopener,noreferrer");
             onClose();
           }}
         >
-          Mở bằng Apple Maps
+          <Navigation size={15} style={{ color: "var(--color-text-sub)" }} />
+          <span style={{ flex: 1 }}>Mở bằng Apple Maps</span>
+          <ExternalLink size={12} style={{ color: "var(--color-text-sub)" }} />
         </div>
 
-        <div className="PopItem" onClick={handleCopy}>
-          {copied ? "✓ Đã sao chép địa chỉ!" : "Sao chép địa chỉ"}
+        <div
+          className="PopItem"
+          style={{ display: "flex", alignItems: "center", gap: 8 }}
+          onClick={handleCopy}
+        >
+          {copied ? (
+            <>
+              <Check size={15} style={{ color: "var(--color-success)" }} />
+              <span style={{ color: "var(--color-success)", fontWeight: 600 }}>Đã sao chép địa chỉ!</span>
+            </>
+          ) : (
+            <>
+              <Copy size={15} style={{ color: "var(--color-text-sub)" }} />
+              <span>Sao chép địa chỉ</span>
+            </>
+          )}
         </div>
       </div>
     </>

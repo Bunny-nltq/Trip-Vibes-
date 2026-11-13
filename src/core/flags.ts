@@ -5,6 +5,21 @@ import {
   GIO_DEN_SOM,
   NGUONG_DI_CHUYEN_LAU_PHUT,
 } from "./assumptions";
+import type { PlanItem } from "@/contracts";
+
+export function workspaceFlags(items: PlanItem[], budget: number): string[] {
+  const flags: string[] = [];
+  if (items.some(i => i.priceKnown === false)) flags.push("workspace_missing_prices");
+  if (items.some(i => i.state === "closed")) flags.push("workspace_closed_place");
+  if (items.reduce((sum, i) => sum + i.donGia * i.soLuong, 0) > budget) flags.push("workspace_over_budget");
+  const timed = items.filter(i => i.gio && i.durationMinutes && i.state !== "skipped").sort((a, b) => a.ngay - b.ngay || a.gio!.localeCompare(b.gio!));
+  for (let index = 1; index < timed.length; index++) {
+    const a = timed[index - 1], b = timed[index];
+    const minutes = (time: string) => Number(time.slice(0, 2)) * 60 + Number(time.slice(3));
+    if (a.ngay === b.ngay && minutes(a.gio!) + a.durationMinutes! > minutes(b.gio!)) { flags.push("workspace_time_overlap"); break; }
+  }
+  return flags;
+}
 
 export interface TransportFlags {
   /** Số phút tính từ 00:00 của ngày đi */
@@ -62,4 +77,12 @@ export function calculateTransportFlags(
     denSom,
     diChuyenLau,
   };
+}
+
+/** Local route duration is estimated; show a review warning when it overlaps a stop. */
+export function localRouteWarnings(items:import("@/contracts").PlanItem[]):string[]{
+ const minutes=(time:string)=>Number(time.slice(0,2))*60+Number(time.slice(3));
+ for(const leg of items){if(leg.experienceType!=="local_transfer"||!leg.gio)continue;const departure=minutes(leg.gio);
+ for(const stop of items){if(stop.ngay!==leg.ngay||stop.hangMuc==="Di chuyển"||!stop.gio)continue;const start=minutes(stop.gio);if(start<=departure&&start+(stop.durationMinutes??30)>departure)return ["Cần rà soát thời gian dừng và di chuyển nội vùng; một số chặng ước tính có thể chồng giờ."];}}
+ return [];
 }

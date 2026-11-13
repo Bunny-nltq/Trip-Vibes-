@@ -1,3 +1,6 @@
+import { findBudgetAlternatives } from "@/core/budgetAlternatives";
+import type { BudgetAlternative } from "@/contracts";
+import {uniqueNamedOsmVenues} from "@/core/venueDiscovery";
 import type { TripRequest, Plan, DiemDen } from "@/contracts";
 import { DEFAULT_DIEM_DI } from "@/contracts";
 import { LiveDataSource } from "@/data/live/LiveDataSource";
@@ -33,6 +36,7 @@ export interface PlanRepairResult {
   ungVien?: GeocodeCandidate[];
   request: TripRequest;
   plan?: Plan;
+  budgetAlternatives?: BudgetAlternative[];
   hard: Violation[];
   soft: Violation[];
   chiTietThieu?: {
@@ -129,6 +133,7 @@ export async function planWithRepair(
     resolvedDiemDen = request.diemDen;
   }
 
+  if(resolvedDiemDen.maQuocGia.toUpperCase()!=="VN"){emptyResult.lyDo="Trip Vibes hiện chỉ lập chuyến mới trong Việt Nam.";return emptyResult;}
   let resolvedDiemDi: DiemDen = DEFAULT_DIEM_DI;
   if (request.diemDi) {
     if (typeof request.diemDi === "string") {
@@ -137,9 +142,8 @@ export async function planWithRepair(
         resolvedDiemDi = snapDiemDi;
       } else {
         const geoDi = await geocodeDestination(request.diemDi);
-        if (geoDi.status === "thanh_cong") {
-          resolvedDiemDi = geoDi.diemDen;
-        }
+        if (geoDi.status === "thanh_cong") {resolvedDiemDi = geoDi.diemDen;}
+        else {emptyResult.lyDo="Chưa xác định được nơi xuất phát. Hãy kiểm tra tên địa phương.";return emptyResult;}
       }
     } else {
       resolvedDiemDi = request.diemDi;
@@ -150,18 +154,17 @@ export async function planWithRepair(
     !request.soNguoi ||
     !request.soNgay ||
     !request.ngansachTongVND ||
-    request.soNgay < 2 ||
-    request.soNgay > 7 ||
+    request.soNgay < 1 ||
     request.thieu.length > 0
   ) {
-    if (request.soNgay && (request.soNgay < 2 || request.soNgay > 7)) {
+    if (request.soNgay && (request.soNgay < 1)) {
       emptyResult.lyDo = "ngoai_pham_vi_so_ngay";
       if (!request.thieu.includes("soNgay")) {
         request.thieu.push("soNgay");
       }
       if (!request.cauHoiLamRo.some((q) => q.includes("ngày"))) {
         request.cauHoiLamRo.push(
-          "Trip Vibes hiện hỗ trợ lịch trình từ 2 đến 7 ngày. Bạn muốn đi trong mấy ngày?"
+          "Trip Vibes hiện hỗ trợ lịch trình từ 1 ngày theo nhu cầu của bạn. Bạn muốn đi trong mấy ngày?"
         );
       }
     } else {
@@ -173,7 +176,7 @@ export async function planWithRepair(
 
   logger.debug("[planWithRepair] Initializing LiveDataSource for:", resolvedDiemDen.ten);
   const liveDataSource = new LiveDataSource(
-    undefined,
+    getSnapshotDiemDen(resolvedDiemDen.ten)?undefined:"live",
     undefined,
     resolvedDiemDen,
     resolvedDiemDi,
@@ -185,7 +188,7 @@ export async function planWithRepair(
 
   logger.debug("[planWithRepair] Fetching all data via Promise.all...");
   // Lấy dữ liệu song song
-  const [transports, hotels, activities, khachSans, quanAns, cafes, hoatDongs] =
+  const [allTransports, hotels, rawActivities, khachSans, quanAns, cafes, rawHoatDongs] =
     await Promise.all([
       liveDataSource.getTransports(),
       liveDataSource.getHotels(),
@@ -195,6 +198,8 @@ export async function planWithRepair(
       liveDataSource.getCafes(),
       liveDataSource.getHoatDongs(),
     ]);
+  const activities=uniqueNamedOsmVenues(rawActivities),hoatDongs=uniqueNamedOsmVenues(rawHoatDongs);
+  const transports=allTransports.filter(t=>!request.transportMode||request.transportMode==="auto"||t.type===request.transportMode);
   logger.debug(`[planWithRepair] Data ready: ${transports.length} transports, ${khachSans.length} hotels, ${quanAns.length} food, ${hoatDongs.length} activities`);
 
   const dsUsedInfo = liveDataSource.getDataSourceUsed();
@@ -259,7 +264,8 @@ export async function planWithRepair(
     khachSans: data.khachSans,
   });
 
-  if (!locRes.khaThi || (request.ngansachTongVND && locRes.toiThieuVND > request.ngansachTongVND)) {
+  const needsEconomyPlan = !locRes.khaThi;
+  if (needsEconomyPlan && request.reservePercent !== undefined) {
     emptyResult.status = "khong_the_dat_ngan_sach";
     emptyResult.toiThieuVND = locRes.toiThieuVND;
     emptyResult.soLanGoiAI = 0;
@@ -307,6 +313,8 @@ export async function planWithRepair(
       return {
         status: "khong_the_dat_ngan_sach",
         request,
+        budgetAlternatives: findBudgetAlternatives(request, { ...data, transports: allTransports })
+          .map(option => ({ ...option, plan: { ...option.plan, dataSourceUsed: dsUsedInfo.source } })),
         hard: [
           {
             code: "ngan_sach_toi_thieu",
@@ -359,6 +367,10 @@ export async function planWithRepair(
     };
   };
 
+  if (needsEconomyPlan) {
+    return fallbackToRules(options?.lyDoDuPhong ?? "ai_khong_sua_duoc_ngan_sach", 0, 0, 0);
+  }
+
   if (options?.forceRulesOnly) {
     return fallbackToRules(options.lyDoDuPhong ?? "het_luot_ai", 0, 0, 0);
   }
@@ -374,6 +386,7 @@ export async function planWithRepair(
       return fallbackToRules("qua_thoi_gian", soLanGoiAI, soLan429, vong);
     }
 
+    const roundCallBase=soLanGoiAI,round429Base=soLan429;
     let agentResult;
     let budgetTimer: NodeJS.Timeout;
     const budgetPromise = new Promise<never>((_, reject) => {
@@ -398,6 +411,7 @@ export async function planWithRepair(
         startTimeOverall: startMs,
         maxAICallsOverall: maxAICalls,
         currentAICallsCount: soLanGoiAI,
+        onAIUsage:(calls,rateHits)=>{soLanGoiAI=roundCallBase+calls;soLan429=round429Base+rateHits;},
         allowedTransportDiIds,
         allowedTransportVeIds,
         allowedHotelIds,
@@ -405,8 +419,8 @@ export async function planWithRepair(
       });
 
       agentResult = await Promise.race([agentPromise, budgetPromise]);
-      soLanGoiAI += agentResult.soLanGoiAI ?? 1;
-      soLan429 += agentResult.soLan429 ?? 0;
+      soLanGoiAI = Math.max(soLanGoiAI,roundCallBase+(agentResult.soLanGoiAI??1));
+      soLan429 = Math.max(soLan429,round429Base+(agentResult.soLan429??0));
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes("vuot_so_luot_goi_ai")) {
@@ -422,8 +436,8 @@ export async function planWithRepair(
         msg.includes("quota")
       ) {
         lyDo = "het_luot_ai";
-        soLan429 = Math.max(soLan429 + 1, 1);
-        soLanGoiAI = Math.max(soLanGoiAI + 1, 1);
+        soLan429 = Math.max(soLan429, 1);
+        soLanGoiAI = Math.max(soLanGoiAI, 1);
       } else if (
         msg.includes("qua_thoi_gian") ||
         msg.includes("timed out") ||

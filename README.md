@@ -4,9 +4,11 @@ AI Agent lập kế hoạch du lịch thông minh – Next.js 16 + TypeScript + 
 
 ---
 
+> **Bản V2 local:** chạy `CHAY-TRIP-VIBES.cmd`. Xem [hướng dẫn chạy và kết quả nâng cấp](docs/NANG-CAP-V2-LOCAL.md).
+
 ## 1. Cài đặt
 
-Yêu cầu môi trường: **Node.js >= 20.11** và **npm**.
+Yêu cầu môi trường: **Node.js >= 22.14** và **npm**.
 
 ```bash
 git clone https://github.com/Bunny-nltq/Trip-Vibes-.git

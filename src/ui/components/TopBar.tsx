@@ -84,9 +84,9 @@ export function TopBar() {
 
   const [copied, setCopied] = React.useState(false);
 
-  const handleShare = () => {
+  const handleShare = async () => {
     if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
+      try { await navigator.clipboard.writeText(window.location.href); } catch { window.alert("Trình duyệt không cho phép sao chép. Hãy sao chép địa chỉ trên thanh địa chỉ."); return; }
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -109,12 +109,6 @@ export function TopBar() {
               fontSize: 13,
             }}
           >
-            {stepInfo.step > 0 ? (
-              <>
-                <span>Bước {stepInfo.step}/11</span>
-                <span style={{ opacity: 0.5 }}>•</span>
-              </>
-            ) : null}
             <span style={{ color: "var(--color-text)" }}>{stepInfo.title}</span>
           </div>
         </div>
@@ -177,11 +171,11 @@ export function TopBar() {
             type="button"
             className="Btn BtnSmall BtnGhost"
             onClick={handleShare}
-            title="Sao chép liên kết kế hoạch"
+            title="Sao chép địa chỉ trang; không kèm dữ liệu chuyến đi"
             style={{ display: "inline-flex", alignItems: "center", gap: 6, marginRight: 8 }}
           >
             {copied ? <Check size={14} color="var(--color-status-success)" /> : <Share2 size={14} />}
-            <span style={{ fontSize: 12 }}>{copied ? "Đã chép link" : "Chia sẻ"}</span>
+            <span style={{ fontSize: 12 }}>{copied ? "Đã chép địa chỉ" : "Chép địa chỉ"}</span>
           </button>
         )}
 

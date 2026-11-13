@@ -1,12 +1,18 @@
 "use client";
+import {expenseDateForTripDay} from "@/core/travelRequest";
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useApp } from "@/ui/context/AppContext";
 import { useTrangThaiAI } from "@/ui/hooks/useTrangThaiAI";
 import { useExtractBill } from "@/ui/hooks/useExtractBill";
 import { useExpenseConfirm } from "@/ui/hooks/useExpenseConfirm";
 import type { ExpenseCategory, BillExtraction } from "@/contracts";
-import { B8ChuyenDiScreen } from "./B8ChuyenDiScreen";
-import { RefreshCw } from "lucide-react";
+
+import { RefreshCw, Sparkles, Calendar, Tag } from "lucide-react";
+import {
+  matchExpenseToPlan,
+  mapPlanCategoryToExpenseCategory,
+  type MatchedPlanItem,
+} from "@/core/bill/matchExpenseToPlan";
 
 const CANH_BAO_TEXT_MAP: Record<string, string> = {
   tong_khong_khop_cac_dong: "Tổng tiền không khớp với cộng các dòng chi tiết",
@@ -27,7 +33,16 @@ const HANG_MUC_OPTIONS: Array<{ value: ExpenseCategory; label: string }> = [
 ];
 
 export function B10ChonNguonScreen() {
-  const { nav, addExpenseToLedger, b10Prefill, setB10Prefill } = useApp();
+  const {
+    nav,
+    addExpenseToLedger,
+    b10Prefill,
+    setB10Prefill,
+    activeDay,
+    plan,
+    tickedPlaces,
+    toggleTickPlace,
+  } = useApp();
   const { aiBat } = useTrangThaiAI();
   const { extract: runExtractBill } = useExtractBill();
   const { confirm: runConfirmExpense } = useExpenseConfirm();
@@ -41,71 +56,27 @@ export function B10ChonNguonScreen() {
   });
 
   // Form state
-  const [tenCuaHang, setTenCuaHang] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      const q = new URLSearchParams(window.location.search).get("state");
-      if (q === "nhap_tay") return "Bánh xèo Bà Dưỡng";
-      if (q === "ket_qua_doc") return "Quán Ăn Phố Cổ (mẫu)";
-    }
-    return "";
-  });
+  const [tenCuaHang, setTenCuaHang] = useState<string>("");
   const [ngay, setNgay] = useState<string>(() => {
-    return new Date().toISOString().slice(0, 10);
+    return expenseDateForTripDay(plan?.request.travelDates?.departureDate,activeDay||1,new Date());
   });
-  const [ngayTrongChuyen, setNgayTrongChuyen] = useState<number>(() => {
-    if (typeof window !== "undefined") {
-      const q = new URLSearchParams(window.location.search).get("state");
-      if (q === "nhap_tay") return 2;
-    }
-    return 2;
-  });
+  const [ngayTrongChuyen, setNgayTrongChuyen] = useState<number>(activeDay||1);
   const [hangMuc, setHangMuc] = useState<ExpenseCategory>("an_uong");
-  const [soTienVND, setSoTienVND] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      const q = new URLSearchParams(window.location.search).get("state");
-      if (q === "nhap_tay") return "180000";
-      if (q === "ket_qua_doc") return "308000";
-    }
-    return "";
-  });
+  const [soTienVND, setSoTienVND] = useState<string>("");
   const [ghiChu, setGhiChu] = useState<string>("");
 
+  // Multimodal Match state
+  const [matchedItem, setMatchedItem] = useState<MatchedPlanItem | null>(null);
+  const [candidateMatches, setCandidateMatches] = useState<MatchedPlanItem[]>([]);
+  const [autoTickMatchedItem, setAutoTickMatchedItem] = useState<boolean>(true);
+
   // AI & Bill state
-  const [giaTriAIDoc, setGiaTriAIDoc] = useState<number | null>(() => {
-    if (typeof window !== "undefined") {
-      const q = new URLSearchParams(window.location.search).get("state");
-      if (q === "ket_qua_doc") return 308000;
-    }
-    return null;
-  });
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(() => {
-    if (typeof window !== "undefined") {
-      const q = new URLSearchParams(window.location.search).get("state");
-      if (q === "ket_qua_doc") return "/eval/bills/b01_nhahang_haisan.jpg";
-      if (q === "khong_doc_duoc") return "/eval/bills/b05_thuc_don_khong_phai_hoa_don.jpg";
-      if (q === "het_luot") return "/eval/bills/b02_cafe.jpg";
-    }
-    return null;
-  });
+  const [giaTriAIDoc, setGiaTriAIDoc] = useState<number|null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string|null>(null);
   const [isReading, setIsReading] = useState<boolean>(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [specialStatus, setSpecialStatus] = useState<
-    "khong_phai_chung_tu" | "khong_doc_duoc_so_tien" | "429" | "network_error" | null
-  >(() => {
-    if (typeof window !== "undefined") {
-      const q = new URLSearchParams(window.location.search).get("state");
-      if (q === "khong_doc_duoc") return "khong_doc_duoc_so_tien";
-      if (q === "het_luot") return "429";
-    }
-    return null;
-  });
-  const [warnings, setWarnings] = useState<string[]>(() => {
-    if (typeof window !== "undefined") {
-      const q = new URLSearchParams(window.location.search).get("state");
-      if (q === "ket_qua_doc") return [];
-    }
-    return [];
-  });
+  const [specialStatus, setSpecialStatus] = useState<"khong_phai_chung_tu"|"khong_doc_duoc_so_tien"|"429"|"network_error"|null>(null);
+  const [warnings, setWarnings] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -117,55 +88,14 @@ export function B10ChonNguonScreen() {
   // Apply prefill when opened from B8 toast or B11
   useEffect(() => {
     if (b10Prefill) {
+      if(b10Prefill.soTienVND!==undefined)setSoTienVND(String(b10Prefill.soTienVND));
       // eslint-disable-next-line react-hooks/set-state-in-effect -- đồng bộ với hệ thống bên ngoài React (URL, sessionStorage, mạng) chỉ làm được sau khi dựng
       if (b10Prefill.tenCuaHang) setTenCuaHang(b10Prefill.tenCuaHang);
-      if (b10Prefill.ngayTrongChuyen) setNgayTrongChuyen(b10Prefill.ngayTrongChuyen);
+      if (b10Prefill.ngayTrongChuyen){setNgayTrongChuyen(b10Prefill.ngayTrongChuyen);setNgay(expenseDateForTripDay(plan?.request.travelDates?.departureDate,b10Prefill.ngayTrongChuyen,new Date()));}
       if (b10Prefill.hangMuc) setHangMuc(b10Prefill.hangMuc);
     }
-  }, [b10Prefill]);
+  }, [b10Prefill,plan?.request.travelDates?.departureDate]);
 
-  // Support URL param for demo & testing states
-  useEffect(() => {
-    if (typeof window === "undefined" || process.env.NODE_ENV !== "development") return;
-    const params = new URLSearchParams(window.location.search);
-    const mockState = params.get("state");
-    if (mockState === "nhap_tay") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- đồng bộ với hệ thống bên ngoài React (URL, sessionStorage, mạng) chỉ làm được sau khi dựng
-      setActiveTab("manual");
-      setTenCuaHang("Bánh xèo Bà Dưỡng");
-      setSoTienVND("180000");
-      setNgayTrongChuyen(2);
-      setHangMuc("an_uong");
-    } else if (mockState === "ket_qua_doc") {
-      setActiveTab("bill");
-      setImagePreviewUrl("/eval/bills/b01_nhahang_haisan.jpg");
-      setTenCuaHang("Quán Ăn Phố Cổ (mẫu)");
-      setSoTienVND("308000");
-      setGiaTriAIDoc(308000);
-      setNgayTrongChuyen(2);
-      setHangMuc("an_uong");
-      setWarnings([]);
-    } else if (mockState === "khong_doc_duoc") {
-      setActiveTab("bill");
-      setImagePreviewUrl("/eval/bills/b05_thuc_don_khong_phai_hoa_don.jpg");
-      setSpecialStatus("khong_doc_duoc_so_tien");
-    } else if (mockState === "het_luot") {
-      setActiveTab("bill");
-      setImagePreviewUrl("/eval/bills/b02_cafe.jpg");
-      setSpecialStatus("429");
-    }
-  }, []);
-
-  // Clean up object URL on unmount or change
-  useEffect(() => {
-    return () => {
-      if (imagePreviewUrl && imagePreviewUrl.startsWith("blob:")) {
-        URL.revokeObjectURL(imagePreviewUrl);
-      }
-    };
-  }, [imagePreviewUrl]);
-
-  // Check if user manually modified AI amount
   const daSuaSo = useMemo(() => {
     if (activeTab !== "bill" || giaTriAIDoc === null) return false;
     const currentNum = parseInt(soTienVND.replace(/\D/g, ""), 10);
@@ -239,6 +169,42 @@ export function B10ChonNguonScreen() {
       if (extraction.canhBao && Array.isArray(extraction.canhBao)) {
         setWarnings(extraction.canhBao);
       }
+
+      // Khả năng kết nối đa phương thức: Gắn tự động hóa đơn vào đúng ngày/hạng mục hành trình
+      const matchResult = matchExpenseToPlan(
+        plan,
+        {
+          tenCuaHang: extraction.tenCuaHang,
+          ngay: extraction.ngay,
+          hangMucGoiY: extraction.hangMucGoiY,
+          tongTienVND: extraction.tongTienVND,
+          dongChiTiet: extraction.dongChiTiet,
+        },
+        tickedPlaces
+      );
+
+      if (matchResult.bestMatch) {
+        setMatchedItem(matchResult.bestMatch);
+        setCandidateMatches(matchResult.candidates);
+        if (matchResult.suggestedDay) {
+          setNgayTrongChuyen(matchResult.suggestedDay);
+          if (!extraction.ngay) {
+            setNgay(
+              expenseDateForTripDay(
+                plan?.request.travelDates?.departureDate,
+                matchResult.suggestedDay,
+                new Date()
+              )
+            );
+          }
+        }
+        if (matchResult.suggestedCategory) {
+          setHangMuc(matchResult.suggestedCategory);
+        }
+      } else {
+        setMatchedItem(null);
+        setCandidateMatches([]);
+      }
     } catch {
       setIsReading(false);
       setSpecialStatus("network_error");
@@ -265,6 +231,7 @@ export function B10ChonNguonScreen() {
     e.preventDefault();
     setSubmitError(null);
 
+    if (!Number.isInteger(ngayTrongChuyen) || ngayTrongChuyen < 1 || ngayTrongChuyen > (plan?.request.soNgay || 1)) { setSubmitError("Ngày chi tiêu phải nằm trong chuyến đi."); return; }
     const amount = parseInt(soTienVND.replace(/\D/g, ""), 10);
     if (isNaN(amount) || amount <= 0) {
       setSubmitError("Vui lòng nhập số tiền hợp lệ lớn hơn 0.");
@@ -292,19 +259,14 @@ export function B10ChonNguonScreen() {
 
       if (confirmRes.ok && confirmRes.expense) {
         addExpenseToLedger(confirmRes.expense);
+        if (autoTickMatchedItem && matchedItem?.item?.id) {
+          if (!tickedPlaces[matchedItem.item.id]) {
+            toggleTickPlace(matchedItem.item.id);
+          }
+        }
       } else {
-        addExpenseToLedger({
-          id: `exp-${Date.now()}`,
-          ngayTrongChuyen,
-          ngay,
-          tenCuaHang: tenCuaHang.trim(),
-          hangMuc,
-          soTienVND: amount,
-          nguon: activeTab === "bill" ? "anh_bill" : "nhap_tay",
-          giaTriAIDoc: activeTab === "bill" ? giaTriAIDoc : null,
-          daSuaTay: activeTab === "bill" ? daSuaSo : false,
-          ghiChu: ghiChu.trim() || null,
-        });
+        setSubmitError(confirmRes.error || "Chưa ghi được khoản chi. Hãy kiểm tra thông tin và thử lại.");
+        setIsSubmitting(false); return;
       }
 
       setIsSubmitting(false);
@@ -321,34 +283,11 @@ export function B10ChonNguonScreen() {
     nav("b8-chuyen-di");
   };
 
-  const subTitleText = `Cho: ${tenCuaHang || "Ngũ Hành Sơn"} · Ngày ${ngayTrongChuyen}`;
+  const subTitleText = `Chi tiêu ngày ${ngayTrongChuyen}${tenCuaHang ? ` · ${tenCuaHang}` : ""}`;
 
   return (
     <div style={{ position: "relative", minHeight: "100%", width: "100%" }}>
-      {/* NỀN DIM: Giao diện chuyến đi bên dưới */}
-      <div className="Dim" aria-hidden="true">
-        <B8ChuyenDiScreen />
-      </div>
-
-      {/* OVERLAY MODAL */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "rgba(31, 42, 68, 0.45)",
-          backdropFilter: "blur(3px)",
-          zIndex: 999,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 16,
-        }}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) handleCancel();
-        }}
-        role="dialog"
-        aria-modal="true"
-      >
+      <section className="TripExpenseForm" aria-label="Ghi chi tiêu">
         {/* MODAL B10a: Chọn ảnh bill */}
         {activeTab === "bill" && !imagePreviewUrl && (
           <div className="Modal" style={{ position: "relative", width: 740, maxWidth: "95vw" }}>
@@ -513,12 +452,192 @@ export function B10ChonNguonScreen() {
 
               {/* Cột phải: Form */}
               <div className="Grow">
+                {matchedItem && (
+                  <div
+                    style={{
+                      padding: "12px 14px",
+                      borderRadius: "var(--r-md)",
+                      background: "var(--color-primary-tint)",
+                      border: "1px solid var(--color-border)",
+                      marginBottom: 14,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        marginBottom: 6,
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                          fontSize: 13,
+                          fontWeight: 600,
+                          color: "var(--color-primary)",
+                        }}
+                      >
+                        <Sparkles size={16} />
+                        <span>Tự động khớp với lịch trình AI</span>
+                      </div>
+                      <span
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 700,
+                          padding: "2px 8px",
+                          borderRadius: 999,
+                          background:
+                            matchedItem.score >= 70
+                              ? "var(--color-success-bg)"
+                              : "var(--color-warning-bg)",
+                          color:
+                            matchedItem.score >= 70
+                              ? "var(--color-success-text)"
+                              : "var(--color-warning-text)",
+                        }}
+                      >
+                        {matchedItem.score}% tương đồng
+                      </span>
+                    </div>
+
+                    <div
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: "var(--color-text)",
+                        marginBottom: 4,
+                      }}
+                    >
+                      {matchedItem.item.noiDung}
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: 12,
+                        fontSize: 12,
+                        color: "var(--color-text-sub)",
+                        marginBottom: 8,
+                      }}
+                    >
+                      <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <Calendar size={13} />
+                        Ngày {matchedItem.item.ngay} ({matchedItem.item.gio})
+                      </span>
+                      <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <Tag size={13} />
+                        Dự toán: {matchedItem.item.thanhTien.toLocaleString("vi-VN")} đ
+                      </span>
+                    </div>
+
+                    {matchedItem.matchReasons.length > 0 && (
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
+                        {matchedItem.matchReasons.map((reason, idx) => (
+                          <span
+                            key={idx}
+                            style={{
+                              fontSize: 11,
+                              padding: "2px 8px",
+                              borderRadius: "var(--r-sm)",
+                              background: "var(--color-surface)",
+                              border: "1px solid var(--color-border)",
+                              color: "var(--color-text)",
+                            }}
+                          >
+                            {reason}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <label
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        fontSize: 12,
+                        fontWeight: 500,
+                        color: "var(--color-text)",
+                        cursor: "pointer",
+                        userSelect: "none",
+                        paddingTop: 8,
+                        borderTop: "1px dashed var(--color-border)",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={autoTickMatchedItem}
+                        onChange={(e) => setAutoTickMatchedItem(e.target.checked)}
+                        style={{
+                          width: 15,
+                          height: 15,
+                          accentColor: "var(--color-primary)",
+                          cursor: "pointer",
+                        }}
+                      />
+                      <span>Đánh dấu hoàn thành hoạt động này trong Chuyến đi (B8)</span>
+                    </label>
+
+                    {candidateMatches.length > 1 && (
+                      <div
+                        style={{
+                          marginTop: 8,
+                          fontSize: 12,
+                          color: "var(--color-text-sub)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                        }}
+                      >
+                        <span>Hoặc liên kết mục khác:</span>
+                        <select
+                          value={matchedItem.item.id}
+                          onChange={(e) => {
+                            const chosen = candidateMatches.find((c) => c.item.id === e.target.value);
+                            if (chosen) {
+                              setMatchedItem(chosen);
+                              setNgayTrongChuyen(chosen.item.ngay);
+                              setHangMuc(mapPlanCategoryToExpenseCategory(chosen.item.hangMuc));
+                              setNgay(
+                                expenseDateForTripDay(
+                                  plan?.request.travelDates?.departureDate,
+                                  chosen.item.ngay,
+                                  new Date()
+                                )
+                              );
+                            }
+                          }}
+                          style={{
+                            fontSize: 12,
+                            padding: "2px 8px",
+                            borderRadius: "var(--r-sm)",
+                            border: "1px solid var(--color-border)",
+                            background: "var(--color-surface)",
+                            color: "var(--color-text)",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {candidateMatches.map((c) => (
+                            <option key={c.item.id} value={c.item.id}>
+                              Ngày {c.item.ngay}: {c.item.noiDung} ({c.score}%)
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div className="Field">
                   <div className="FieldLabel">Tên cửa hàng hoặc nội dung</div>
                   <input
                     type="text"
                     className="Input"
-                    value={tenCuaHang}
+                    aria-label="Tên cửa hàng hoặc nội dung" value={tenCuaHang}
                     onChange={(e) => setTenCuaHang(e.target.value)}
                     placeholder="Quán Ăn Phố Cổ"
                   />
@@ -529,8 +648,21 @@ export function B10ChonNguonScreen() {
                   <input
                     type="text"
                     className="Input"
-                    value={ngay}
+                    aria-label="Ngày hóa đơn" value={ngay}
                     onChange={(e) => setNgay(e.target.value)}
+                  />
+                </div>
+
+                <div className="Field">
+                  <label htmlFor="expense-bill-trip-day">Ngày trong chuyến</label>
+                  <input
+                    id="expense-bill-trip-day"
+                    className="Input"
+                    type="number"
+                    min={1}
+                    max={plan?.request.soNgay || 1}
+                    value={ngayTrongChuyen}
+                    onChange={(e) => setNgayTrongChuyen(Number(e.target.value))}
                   />
                 </div>
 
@@ -554,7 +686,7 @@ export function B10ChonNguonScreen() {
                   <input
                     type="text"
                     className="Input InputBig"
-                    value={soTienVND}
+                    aria-label="Số tiền" value={soTienVND}
                     onChange={(e) => setSoTienVND(e.target.value)}
                   />
                   <div className="Hint">
@@ -573,7 +705,7 @@ export function B10ChonNguonScreen() {
                   <input
                     type="text"
                     className="Input"
-                    value={ghiChu}
+                    aria-label="Ghi chú" value={ghiChu}
                     onChange={(e) => setGhiChu(e.target.value)}
                     placeholder="Ghi chú thêm về hóa đơn này..."
                   />
@@ -632,12 +764,56 @@ export function B10ChonNguonScreen() {
               </div>
             )}
 
+            {/* Gợi ý chọn nhanh từ lịch trình (nếu có) */}
+            {plan?.items && plan.items.length > 0 && (
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 12, fontWeight: 500, color: "var(--color-text-sub)", marginBottom: 6 }}>
+                  Chọn nhanh từ hoạt động trong lịch trình:
+                </div>
+                <div style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 4 }}>
+                  {plan.items.slice(0, 8).map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        setTenCuaHang(item.noiDung);
+                        setNgayTrongChuyen(item.ngay);
+                        setHangMuc(mapPlanCategoryToExpenseCategory(item.hangMuc));
+                        setNgay(
+                          expenseDateForTripDay(
+                            plan?.request.travelDates?.departureDate,
+                            item.ngay,
+                            new Date()
+                          )
+                        );
+                        if (item.thanhTien > 0 && !soTienVND) {
+                          setSoTienVND(String(item.thanhTien));
+                        }
+                      }}
+                      style={{
+                        fontSize: 11,
+                        padding: "4px 8px",
+                        borderRadius: "var(--r-sm)",
+                        border: "1px solid var(--color-border)",
+                        background: "var(--color-surface)",
+                        color: "var(--color-primary)",
+                        whiteSpace: "nowrap",
+                        cursor: "pointer",
+                      }}
+                    >
+                      N{item.ngay}: {item.destinationName || item.noiDung.slice(0, 20)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="Field">
               <div className="FieldLabel">Tên cửa hàng hoặc nội dung</div>
               <input
                 type="text"
                 className="Input"
-                value={tenCuaHang}
+                aria-label="Tên cửa hàng hoặc nội dung" value={tenCuaHang}
                 onChange={(e) => setTenCuaHang(e.target.value)}
                 placeholder="Ví dụ: Cà phê view biển"
               />
@@ -648,11 +824,12 @@ export function B10ChonNguonScreen() {
               <input
                 type="text"
                 className="Input"
-                value={ngay}
+                aria-label="Ngày hóa đơn" value={ngay}
                 onChange={(e) => setNgay(e.target.value)}
               />
             </div>
 
+            <div className="Field"><label htmlFor="expense-trip-day">Ngày trong chuyến</label><input id="expense-trip-day" className="Input" type="number" min={1} max={plan?.request.soNgay || 1} value={ngayTrongChuyen} onChange={e=>setNgayTrongChuyen(Number(e.target.value))} /></div>
             <div className="Field">
               <div className="FieldLabel">Hạng mục</div>
               <div className="Chips" style={{ margin: 0 }}>
@@ -673,7 +850,7 @@ export function B10ChonNguonScreen() {
               <input
                 type="text"
                 className="Input InputBig"
-                value={soTienVND}
+                aria-label="Số tiền" value={soTienVND}
                 onChange={(e) => setSoTienVND(e.target.value)}
                 placeholder="0 đ"
               />
@@ -684,7 +861,7 @@ export function B10ChonNguonScreen() {
               <input
                 type="text"
                 className="Input"
-                value={ghiChu}
+                aria-label="Ghi chú" value={ghiChu}
                 onChange={(e) => setGhiChu(e.target.value)}
                 placeholder="Ghi chú thêm về khoản chi..."
               />
@@ -720,7 +897,7 @@ export function B10ChonNguonScreen() {
             </div>
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }

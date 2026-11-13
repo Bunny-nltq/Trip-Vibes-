@@ -1,53 +1,29 @@
 import { NextResponse } from "next/server";
-import { registerUser } from "@/data/authStore";
-
+import crypto from "node:crypto";
+import { RegisterInputSchema } from "@/contracts";
+import { registerUser, createSession, revokeSession, allowAttempt } from "@/data/authStore";
+import { apiError, validOrigin, attachSession, requestToken } from "@/app/api/_auth";
+export const runtime = "nodejs";
 export async function POST(req: Request) {
-  try {
-    let body: any;
+    if (!validOrigin(req))
+        return apiError("Nguồn yêu cầu không hợp lệ.", 403);
     try {
-      body = await req.json();
-    } catch {
-      return NextResponse.json(
-        { ok: false, thanhCong: false, error: "Dữ liệu JSON không hợp lệ.", thongDiep: "Dữ liệu JSON không hợp lệ." },
-        { status: 400 }
-      );
+        const raw = await req.json().catch(() => null);
+        if (!raw || typeof raw !== "object")
+            return apiError("Dữ liệu JSON không hợp lệ.");
+        const input = RegisterInputSchema.safeParse({ ...raw, name: raw.name ?? raw.ten, password: raw.password ?? raw.matKhau });
+        if (!input.success)
+            return apiError("Tên/email không hợp lệ hoặc mật khẩu không đáp ứng yêu cầu.");
+        const key = crypto.createHash("sha256").update(input.data.email.toLowerCase()).digest("hex");
+        if (!allowAttempt("register:" + key) || !allowAttempt("register:global", 100, 60000))
+            return apiError("Thử quá nhiều lần. Vui lòng chờ rồi thử lại.", 429);
+        const result = registerUser(input.data.name, input.data.email, input.data.password);
+        if (!result.ok)
+            return apiError(result.error, 400);
+        revokeSession(requestToken(req));
+        return attachSession(NextResponse.json({ ok: true, thanhCong: true, user: result.user }, { status: 201 }), createSession(result.user.id));
     }
-
-    if (!body || typeof body !== "object") {
-      return NextResponse.json(
-        { ok: false, thanhCong: false, error: "Thiếu dữ liệu yêu cầu.", thongDiep: "Thiếu dữ liệu yêu cầu." },
-        { status: 400 }
-      );
+    catch {
+        return apiError("Máy chủ chưa thể xử lý yêu cầu. Vui lòng thử lại.", 500);
     }
-
-    const name = body.name || body.ten || "";
-    const email = body.email || "";
-    const password = body.password || body.matKhau || "";
-
-    const result = registerUser(name, email, password);
-
-    if (!result.ok) {
-      return NextResponse.json(
-        { ok: false, thanhCong: false, error: result.error, thongDiep: result.error },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      {
-        ok: true,
-        thanhCong: true,
-        user: result.user,
-        message: "Đăng ký tài khoản thành công.",
-        thongDiep: "Đăng ký tài khoản thành công.",
-      },
-      { status: 201 }
-    );
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
-    return NextResponse.json(
-      { ok: false, thanhCong: false, error: msg, thongDiep: msg },
-      { status: 500 }
-    );
-  }
 }

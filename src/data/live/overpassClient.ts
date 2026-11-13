@@ -1,3 +1,4 @@
+import {accommodationType} from "@/core/accommodation";
 /**
  * src/data/live/overpassClient.ts
  *
@@ -465,8 +466,8 @@ export async function fetchKhachSansOSM(
   let b = boundingBox(toaDo, nuaCanhVi);
   let ql = `
 (
-  node["tourism"~"hotel|hostel|guest_house"]["name"](${b.south},${b.west},${b.north},${b.east});
-  way["tourism"~"hotel|hostel|guest_house"]["name"](${b.south},${b.west},${b.north},${b.east});
+  node["tourism"~"hotel|hostel|guest_house|resort|apartment|villa|chalet"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["tourism"~"hotel|hostel|guest_house|resort|apartment|villa|chalet"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
 
   let cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "hotels");
@@ -478,8 +479,8 @@ export async function fetchKhachSansOSM(
     b = boundingBox(toaDo, nuaCanhVi);
     ql = `
 (
-  node["tourism"~"hotel|hostel|guest_house"]["name"](${b.south},${b.west},${b.north},${b.east});
-  way["tourism"~"hotel|hostel|guest_house"]["name"](${b.south},${b.west},${b.north},${b.east});
+  node["tourism"~"hotel|hostel|guest_house|resort|apartment|villa|chalet"]["name"](${b.south},${b.west},${b.north},${b.east});
+  way["tourism"~"hotel|hostel|guest_house|resort|apartment|villa|chalet"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
     cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "hotels");
     elements = await queryOverpass(ql, cacheKey, "khach_san_half", "hotels", toaDo);
@@ -511,6 +512,7 @@ export async function fetchKhachSansOSM(
         : null,
       toaDo: coord,
       loai: "khach_san",
+      accommodationType:accommodationType(tags),
       gioMoCua: null,
       soSao: Number.isNaN(stars) ? null : stars,
       giaUocTinhNguoi: null,
@@ -685,6 +687,9 @@ export async function fetchHoatDongsOSM(
   way["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](${b.south},${b.west},${b.north},${b.east});
   node["natural"="beach"]["name"](${b.south},${b.west},${b.north},${b.east});
   way["natural"="beach"]["name"](${b.south},${b.west},${b.north},${b.east});
+  nwr["historic"~"castle|ruins|monument|archaeological_site"]["name"](${b.south},${b.west},${b.north},${b.east});
+  nwr["leisure"~"park|water_park"]["name"](${b.south},${b.west},${b.north},${b.east});
+  relation["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
 
   let cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "attractions");
@@ -700,6 +705,9 @@ export async function fetchHoatDongsOSM(
   way["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](${b.south},${b.west},${b.north},${b.east});
   node["natural"="beach"]["name"](${b.south},${b.west},${b.north},${b.east});
   way["natural"="beach"]["name"](${b.south},${b.west},${b.north},${b.east});
+  nwr["historic"~"castle|ruins|monument|archaeological_site"]["name"](${b.south},${b.west},${b.north},${b.east});
+  nwr["leisure"~"park|water_park"]["name"](${b.south},${b.west},${b.north},${b.east});
+  relation["tourism"~"attraction|museum|viewpoint|theme_park|gallery"]["name"](${b.south},${b.west},${b.north},${b.east});
 );`;
     cacheKey = getCacheKey(toaDo.lat, toaDo.lng, nuaCanhVi, "attractions");
     elements = await queryOverpass(ql, cacheKey, "hoat_dong_half", "attractions", toaDo);
@@ -718,10 +726,10 @@ export async function fetchHoatDongsOSM(
   return filtered.map((el): HoatDong => {
     const tags = el.tags ?? {};
     const coord = getCoord(el, toaDo);
-    const loaiOsm = tags.tourism ?? tags.natural ?? "attraction";
+    const loaiOsm = tags.tourism ?? tags.historic ?? tags.leisure ?? tags.natural ?? "attraction";
     const nhan: Preference[] = ATTRACTION_NHAN[loaiOsm] ?? ["giai_tri_vui_choi"];
     const ten = tags.name ?? "Điểm tham quan";
-    const fee = tags.fee === "yes" ? 50_000 : 0;
+    const fee = tags.fee === "no" ? 0 : null;
 
     return {
       id: getOsmId(el),
@@ -737,8 +745,9 @@ export async function fetchHoatDongsOSM(
       nguon: getOsmId(el),
       ngayLay,
       doTinCay: "tham_khao",
-      giaLaUocTinh: false,
-      giaVeNguoi: fee,
+      giaLaUocTinh: fee===null,
+      priceKnown:fee!==null,
+      giaVeNguoi: fee??0,
       thoiLuongPhut: loaiOsm === "beach" ? 120 : 90,
       nhan,
       dongNguoi: loaiOsm === "beach" || loaiOsm === "theme_park",

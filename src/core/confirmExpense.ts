@@ -85,7 +85,7 @@ export function confirmExpense(
 
   if (
     input.ngayTrongChuyen !== null &&
-    (input.ngayTrongChuyen < 1 || input.ngayTrongChuyen > 7)
+    (!Number.isSafeInteger(input.ngayTrongChuyen) || input.ngayTrongChuyen < 1)
   ) {
     loi.push("ngay_trong_chuyen_khong_hop_le");
   }

@@ -1,0 +1,46 @@
+.workspace { max-width:var(--ws-wide); margin:auto; padding:var(--ws-section) 0; color:var(--color-text); font-size:var(--ws-body); display:grid; gap:var(--ws-gap); }
+.workspace h1 { font-size:var(--ws-title); font-weight:800; }
+.workspace h2 { font-size:var(--ws-heading); font-weight:700; }
+.workspace p, .workspace small { color:var(--color-text-sub); line-height:1.7; }
+.workspace small { font-size:var(--ws-small); }
+.workspace label { display:grid; gap:var(--ws-smallGap); font-weight:600; }
+.workspace input, .workspace select, .workspace textarea { width:100%; min-width:0; padding:var(--ws-smallGap) var(--ws-gap); border:var(--ws-borderWidth) solid var(--color-border-input); border-radius:var(--ws-controlRadius); background:var(--color-surface); color:var(--color-text); font:inherit; min-height:var(--ws-controlHeight); }
+.workspace button { min-height:var(--ws-controlHeight); padding:var(--ws-smallGap) var(--ws-gap); border:var(--ws-borderWidth) solid var(--color-border); border-radius:var(--ws-controlRadius); background:var(--color-surface); color:var(--color-primary-main); font:inherit; font-weight:600; cursor:pointer; }
+.workspace button:disabled { opacity:.5; cursor:default; }
+.workspace button:focus-visible, .workspace a:focus-visible, .workspace input:focus-visible, .workspace select:focus-visible { outline:var(--ws-focusWidth) solid var(--color-primary-main); outline-offset:var(--ws-focusOffset); }
+.workspace a { color:var(--color-primary-main); }
+.workspace .primary { background:var(--color-primary-main); color:var(--color-primary-text); }
+.row { display:flex; flex-wrap:wrap; align-items:center; gap:var(--ws-smallGap); }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,var(--ws-cardMin)),1fr)); gap:var(--ws-gap); }
+.card { background:var(--color-surface); border:var(--ws-borderWidth) solid var(--color-border); border-radius:var(--ws-radius); padding:var(--ws-section); display:grid; gap:var(--ws-gap); min-width:0; }
+.notice { padding:var(--ws-gap); border-radius:var(--ws-controlRadius); border:var(--ws-borderWidth) solid var(--color-border); background:var(--color-primary-tint); }
+.error { background:var(--color-status-errBg); color:var(--color-status-errText); padding:var(--ws-gap); border-radius:var(--ws-controlRadius); }
+.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,var(--ws-statMin)),1fr)); gap:var(--ws-gap); }
+.stats strong { font-size:var(--ws-heading); }
+.list { display:grid; gap:var(--ws-gap); list-style:none; padding:0; }
+.toolbar { display:flex; flex-wrap:wrap; gap:var(--ws-smallGap); }
+.chrome :global(.Content) { min-width:0; }
+.chrome :global(main) { min-width:0; }
+.chrome :global(.tv-table) { width:100%; }
+@media (max-width:900px) {
+ .chrome :global(.Shell) { display:block; }
+ .chrome :global(.Sidebar) { width:100%; min-width:0; height:auto; position:relative; border-right:0; }
+ .chrome :global(.Sidebar .Nav) { display:flex; flex-wrap:wrap; margin-top:var(--ws-gap) !important; gap:var(--ws-smallGap); }
+ .chrome :global(.Sidebar .NavItem) { width:auto; }
+ .chrome :global(.Content) { padding:var(--ws-gap); width:100%; }
+ .chrome :global(.TopbarFlow) { height:auto; flex-wrap:wrap; padding:var(--ws-smallGap) !important; }
+ .chrome :global(.MainWide), .chrome :global(.Main), .chrome :global(.Row2) { width:100%; max-width:100%; min-width:0; }
+ .chrome :global(.Row2) { display:block; }
+ .chrome :global(.tv-table) { display:block; max-width:100%; overflow-x:auto; }
+}
+
+.chrome { background-image:var(--ws-sceneWash),var(--ws-sceneImage); background-size:cover; background-attachment:fixed; min-height:100vh; }
+.chrome :global(.Content) { background:transparent; padding:var(--ws-section); min-width:0; }
+.chrome :global(.Sidebar) { background:var(--color-surface); padding:var(--ws-section) var(--ws-gap) !important; }
+.chrome :global(.Sidebar .NavItem) { display:flex; align-items:center; gap:var(--ws-smallGap); text-align:left; line-height:1.45; width:100%; padding:var(--ws-gap) var(--ws-smallGap); }
+.chrome :global(.Sidebar .NavItem svg) { flex-shrink:0; }
+.chrome :global(.Sidebar .NavItem span) { flex:1; }
+.chrome :global(.TopbarFlow) { background:transparent; margin-bottom:var(--ws-section); }
+.chrome :global(.DayCard) { border-radius:var(--ws-radius); padding:var(--ws-section); }
+
+.chrome :global([role="button"]:focus-visible) { outline:var(--ws-focusWidth) solid var(--color-primary-main); outline-offset:var(--ws-focusOffset); }

@@ -1,3 +1,7 @@
+import {getHotelPricePerNight} from "@/core/minBudget";
+import {AI_TOOL_RESULT_LIMIT} from "@/core/assumptions";
+import {isDiningVenue, uniqueNamedOsmVenues} from "@/core/venueDiscovery";
+import {foodGroupEstimate,lodgingGroupCost,admissionGroupQuote,perPersonGroupCost} from "@/core/venuePricing";
 import { Type } from "@google/genai";
 import type { DataSource } from "@/data/DataSource";
 import type { LiveDataSource } from "@/data/live/LiveDataSource";
@@ -5,10 +9,6 @@ import type { Selection, Preference, QuanAn, Cafe } from "@/contracts";
 import { calculateTransportFlags } from "@/core/flags";
 import { removeVietnameseDiacritics } from "@/core/normalizeRequest";
 import { buildMapsUrls } from "@/core/maps";
-import {
-  HOTEL_GIA_THEO_SAO,
-  HOTEL_GIA_MAC_DINH,
-} from "@/core/assumptions";
 
 export interface ToolContext {
   dataSource: DataSource;
@@ -234,7 +234,7 @@ export async function executeTimPhuongTien(
     return true;
   });
 
-  return filtered.map((t) => {
+  return filtered.slice(0,AI_TOOL_RESULT_LIMIT).map((t) => {
     const flags = calculateTransportFlags(t.departureTime, t.durationMinutes);
     ctx.seenIds.add(t.id);
     return {
@@ -245,7 +245,7 @@ export async function executeTimPhuongTien(
       gioDen: flags.gioDen,
       thoiLuongPhut: t.durationMinutes,
       giaNguoi: t.pricePerPerson,
-      tongTienChoNhom: t.pricePerPerson * ctx.soNguoi,
+      tongTienChoNhom: perPersonGroupCost(t.pricePerPerson,ctx.soNguoi),
       hangCho: t.seatClass,
       diemDon: t.boardingPoint,
       diemTra: t.dropOffPoint,
@@ -285,33 +285,27 @@ export async function executeTimKhachSan(
       }
       // Kiểm tra giá
       if (args.toiDaGiaDem !== undefined) {
-        const giaDem = h.khoangGiaDemVND
-          ? Math.round((h.khoangGiaDemVND.min + h.khoangGiaDemVND.max) / 2)
-          : h.giaUocTinhNguoi ?? HOTEL_GIA_MAC_DINH;
+        const giaDem=getHotelPricePerNight(h);
         if (giaDem > args.toiDaGiaDem) return false;
       }
       return true;
     });
 
-    return filtered.map((h) => {
+    return filtered.slice(0,AI_TOOL_RESULT_LIMIT).map((h) => {
       ctx.seenIds.add(h.id);
-      const giaDem = h.khoangGiaDemVND
-        ? Math.round((h.khoangGiaDemVND.min + h.khoangGiaDemVND.max) / 2)
-        : h.giaUocTinhNguoi ??
-          (h.soSao !== null && HOTEL_GIA_THEO_SAO[h.soSao]
-            ? HOTEL_GIA_THEO_SAO[h.soSao]
-            : HOTEL_GIA_MAC_DINH);
-      const mapsUrls = buildMapsUrls(h);
+      const giaDem=getHotelPricePerNight(h);
+      const mapsUrls = buildMapsUrls(h,h.khuVuc);
       return {
         id: h.id,
         ten: h.ten,
+        accommodationType:h.accommodationType,
         khuVuc: h.khuVuc,
         soSao: h.soSao,
         giaDem,
         giaLaUocTinh: h.giaLaUocTinh,
         doTinCay: h.doTinCay,
         nguon: h.nguon,
-        tongTienLuuTru: giaDem * ctx.soDem * ctx.soPhong,
+        tongTienLuuTru: lodgingGroupCost(giaDem,ctx.soDem,ctx.soPhong),
         mapsUrls,
         osmId: h.osmId,
       };
@@ -334,7 +328,7 @@ export async function executeTimKhachSan(
     return true;
   });
 
-  return filtered.map((h) => {
+  return filtered.slice(0,AI_TOOL_RESULT_LIMIT).map((h) => {
     ctx.seenIds.add(h.id);
     return {
       id: h.id,
@@ -347,7 +341,7 @@ export async function executeTimKhachSan(
       nguon: h.source ?? null,
       buffetSang: h.includesBreakfast,
       hoBoi: h.hasPool,
-      tongTienLuuTru: h.pricePerNight * ctx.soDem * ctx.soPhong,
+      tongTienLuuTru: lodgingGroupCost(h.pricePerNight,ctx.soDem,ctx.soPhong),
     };
   });
 }
@@ -363,7 +357,7 @@ export async function executeTimQuanAn(
   const liveDS = ctx.liveDataSource;
   if (!liveDS || liveDS.getMode() === "mock") return [];
 
-  const quanAns = await liveDS.getQuanAns();
+  const quanAns = (await liveDS.getQuanAns()).filter(isDiningVenue);
   const filtered = quanAns.filter((q: QuanAn) => {
     if (args.khuVuc) {
       const norm = removeVietnameseDiacritics(q.khuVuc);
@@ -379,18 +373,17 @@ export async function executeTimQuanAn(
     return true;
   });
 
-  return filtered.map((q: QuanAn) => {
+  return filtered.slice(0,AI_TOOL_RESULT_LIMIT).map((q: QuanAn) => {
     ctx.seenIds.add(q.id);
     ctx.validFoodIds.add(q.id);
-    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q.ten + ", Đà Nẵng")}`;
+    const mapsUrl = buildMapsUrls(q,q.khuVuc).xem;
     return {
       id: q.id,
       ten: q.ten,
       khuVuc: q.khuVuc,
       loai: "quan_an",
       amThuc: q.amThuc,
-      giaUocTinhNguoi: q.giaUocTinhNguoi ?? 150_000,
-      tongTienChoNhom: (q.giaUocTinhNguoi ?? 150_000) * ctx.soNguoi,
+      ...foodGroupEstimate(q.giaUocTinhNguoi,ctx.soNguoi,"meal",q.giaLaUocTinh),
       gioMoCua: q.gioMoCua,
       doTinCay: q.doTinCay,
       nguon: q.nguon,
@@ -416,17 +409,16 @@ export async function executeTimCafe(
     return true;
   });
 
-  return filtered.map((c: Cafe) => {
+  return filtered.slice(0,AI_TOOL_RESULT_LIMIT).map((c: Cafe) => {
     ctx.seenIds.add(c.id);
     ctx.validFoodIds.add(c.id);
-    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.ten + ", Đà Nẵng")}`;
+    const mapsUrl = buildMapsUrls(c,c.khuVuc).xem;
     return {
       id: c.id,
       ten: c.ten,
       khuVuc: c.khuVuc,
       loai: "cafe",
-      giaUocTinhNguoi: c.giaUocTinhNguoi ?? 50_000,
-      tongTienChoNhom: (c.giaUocTinhNguoi ?? 50_000) * ctx.soNguoi,
+      ...foodGroupEstimate(c.giaUocTinhNguoi,ctx.soNguoi,"cafe",c.giaLaUocTinh),
       gioMoCua: c.gioMoCua,
       doTinCay: c.doTinCay,
       nguon: c.nguon,
@@ -467,19 +459,20 @@ export async function executeGoiYHoatDong(
       });
     }
 
-    return filtered.map((a) => {
+    return uniqueNamedOsmVenues(filtered).slice(0,AI_TOOL_RESULT_LIMIT).map((a) => {
       ctx.seenIds.add(a.id);
       return {
         id: a.id,
         ten: a.ten,
         khuVuc: a.khuVuc,
-        giaVeNguoi: a.giaVeNguoi,
+        ...admissionGroupQuote(a.giaVeNguoi,a.priceKnown,ctx.soNguoi,a.giaLaUocTinh),
+        venueType:a.venueType,
         thoiLuongPhut: a.thoiLuongPhut,
         nhan: a.nhan,
         dongNguoi: a.dongNguoi,
         diBoNhieu: a.diBoNhieu,
-        tongTienChoNhom: a.giaVeNguoi * ctx.soNguoi,
-        mapsUrls: a.mapsUrls,
+
+        mapsUrls: buildMapsUrls(a,a.khuVuc),
         nguon: a.nguon,
         doTinCay: a.doTinCay,
       };
@@ -507,7 +500,7 @@ export async function executeGoiYHoatDong(
     });
   }
 
-  return filtered.map((a) => {
+  return uniqueNamedOsmVenues(filtered).slice(0,AI_TOOL_RESULT_LIMIT).map((a) => {
     ctx.seenIds.add(a.id);
     return {
       id: a.id,
@@ -518,7 +511,7 @@ export async function executeGoiYHoatDong(
       nhan: a.nhan,
       dongNguoi: a.dongNguoi,
       diBoNhieu: a.diBoNhieu,
-      tongTienChoNhom: a.giaVeNguoi * ctx.soNguoi,
+      tongTienChoNhom: perPersonGroupCost(a.giaVeNguoi,ctx.soNguoi),
     };
   });
 }

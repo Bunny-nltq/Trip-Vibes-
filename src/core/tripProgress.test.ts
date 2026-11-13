@@ -120,35 +120,35 @@ function createFixtureAPlan(): Plan {
 }
 
 describe("src/core/tripProgress.ts", () => {
-  it("gomDiaDiemTheoNgay: trích xuất đúng 4 địa điểm theo từng ngày cho Fixture A", () => {
+  it("gomDiaDiemTheoNgay: giữ đầy đủ 7 hạng mục theo từng ngày cho Fixture A", () => {
     const plan = createFixtureAPlan();
     const theoNgay = gomDiaDiemTheoNgay(plan);
 
     expect(Object.keys(theoNgay)).toHaveLength(3);
-    expect(theoNgay[1]).toHaveLength(1);
-    expect(theoNgay[1][0].id).toBe("act-my-khe");
-    expect(theoNgay[1][0].ten).toBe("Bãi biển Mỹ Khê");
+    expect(theoNgay[1]).toHaveLength(3);
+    expect(theoNgay[1].some(item=>item.id==="act-my-khe")).toBe(true);
+    expect(theoNgay[1].some(item=>item.ten==="Bãi biển Mỹ Khê")).toBe(true);
 
     expect(theoNgay[2]).toHaveLength(2);
     expect(theoNgay[2][0].id).toBe("act-ngu-hanh-son");
     expect(theoNgay[2][1].id).toBe("act-hoi-an");
 
-    expect(theoNgay[3]).toHaveLength(1);
-    expect(theoNgay[3][0].id).toBe("act-ba-na");
+    expect(theoNgay[3]).toHaveLength(2);
+    expect(theoNgay[3].some(item=>item.id==="act-ba-na")).toBe(true);
   });
 
-  describe("tinhTienDo với Fixture A (4 địa điểm)", () => {
+  describe("tinhTienDo với Fixture A (7 hạng mục)", () => {
     const plan = createFixtureAPlan();
     const diaDiem = gomDiaDiemTheoNgay(plan);
 
-    it("Không tick: daDen 0, tong 4, phanTram 0", () => {
+    it("Không tick: daDen 0, tong 7, phanTram 0", () => {
       const res = tinhTienDo(diaDiem, []);
-      expect(res).toEqual({ daDen: 0, tong: 4, phanTram: 0 });
+      expect(res).toEqual({ daDen: 0, tong: 7, phanTram: 0 });
     });
 
-    it("Tick 2 trên 4: daDen 2, tong 4, phanTram 50", () => {
+    it("Tick 2 trên 4: daDen 2, tong 7, phanTram 29", () => {
       const res = tinhTienDo(diaDiem, ["act-my-khe", "act-hoi-an"]);
-      expect(res).toEqual({ daDen: 2, tong: 4, phanTram: 50 });
+      expect(res).toEqual({ daDen: 2, tong: 7, phanTram: 29 });
     });
 
     it("Tick id không tồn tại: bỏ qua id lạ, vẫn chỉ đếm id hợp lệ", () => {
@@ -159,21 +159,21 @@ describe("src/core/tripProgress.ts", () => {
         "id-la-1",
         "id-la-2",
       ]);
-      expect(res).toEqual({ daDen: 2, tong: 4, phanTram: 50 });
+      expect(res).toEqual({ daDen: 2, tong: 7, phanTram: 29 });
 
       // Chỉ tick id không tồn tại
       const resRong = tinhTienDo(diaDiem, ["id-khong-ton-tai"]);
-      expect(resRong).toEqual({ daDen: 0, tong: 4, phanTram: 0 });
+      expect(resRong).toEqual({ daDen: 0, tong: 7, phanTram: 0 });
     });
 
-    it("Tick đủ 4: daDen 4, tong 4, phanTram 100", () => {
+    it("Tick đủ 4: daDen 4, tong 7, phanTram 57", () => {
       const res = tinhTienDo(diaDiem, [
         "act-my-khe",
         "act-ngu-hanh-son",
         "act-hoi-an",
         "act-ba-na",
       ]);
-      expect(res).toEqual({ daDen: 4, tong: 4, phanTram: 100 });
+      expect(res).toEqual({ daDen: 4, tong: 7, phanTram: 57 });
     });
 
     it("Hỗ trợ đối tượng Record<string, boolean> và Set<string>", () => {
@@ -183,14 +183,14 @@ describe("src/core/tripProgress.ts", () => {
         "act-ba-na": true,
         "act-hoi-an": false,
       });
-      expect(resRecord).toEqual({ daDen: 2, tong: 4, phanTram: 50 });
+      expect(resRecord).toEqual({ daDen: 2, tong: 7, phanTram: 29 });
 
       // Dùng Set<string>
       const resSet = tinhTienDo(
         diaDiem,
         new Set(["act-my-khe", "act-ngu-hanh-son", "act-hoi-an", "act-ba-na"])
       );
-      expect(resSet).toEqual({ daDen: 4, tong: 4, phanTram: 100 });
+      expect(resSet).toEqual({ daDen: 4, tong: 7, phanTram: 57 });
     });
   });
 });
