@@ -37,7 +37,7 @@ export function WelcomeScreen() {
           <circle cx="12" cy="13" r="3"/>
         </svg>),
             title: "Theo dõi chi tiêu",
-            sub: "Bóc tách hóa đơn tự động — bạn kiểm tra và xác nhận",
+            sub: "Ghi chi tiêu và đối chiếu với ngân sách dự kiến",
         },
     ];
     return (<div className="Landing" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -165,7 +165,7 @@ export function WelcomeScreen() {
         </button>
 
         <div style={{ marginTop: 28, fontSize: 12, color: "var(--color-light-muted)" }}>
-          Phiên bản thử nghiệm · Nguồn dữ liệu minh bạch · Không lưu giữ ảnh hóa đơn trên đĩa
+          Phiên bản thử nghiệm · Nguồn dữ liệu minh bạch
         </div>
       </main>
     </div>);

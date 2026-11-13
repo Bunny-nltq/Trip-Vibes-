@@ -235,7 +235,7 @@ export const TripRequestSchema = z.object({
   soNgay: z.number().int().positive().safe().max(MAX_STORED_TRIP_DAYS).nullable(),
   soNguoi: z.number().int().nullable(),
   /** Ngân sách tổng tính bằng VND (số nguyên), null nếu thiếu thông tin ngân sách */
-  ngansachTongVND: z.number().int().nullable(),
+  ngansachTongVND: z.number().int().nonnegative().nullable(),
   sothich: z.array(PreferenceSchema),
   tranh: z.array(AvoidanceSchema),
   ghiChu: z.array(z.string()),

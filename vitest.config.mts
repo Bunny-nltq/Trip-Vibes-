@@ -4,7 +4,7 @@ import path from "node:path";
 export default defineConfig({
   test: {
     environment: "node",
-    exclude: ["**/node_modules/**", "Trip_Vibes/**", "**/.next/**"],
+    exclude: ["**/node_modules/**", "Trip_Vibes/**", "**/.next/**", "**/.cache/**"],
     setupFiles: ["./scripts/test-setup.ts"],
   },
   resolve: {

@@ -52,15 +52,7 @@ export default function DemoIndex() {
           <div className="text-sm text-[var(--color-neutral-500)] mt-2">Xem chi tiết &rarr;</div>
         </Link>
         
-        <Link href="/demo/10-b10a-chon-nguon" className="p-4 border rounded-xl hover:border-[var(--color-primary-500)] hover:shadow-md transition-all bg-white">
-          <div className="font-semibold text-lg text-[var(--color-neutral-navy)]">B10a Chọn ảnh bill</div>
-          <div className="text-sm text-[var(--color-neutral-500)] mt-2">Xem chi tiết &rarr;</div>
-        </Link>
         
-        <Link href="/demo/11-b10b-xac-nhan-ket-qua" className="p-4 border rounded-xl hover:border-[var(--color-primary-500)] hover:shadow-md transition-all bg-white">
-          <div className="font-semibold text-lg text-[var(--color-neutral-navy)]">B10b Xác nhận kết quả đọc</div>
-          <div className="text-sm text-[var(--color-neutral-500)] mt-2">Xem chi tiết &rarr;</div>
-        </Link>
         
         <Link href="/demo/12-b10c-nhap-tay" className="p-4 border rounded-xl hover:border-[var(--color-primary-500)] hover:shadow-md transition-all bg-white">
           <div className="font-semibold text-lg text-[var(--color-neutral-navy)]">B10c Nhập tay</div>
@@ -97,10 +89,6 @@ export default function DemoIndex() {
           <div className="text-sm text-[var(--color-neutral-500)] mt-2">Xem chi tiết &rarr;</div>
         </Link>
         
-        <Link href="/demo/19-b10-khong-doc-duoc" className="p-4 border rounded-xl hover:border-[var(--color-primary-500)] hover:shadow-md transition-all bg-white">
-          <div className="font-semibold text-lg text-[var(--color-neutral-navy)]">B10 Không đọc được số tiền</div>
-          <div className="text-sm text-[var(--color-neutral-500)] mt-2">Xem chi tiết &rarr;</div>
-        </Link>
         
         <Link href="/demo/20-b11-lech-ngan-sach" className="p-4 border rounded-xl hover:border-[var(--color-primary-500)] hover:shadow-md transition-all bg-white">
           <div className="font-semibold text-lg text-[var(--color-neutral-navy)]">B11 Lệch ngân sách</div>

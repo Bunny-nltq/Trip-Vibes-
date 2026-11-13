@@ -1,5 +1,4 @@
 import React from "react";
-import "@/app/wireframes.css"; // We will create this
 
 export default function Page_14b1canlamro() {
   return (

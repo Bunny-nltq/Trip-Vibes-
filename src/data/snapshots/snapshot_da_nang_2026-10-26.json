@@ -81,43 +81,6 @@
     {
       "venueType": "guest_house",
       "description": null,
-      "phone": "0905765959",
-      "website": null,
-      "cuisine": null,
-      "wheelchair": "unknown",
-      "addressStatus": "specific",
-      "priceKnown": false,
-      "id": "osm:node:4704794989",
-      "osmId": "osm:node:4704794989",
-      "ten": "VTV",
-      "khuVuc": "Thành phố Đà Nẵng",
-      "diaChi": "183/15/13 Phan Thanh",
-      "toaDo": {
-        "lat": 16.0614403,
-        "lng": 108.2101891
-      },
-      "loai": "khach_san",
-      "gioMoCua": null,
-      "soSao": null,
-      "giaUocTinhNguoi": null,
-      "nguon": "osm:node:4704794989",
-      "ngayLay": "2026-10-26T17:11:49.863Z",
-      "doTinCay": "tham_khao",
-      "giaLaUocTinh": true,
-      "accommodationType": "guest_house",
-      "khoangGiaDemVND": null,
-      "includesBreakfast": false,
-      "hasPool": false,
-      "mapsUrls": {
-        "xem": "https://www.google.com/maps/search/?api=1&query=VTV%2C%20183%2F15%2F13%20Phan%20Thanh%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
-        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=VTV%2C%20183%2F15%2F13%20Phan%20Thanh%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
-        "apple": "https://maps.apple.com/?daddr=VTV%2C%20183%2F15%2F13%20Phan%20Thanh%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng"
-      },
-      "nguonGia": []
-    },
-    {
-      "venueType": "guest_house",
-      "description": null,
       "phone": "+84 969 764 343",
       "website": null,
       "cuisine": null,
@@ -155,43 +118,6 @@
     {
       "venueType": "guest_house",
       "description": null,
-      "phone": null,
-      "website": null,
-      "cuisine": null,
-      "wheelchair": "unknown",
-      "addressStatus": "specific",
-      "priceKnown": false,
-      "id": "osm:node:7143487885",
-      "osmId": "osm:node:7143487885",
-      "ten": "139nguyễn đucedm",
-      "khuVuc": "Thành phố Đà Nẵng",
-      "diaChi": "139 Nguyễn đức chung",
-      "toaDo": {
-        "lat": 16.062815,
-        "lng": 108.2101633
-      },
-      "loai": "khach_san",
-      "gioMoCua": null,
-      "soSao": null,
-      "giaUocTinhNguoi": null,
-      "nguon": "osm:node:7143487885",
-      "ngayLay": "2026-10-26T17:11:49.863Z",
-      "doTinCay": "tham_khao",
-      "giaLaUocTinh": true,
-      "accommodationType": "guest_house",
-      "khoangGiaDemVND": null,
-      "includesBreakfast": false,
-      "hasPool": false,
-      "mapsUrls": {
-        "xem": "https://www.google.com/maps/search/?api=1&query=139nguy%E1%BB%85n%20%C4%91ucedm%2C%20139%20Nguy%C3%AA%CC%83n%20%C4%91%E1%BB%A9c%20chung%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
-        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=139nguy%E1%BB%85n%20%C4%91ucedm%2C%20139%20Nguy%C3%AA%CC%83n%20%C4%91%E1%BB%A9c%20chung%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
-        "apple": "https://maps.apple.com/?daddr=139nguy%E1%BB%85n%20%C4%91ucedm%2C%20139%20Nguy%C3%AA%CC%83n%20%C4%91%E1%BB%A9c%20chung%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng"
-      },
-      "nguonGia": []
-    },
-    {
-      "venueType": "guest_house",
-      "description": null,
       "phone": "02363819525",
       "website": null,
       "cuisine": null,
@@ -223,43 +149,6 @@
         "xem": "https://www.google.com/maps/search/?api=1&query=Ch%E1%BB%8B%20Hoa%2C%2052%20B%E1%BA%AFc%20%C4%90%E1%BA%A9u%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
         "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=Ch%E1%BB%8B%20Hoa%2C%2052%20B%E1%BA%AFc%20%C4%90%E1%BA%A9u%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
         "apple": "https://maps.apple.com/?daddr=Ch%E1%BB%8B%20Hoa%2C%2052%20B%E1%BA%AFc%20%C4%90%E1%BA%A9u%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng"
-      },
-      "nguonGia": []
-    },
-    {
-      "venueType": "hotel",
-      "description": null,
-      "phone": null,
-      "website": null,
-      "cuisine": null,
-      "wheelchair": "unknown",
-      "addressStatus": "missing",
-      "priceKnown": false,
-      "id": "osm:node:4582707890",
-      "osmId": "osm:node:4582707890",
-      "ten": "CaPhe Giai Khat 78",
-      "khuVuc": "Thành phố Đà Nẵng",
-      "diaChi": null,
-      "toaDo": {
-        "lat": 16.0593521,
-        "lng": 108.2084405
-      },
-      "loai": "khach_san",
-      "gioMoCua": null,
-      "soSao": null,
-      "giaUocTinhNguoi": null,
-      "nguon": "osm:node:4582707890",
-      "ngayLay": "2026-10-26T17:11:49.863Z",
-      "doTinCay": "tham_khao",
-      "giaLaUocTinh": true,
-      "accommodationType": "hotel",
-      "khoangGiaDemVND": null,
-      "includesBreakfast": false,
-      "hasPool": false,
-      "mapsUrls": {
-        "xem": "https://www.google.com/maps/search/?api=1&query=CaPhe%20Giai%20Khat%2078%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
-        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=CaPhe%20Giai%20Khat%2078%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
-        "apple": "https://maps.apple.com/?daddr=CaPhe%20Giai%20Khat%2078%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng"
       },
       "nguonGia": []
     },
@@ -1993,5 +1882,5 @@
     "source": "https://api.openstreetmap.org/api/0.6/",
     "queriedAt": "2026-10-26T17:11:49.863Z"
   },
-  "checksum": "f9938c945fc3531cae8184b3fc8e4c8892858bb70f79d8abde2b802673932aa3"
+  "checksum": "c214c4c32fe1253c9fe9c29877ca4d26fb6aed0002a84443285f476ac7d038a4"
 }

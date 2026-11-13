@@ -39,6 +39,7 @@ export function B1ChonNhanhScreen() {
     planStatus,
     planError,
     hardViolations,
+    toiThieuVND,
   } = useApp();
   const conversation = useTravelConversation();
 
@@ -61,7 +62,9 @@ export function B1ChonNhanhScreen() {
   const invalidDateOrder = Boolean(start && end && end < start);
   const planIssueMessage = (() => {
     if (planStatus === "khong_the_dat_ngan_sach") {
-      return "Chưa tìm được lịch trình trong ngân sách đã nhập. Bạn có thể chọn phương tiện khác hoặc rút ngắn chuyến đi.";
+      return toiThieuVND > 0
+        ? `Chưa tìm được lịch trình trong ngân sách đã nhập. Phương án tìm được cần khoảng ${toiThieuVND.toLocaleString("vi-VN")} đ.`
+        : "Chưa tìm được lịch trình trong ngân sách đã nhập. Bạn có thể chọn phương tiện khác hoặc rút ngắn chuyến đi.";
     }
     if (planStatus === "can_lam_ro") {
       return hardViolations.length > 0
@@ -179,7 +182,11 @@ export function B1ChonNhanhScreen() {
                 {error || planIssueMessage}
               </div>
             </div>
-
+            {!error && planStatus === "khong_the_dat_ngan_sach" && toiThieuVND > budget && (
+              <button type="button" className="Btn BtnSmall" onClick={() => setBudget(toiThieuVND)}>
+                Điền mức tối thiểu ({toiThieuVND.toLocaleString("vi-VN")} đ)
+              </button>
+            )}
           </div>
         )}
 

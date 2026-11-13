@@ -29,6 +29,22 @@ import {
 import { getHotelImage, getActivityImage } from "@/ui/lib/imageMap";
 
 const fmt = (n: number) => n.toLocaleString("vi-VN") + " đ";
+const accommodationLabels: Record<NonNullable<HotelOptionItem["accommodationType"]>, string> = {
+  hotel: "Khách sạn",
+  resort: "Khu nghỉ dưỡng",
+  villa: "Biệt thự",
+  homestay: "Homestay",
+  apartment: "Căn hộ dịch vụ",
+  guest_house: "Nhà khách",
+  unknown: "Chỗ ở",
+};
+const reliabilityLabels: Record<NonNullable<HotelOptionItem["doTinCay"]>, string> = {
+  xac_minh: "Đã xác minh",
+  uoc_tinh: "Ước tính",
+  tham_khao: "Tham khảo",
+  mau: "Dữ liệu mẫu",
+  nguoi_dung_nhap: "Người dùng nhập",
+};
 
 export function B5KhachSanScreen() {
   const { nav, plan, editContext, setPreviewData } = useApp();
@@ -379,15 +395,18 @@ export function B5KhachSanScreen() {
                               ))}
                             </span>
                           ) : (
-                            <span>Khách sạn</span>
+                            <span>{accommodationLabels[h.accommodationType ?? "unknown"]}</span>
                           )}
                           <span>· Khu vực {h.khuVuc || getDiemDenTen(plan?.request.diemDen) || "Trung tâm"}</span>
                         </div>
                         <div style={{ fontSize: 12, color: "var(--g700)", display: "flex", gap: 12, flexWrap: "wrap", marginTop: 4 }}>
-                          <span>Buffet: <b>{h.includesBreakfast ? "Đã gồm" : "Tự túc"}</b></span>
-                          <span>Hồ bơi: <b>{h.hasPool ? "Có" : "Không"}</b></span>
-                          {h.doTinCay && <span>Độ tin cậy: <b>{h.doTinCay}</b></span>}
+                          <span>Bữa sáng: <b>{h.includesBreakfast ? "Đã gồm" : "Chưa xác minh"}</b></span>
+                          <span>Hồ bơi: <b>{h.hasPool ? "Có" : "Chưa xác minh"}</b></span>
+                          {h.doTinCay && <span>Độ tin cậy: <b>{reliabilityLabels[h.doTinCay]}</b></span>}
                         </div>
+                        {h.nguon && (
+                          <small>Nguồn: {h.nguon.startsWith("osm:") ? "OpenStreetMap" : h.nguon}{h.ngayLay && ` · ${h.ngayLay.slice(0, 10)}`}</small>
+                        )}
 
                         {h.praised && h.praised.length > 0 && (
                           <div className="said" style={{ marginTop: 12 }}>
@@ -411,7 +430,7 @@ export function B5KhachSanScreen() {
 
                       <div style={{ textAlign: "right", minWidth: 160, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
                         <div style={{ fontSize: 20, fontWeight: 800, color: isSelected ? "var(--p500)" : "var(--navy)" }}>
-                          {fmt(h.giaMotDem)} <span style={{ fontSize: 12, fontWeight: 400, color: "var(--g500)" }}>/đêm/phòng</span>
+                          {fmt(h.giaMotDem)} <span style={{ fontSize: 12, fontWeight: 400, color: "var(--g500)" }}>/đêm/phòng · ước tính</span>
                         </div>
                         <div style={{ fontSize: 12, color: "var(--g500)", marginTop: 2 }}>
                           {soDem} đêm ({soPhong} phòng): <b>{fmt(totalStay)}</b>

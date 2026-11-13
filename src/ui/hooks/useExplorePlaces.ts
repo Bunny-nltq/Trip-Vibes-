@@ -5,6 +5,7 @@ export function useExplorePlaces(destination: string, kind: "activity" | "restau
     const [places, setPlaces] = useState<PlaceSuggestion[]>([]), [loading, setLoading] = useState(true), [error, setError] = useState("");
     useEffect(() => {
         const controller = new AbortController();
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Bắt đầu truy vấn mới khi điểm đến thay đổi.
         setLoading(true);
         setError("");
         setPlaces([]);

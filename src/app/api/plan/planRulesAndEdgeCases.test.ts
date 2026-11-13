@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { POST as planPost } from "./route";
 import { POST as parseRequestPost } from "../parse-request/route";
-import { POST as extractBillPost } from "../extract-bill/route";
 import { POST as planRegeneratePost } from "./regenerate/route";
 import { GET as aiPingGet } from "../ai-ping/route";
 
@@ -27,24 +26,6 @@ describe("Kiểm tra API Lập kế hoạch bằng Quy tắc & Ca biên (Không 
         body: JSON.stringify({ text: "tôi muốn đi Hà Nội 3 ngày" }),
       });
       const res = await parseRequestPost(req);
-      expect(res.status).toBe(503);
-      const data = await res.json();
-      expect(data.ok).toBe(false);
-      expect(data.maLoi).toBe("ai_tat");
-
-      const bodyStr = JSON.stringify(data);
-      expect(bodyStr).not.toContain(".env");
-      expect(bodyStr).not.toContain("GEMINI_API_KEY");
-    });
-
-    it("/api/extract-bill trả 503 ai_tat, không rò rỉ .env hay GEMINI_API_KEY", async () => {
-      const formData = new FormData();
-      formData.append("image", new Blob(["fake-image"], { type: "image/jpeg" }));
-      const req = new Request("http://localhost:3000/api/extract-bill", {
-        method: "POST",
-        body: formData,
-      });
-      const res = await extractBillPost(req);
       expect(res.status).toBe(503);
       const data = await res.json();
       expect(data.ok).toBe(false);

@@ -9,11 +9,6 @@ export const SidebarContext = React.createContext<boolean>(false);
 export function SideNav() {
   const isInsideOuterSidebar = React.useContext(SidebarContext);
   const { screen, nav, user, logoutUser } = useApp();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Ngăn chặn nhân đôi sidebar khi component con gọi tiếp <SideNav /> bên trong main shell
   if (isInsideOuterSidebar) {
@@ -132,7 +127,7 @@ export function SideNav() {
         }}
         suppressHydrationWarning
       >
-        {mounted && user ? (
+        {user ? (
           <div
             style={{
               display: "flex",

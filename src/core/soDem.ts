@@ -10,7 +10,7 @@
 
 export function soDemOKhachSan(
   soNgay: number,
-  gioDenTuyetDoiPhut: number
+  gioDenTuyetDoiPhut: number = 0
 ): number {
   if (soNgay <= 0) return 0;
   return Math.max(0, soNgay - (Math.floor(gioDenTuyetDoiPhut / 1440) + 1));

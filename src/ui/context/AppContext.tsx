@@ -426,6 +426,7 @@ export function AppProvider({ children, initialScreen, initialMau, initialDest, 
     const history = usePlanHistory(restored?.plan ?? null);
     useEffect(() => { if (templateKey && template.plan && !history.current) {
         history.init(template.plan);
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Đồng bộ bản nháp khi lịch trình mẫu tải xong.
         setTripConfigState({ travelDates:template.plan.request.travelDates,transportMode:template.plan.request.transportMode,localTransportMode:template.plan.request.localTransportMode,diemDi: template.plan.request.diemDi, diemDen: template.plan.request.diemDen, soNgay: template.plan.request.soNgay || 1, people: template.plan.request.soNguoi || 1, budget: template.plan.request.ngansachTongVND || 0, avoids: template.plan.request.tranh, note: template.plan.request.ghiChu.join(", ") });
     } }, [templateKey, template.plan, history]);
     useEffect(() => {
@@ -436,6 +437,7 @@ export function AppProvider({ children, initialScreen, initialMau, initialDest, 
     }, [planState.plan, history]);
     useEffect(() => {
         if (initialScreen && ALL_SCREENS.includes(initialScreen as Screen)) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- Đồng bộ với tham số tuyến đường mới từ Next.js.
             setScreen(initialScreen as Screen);
         }
     }, [initialScreen]);
@@ -567,6 +569,7 @@ export function AppProvider({ children, initialScreen, initialMau, initialDest, 
     }, [executePlanRequest, tripConfig, adoptPlan]);
     useEffect(() => { if (history.current?.items.some(item => item.noiDung === "QA Cafe")) {
         history.clear();
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Xóa sổ chi cùng bản nháp cũ khi khôi phục phiên.
         setLedger(createLedger());
         setTickedPlaces({});
         setActiveSavedTrip(null);
@@ -648,7 +651,8 @@ export function AppProvider({ children, initialScreen, initialMau, initialDest, 
     }, [user]);
     useEffect(() => {
         if (user) {
-            refreshSavedTrips();
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- Tải dữ liệu SQLite qua API khi phiên đăng nhập thay đổi.
+            void refreshSavedTrips();
         }
     }, [user, refreshSavedTrips]);
     const loginUser = useCallback(async (email: string, pass: string) => {

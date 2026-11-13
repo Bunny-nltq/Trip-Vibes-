@@ -16,12 +16,12 @@ const FAQS = [
     a: "Trip Vibes là công cụ hỗ trợ bạn xây dựng kế hoạch du lịch dựa trên ngân sách thực tế. Bạn chỉ cần chọn điểm đến, số ngày (tự chọn), số người và mức tiền dự kiến; hệ thống sẽ tự động phân bổ chi phí phương tiện, khách sạn, ăn uống và gợi ý các điểm tham quan phù hợp từ OpenStreetMap.",
   },
   {
-    q: "Làm thế nào để ghi nhận chi tiêu từ hóa đơn?",
-    a: "Tại mục 'Nhật ký chuyến đi' (màn hình B8), chuyển sang tab 'Chi tiêu' và chọn 'Thêm khoản chi' -> 'Quét hóa đơn'. Bạn chỉ cần tải lên ảnh hóa đơn (JPEG/PNG dưới 5MB). AI sẽ tự động đọc tên cửa hàng, ngày và số tiền để bạn xác nhận trước khi lưu vào sổ.",
+    q: "Làm thế nào để ghi nhận chi tiêu?",
+    a: "Trong chuyến đi, mở Ghi chi tiêu hoặc chọn Thêm chi tiêu trong Ngân sách thực tế. Nhập nội dung, ngày, hạng mục và số tiền rồi bấm Ghi chi tiêu.",
   },
   {
-    q: "Dữ liệu hóa đơn và chi tiêu của tôi có bị lộ không?",
-    a: "Tuyệt đối không! Ảnh hóa đơn chỉ được xử lý tạm thời trên bộ nhớ RAM để trích xuất số liệu và được giải phóng ngay sau đó. Hệ thống không lưu trữ tệp ảnh trên máy chủ và không thu thập bất kỳ thông tin cá nhân nào.",
+    q: "Khoản chi được lưu ở đâu?",
+    a: "Ở chế độ khách, khoản chi được lưu trong trình duyệt trên thiết bị này. Khi lưu chuyến đi vào tài khoản, sổ chi tiêu được lưu cùng chuyến đi.",
   },
   {
     q: "Tại sao tôi thấy cờ cảnh báo 'Thời gian di chuyển dài'?",
@@ -29,7 +29,7 @@ const FAQS = [
   },
   {
     q: "Giá hiển thị trên ứng dụng có phải là giá chốt khi đặt thực tế?",
-    a: "Không. Mọi mức giá trên Trip Vibes đều là 'Giá ước tính' dựa trên dữ liệu tham khảo và mức giá trung bình của các khách sạn theo phân khúc sao hoặc quán ăn. Khi đi du lịch thực tế, bạn sẽ ghi nhận số tiền thật qua tính năng Quét hóa đơn để theo dõi độ lệch ngân sách.",
+    a: "Không. Mọi mức giá trên Trip Vibes đều là 'Giá ước tính' dựa trên dữ liệu tham khảo và mức giá trung bình của các khách sạn theo phân khúc sao hoặc quán ăn. Khi đi du lịch thực tế, bạn sẽ ghi nhận số tiền thật trong sổ chi tiêu để theo dõi độ lệch ngân sách.",
   },
 ];
 
@@ -192,9 +192,9 @@ export function TroGiupScreen() {
               >
                 4
               </div>
-              <strong style={{ fontSize: 15, color: "var(--color-text)" }}>Ghi sổ & Quét hóa đơn</strong>
+              <strong style={{ fontSize: 15, color: "var(--color-text)" }}>Ghi sổ chi tiêu</strong>
               <p style={{ margin: 0, fontSize: 13, color: "var(--color-text-sub)", lineHeight: 1.5 }}>
-                Tải ảnh bill bữa ăn hoặc vé xe; AI đọc số tiền để bạn đối soát tiến độ ngân sách thực tế.
+                Nhập tiền bữa ăn, vé xe hoặc các khoản chi khác để đối chiếu với ngân sách dự kiến.
               </p>
             </div>
           </div>

@@ -125,7 +125,7 @@ export function GioiHanScreen() {
               <strong style={{ fontSize: 15, color: "var(--color-text)" }}>Bảo mật dữ liệu bill</strong>
             </div>
             <p style={{ margin: 0, fontSize: 14, color: "var(--color-text-sub)", lineHeight: 1.5 }}>
-              Ảnh hóa đơn chỉ xử lý trong bộ nhớ RAM, không lưu xuống ổ đĩa, không ghi log nhạy cảm.
+              Các khoản chi được ghi theo thông tin bạn nhập.
             </p>
           </div>
         </div>
@@ -181,7 +181,7 @@ export function GioiHanScreen() {
               </p>
               <ul style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: 8 }}>
                 <li><strong>Không đặt vé thật hay phòng khách sạn thật:</strong> Ứng dụng cung cấp kế hoạch tham khảo, không tích hợp cổng đặt phòng trực tiếp.</li>
-                <li><strong>Không xử lý thanh toán tiền thật:</strong> Hệ thống không yêu cầu thẻ tín dụng hay tài khoản ngân hàng. Tính năng quét bill chỉ nhằm ghi chép vào sổ chi tiêu cá nhân.</li>
+                <li><strong>Không xử lý thanh toán tiền thật:</strong> Hệ thống không yêu cầu thẻ tín dụng hay tài khoản ngân hàng. Sổ chi tiêu dùng để ghi lại các khoản đã chi.</li>
                 <li><strong>Không tư vấn pháp lý xuất nhập cảnh hay visa:</strong> Người dùng cần tự kiểm tra quy định visa chính thức khi du lịch nước ngoài (Bangkok, Seoul).</li>
                 <li><strong>Không nhúng bản đồ tương tác khi chưa có thỏa thuận cấp phép ô bản đồ (Map Tiles):</strong> Ứng dụng cung cấp liên kết ngoài mở chỉ đường trên Google Maps / Apple Maps.</li>
               </ul>
@@ -200,16 +200,11 @@ export function GioiHanScreen() {
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
               <ShieldCheck size={22} color="var(--color-status-success)" />
               <h2 style={{ fontSize: 20, fontWeight: 700, margin: 0, color: "var(--color-text)" }}>
-                3. Xử lý hóa đơn & Bảo vệ quyền riêng tư
+                3. Chi tiêu và quyền riêng tư
               </h2>
             </div>
             <ul style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: 10, lineHeight: 1.6, color: "var(--color-text-sub)" }}>
-              <li>
-                <strong style={{ color: "var(--color-text)" }}>Xử lý hoàn toàn trong bộ nhớ (In-memory buffer):</strong> Khi tải ảnh hóa đơn chi tiêu lên, tệp ảnh chỉ được lưu tạm trong bộ nhớ RAM phục vụ trích xuất và bị hủy ngay lập tức, không bao giờ lưu trữ vào đĩa cứng máy chủ.
-              </li>
-              <li>
-                <strong style={{ color: "var(--color-text)" }}>Xác nhận của người dùng:</strong> Mọi số tiền bóc tách được từ hóa đơn luôn hiển thị để người dùng kiểm tra và bấm nút xác nhận trước khi được lưu vào sổ chi tiêu.
-              </li>
+              <li>Kiểm tra nội dung, ngày và số tiền trước khi ghi khoản chi.</li>
               <li>
                 <strong style={{ color: "var(--color-text)" }}>Chế độ khách (Guest mode):</strong> Người dùng không cần tạo tài khoản hay đăng nhập. Mọi dữ liệu hành trình được lưu trữ an toàn trong trình duyệt cục bộ (Local Storage).
               </li>

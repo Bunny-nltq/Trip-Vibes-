@@ -1,15 +1,16 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { AlertCircle, Eye, EyeOff, Mountain } from "lucide-react";
 import authStyles from "./AuthPanel.module.css";
 
 export { authStyles };
 
-export function AuthPanel({ title, subtitle, error, children, onSwitch, switchLabel, onContinue }: {
+export function AuthPanel({ title, subtitle, error, children, switchTo, switchLabel, onContinue }: {
   title: string;
   subtitle: string;
   error: string | null;
   children: ReactNode;
-  onSwitch: () => void;
+  switchTo: "login" | "register";
   switchLabel: string;
   onContinue: () => void;
 }) {
@@ -21,7 +22,7 @@ export function AuthPanel({ title, subtitle, error, children, onSwitch, switchLa
       {error && <p role="alert" className={authStyles.error}><AlertCircle size={18} /> {error}</p>}
       {children}
       <div className={authStyles.links}>
-        <button type="button" onClick={onSwitch}>{switchLabel}</button>
+        <Link href={`/lap-ke-hoach?screen=${switchTo}`}>{switchLabel}</Link>
         <button type="button" onClick={onContinue}>Tiếp tục với tư cách khách</button>
       </div>
     </section>

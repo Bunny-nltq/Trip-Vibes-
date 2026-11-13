@@ -28,5 +28,5 @@
 .submit { display: flex; justify-content: center; align-items: center; gap: var(--home-smallSpace); min-height: var(--home-controlHeight); border-radius: var(--home-pill); color: var(--home-white); background: var(--home-blue); font-weight: 700; }
 .submit:disabled { opacity: .7; cursor: wait; }
 .links { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--home-smallSpace); margin-top: var(--home-space); padding-top: var(--home-space); border-top: var(--home-rule) solid var(--home-line); }
-.links button { color: var(--home-blue); text-align: left; }
+.links button, .links a { color: var(--home-blue); text-align: left; }
 .error { display: flex; align-items: center; gap: var(--home-smallSpace); margin-top: var(--home-space); padding: var(--home-smallSpace); border-radius: var(--home-space); background: var(--home-pink); color: var(--home-ink); }

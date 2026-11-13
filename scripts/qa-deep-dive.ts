@@ -412,7 +412,7 @@ async function runQa() {
   console.log("\n--- [4] KIỂM THỬ THUẬT TOÁN KẾ HOẠCH & TÍNH TIỀN ---");
 
   // 4.1 Chuyến đi 1 ngày: Số đêm ở khách sạn phải bằng 0 và không tính tiền phòng
-  const nights1Day = soDemOKhachSan(1);
+  const nights1Day = soDemOKhachSan(1, 0);
   if (nights1Day === 0) {
     record("Planning Core", "Chuyến đi 1 ngày có số đêm lưu trú = 0", "PASS", "soDem = 0 chính xác");
   } else {
@@ -420,8 +420,8 @@ async function runQa() {
   }
 
   // 4.2 Chuyến đi 3 ngày -> 2 đêm; 5 ngày -> 4 đêm
-  const nights3Days = soDemOKhachSan(3);
-  const nights5Days = soDemOKhachSan(5);
+  const nights3Days = soDemOKhachSan(3, 0);
+  const nights5Days = soDemOKhachSan(5, 0);
   if (nights3Days === 2 && nights5Days === 4) {
     record("Planning Core", "Tính số đêm chuẩn (soNgay - 1)", "PASS", "3 ngày 2 đêm, 5 ngày 4 đêm");
   } else {
@@ -429,7 +429,27 @@ async function runQa() {
   }
 
   // 4.3 Kế hoạch Đà Nẵng 3 ngày bằng thuật toán tự động
-  const daNangCandidates = getSnapshotDiemDen("da-nang");
+  const { LiveDataSource } = await import("../src/data/live/LiveDataSource");
+  const daNangDiemDen = getSnapshotDiemDen("da-nang") || {
+    ten: "Đà Nẵng",
+    quocGia: "Việt Nam",
+    maQuocGia: "VN",
+    toaDo: { lat: 16.0544, lng: 108.2022 },
+    tienTe: "VND",
+    nguon: "danh_sach_co_dinh",
+    ngayLay: "2026-10-20",
+  };
+  const ds = new LiveDataSource("snapshot", undefined, daNangDiemDen);
+  const [transports, hotels, activities, khachSans, quanAns, cafes, hoatDongs] = await Promise.all([
+    ds.getTransports(),
+    ds.getHotels(),
+    ds.getActivities(),
+    ds.getKhachSans(),
+    ds.getQuanAns(),
+    ds.getCafes(),
+    ds.getHoatDongs(),
+  ]);
+  const daNangCandidates = { transports, hotels, activities, khachSans, quanAns, cafes, hoatDongs };
   if (daNangCandidates) {
     const daNangReq: any = {
       schemaVersion,
@@ -665,15 +685,14 @@ async function runQa() {
 
   const matchedReceipt = matchExpenseToPlan(samplePlanForMatch, {
     tenCuaHang: "Quán Cơm Gà Đà Nẵng",
-    hangMuc: "an_uong",
-    soTienVND: 120_000,
-    ngay: 1,
+    hangMucGoiY: "an_uong",
+    tongTienVND: 120_000,
   });
 
-  if (matchedReceipt.matchedItemId === "item_lunch_d1" && matchedReceipt.matchedDay === 1) {
+  if (matchedReceipt.bestMatch?.item.id === "item_lunch_d1" && matchedReceipt.bestMatch?.item.ngay === 1) {
     record("Expense & OCR", "Thuật toán khớp hóa đơn tự động nhận diện đúng hoạt động và ngày", "PASS", "Khớp chính xác item_lunch_d1 ngày 1");
   } else {
-    record("Expense & OCR", "Thuật toán khớp hóa đơn tự động nhận diện đúng hoạt động và ngày", "FAIL", `Khớp sai: ${matchedReceipt.matchedItemId}`);
+    record("Expense & OCR", "Thuật toán khớp hóa đơn tự động nhận diện đúng hoạt động và ngày", "FAIL", `Khớp sai: ${matchedReceipt.bestMatch?.item.id ?? "none"}`);
   }
 
   // 7.3 OCR hóa đơn: Xử lý dữ liệu trong bộ nhớ (In-memory verification)
@@ -731,8 +750,8 @@ async function runQa() {
     },
   ];
 
-  const stats = tripStatistics(statsTrips);
-  if (stats.completedTrips === 1 && stats.totalTrips === 2 && stats.totalSpentVND === 4_800_000) {
+  const stats = tripStatistics(statsTrips as any);
+  if (stats.completed === 1 && stats.total === 2 && stats.actual === 4_800_000) {
     record("Statistics & Personalization", "Thống kê chuyến đi và tổng chi thực tế chính xác", "PASS", "2 chuyến (1 hoàn thành, 1 đã lên kế hoạch), tổng chi 4.8 triệu đ");
   } else {
     record("Statistics & Personalization", "Thống kê chuyến đi và tổng chi thực tế chính xác", "FAIL", `Sai thống kê: ${JSON.stringify(stats)}`);

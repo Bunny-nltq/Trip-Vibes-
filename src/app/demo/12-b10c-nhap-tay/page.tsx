@@ -1,5 +1,4 @@
 import React from "react";
-import "@/app/wireframes.css"; // We will create this
 
 export default function Page_12b10cnhaptay() {
   return (
@@ -20,7 +19,7 @@ export default function Page_12b10cnhaptay() {
 <div className="Info"><div className="InfoTitle">Phố cổ Hội An</div><div className="InfoSub">4 giờ</div></div>
 <div className="Amount">240.000 đ<span className="AmountSub">10 phút tới điểm kế</span></div><div className="Action" style={{"width": "110px"}}><div className="Btn BtnSmall">Chỉ đường</div></div></div></div>
 <div className="Hint">Tick khi bạn đã đến một địa điểm. Bạn có thể bỏ tick nếu bấm nhầm.</div></div><div className="Side"><div className="BudgetSummary"><div className="Label">Ngân sách còn lại</div><div className="Big">2.584.000 đ</div><div className="BigSub">Đã chi thực tế 1.296.000 đ</div>
-<div className="BarTrack"><div className="BarFill" style={{"width": "13%"}}></div></div><div className="Divider" style={{"marginTop": "16px"}}></div><div className="Link">Xem chi tiết ngân sách</div></div></div></div></div><div className="Modal" style={{"left": "350px", "top": "90px", "width": "740px"}}><div className="ModalTitle">Thêm chi tiêu</div><div className="Sub">Cho: Ngũ Hành Sơn · Ngày 2</div><div className="Tabs"><div className="Tab">Ảnh bill</div><div className="Tab TabOn">Nhập tay</div></div>
+<div className="BarTrack"><div className="BarFill" style={{"width": "13%"}}></div></div><div className="Divider" style={{"marginTop": "16px"}}></div><div className="Link">Xem chi tiết ngân sách</div></div></div></div></div><div className="Modal" style={{"left": "350px", "top": "90px", "width": "740px"}}><div className="ModalTitle">Thêm chi tiêu</div><div className="Sub">Cho: Ngũ Hành Sơn · Ngày 2</div><div className="Tabs"><div className="Tab">Nhập tay</div><div className="Tab TabOn">Nhập tay</div></div>
 <div className="Field"><div className="FieldLabel">Tên cửa hàng hoặc nội dung</div><div className="Input">Ví dụ: Cà phê view biển</div></div>
 <div className="Field"><div className="FieldLabel">Ngày</div><div className="Input">22/09/2026</div></div>
 <div className="Field"><div className="FieldLabel">Hạng mục</div><div className="Chips" style={{"margin": "0"}}><div className="Chip ChipOn">Ăn uống</div><div className="Chip">Vui chơi</div><div className="Chip">Di chuyển</div><div className="Chip">Chỗ ở</div><div className="Chip">Khác</div></div></div>

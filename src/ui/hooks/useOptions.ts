@@ -10,7 +10,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-import type { DiemDen } from "@/contracts";
+import type { AccommodationTypeSchema, DiemDen, DoTinCay } from "@/contracts";
+import type { z } from "zod";
 
 export interface TransportOption {
   id: string;
@@ -40,8 +41,10 @@ export interface HotelOptionItem {
   giaMotDem: number;
   includesBreakfast: boolean;
   hasPool: boolean;
+  accommodationType?: z.infer<typeof AccommodationTypeSchema>;
   nguon?: string | null;
-  doTinCay?: string;
+  ngayLay?: string;
+  doTinCay?: DoTinCay;
   giaLaUocTinh?: boolean;
   praised?: string[];
   watchOut?: string[];

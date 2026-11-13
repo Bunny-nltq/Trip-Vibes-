@@ -62,7 +62,7 @@ function DevTools() {
     { id: "b7-xac-nhan", label: "B7 · Xác nhận" },
     { id: "b8-chuyen-di", label: "B8 · Chuyến đi" },
     { id: "b9-chi-duong", label: "B9 · Chỉ đường" },
-    { id: "b10-chon-nguon", label: "B10 · Đọc bill / Chi tiêu" },
+    { id: "b10-chon-nguon", label: "B10 · Ghi chi tiêu" },
     { id: "b11-ngan-sach", label: "B11 · Sổ ngân sách" },
   ] as const;
 

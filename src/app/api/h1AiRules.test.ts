@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { POST as postParseRequest } from "./parse-request/route";
-import { POST as postExtractBill } from "./extract-bill/route";
 import { POST as postPlanRegenerate } from "./plan/regenerate/route";
 import {
   quyetDinhGoiParse,
@@ -33,24 +32,6 @@ describe("H1: Kiểm thử an toàn API AI và các hàm thuần", () => {
     });
 
     const res = await postParseRequest(req);
-    expect(res.status).toBe(503);
-
-    const body = await res.json();
-    expect(body.ok).toBe(false);
-    expect(body.maLoi).toBe("ai_tat");
-
-    const raw = JSON.stringify(body);
-    expect(raw).not.toContain(".env");
-    expect(raw).not.toContain("GEMINI_API_KEY");
-  });
-
-  it("extract-bill: khi LIVE_AI_ENABLED không đặt trả HTTP 503, maLoi 'ai_tat', không rò rỉ .env hay GEMINI_API_KEY", async () => {
-    const req = new Request("http://localhost/api/extract-bill", {
-      method: "POST",
-      body: new FormData(),
-    });
-
-    const res = await postExtractBill(req);
     expect(res.status).toBe(503);
 
     const body = await res.json();

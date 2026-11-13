@@ -12,14 +12,14 @@ const eslintConfig = defineConfig([
         "warn",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
-      "react-hooks/set-state-in-effect": "warn",
-      "react-hooks/purity": "warn",
     },
   },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    ".cache/**",
+    "eval/.cache/**",
     "out/**",
     "build/**",
     "next-env.d.ts",

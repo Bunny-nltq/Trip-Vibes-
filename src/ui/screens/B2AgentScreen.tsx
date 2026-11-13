@@ -132,7 +132,7 @@ export function B2AgentScreen() {
 
   const handleCancel = () => {
     cancelPrepare();
-    abortPlan();
+    if (!isPlanIssue) abortPlan();
     if (window.history.state?.tripVibesPlanningEntry) window.history.back();
     else nav("b1-chon-nhanh");
   };
@@ -140,11 +140,11 @@ export function B2AgentScreen() {
   useEffect(() => {
     function cancelOnBack() {
       const target = new URLSearchParams(window.location.search).get("screen");
-      if (target !== "b2-dang-chay") abortPlan();
+      if (target !== "b2-dang-chay" && !isPlanIssue) abortPlan();
     }
     window.addEventListener("popstate", cancelOnBack);
     return () => window.removeEventListener("popstate", cancelOnBack);
-  }, [abortPlan]);
+  }, [abortPlan, isPlanIssue]);
 
   // Tính phần trăm tiến trình Bước B
   const pct =
@@ -390,6 +390,15 @@ export function B2AgentScreen() {
             >
               ← Quay lại chỉnh lịch trình
             </button>
+            {planStatus === "khong_the_dat_ngan_sach" && toiThieuVND > (tripConfig.budget || 0) && (
+              <button type="button" className="Btn BtnPrimary BtnSmall" onClick={() => {
+                const budget = toiThieuVND;
+                setTripConfig({ budget });
+                void executePlan({ ...tripConfig, budget });
+              }}>
+                Áp dụng mức tối thiểu &amp; Tạo lại lịch trình
+              </button>
+            )}
             {planStatus === "khong_the_dat_ngan_sach" && alternatives.length === 0 && tripConfig.transportMode && tripConfig.transportMode !== "auto" && (
               <button type="button" className="Btn BtnPrimary BtnSmall" onClick={() => {
                 setTripConfig({ transportMode: "auto" });

@@ -77,7 +77,7 @@ export function RegisterScreen() {
   return (
     <AuthPanel title="Đăng ký tài khoản" subtitle="Tạo tài khoản để lưu hành trình và theo dõi chi tiêu của bạn." error={error}
       onContinue={() => nav(returnScreen && returnScreen !== "login" && returnScreen !== "register" ? returnScreen : "b1-chon-nhanh")}
-      onSwitch={() => nav("login")} switchLabel="Đã có tài khoản? Đăng nhập">
+      switchTo="login" switchLabel="Đã có tài khoản? Đăng nhập">
       <form onSubmit={handleSubmit} className={authStyles.form} onChange={() => setError(null)}>
         <label>Họ và tên
           <input id="reg-name" name="name" autoComplete="name" required value={name}

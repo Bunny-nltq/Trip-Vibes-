@@ -2,7 +2,7 @@
   "taoBoi": "script data:snapshot",
   "ngayTao": "2026-10-20T15:52:18.179Z",
   "diemDen": "Thành phố Đà Nẵng",
-  "checksum": "bac1fbfa840c290f770be6d1f7b39945a5dc56a9e7d6b0622e1eedc150df4c39",
+  "checksum": "2c05eaf3035ca7b0f2642d456204474f7f8fa696e6516f8a6e80de7e39c7a89b",
   "createdAt": "2026-10-20T15:52:18.179Z",
   "khachSans": [
     {
@@ -68,37 +68,6 @@
       "nguonGia": []
     },
     {
-      "id": "osm:node:4704794989",
-      "osmId": "osm:node:4704794989",
-      "ten": "Nhà trọ VTV",
-      "khuVuc": "Trung tâm",
-      "diaChi": "183/15/13 Phan Thanh",
-      "toaDo": {
-        "lat": 16.0614403,
-        "lng": 108.2101891
-      },
-      "loai": "khach_san",
-      "gioMoCua": null,
-      "soSao": null,
-      "giaUocTinhNguoi": 375000,
-      "nguon": "osm:node:4704794989",
-      "ngayLay": "2026-10-20T15:48:00.189Z",
-      "doTinCay": "tham_khao",
-      "giaLaUocTinh": true,
-      "khoangGiaDemVND": {
-        "min": 637500,
-        "max": 862500
-      },
-      "includesBreakfast": false,
-      "hasPool": false,
-      "mapsUrls": {
-        "xem": "https://www.google.com/maps/search/?api=1&query=Nh%C3%A0%20tr%E1%BB%8D%20VTV%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
-        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=16.0614403%2C108.2101891",
-        "apple": "https://maps.apple.com/?daddr=16.0614403,108.2101891"
-      },
-      "nguonGia": []
-    },
-    {
       "id": "osm:node:11715209969",
       "osmId": "osm:node:11715209969",
       "ten": "ChiPa Homestay",
@@ -130,37 +99,6 @@
       "nguonGia": []
     },
     {
-      "id": "osm:node:7143487885",
-      "osmId": "osm:node:7143487885",
-      "ten": "139nguyễn đucedm",
-      "khuVuc": "Trung tâm",
-      "diaChi": "139 Nguyễn đức chung",
-      "toaDo": {
-        "lat": 16.062815,
-        "lng": 108.2101633
-      },
-      "loai": "khach_san",
-      "gioMoCua": null,
-      "soSao": null,
-      "giaUocTinhNguoi": 375000,
-      "nguon": "osm:node:7143487885",
-      "ngayLay": "2026-10-20T15:48:00.189Z",
-      "doTinCay": "tham_khao",
-      "giaLaUocTinh": true,
-      "khoangGiaDemVND": {
-        "min": 637500,
-        "max": 862500
-      },
-      "includesBreakfast": false,
-      "hasPool": false,
-      "mapsUrls": {
-        "xem": "https://www.google.com/maps/search/?api=1&query=139nguy%C3%AA%CC%83n%20%C4%91ucedm%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
-        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=16.062815%2C108.2101633",
-        "apple": "https://maps.apple.com/?daddr=16.062815,108.2101633"
-      },
-      "nguonGia": []
-    },
-    {
       "id": "osm:node:5249863422",
       "osmId": "osm:node:5249863422",
       "ten": "Chị Hoa",
@@ -188,37 +126,6 @@
         "xem": "https://www.google.com/maps/search/?api=1&query=Ch%E1%BB%8B%20Hoa%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
         "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=16.0759094%2C108.2108049",
         "apple": "https://maps.apple.com/?daddr=16.0759094,108.2108049"
-      },
-      "nguonGia": []
-    },
-    {
-      "id": "osm:node:4582707890",
-      "osmId": "osm:node:4582707890",
-      "ten": "CaPhe Giai Khat 78",
-      "khuVuc": "Trung tâm",
-      "diaChi": null,
-      "toaDo": {
-        "lat": 16.0593521,
-        "lng": 108.2084405
-      },
-      "loai": "khach_san",
-      "gioMoCua": null,
-      "soSao": null,
-      "giaUocTinhNguoi": 375000,
-      "nguon": "osm:node:4582707890",
-      "ngayLay": "2026-10-20T15:48:00.189Z",
-      "doTinCay": "tham_khao",
-      "giaLaUocTinh": true,
-      "khoangGiaDemVND": {
-        "min": 637500,
-        "max": 862500
-      },
-      "includesBreakfast": false,
-      "hasPool": false,
-      "mapsUrls": {
-        "xem": "https://www.google.com/maps/search/?api=1&query=CaPhe%20Giai%20Khat%2078%2C%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng",
-        "chiDuong": "https://www.google.com/maps/dir/?api=1&destination=16.0593521%2C108.2084405",
-        "apple": "https://maps.apple.com/?daddr=16.0593521,108.2084405"
       },
       "nguonGia": []
     },

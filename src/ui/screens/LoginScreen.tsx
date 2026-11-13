@@ -61,7 +61,7 @@ export function LoginScreen() {
   return (
     <AuthPanel title="Đăng nhập" subtitle="Mở nhật ký và tiếp tục chuyến đi của bạn." error={error}
       onContinue={() => nav(returnScreen && returnScreen !== "login" && returnScreen !== "register" ? returnScreen : "b1-chon-nhanh")}
-      onSwitch={() => nav("register")} switchLabel="Chưa có tài khoản? Đăng ký">
+      switchTo="register" switchLabel="Chưa có tài khoản? Đăng ký">
       <form onSubmit={handleSubmit} className={authStyles.form} onChange={() => setError(null)}>
         <label>Email
           <input id="login-email" name="email" type="email" autoComplete="email" required value={email}

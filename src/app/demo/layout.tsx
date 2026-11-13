@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import "@/design/wireframes.css";
 
 export default function DemoLayout({
   children,

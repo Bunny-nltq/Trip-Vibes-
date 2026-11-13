@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import tokens from "@/design/tokens.json";
+import "./globals.css";
+import { ThemeProvider } from "@/ui/components/ThemeProvider";
 
 export const viewport: Viewport = {
   themeColor: tokens.colors.primary.main,
@@ -13,7 +15,7 @@ export const metadata: Metadata = {
     template: "%s | Trip Vibes",
   },
   description:
-    "Ứng dụng lập kế hoạch du lịch tự động, tối ưu chi phí và bám sát ngân sách thực tế. Tra cứu giá vé, khách sạn, lịch trình chi tiết và bóc tách hóa đơn tiện lợi.",
+    "Ứng dụng lập kế hoạch du lịch tự động, tối ưu chi phí và bám sát ngân sách thực tế. Tra cứu giá vé, khách sạn, lịch trình chi tiết và theo dõi chi tiêu.",
   keywords: [
     "du lịch",
     "kế hoạch du lịch",
@@ -42,24 +44,6 @@ export const metadata: Metadata = {
     follow: true,
   },
 };
-import { Be_Vietnam_Pro, Dancing_Script } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/ui/components/ThemeProvider";
-
-const beVietnamPro = Be_Vietnam_Pro({
-  weight: ["400", "500", "600", "700", "800"],
-  subsets: ["latin", "latin-ext", "vietnamese"],
-  variable: "--font-sans",
-  display: "swap",
-});
-
-const dancingScript = Dancing_Script({
-  weight: ["600", "700"],
-  subsets: ["latin", "latin-ext", "vietnamese"],
-  variable: "--font-script",
-  display: "swap",
-});
-
 
 export default function RootLayout({
   children,
@@ -67,7 +51,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={`${beVietnamPro.variable} ${dancingScript.variable}`}>
+    <html lang="vi">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="antialiased">
         <a href="#main-content" className="skip-link">
           Bỏ qua đến nội dung chính

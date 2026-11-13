@@ -151,10 +151,10 @@ export function PhapLyScreen({ loai }: PhapLyScreenProps) {
 
             <section>
               <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--color-text)", margin: "0 0 8px" }}>
-                2. Quy trình xử lý ảnh hóa đơn chi tiêu
+                2. Dữ liệu chi tiêu
               </h2>
               <p style={{ margin: 0 }}>
-                Khi bạn sử dụng tính năng bóc tách hóa đơn, tệp ảnh được chuyển trực tiếp vào bộ nhớ đệm (in-memory buffer) để mô hình OCR trích xuất số tiền. Tệp ảnh <strong>không bao giờ được ghi xuống đĩa cứng máy chủ</strong> và bị giải phóng khỏi bộ nhớ ngay sau khi xử lý xong.
+                Sổ chi tiêu lưu nội dung khoản chi, ngày, hạng mục, số tiền và ghi chú do bạn nhập.
               </p>
             </section>
 

@@ -462,7 +462,7 @@ export function B11NganSachScreen() {
               Chưa có khoản chi tiêu nào
             </div>
             <p className="page-sub" style={{ maxWidth: 440, margin: "8px auto 20px" }}>
-              Chụp ảnh bill hoặc nhập tay các khoản chi trong chuyến đi để theo dõi và đối chiếu chi phí thực tế.
+              Nhập khoản chi trong chuyến đi để đối chiếu với ngân sách dự kiến.
             </p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
               <button className="btn btn-primary" onClick={() => openB10()}>
@@ -505,7 +505,7 @@ export function B11NganSachScreen() {
                     </td>
                     <td>
                       <span className={`pill ${e.nguon === "anh_bill" ? "bill" : "manual"}`}>
-                        {e.nguon === "anh_bill" ? "Ảnh bill" : "Nhập tay"}
+                        {e.nguon === "anh_bill" ? "Quét hóa đơn (trước đây)" : "Nhập tay"}
                       </span>
                       {e.daSuaTay && (
                         <span

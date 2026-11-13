@@ -3,7 +3,6 @@ import { GET as getHealth } from "../health/route";
 import { GET as getDataStatus } from "../data/status/route";
 import { GET as getAiPing } from "../ai-ping/route";
 import { POST as postParseRequest } from "../parse-request/route";
-import { POST as postExtractBill } from "../extract-bill/route";
 import { POST as postExpenseConfirm } from "../expenses/confirm/route";
 import { GET as getDestination } from "../destination/route";
 import { GET as getDestinationStatus } from "../destination/status/route";
@@ -138,90 +137,6 @@ describe("Toàn diện Backend API Routes (Comprehensive Backend Test Suite)", (
       const data = await res.json();
       expect(data.ok).toBe(false);
       expect(data.error).toContain("500");
-    });
-  });
-
-  describe("3. Bóc tách hóa đơn (/api/extract-bill)", () => {
-    it("trả về 503 khi LIVE_AI_ENABLED=false", async () => {
-      const formData = new FormData();
-      formData.append("image", new Blob(["abc"], { type: "image/jpeg" }));
-      const req = new Request("http://localhost/api/extract-bill", {
-        method: "POST",
-        body: formData,
-      });
-      const res = await postExtractBill(req);
-      expect(res.status).toBe(503);
-      const data = await res.json();
-      expect(data.ok).toBe(false);
-      expect(data.maLoi).toBe("ai_tat");
-    });
-
-    it("trả về 400 khi thiếu file ảnh", async () => {
-      process.env.LIVE_AI_ENABLED = "true";
-      process.env.GEMINI_API_KEY = "test_key";
-
-      const formData = new FormData();
-      const req = new Request("http://localhost/api/extract-bill", {
-        method: "POST",
-        body: formData,
-      });
-      const res = await postExtractBill(req);
-      expect(res.status).toBe(400);
-      const data = await res.json();
-      expect(data.ok).toBe(false);
-      expect(data.error).toContain("Thiếu file");
-    });
-
-    it("trả về 400 khi định dạng MIME không được hỗ trợ", async () => {
-      process.env.LIVE_AI_ENABLED = "true";
-      process.env.GEMINI_API_KEY = "test_key";
-
-      const formData = new FormData();
-      formData.append("image", new Blob(["abc"], { type: "application/pdf" }));
-      const req = new Request("http://localhost/api/extract-bill", {
-        method: "POST",
-        body: formData,
-      });
-      const res = await postExtractBill(req);
-      expect(res.status).toBe(400);
-      const data = await res.json();
-      expect(data.ok).toBe(false);
-      expect(data.error).toContain("jpeg, png, webp");
-    });
-
-    it("trả về 400 khi byte thực tế (magic bytes) không khớp với MIME type", async () => {
-      process.env.LIVE_AI_ENABLED = "true";
-      process.env.GEMINI_API_KEY = "test_key";
-
-      const formData = new FormData();
-      formData.append("image", new Blob([new Uint8Array([0x00, 0x01, 0x02])], { type: "image/jpeg" }));
-      const req = new Request("http://localhost/api/extract-bill", {
-        method: "POST",
-        body: formData,
-      });
-      const res = await postExtractBill(req);
-      expect(res.status).toBe(400);
-      const data = await res.json();
-      expect(data.ok).toBe(false);
-      expect(data.error).toContain("hợp lệ");
-    });
-
-    it("trả về 413 khi kích thước ảnh vượt quá 5MB", async () => {
-      process.env.LIVE_AI_ENABLED = "true";
-      process.env.GEMINI_API_KEY = "test_key";
-
-      const largeBuffer = new Uint8Array(5 * 1024 * 1024 + 10);
-      const formData = new FormData();
-      formData.append("image", new Blob([largeBuffer], { type: "image/jpeg" }));
-      const req = new Request("http://localhost/api/extract-bill", {
-        method: "POST",
-        body: formData,
-      });
-      const res = await postExtractBill(req);
-      expect(res.status).toBe(413);
-      const data = await res.json();
-      expect(data.ok).toBe(false);
-      expect(data.error).toContain("5MB");
     });
   });
 

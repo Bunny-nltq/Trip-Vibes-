@@ -11,6 +11,16 @@ import { planRegenerate } from "@/ai/planRegenerate";
 import { getSnapshotDiemDen } from "@/data/prepareDestination";
 
 export async function POST(req: Request) {
+  if (process.env.LIVE_AI_ENABLED !== "true" || !process.env.GEMINI_API_KEY) {
+    return NextResponse.json(
+      {
+        ok: false,
+        maLoi: "ai_tat",
+        thongBao: "Tính năng này đang tắt trên bản hiện tại.",
+      },
+      { status: 503 }
+    );
+  }
   try {
     let body: any;
     try {

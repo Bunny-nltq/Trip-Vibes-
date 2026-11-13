@@ -1,5 +1,4 @@
 import React from "react";
-import "@/app/wireframes.css"; // We will create this
 
 export default function Page_24w0manchao() {
   return (
@@ -16,7 +15,7 @@ export default function Page_24w0manchao() {
 <div className="Sub" style={{"fontSize": "16px", "marginBottom": "32px"}}>Chọn vài nút bấm là có kế hoạch có giá, xem trước mọi thay đổi và theo dõi chi tiêu.</div>
 <div className="Row" style={{"justifyContent": "center", "gap": "16px", "marginBottom": "36px"}}><div className="Card" style={{"width": "220px", "margin": "0"}}><div className="InfoTitle">Kế hoạch có giá</div><div className="InfoSub">Phương tiện, khách sạn, hoạt động</div></div>
 <div className="Card" style={{"width": "220px", "margin": "0"}}><div className="InfoTitle">Xem trước thay đổi</div><div className="InfoSub">Biết trước tiền, thời gian</div></div>
-<div className="Card" style={{"width": "220px", "margin": "0"}}><div className="InfoTitle">Theo dõi chi tiêu</div><div className="InfoSub">Chụp bill, AI đọc giúp</div></div></div>
+<div className="Card" style={{"width": "220px", "margin": "0"}}><div className="InfoTitle">Theo dõi chi tiêu</div><div className="InfoSub">Nhập và đối chiếu khoản chi</div></div></div>
 <div className="Btn BtnPrimary" style={{"width": "320px", "height": "52px", "margin": "0 auto"}}>Bắt đầu lập kế hoạch</div><div style={{"height": "16px"}}></div><div className="Link">Đăng nhập</div>
 <div className="Hint" style={{"marginTop": "28px"}}>Bản mô phỏng, dùng dữ liệu mẫu.</div></div>
 
