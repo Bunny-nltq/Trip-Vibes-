@@ -7,6 +7,7 @@
 
 import anhDiemDenData from "@/design/anh-diem-den.json";
 import journeyScene from "@/design/assets/coastal-journey-v3.png";
+import dragonBridge from "@/design/assets/da-nang-cau-rong.webp";
 
 export interface ImageInfo {
   url: string;
@@ -53,6 +54,10 @@ export function getDestinationImage(name?:string|null):ImageInfo {
  const candidate=slug?(anhDiemDenData as Record<string,unknown>)[slug]:null;
  if(!candidate||typeof candidate!=="object")return illustration(name);
  const image=candidate as ImageInfo;
+ if (slug === "da-nang") {
+   const localUrl = typeof dragonBridge === "string" ? dragonBridge : dragonBridge.src;
+   return { ...image, url: localUrl, urlThumb: localUrl };
+ }
  return image.tacGia==="CC-Photographer"||image.tacGia==="Wikimedia Commons"?illustration(name):image;
 }
 

@@ -6,7 +6,13 @@ import { MapPin, Utensils, Coffee, ExternalLink, Send, Star, Database, ArrowRigh
 import { SiteHeader } from "@/ui/components/site/SiteHeader";
 import { SiteFooter } from "@/ui/components/site/SiteFooter";
 import { dinhDangTien } from "@/core/formB1";
-import { getActivityImage, getRestaurantImage, getCafeImage, getHotelImage, getExperienceImage } from "@/ui/lib/imageMap";
+import { getRestaurantImage, getCafeImage, getHotelImage, getExperienceImage, getDestinationImage } from "@/ui/lib/imageMap";
+function showIllustrationOnImageError({ currentTarget }: React.SyntheticEvent<HTMLImageElement>) {
+    const fallback = getDestinationImage();
+    if (currentTarget.getAttribute("src") === fallback.url) return;
+    currentTarget.alt = fallback.alt;
+    currentTarget.src = fallback.url;
+}
 export interface DiaDiemVuiChoiItem {
     id: string;
     ten: string;
@@ -172,7 +178,7 @@ export function DiemDenChiTietScreen({ slug, ten, quocGia, moTa, ngayDuLieu = "2
                 boxShadow: "0 4px 20px rgba(0, 0, 0, 0.06)",
             }}>
                 {/* unoptimized: ảnh Wikimedia Commons được trình duyệt tải trực tiếp (Wikimedia chặn tải tự động từ máy chủ) */}
-                <Image src={hinhAnh.url} alt={hinhAnh.alt || ten} width={1200} height={420} sizes="(max-width: 1200px) 100vw, 1200px" unoptimized style={{
+                <Image src={slug === "da-nang" ? getDestinationImage(ten).url : hinhAnh.url} alt={hinhAnh.alt || ten} width={1200} height={420} sizes="(max-width: 1200px) 100vw, 1200px" unoptimized style={{
                 width: "100%",
                 maxHeight: 420,
                 height: "auto",
@@ -206,7 +212,7 @@ export function DiemDenChiTietScreen({ slug, ten, quocGia, moTa, ngayDuLieu = "2
             gap: 20,
         }}>
             {hoatDongs.map((hd) => {
-            const actImg = getExperienceImage(hd.ten, ten, hd.loai || undefined);
+            const actImg = slug === "da-nang" ? getDestinationImage() : getExperienceImage(hd.ten, ten, hd.loai || undefined);
             return (<article key={hd.id} style={{
                     background: "var(--color-surface)",
                     borderRadius: "var(--r-xl)",
@@ -227,7 +233,7 @@ export function DiemDenChiTietScreen({ slug, ten, quocGia, moTa, ngayDuLieu = "2
                     overflow: "hidden",
                     borderBottom: "1px solid var(--color-border)",
                 }}>
-                      <img src={actImg.urlThumb || actImg.url} alt={actImg.alt || hd.ten} loading="lazy" style={{
+                      <img src={actImg.urlThumb || actImg.url} alt={actImg.alt || hd.ten} loading="lazy" onError={showIllustrationOnImageError} style={{
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
@@ -394,7 +400,7 @@ export function DiemDenChiTietScreen({ slug, ten, quocGia, moTa, ngayDuLieu = "2
                         overflow: "hidden",
                         borderBottom: "1px solid var(--color-border)",
                     }}>
-                        <img src={foodImg.urlThumb || foodImg.url} alt={foodImg.alt || qa.ten} loading="lazy" style={{
+                        <img src={foodImg.urlThumb || foodImg.url} alt={foodImg.alt || qa.ten} loading="lazy" onError={showIllustrationOnImageError} style={{
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
@@ -487,7 +493,7 @@ export function DiemDenChiTietScreen({ slug, ten, quocGia, moTa, ngayDuLieu = "2
                         overflow: "hidden",
                         borderBottom: "1px solid var(--color-border)",
                     }}>
-                        <img src={cafeImg.urlThumb || cafeImg.url} alt={cafeImg.alt || cf.ten} loading="lazy" style={{
+                        <img src={cafeImg.urlThumb || cafeImg.url} alt={cafeImg.alt || cf.ten} loading="lazy" onError={showIllustrationOnImageError} style={{
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
@@ -601,7 +607,7 @@ export function DiemDenChiTietScreen({ slug, ten, quocGia, moTa, ngayDuLieu = "2
                     overflow: "hidden",
                     borderBottom: "1px solid var(--color-border)",
                 }}>
-                      <img src={hotelImg.urlThumb || hotelImg.url} alt={hotelImg.alt || ks.ten} loading="lazy" style={{
+                      <img src={hotelImg.urlThumb || hotelImg.url} alt={hotelImg.alt || ks.ten} loading="lazy" onError={showIllustrationOnImageError} style={{
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",

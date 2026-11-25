@@ -241,8 +241,13 @@ export function B8ChuyenDiScreen() {
                 {/* Checkbox Box */}
                 <button type="button" role="checkbox" aria-checked={isDone} aria-label={`Hoàn thành ${place.ten}, ngày ${place.ngay}`} disabled={activeSavedTrip?.status==="completed"} className={`Box ${isDone?"BoxOn":""}`} onClick={()=>handleToggle(place)}>{isDone?<Check size={16}/>:null}</button>
 
-                {/* Ảnh địa điểm thật */}
-                {place.hangMuc==="Di chuyển"?<Bus size={24}/>:                <img src={placeImg.urlThumb || placeImg.url} alt={`Ảnh minh họa ${place.hangMuc.toLowerCase()}`} loading="lazy" style={{
+                {/* Ảnh minh họa địa điểm */}
+                {place.hangMuc==="Di chuyển"?<Bus size={24}/>:                <img src={placeImg.urlThumb || placeImg.url} alt={`Ảnh minh họa ${place.hangMuc.toLowerCase()}`} loading="lazy" onError={({ currentTarget }) => {
+                    const fallback = getDestinationImage().url;
+                    if (currentTarget.getAttribute("src") === fallback) return;
+                    currentTarget.alt = "Ảnh minh họa hành trình";
+                    currentTarget.src = fallback;
+                }} style={{
                     width: 38,
                     height: 38,
                     borderRadius: "var(--r-md)",
